@@ -19,6 +19,7 @@
   },
   "scripts": {
     "build": "[ -d ./dist ] && rm -rf ./dist; tsc",
+    "gen:docs": "typedoc ./src/index.ts",
     "prepublishOnly": "npm run build"
   },
   "author": "Alexander McCormick",
