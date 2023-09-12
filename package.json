@@ -1,0 +1,22 @@
+{
+  "name": "sdk-js",
+  "version": "1.0.0",
+  "description": "SJVAir Development SDK",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Alexander McCormick",
+  "license": "ISC",
+  "workspaces": [
+    "web-components/*",
+    "api",
+    "types"
+  ],
+  "devDependencies": {
+    "@tstk/web-components": "^1.0.1",
+    "typescript": "^5.2.2",
+    "uplot": "^1.6.25",
+    "vite": "^4.4.9"
+  }
+}

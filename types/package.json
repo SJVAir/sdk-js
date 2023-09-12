@@ -1,0 +1,17 @@
+{
+  "name": "@sjvair/types",
+  "version": "1.0.0",
+  "description": "Type definitions for working with the SJVAir API",
+  "main": "src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "Alexander McCormick",
+  "license": "ISC"
+}

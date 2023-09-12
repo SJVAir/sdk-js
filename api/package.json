@@ -1,0 +1,26 @@
+{
+  "name": "@sjvair/api",
+  "version": "1.0.0",
+  "description": "Official SDK for the SJVAir API",
+  "files": [ "dist" ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./Monitors": {
+      "import": "./dist/monitors.js",
+      "types": "./dist/types/monitors.d.ts"
+    },
+    "./Utils": {
+      "import": "./dist/utils.js",
+      "types": "./dist/types/utils.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "[ -d ./dist ] && rm -rf ./dist; tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "Alexander McCormick",
+  "license": "ISC"
+}
