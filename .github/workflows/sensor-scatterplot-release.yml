@@ -1,4 +1,4 @@
-name: Publish New Package Versions
+name: Publish New Sensor Scatterplot Package Version
 on:
   push:
     branches: [main]
