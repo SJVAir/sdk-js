@@ -1,4 +1,4 @@
-name: Publish New Package Versions
+name: Publish New Sensor Scatterplot Package Version
 on:
   push:
     branches: [main]
@@ -14,4 +14,4 @@ jobs:
       - uses: JS-DevTools/npm-publish@v2
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ../../web-components/sensor-scatterplot/package.json
+          package: ./web-components/sensor-scatterplot/package.json

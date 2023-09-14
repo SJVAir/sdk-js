@@ -1,4 +1,4 @@
-name: Publish New Package Versions
+name: Publish New Types Package Version
 on:
   push:
     branches: [main]
@@ -14,4 +14,4 @@ jobs:
       - uses: JS-DevTools/npm-publish@v2
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ../../types/package.json
+          package: ./types/package.json
