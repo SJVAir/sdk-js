@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sensor-scatterplot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "files": ["dist"],
   "scripts": {
