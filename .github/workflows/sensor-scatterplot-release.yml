@@ -16,3 +16,4 @@ jobs:
           access: public
           package: ./web-components/sensor-scatterplot
           token: ${{ secrets.NPM_TOKEN }}
+      - run: npm run build

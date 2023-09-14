@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/types",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Type definitions for working with the SJVAir API",
   "main": "src/index.ts",
   "types": "./dist/index.d.ts",
