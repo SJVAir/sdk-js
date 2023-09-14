@@ -14,5 +14,5 @@ jobs:
       - uses: JS-DevTools/npm-publish@v2
         with:
           access: public
-          package: ./types/package.json
+          package: ./types
           token: ${{ secrets.NPM_TOKEN }}
