@@ -1,4 +1,4 @@
-name: Publish New Sensor Scatterplot Package Version
+name: Publish New API Package Version
 on:
   push:
     branches: [main]
@@ -12,6 +12,6 @@ jobs:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npm publish -w @sjvair/sensor-scatterplot --access public
+      - run: npm run --workspaces publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
