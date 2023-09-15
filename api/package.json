@@ -2,7 +2,7 @@
   "name": "@sjvair/api",
   "version": "1.0.3",
   "description": "Official SDK for the SJVAir API",
-  "files": [ "dist" ],
+  "files": [ "dist", "src" ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -20,7 +20,7 @@
   "scripts": {
     "build": "[ -d ./dist ] && rm -rf ./dist; tsc",
     "gen:docs": "typedoc ./src/index.ts",
-    "prepublishOnly": "npm run build"
+    "publish": "../scripts/publish.sh"
   },
   "author": "Alexander McCormick",
   "license": "ISC"

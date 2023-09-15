@@ -2,13 +2,13 @@
   "name": "@sjvair/sensor-scatterplot",
   "version": "1.0.4",
   "type": "module",
-  "files": ["dist"],
+  "files": [ "dist", "src" ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "gen:docs": "typedoc ./src/main.ts",
-    "prepublishOnly": "npm run build"
+    "publish": "../../scripts/publish.sh"
   },
   "devDependencies": {
     "@sjvair/api": "^1.0.0"
