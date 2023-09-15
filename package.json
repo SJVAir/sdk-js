@@ -2,9 +2,7 @@
   "name": "sdk-js",
   "version": "1.0.0",
   "description": "SJVAir Development SDK",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "Alexander McCormick",
   "license": "ISC",
