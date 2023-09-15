@@ -9,9 +9,9 @@
   "author": "Alexander McCormick",
   "license": "ISC",
   "workspaces": [
-    "web-components/*",
+    "types",
     "api",
-    "types"
+    "web-components/sensor-scatterplot"
   ],
   "devDependencies": {
     "@tstk/web-components": "^1.0.1",
