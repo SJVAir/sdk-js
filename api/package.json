@@ -18,6 +18,7 @@
     }
   },
   "scripts": {
+    "prebuild": "../scripts/assert-built.sh @sjvair/types",
     "build": "[ -d ./dist ] && rm -rf ./dist; tsc",
     "gen:docs": "typedoc ./src/index.ts",
     "try:publish": "../scripts/publish.sh"

@@ -5,6 +5,7 @@
   "files": [ "dist", "src" ],
   "scripts": {
     "dev": "vite",
+    "prebuild": "../scripts/assert-built.sh @sjvair/types @sjvair/api",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "gen:docs": "typedoc ./src/main.ts",
