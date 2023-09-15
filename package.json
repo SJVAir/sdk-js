@@ -13,6 +13,7 @@
   ],
   "devDependencies": {
     "@tstk/web-components": "^1.0.1",
+    "@types/node": "^20.6.1",
     "typedoc": "^0.25.1",
     "typescript": "^5.2.2",
     "uplot": "^1.6.25",
