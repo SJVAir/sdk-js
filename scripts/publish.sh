@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Compare local and published versions before building and publishing
 package_name=$(node -p -e "require('./package.json').name")
