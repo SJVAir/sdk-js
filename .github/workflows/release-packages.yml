@@ -1,4 +1,4 @@
-name: Publish New API Package Version
+name: Publish Newly Versioned Packages
 on:
   push:
     branches: [main]
