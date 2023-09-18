@@ -45,19 +45,6 @@ export class ScatterPlot extends BaseElement {
     return `<div id="chartContainer"></div>`;
   }
 
-  /**
-   * Creates a new instance of ScatterPlot
-   *
-   * @returns A new instance of ScatterPlot
-   */
-  constructor() {
-    super();
-    this.shadowRoot = this.attachShadow({ mode: "open" });
-  }
-
-  /**
-   * Set initial styles for ScatterPlot
-   */
   protected onConnected() {
     this.style.display = "block";
     this.shadowRoot.adoptedStyleSheets = [styles];
