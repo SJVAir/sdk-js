@@ -18,5 +18,8 @@
     "typescript": "^5.2.2",
     "uplot": "^1.6.25",
     "vite": "^4.4.9"
+  },
+  "dependencies": {
+    "color2k": "^2.0.2"
   }
 }
