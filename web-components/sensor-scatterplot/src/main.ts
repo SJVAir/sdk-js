@@ -39,14 +39,8 @@ export class ScatterPlot extends BaseElement {
   get template() {
     return `<div id="chartContainer"></div>`;
   }
-  
-  /**
-   * Creates a new ScatterPlot element
-   *
-   * @returns A new instances of ScatterPlot
-   */
-  constructor() {
-    super();
+
+  protected onConnected() {
     this.style.display = "block";
   }
 
