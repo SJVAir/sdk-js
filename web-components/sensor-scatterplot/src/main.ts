@@ -5,10 +5,10 @@ import { appendChart } from "./Chart";
 import "uplot/dist/uPlot.min.css";
 
 /**
- * A web component for generating scatterplot graphs with monitor sensor data
+ * A web component for generating scatterPlot graphs with monitor sensor data
  */
 @Component("scatter-plot")
-export class Scatterplot extends BaseElement {
+export class ScatterPlot extends BaseElement {
   /**
    * The ID of the monitor whose sensors we will graph
    */
