@@ -1,10 +1,14 @@
 import { default as uPlot } from "uplot";
-import type { AlignedData, Options, Series } from "uplot";
+import { readableColor } from "color2k";
+import type { AlignedData, Axis, Options, Series } from "uplot";
 
 /**
  * Configuration options for the uPlot scatter plot
  */
 interface uPlotConfig {
+  /** Option to check background to set text to a more readable color */
+  detectBackground: boolean;
+
   /** The height of the graph */
   height: number;
 
@@ -43,6 +47,16 @@ export function appendChart(target: HTMLElement, data: AlignedData, cfg: uPlotCo
  * @returns A uPlot options object
  */
 function configureOptions(cfg: uPlotConfig): Options {
+  const axes: Array<Axis> = (() => {
+    if (cfg.detectBackground) {
+      const { backgroundColor } = window.getComputedStyle(document.body);
+      const axis = { grid: { stroke: readableColor(backgroundColor) } };
+      return [ axis,  axis];
+    } else {
+      return [];
+    }
+  })();
+
   const ySeries: Array<Series> = cfg.sensors.map((sensor, idx) => {
     const label = `Sensor ${
       (sensor.length === 1) ? sensor.toUpperCase() : sensor
@@ -69,6 +83,7 @@ function configureOptions(cfg: uPlotConfig): Options {
         fill: "black"
       }
     },
+    axes,
     //@ts-ignore: select missing psudo "required" options
     select: {
       show: false
