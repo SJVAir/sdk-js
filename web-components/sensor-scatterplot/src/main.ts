@@ -5,10 +5,10 @@ import { appendChart } from "./Chart";
 import "uplot/dist/uPlot.min.css";
 
 /**
- * A web component for generating scatterplot graphs with monitor sensor data
+ * A web component for generating scatterPlot graphs with monitor sensor data
  */
 @Component("scatter-plot")
-export class Scatterplot extends BaseElement {
+export class ScatterPlot extends BaseElement {
   /**
    * The ID of the monitor whose sensors we will graph
    */
@@ -39,6 +39,16 @@ export class Scatterplot extends BaseElement {
   get template() {
     return `<div id="chartContainer"></div>`;
   }
+  
+  /**
+   * Creates a new ScatterPlot element
+   *
+   * @returns A new instances of ScatterPlot
+   */
+  constructor() {
+    super();
+    this.style.display = "block";
+  }
 
   /**
    * Initial rendering and re-renders uPlot chart when attribute values vhange
@@ -48,6 +58,7 @@ export class Scatterplot extends BaseElement {
       const monitorId = changes.get("monitorId")?.newValue ?? this.monitorId;
       const timestampGte = changes.get("timestampGte")?.newValue ?? this.timestampGte;
       const timestampLte = changes.get("timestampLte")?.newValue ?? this.timestampLte;
+      const { width, height } = this.getBoundingClientRect();
 
       const { name, sensors} = await fetchMonitorDetails(monitorId);
       const data = await fetchChartData(sensors, {
@@ -61,8 +72,8 @@ export class Scatterplot extends BaseElement {
       appendChart(this.container, data, {
         monitorName: name,
         sensors,
-        height: 300,
-        width: 500
+        height,
+        width
       });
     }
   }
