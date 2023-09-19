@@ -5,9 +5,9 @@ import type { AlignedData, Axis, Options, Series } from "uplot";
 /**
  * Configuration options for the uPlot scatter plot
  */
-interface uPlotConfig {
-  /** Option to check background to set text to a more readable color */
-  detectBackground: boolean;
+export interface uPlotConfig {
+  /** The desired color for text and grid lines */
+  textColor?: string;
 
   /** The height of the graph */
   height: number;
@@ -48,9 +48,13 @@ export function appendChart(target: HTMLElement, data: AlignedData, cfg: uPlotCo
  */
 function configureOptions(cfg: uPlotConfig): Options {
   const axes: Array<Axis> = (() => {
-    if (cfg.detectBackground) {
-      const { backgroundColor } = window.getComputedStyle(document.body);
-      const axis = { grid: { stroke: readableColor(backgroundColor) } };
+    if (cfg.textColor) {
+      const stroke = cfg.textColor;
+      const axis: Axis = {
+        stroke,
+        grid: { stroke },
+        ticks: { stroke}
+      };
       return [ axis,  axis];
     } else {
       return [];
@@ -65,7 +69,6 @@ function configureOptions(cfg: uPlotConfig): Options {
       show: true,
       spanGaps: false,
       label,
-      // series style
       stroke: colors[idx],
       fill: colors[idx],
       paths: drawPoints,
