@@ -3,6 +3,8 @@ import { fetchMonitorDetails } from "@sjvair/api";
 import { fetchChartData } from "./ChartData";
 import { appendChart } from "./Chart";
 import uPlotStyles from "uplot/dist/uPlot.min.css?inline";
+import type { uPlotConfig } from "./Chart";
+import {readableColor} from "color2k";
 
 /**
  * uPlot specific stylesheet
@@ -45,6 +47,11 @@ export class ScatterPlot extends BaseElement {
     return `<div id="chartContainer"></div>`;
   }
 
+  constructor() {
+    super();
+    this.shadowRoot = this.attachShadow({ mode: "open" });
+  }
+
   protected onConnected() {
     this.style.display = "block";
     this.shadowRoot.adoptedStyleSheets = [styles];
@@ -54,16 +61,20 @@ export class ScatterPlot extends BaseElement {
    * Initial rendering and re-renders uPlot chart when attribute values vhange
    */
   protected async onChanges(changes: ElementChanges): Promise<void> {
+    function getInput(name: string, defaultValue: any) {
+      const inputChange = changes.get(name);
+      return inputChange?.newValue ?? inputChange?.oldValue ?? defaultValue;
+    }
     const changeHappened = changes.has("detectBackground")
       || changes.has("monitorId")
       || changes.has("timestampGte")
       || changes.has("timestampLte");
 
     if (changeHappened) {
-      const detectBackground = changes.get("detectBackground")?.newValue ?? false;
-      const monitorId = changes.get("monitorId")?.newValue ?? this.monitorId;
-      const timestampGte = changes.get("timestampGte")?.newValue ?? this.timestampGte;
-      const timestampLte = changes.get("timestampLte")?.newValue ?? this.timestampLte;
+      const detectBackground = getInput("detectBackground", false);
+      const monitorId = getInput("monitorId", this.monitorId);
+      const timestampGte = getInput("timestampGte", this.timestampGte);
+      const timestampLte = getInput("timestampLte", this.timestampLte);
 
       const container = document.createElement("div")
       const { width, height } = this.getBoundingClientRect();
@@ -76,17 +87,25 @@ export class ScatterPlot extends BaseElement {
         timestampLte
       });
 
-      this.shadowRoot.innerHTML = "";
-      this.shadowRoot.append(container);
-
-      appendChart(container, data, {
-        detectBackground,
+      const chartCfg: uPlotConfig = {
         monitorName: name,
         sensors,
         height: height - 90,
         width
-      });
+      };
 
+      if (detectBackground) {
+        const color = readableColor(window.getComputedStyle(document.body).backgroundColor);
+        Object.defineProperty(chartCfg, "textColor", {
+          value: color
+        });
+        styles.replaceSync(uPlotStyles + `.u-legend { color: ${ color } }`);
+      }
+
+      this.shadowRoot.innerHTML = "";
+      this.shadowRoot.append(container);
+      appendChart(container, data, chartCfg);
     }
   }
 }
+
