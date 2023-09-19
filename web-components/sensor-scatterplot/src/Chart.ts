@@ -1,5 +1,4 @@
 import { default as uPlot } from "uplot";
-import { readableColor } from "color2k";
 import type { AlignedData, Axis, Options, Series } from "uplot";
 
 /**
