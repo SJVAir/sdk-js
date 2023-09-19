@@ -1,3 +1,4 @@
+import { transparentize } from "color2k";
 import { default as uPlot } from "uplot";
 import type { AlignedData, Axis, Options, Series } from "uplot";
 
@@ -48,11 +49,11 @@ export function appendChart(target: HTMLElement, data: AlignedData, cfg: uPlotCo
 function configureOptions(cfg: uPlotConfig): Options {
   const axes: Array<Axis> = (() => {
     if (cfg.textColor) {
-      const stroke = cfg.textColor;
+      const stroke = transparentize(cfg.textColor, 0.5);
       const axis: Axis = {
         stroke,
         grid: { stroke },
-        ticks: { stroke}
+        ticks: { stroke }
       };
       return [ axis,  axis];
     } else {
