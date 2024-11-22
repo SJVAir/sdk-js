@@ -1,4 +1,4 @@
-import { Ajv, type JSONSchemaType, type ValidateFunction } from "ajv";
+import { Ajv, type JSONSchemaType } from "ajv";
 import type {
   MonitorData,
   MonitorDataSource,
@@ -6,6 +6,7 @@ import type {
   MonitorEntry,
   MonitorPosition,
 } from "../types.ts";
+import type { SchemaValidationFailureHandler } from "./types.ts";
 
 export const monitorDataSource: JSONSchemaType<MonitorDataSource> = {
   type: "object",
@@ -132,10 +133,7 @@ export const monitorData: JSONSchemaType<MonitorData> = {
 
 export function validateMonitorSchema(
   data: MonitorData | Array<MonitorData>,
-  failureHandle: (
-    errors: ValidateFunction<MonitorData>["errors"],
-    monitor: MonitorData,
-  ) => void,
+  failureHandle: SchemaValidationFailureHandler<MonitorData>,
 ) {
   const ajv = new Ajv();
   const validate = ajv.compile(monitorData);
