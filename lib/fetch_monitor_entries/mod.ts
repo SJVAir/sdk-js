@@ -120,6 +120,18 @@ class MonitorEntryRequestOptions {
 }
 
 /**
+ * Constructs the URL for getting the "monitors/${monitorID}/entries" api endpoint.
+ *
+ * @param config An object containing the monitor ID and search parameters
+ *
+ * @returns An instance of URL configured for the "monitors/${monitorID}/entries" api endpoint.
+ */
+export function getMonitorEntriesUrl(config: MonitorEntryRequestConfig): URL {
+  const params = new MonitorEntryRequestOptions(config);
+  return getApiUrl(`monitors/${config.monitorId}/entries`, params);
+}
+
+/**
  * Fetch entries for a given monitor
  *
  * @param config An object containing the monitor ID and search parameters
@@ -130,9 +142,8 @@ export async function fetchMonitorEntries(
   config: MonitorEntryRequestConfig,
 ): Promise<Array<MonitorEntry>> {
   const entries: Array<MonitorEntry> = [];
-  const params = new MonitorEntryRequestOptions(config);
 
-  const url = getApiUrl(`monitors/${config.monitorId}/entries`, params);
+  const url = getMonitorEntriesUrl(config);
 
   try {
     const response = await (await fetch(url))
