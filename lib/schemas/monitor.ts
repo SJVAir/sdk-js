@@ -153,3 +153,26 @@ export function validateMonitorSchema(
     process(data);
   }
 }
+
+export function validateMonitorEntrySchema(
+  data: MonitorEntry | Array<MonitorEntry>,
+  failureHandle: SchemaValidationFailureHandler<MonitorEntry>,
+) {
+  const ajv = new Ajv();
+  const validate = ajv.compile(monitorData);
+
+  const process = (monitorEntry: MonitorEntry) => {
+    const valid = validate(monitorEntry);
+    if (!valid) {
+      failureHandle(validate.errors, monitorEntry);
+    }
+  };
+
+  if (Array.isArray(data)) {
+    for (const entry of data) {
+      process(entry);
+    }
+  } else {
+    process(data);
+  }
+}
