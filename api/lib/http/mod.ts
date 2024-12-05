@@ -1,4 +1,12 @@
 /**
+ * The request response format when used with native fetch api
+ */
+export interface APIRequestResponse<T>
+  extends Omit<Response, "body" | "bodyUsed"> {
+  body: T;
+}
+
+/**
  * The default origin to use when making requests to the SJVAir API
  */
 export let origin = "https://www.sjvair.com";
@@ -42,7 +50,10 @@ export function getApiUrl(
  *
  * @returns The result of the request
  */
-export async function apiRequest<T>(url: URL, config?: RequestInit) {
+export async function apiRequest<T>(
+  url: URL,
+  config?: RequestInit,
+): Promise<APIRequestResponse<T>> {
   return await fetch(url, config)
     .then(async (response) => {
       const { body: _body, bodyUsed: _bodyUsed, ...rest } = response;
