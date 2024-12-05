@@ -17,28 +17,39 @@ Deno.test({
         });
     }
 
-    await t.step("Build fetch monitor details url", () => {
-      const url = getMonitorDetailsUrl(monitorId);
+    const buildUrlSuccess = await t.step(
+      "Build fetch monitor details url",
+      () => {
+        const url = getMonitorDetailsUrl(monitorId);
 
-      assertEquals(url.origin, "https://www.sjvair.com");
-      assertEquals(
-        url.pathname,
-        "/api/1.0/monitors/xudEmbncQ7iqwy3sZ0jZvQ/",
-      );
+        assertEquals(url.origin, "https://www.sjvair.com");
+        assertEquals(
+          url.pathname,
+          "/api/1.0/monitors/xudEmbncQ7iqwy3sZ0jZvQ/",
+        );
+      },
+    );
+
+    const fetchMonitorDetailsSuccess = await t.step({
+      name: "Fetch monitor details",
+      ignore: !buildUrlSuccess,
+      async fn() {
+        const monitor = await getDetails();
+        assertEquals(monitor.name, "CCA Root Access Hackerspace #2");
+      },
     });
 
-    await t.step("Fetch monitor details", async () => {
-      const monitor = await getDetails();
-      assertEquals(monitor.name, "CCA Root Access Hackerspace #2");
-    });
-
-    await t.step("Validate monitor data", async () => {
-      const details = await getDetails();
-      validateMonitorSchema(details, (errors, entry) => {
-        console.error(errors);
-        console.error(entry);
-        fail("Monitor entry did not pass schema validation");
-      });
+    await t.step({
+      name: "Validate monitor data",
+      ignore: !fetchMonitorDetailsSuccess,
+      async fn() {
+        const details = await getDetails();
+        validateMonitorSchema(details, (errors, entry) => {
+          console.error(errors);
+          console.error(entry);
+          fail("Monitor entry did not pass schema validation");
+        });
+      },
     });
   },
 });
