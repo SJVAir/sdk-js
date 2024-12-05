@@ -21,7 +21,7 @@ Deno.test({
       setOrigin(originalOrigin);
     });
 
-    await t.step("Build API URL object", () => {
+    const buildApiUrlSuccess = await t.step("Build API URL object", () => {
       const url = getApiUrl("monitors/closest", {
         latitude: "36.76272050981146",
         longitude: "-119.7987626619462",
@@ -33,17 +33,21 @@ Deno.test({
       );
     });
 
-    await t.step("API Request", async () => {
-      const requestUrl = getApiUrl("time");
-      const { body: result } = await apiRequest<number>(requestUrl);
+    await t.step({
+      name: "API Request",
+      ignore: !buildApiUrlSuccess,
+      async fn() {
+        const requestUrl = getApiUrl("time");
+        const { body: result } = await apiRequest<number>(requestUrl);
 
-      const resultDate = removeSeconds(new Date(result * 1000));
-      const comparisonDate = removeSeconds(new Date());
+        const resultDate = removeSeconds(new Date(result * 1000));
+        const comparisonDate = removeSeconds(new Date());
 
-      assertEquals(
-        resultDate,
-        comparisonDate,
-      );
+        assertEquals(
+          resultDate,
+          comparisonDate,
+        );
+      },
     });
   },
 });
