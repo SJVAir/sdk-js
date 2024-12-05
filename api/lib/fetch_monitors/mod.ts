@@ -15,7 +15,7 @@ export function getMonitorsUrl(): URL {
  *
  * @returns An array containing all monitors.
  */
-export async function fetchClosestMonitor(): Promise<Array<MonitorData>> {
+export async function fetchMonitors(): Promise<Array<MonitorData>> {
   const requestUrl = getMonitorsUrl();
 
   return await apiRequest<{ data: Array<MonitorData> }>(requestUrl)
