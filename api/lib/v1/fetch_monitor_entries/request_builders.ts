@@ -1,5 +1,5 @@
-import { getApiUrl } from "../http/mod.ts";
-import { apiDateFormat } from "../api_date_format/mod.ts";
+import { getApiV1Url } from "../../http/mod.ts";
+import { apiDateFormat } from "../../api_date_format/mod.ts";
 import type { MonitorEntryRequestConfig } from "./types.ts";
 
 function getValidLteDate(timestampLte: Date | string | number): Date {
@@ -76,5 +76,5 @@ class MonitorEntryRequestOptions {
  */
 export function getMonitorEntriesUrl(config: MonitorEntryRequestConfig): URL {
   const params = new MonitorEntryRequestOptions(config);
-  return getApiUrl(`monitors/${config.monitorId}/entries`, params);
+  return getApiV1Url(`monitors/${config.monitorId}/entries`, params);
 }

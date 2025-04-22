@@ -1,6 +1,6 @@
-import { apiRequest, getApiUrl } from "../http/mod.ts";
+import { apiRequest, getApiV1Url } from "../../http/mod.ts";
 import { validateClosestMonitor } from "./validate_closest_monitor.ts";
-import type { MonitorData } from "../types.ts";
+import type { MonitorData } from "../../types.ts";
 
 /**
  * Constructs the URL for getting the "monitors/closest" api endpoint.
@@ -11,7 +11,7 @@ import type { MonitorData } from "../types.ts";
  * @returns An instance of URL configured for the "monitors/closest" api endpoint.
  */
 export function getClosestMonitorUrl(latitude: number, longitude: number): URL {
-  return getApiUrl("monitors/closest", {
+  return getApiV1Url("monitors/closest", {
     latitude: latitude.toString(),
     longitude: longitude.toString(),
   });

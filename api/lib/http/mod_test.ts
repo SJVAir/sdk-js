@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { apiRequest, getApiUrl, origin, setOrigin } from "./mod.ts";
+import { apiRequest, getApiV1Url, origin, setOrigin } from "./mod.ts";
 
 function removeSeconds(date: Date) {
   date.setMilliseconds(0);
@@ -22,7 +22,7 @@ Deno.test({
     });
 
     const buildApiUrlSuccess = await t.step("Build API URL object", () => {
-      const url = getApiUrl("monitors/closest", {
+      const url = getApiV1Url("monitors/closest", {
         latitude: "36.76272050981146",
         longitude: "-119.7987626619462",
       });
@@ -37,7 +37,7 @@ Deno.test({
       name: "API Request",
       ignore: !buildApiUrlSuccess,
       async fn() {
-        const requestUrl = getApiUrl("time");
+        const requestUrl = getApiV1Url("time");
         const { body: result } = await apiRequest<number>(requestUrl);
 
         const resultDate = removeSeconds(new Date(result * 1000));

@@ -1,5 +1,5 @@
-import { apiRequest } from "../http/mod.ts";
-import type { MonitorEntry } from "../types.ts";
+import { apiRequest } from "../../http/mod.ts";
+import type { MonitorEntry } from "../../types.ts";
 import { getMonitorEntriesUrl } from "./request_builders.ts";
 import { gatherMonitorEntries } from "./request_handlers.ts";
 import type {

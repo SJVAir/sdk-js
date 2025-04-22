@@ -1,4 +1,4 @@
-import type { MonitorData } from "../types.ts";
+import type { MonitorData } from "../../types.ts";
 
 export function validateClosestMonitor(monitor: MonitorData): boolean {
   const negativeMin = -15;

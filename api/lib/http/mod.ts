@@ -21,18 +21,50 @@ export function setOrigin(newOrigin: string): void {
 }
 
 /**
- * Constructs an SJVAir specific URL object
+ * Constructs an SJVAir api 2.0 specific URL object
  *
  * @param endpoint Specific route to an endpoint (e.g. "/monitors")
  * @param searchParams Key/Value object containing search parameters
  *
  * @returns A complete request URL for the SJVAir API
  */
-export function getApiUrl(
+export function getApiV2Url(
   endpoint: string,
   searchParams?: Record<string, string>,
 ): URL {
-  const url = new URL(`${origin}/api/1.0/${endpoint}/`);
+  return getApiUrl(endpoint, "2.0", searchParams);
+}
+
+/**
+ * Constructs an SJVAir api 1.0 specific URL object
+ *
+ * @param endpoint Specific route to an endpoint (e.g. "/monitors")
+ * @param searchParams Key/Value object containing search parameters
+ *
+ * @returns A complete request URL for the SJVAir API
+ */
+export function getApiV1Url(
+  endpoint: string,
+  searchParams?: Record<string, string>,
+): URL {
+  return getApiUrl(endpoint, "1.0", searchParams);
+}
+
+/**
+ * Constructs an SJVAir specific URL object
+ *
+ * @param endpoint Specific route to an endpoint (e.g. "/monitors")
+ * @param version The desired api version to use
+ * @param searchParams Key/Value object containing search parameters
+ *
+ * @returns A complete request URL for the SJVAir API
+ */
+export function getApiUrl(
+  endpoint: string,
+  version: "1.0" | "2.0",
+  searchParams?: Record<string, string>,
+): URL {
+  const url = new URL(`${origin}/api/${version}/${endpoint}/`);
 
   if (searchParams) {
     Object.entries(searchParams)

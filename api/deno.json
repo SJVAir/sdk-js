@@ -14,6 +14,10 @@
     "./monitor_entries/requests": "./lib/fetch_monitor_entries/requests.ts",
     "./monitor_entries/types": "./lib/fetch_monitor_entries/types.ts"
   },
+  "imports": {
+    "$types": "./lib/types.ts",
+    "$http": "./lib/http/mod.ts"
+  },
   "tasks": {
     "dev": "deno run --watch main.ts"
   }

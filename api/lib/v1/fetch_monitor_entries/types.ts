@@ -1,4 +1,4 @@
-import type { MonitorEntry } from "../types.ts";
+import type { MonitorEntry } from "$types";
 
 /**
  * The configuration options for the monitor entries endpoint

@@ -1,5 +1,5 @@
-import { getApiUrl } from "../http/mod.ts";
-import type { MonitorData } from "../types.ts";
+import { getApiV1Url } from "../../http/mod.ts";
+import type { MonitorData } from "../../types.ts";
 
 /**
  * Constructs the URL for getting the "monitors/${monitorID}/entries" api endpoint.
@@ -9,7 +9,7 @@ import type { MonitorData } from "../types.ts";
  * @returns An instance of URL configured for the "monitors/${monitorID}/entries" api endpoint.
  */
 export function getMonitorDetailsUrl(monitorId: string): URL {
-  return getApiUrl(`monitors/${monitorId}`);
+  return getApiV1Url(`monitors/${monitorId}`);
 }
 
 /**

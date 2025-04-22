@@ -5,7 +5,7 @@ import {
   validateClosestMonitorResponse,
 } from "./mod.ts";
 import { validateClosestMonitor } from "./validate_closest_monitor.ts";
-import type { MonitorData } from "../types.ts";
+import type { MonitorData } from "../../types.ts";
 
 const raMonitor: MonitorData = {
   id: "xudEmbncQ7iqwy3sZ0jZvQ",
