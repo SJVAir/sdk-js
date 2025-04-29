@@ -1,0 +1,20 @@
+{
+  "name": "@sjvair/api-v2",
+  "version": "1.0.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./mod.ts",
+    "./api_date_format": "./lib/api_date_format/mod.ts",
+    "./closest_monitor": "./lib/fetch_closest_monitor/mod.ts",
+    "./fetch_monitors": "./lib/fetch_monitors/mod.ts",
+    "./monitor_details": "./lib/fetch_monitor_details/mod.ts",
+    "./monitor_entries": "./lib/fetch_monitor_entries/mod.ts",
+    "./monitor_entries/request_builders": "./lib/fetch_monitor_entries/request_builders.ts",
+    "./monitor_entries/request_handlers": "./lib/fetch_monitor_entries/request_handlers.ts",
+    "./monitor_entries/requests": "./lib/fetch_monitor_entries/requests.ts",
+    "./monitor_entries/types": "./lib/fetch_monitor_entries/types.ts"
+  },
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  }
+}

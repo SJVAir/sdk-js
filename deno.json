@@ -3,7 +3,9 @@
     "dev": "deno run --watch main.ts"
   },
   "workspace": [
-    "./api"
+    "./api-v1",
+    "./api-v2",
+    "./utils"
   ],
   "imports": {
     "@std/assert": "jsr:@std/assert@1",

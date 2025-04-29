@@ -1,0 +1,15 @@
+{
+  "name": "@sjvair/utils",
+  "version": "1.0.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./mod.ts",
+    "./api_date_format": "./lib/api_date_format/mod.ts",
+    "./monitors": "./lib/monitors/mod.ts",
+    "./monitors/validation": "./lib/monitors/validation.ts",
+    "./types": "./lib/types.ts"
+  },
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  }
+}
