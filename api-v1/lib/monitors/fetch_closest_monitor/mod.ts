@@ -1,6 +1,6 @@
-import { apiRequest, getApiUrl } from "../http/mod.ts";
+import { apiRequest, getApiUrl } from "$http";
 import { validateClosestMonitor } from "./validate_closest_monitor.ts";
-import type { MonitorData } from "@sjvair/utils/types";
+import type { MonitorData } from "../types.ts";
 
 /**
  * Constructs the URL for getting the "monitors/closest" api endpoint.

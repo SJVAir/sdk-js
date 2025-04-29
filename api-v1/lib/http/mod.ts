@@ -1,9 +1,14 @@
 /**
  * The request response format when used with native fetch api
  */
-export interface APIRequestResponse<T>
-  extends Omit<Response, "body" | "bodyUsed"> {
+export interface APIRequestResponse<T> {
+  headers: Headers;
   body: T;
+  ok: boolean;
+  redirected: boolean;
+  status: number;
+  statusText: string;
+  url: string;
 }
 
 /**
@@ -57,13 +62,21 @@ export async function apiRequest<T>(
 ): Promise<APIRequestResponse<T>> {
   return await fetch(url, config)
     .then(async (response) => {
-      const { body: _body, bodyUsed: _bodyUsed, ...rest } = response;
       const body: T = await response.json()
         .catch((_) => {
           throw new Error(`Request to endpoint "${url.href}" failed`, {
             cause: response,
           });
         });
-      return { body, ...rest };
+
+      return {
+        headers: response.headers,
+        body,
+        ok: response.ok,
+        redirected: response.redirected,
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url,
+      };
     });
 }

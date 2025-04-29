@@ -1,7 +1,7 @@
-import { apiRequest } from "../http/mod.ts";
-import type { MonitorEntry } from "@sjvair/utils/types";
+import { apiRequest } from "$http";
+import type { MonitorEntry } from "../types.ts";
 import { getMonitorEntriesUrl } from "./request_builders.ts";
-import { gatherMonitorEntries } from "./request_handlers.ts";
+import { gatherMonitorEntries } from "./response_handlers.ts";
 import type {
   MonitorEntryRequestConfig,
   MonitorEntryRequestResponse,

@@ -4,16 +4,18 @@
   "license": "MIT",
   "exports": {
     ".": "./mod.ts",
-    "./closest_monitor": "./lib/fetch_closest_monitor/mod.ts",
-    "./fetch_monitors": "./lib/fetch_monitors/mod.ts",
-    "./monitor_details": "./lib/fetch_monitor_details/mod.ts",
-    "./monitor_entries": "./lib/fetch_monitor_entries/mod.ts",
-    "./monitor_entries/request_builders": "./lib/fetch_monitor_entries/request_builders.ts",
-    "./monitor_entries/request_handlers": "./lib/fetch_monitor_entries/request_handlers.ts",
-    "./monitor_entries/requests": "./lib/fetch_monitor_entries/requests.ts",
-    "./monitor_entries/types": "./lib/fetch_monitor_entries/types.ts"
+    "./fetch_monitors": "./lib/monitors/fetch_monitors/mod.ts",
+    "./fetch_monitors/request_builders": "./lib/monitors/fetch_monitors/request_builders.ts",
+    "./fetch_monitors/response_handlers": "./lib/monitors/fetch_monitors/response_handlers.ts",
+    "./fetch_monitors/requests": "./lib/monitors/fetch_monitors/requests.ts",
+    "./fetch_monitors/types": "./lib/monitors/fetch_monitors/types.ts"
   },
   "tasks": {
     "dev": "deno run --watch main.ts"
+  },
+  "imports": {
+    "$apiDateFormat": "./lib/api_date_format/mod.ts",
+    "$http": "./lib/http/mod.ts",
+    "$monitors/": "./lib/monitors/"
   }
 }

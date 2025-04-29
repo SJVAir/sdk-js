@@ -8,7 +8,7 @@ import {
 } from "./mod.ts";
 import { validateMonitorEntrySchema } from "../schemas/monitor.ts";
 import { validateMonitorEntryRequestResponse } from "../schemas/monitor_entries_request_response.ts";
-import type { MonitorEntry } from "@sjvair/utils/types";
+import type { MonitorEntry } from "../types.ts";
 
 const requestConfig: MonitorEntryRequestConfig = {
   monitorId: "xudEmbncQ7iqwy3sZ0jZvQ",

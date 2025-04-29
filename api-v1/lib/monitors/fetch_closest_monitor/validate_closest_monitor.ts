@@ -1,4 +1,4 @@
-import type { MonitorData, MonitorEntry } from "@sjvair/utils/types";
+import type { MonitorData, MonitorEntry } from "../types.ts";
 
 const fieldsUsed: Array<keyof MonitorEntry> = [
   "pm25",

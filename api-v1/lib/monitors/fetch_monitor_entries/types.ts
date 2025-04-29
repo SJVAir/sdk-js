@@ -1,4 +1,4 @@
-import type { MonitorEntry } from "@sjvair/utils/types";
+import type { MonitorEntry } from "../types.ts";
 
 /**
  * The configuration options for the monitor entries endpoint

@@ -1,4 +1,9 @@
 import { assertEquals } from "@std/assert";
+import {
+  fetchClosestMonitor,
+  getClosestMonitorUrl,
+  validateClosestMonitorResponse,
+} from "./mod.ts";
 import { isValidClosestMonitor } from "./validation.ts";
 import type { MonitorData } from "../types.ts";
 
@@ -31,6 +36,9 @@ const raMonitor: MonitorData = {
     particles_10um: "24.00",
     particles_25um: "3.00",
     particles_50um: "0.00",
+    pm100_standard: null,
+    pm10_standard: null,
+    pm25_standard: null,
   },
   county: "Fresno",
   data_source: { name: "PurpleAir", url: "https://www2.purpleair.com/" },
@@ -46,6 +54,18 @@ Deno.test({
   name: "Module: Fetch Closest Monitor",
   permissions: { net: true },
   async fn(t) {
+    const [longitude, latitude] = raMonitor.position.coordinates;
+
+    await t.step("Build closest monitor url", () => {
+      const [longitude, latitude] = raMonitor.position.coordinates;
+      const url = getClosestMonitorUrl(latitude, longitude);
+
+      assertEquals(
+        url.href,
+        "https://www.sjvair.com/api/1.0/monitors/closest/?latitude=36.76274&longitude=-119.798676",
+      );
+    });
+
     await t.step("Validate Closest Monitor", async (t) => {
       await t.step("Valid Monitor", () => {
         const isValid = isValidClosestMonitor(raMonitor);
@@ -60,6 +80,29 @@ Deno.test({
 
         assertEquals(isValid, false);
       });
+    });
+
+    await t.step("Validate Closest Monitor Response", () => {
+      const m1 = structuredClone(raMonitor);
+      m1.name = "Fake Monitor 1";
+      m1.latest!.pm25 = "-16";
+
+      const m2 = structuredClone(raMonitor);
+      m2.name = "Fake Monitor 2";
+      m2.latest!.pm25 = "9999";
+
+      const m3 = structuredClone(raMonitor);
+      m3.name = "Fake Monitor 3";
+
+      const monitor = validateClosestMonitorResponse([m1, m2, m3]);
+
+      assertEquals(monitor.name, "Fake Monitor 3");
+    });
+
+    await t.step("Fetch Closest Monitor", async () => {
+      const monitor = await fetchClosestMonitor(latitude, longitude);
+
+      assertEquals(monitor.name, "CCA Root Access Hackerspace #2");
     });
   },
 });

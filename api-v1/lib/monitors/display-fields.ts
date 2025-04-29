@@ -1,4 +1,4 @@
-import type { MonitorDataFieldName, MonitorDevice } from "../types.ts";
+import type { MonitorDataFieldName, MonitorDevice } from "./types.ts";
 
 /**
  * Get a list of the fields used to display data based on the monitor's device type

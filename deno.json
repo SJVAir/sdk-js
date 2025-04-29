@@ -4,8 +4,7 @@
   },
   "workspace": [
     "./api-v1",
-    "./api-v2",
-    "./utils"
+    "./api-v2"
   ],
   "imports": {
     "@std/assert": "jsr:@std/assert@1",

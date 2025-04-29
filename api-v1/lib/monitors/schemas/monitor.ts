@@ -5,7 +5,7 @@ import type {
   MonitorDevice,
   MonitorEntry,
   MonitorPosition,
-} from "@sjvair/utils/types";
+} from "../types.ts";
 import type { SchemaValidationFailureHandler } from "./types.ts";
 
 export const monitorDataSource: JSONSchemaType<MonitorDataSource> = {

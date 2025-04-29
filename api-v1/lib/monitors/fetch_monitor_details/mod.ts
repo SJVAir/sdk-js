@@ -1,5 +1,5 @@
-import { getApiUrl } from "../http/mod.ts";
-import type { MonitorData } from "@sjvair/utils/types";
+import { getApiUrl } from "$http";
+import type { MonitorData } from "../types.ts";
 
 /**
  * Constructs the URL for getting the "monitors/${monitorID}/entries" api endpoint.

@@ -1,7 +1,7 @@
 import { assertEquals, fail } from "@std/assert";
 import { fetchMonitorDetails, getMonitorDetailsUrl } from "./mod.ts";
 import { validateMonitorSchema } from "../schemas/monitor.ts";
-import type { MonitorData } from "@sjvair/utils/types";
+import type { MonitorData } from "../types.ts";
 
 Deno.test({
   name: "Module: Fetch Monitor Details",
