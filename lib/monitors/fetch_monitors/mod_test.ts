@@ -21,7 +21,7 @@ Deno.test({
       await st.step("Get URL", () => {
         const url = getMonitorsUrl();
 
-        assertEquals(url.href, `${origin}/api/1.0/monitors/`);
+        assertEquals(url.href, `${origin}/api/2.0/monitors/`);
       });
 
       const rawResponseSuccess = await st.step(
