@@ -1,6 +1,10 @@
 import { assertEquals } from "@std/assert";
 import { apiRequest, getApiUrl, origin, setOrigin } from "./mod.ts";
 
+if (!Deno.env.has("TEST_REMOTE")) {
+  setOrigin("http://127.0.0.1:8000");
+}
+
 function removeSeconds(date: Date) {
   date.setMilliseconds(0);
   date.setSeconds(0);
@@ -28,8 +32,8 @@ Deno.test({
       });
 
       assertEquals(
-        url.href,
-        "https://www.sjvair.com/api/1.0/monitors/closest/?latitude=36.76272050981146&longitude=-119.7987626619462",
+        url.pathname + url.search,
+        "/api/2.0/monitors/closest/?latitude=36.76272050981146&longitude=-119.7987626619462",
       );
     });
 
