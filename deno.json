@@ -1,13 +1,23 @@
 {
+  "name": "@sjvair/sdk",
+  "version": "1.0.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./mod.ts",
+    "./fetch_monitors": "./lib/monitors/fetch_monitors/mod.ts",
+    "./fetch_monitors/request_builders": "./lib/monitors/fetch_monitors/request_builders.ts",
+    "./fetch_monitors/response_handlers": "./lib/monitors/fetch_monitors/response_handlers.ts",
+    "./fetch_monitors/requests": "./lib/monitors/fetch_monitors/requests.ts",
+    "./fetch_monitors/types": "./lib/monitors/fetch_monitors/types.ts"
+  },
   "tasks": {
     "dev": "deno run --watch main.ts"
   },
-  "workspace": [
-    "./api-v1",
-    "./api-v2"
-  ],
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "ajv": "npm:ajv@^8.17.1"
+    "ajv": "npm:ajv@^8.17.1",
+    "$apiDateFormat": "./lib/api_date_format/mod.ts",
+    "$http": "./lib/http/mod.ts",
+    "$monitors/": "./lib/monitors/"
   }
 }
