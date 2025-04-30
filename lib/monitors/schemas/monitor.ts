@@ -141,23 +141,19 @@ export const monitorData: JSONSchemaType<MonitorData> = {
     data_source: monitorDataSource,
     data_providers: { type: "array", items: monitorDataSource },
     device: monitorDevice,
-    distance: { type: "number", nullable: true },
+    //distance: { type: "number", nullable: true },
     id: { type: "string" },
     is_active: { type: "boolean" },
     is_sjvair: { type: "boolean" },
     last_active_limit: { type: "number" },
-    latest: {
-      type: ["object", "null"],
-      oneOf: [monitorEntry, { type: "null", nullable: true }],
-    },
     location: { type: "string" },
     name: { type: "string" },
     position: monitorPosition,
     purple_id: { type: "number", nullable: true },
-    sensors: {
-      type: "array",
-      items: { type: "string" },
-    },
+    //sensors: {
+    //  type: "array",
+    //  items: { type: "string" },
+    //},
   },
   required: [
     "county",
@@ -168,10 +164,8 @@ export const monitorData: JSONSchemaType<MonitorData> = {
     "is_active",
     "is_sjvair",
     "last_active_limit",
-    "latest",
     "name",
     "position",
-    "sensors",
   ],
 };
 

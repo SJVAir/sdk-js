@@ -55,14 +55,6 @@ export interface MonitorData {
   /** The brand/model of air monitor */
   device: MonitorDevice;
 
-  /**
-   * The current distance between a monitor and a given geolocation
-   *
-   * @remarks This field is only present when querying the 'monitors/closest'
-   * endpoint
-   */
-  distance?: number;
-
   /** The ID of the monitor */
   id: string;
 
@@ -74,9 +66,6 @@ export interface MonitorData {
 
   /** The length of time a monitor can be offline before being considered inactive */
   last_active_limit: number;
-
-  /** The latest entry reported by the monitor */
-  latest: MonitorEntry | null;
 
   /** Indicates whether monitor is inside or outside */
   location: string;
@@ -92,13 +81,6 @@ export interface MonitorData {
    * @remarks This field is only present if the device type is "PurpleAir"
    */
   purple_id?: number;
-
-  /**
-   * A list of sensor ID's the monitor uses
-   * @remarks Defaults to an array with one empty string when the monitor
-   * only has one reporting sensor
-   */
-  sensors: Array<string>;
 }
 
 /** A data entry for a monitor */
