@@ -38,7 +38,7 @@ export function getApiUrl(
   endpoint: string,
   searchParams?: Record<string, string>,
 ): URL {
-  const url = new URL(`${origin}/api/1.0/${endpoint}/`);
+  const url = new URL(`${origin}/api/2.0/${endpoint}/`);
 
   if (searchParams) {
     Object.entries(searchParams)
