@@ -1,44 +1,20 @@
 import { Ajv, type JSONSchemaType } from "ajv";
 import type {
   MonitorData,
+  MonitorDataProvider,
   MonitorDataSource,
+  MonitorDetails,
   MonitorDevice,
-  MonitorEntry,
   MonitorPosition,
 } from "../types.ts";
 import type { SchemaValidationFailureHandler } from "./types.ts";
 
-export const monitorDataSource: JSONSchemaType<MonitorDataSource> = {
-  type: "object",
-  properties: {
-    name: {
-      type: "string",
-      enum: [
-        "AirNow.gov",
-        "AirNow Partners",
-        "AQview",
-        "California Air Resources Board",
-        "Central California Asthma Collaborative",
-        "Eastern Kern Air Pollution Control District",
-        "Forest Service",
-        "National Park Service",
-        "PurpleAir",
-        "San Joaquin Valley APCD",
-        "San Joaquin Valley Unified APCD",
-      ],
-    },
-    url: { type: "string", nullable: true },
-  },
-  required: ["name"],
-};
-
-export const monitorDevice: JSONSchemaType<MonitorDevice> = {
+export const monitorDeviceSchema: JSONSchemaType<MonitorDevice> = {
   type: "string",
   enum: [
     "PurpleAir",
     "BAM 1020",
     "BAM 1022",
-    "AQview",
     "PA-I",
     "PA-I-LED",
     "PA-II-FLEX",
@@ -48,79 +24,48 @@ export const monitorDevice: JSONSchemaType<MonitorDevice> = {
   ],
 };
 
-export const monitorEntry: JSONSchemaType<MonitorEntry> = {
+export const monitorDataSourceSchema: JSONSchemaType<MonitorDataSource> = {
   type: "object",
   properties: {
-    celsius: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    fahrenheit: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    humidity: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pm10: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pm10_standard: {
+    name: {
       type: "string",
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-      nullable: true,
+      enum: [
+        "PurpleAir",
+        "AQview",
+        "AirNow.gov",
+        "Central California Asthma Collaborative",
+      ],
     },
-    pm25: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pm25_avg_15: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pm25_avg_60: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pm25_reported: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pm25_standard: {
-      type: "string",
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-      nullable: true,
-    },
-    pm100: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pm100_standard: {
-      type: "string",
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-      nullable: true,
-    },
-    particles_03um: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    particles_05um: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    particles_10um: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    particles_25um: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    particles_50um: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    particles_100um: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    pressure: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-    sensor: { type: "string" },
-    timestamp: { type: "string" },
+    url: { type: "string" },
   },
-  required: ["sensor", "timestamp"],
+  required: ["name", "url"],
 };
 
-export const monitorPosition: JSONSchemaType<MonitorPosition> = {
+export const monitorDataProvidersSchema: JSONSchemaType<MonitorDataProvider> = {
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+      enum: [
+        "PurpleAir",
+        "AQview",
+        "AirNow.gov",
+        "California Air Resources Board",
+        "Central California Asthma Collaborative",
+        "AirNow Partners",
+        "Eastern Kern Air Pollution Control District",
+        "Forest Service",
+        "National Park Service",
+        "San Joaquin Valley APCD",
+        "San Joaquin Valley Unified APCD",
+      ],
+    },
+    url: { type: "string", nullable: true },
+  },
+  required: ["name"],
+};
+
+export const monitorPositionSchema: JSONSchemaType<MonitorPosition> = {
   type: "object",
   properties: {
     coordinates: {
@@ -134,26 +79,21 @@ export const monitorPosition: JSONSchemaType<MonitorPosition> = {
   required: ["coordinates", "type"],
 };
 
-export const monitorData: JSONSchemaType<MonitorData> = {
+export const monitorDataSchema: JSONSchemaType<MonitorData> = {
   type: "object",
   properties: {
     county: { type: "string" },
-    data_source: monitorDataSource,
-    data_providers: { type: "array", items: monitorDataSource },
-    device: monitorDevice,
-    //distance: { type: "number", nullable: true },
+    data_source: monitorDataSourceSchema,
+    data_providers: { type: "array", items: monitorDataProvidersSchema },
+    device: monitorDeviceSchema,
     id: { type: "string" },
     is_active: { type: "boolean" },
     is_sjvair: { type: "boolean" },
     last_active_limit: { type: "number" },
     location: { type: "string" },
     name: { type: "string" },
-    position: monitorPosition,
+    position: monitorPositionSchema,
     purple_id: { type: "number", nullable: true },
-    //sensors: {
-    //  type: "array",
-    //  items: { type: "string" },
-    //},
   },
   required: [
     "county",
@@ -164,9 +104,115 @@ export const monitorData: JSONSchemaType<MonitorData> = {
     "is_active",
     "is_sjvair",
     "last_active_limit",
+    "location",
     "name",
     "position",
   ],
+  additionalProperties: false,
+};
+
+export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
+  type: "object",
+  properties: {
+    ...monitorDataSchema.properties,
+    latest: {
+      type: "object",
+      properties: {
+        particulates: {
+          type: "object",
+          properties: {
+            particles_03um: { type: "string", nullable: true },
+            particles_05um: { type: "string", nullable: true },
+            particles_10um: { type: "string", nullable: true },
+            particles_25um: { type: "string", nullable: true },
+            particles_50um: { type: "string", nullable: true },
+            particles_100um: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+        temperature: {
+          type: "object",
+          properties: {
+            value: { type: "number", nullable: true },
+            unit: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+        humidity: {
+          type: "object",
+          properties: {
+            value: { type: "number", nullable: true },
+            unit: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+        pressure: {
+          type: "object",
+          properties: {
+            value: { type: "number", nullable: true },
+            unit: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+        pm10: {
+          type: "object",
+          properties: {
+            value: { type: "number", nullable: true },
+            unit: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+        pm25: {
+          type: "object",
+          properties: {
+            value: { type: "number", nullable: true },
+            unit: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+        pm100: {
+          type: "object",
+          properties: {
+            value: { type: "number", nullable: true },
+            unit: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+        o3: {
+          type: "object",
+          properties: {
+            value: { type: "number", nullable: true },
+            unit: { type: "string", nullable: true },
+          },
+          required: [],
+          nullable: true,
+        },
+      },
+      additionalProperties: true,
+    },
+  },
+  required: [
+    "county",
+    "data_source",
+    "data_providers",
+    "device",
+    "id",
+    "is_active",
+    "is_sjvair",
+    "last_active_limit",
+    "location",
+    "name",
+    "position",
+    "latest",
+  ],
+  additionalProperties: false,
 };
 
 export function validateMonitorSchema(
@@ -174,7 +220,7 @@ export function validateMonitorSchema(
   failureHandle: SchemaValidationFailureHandler<MonitorData>,
 ) {
   const ajv = new Ajv();
-  const validate = ajv.compile(monitorData);
+  const validate = ajv.compile(monitorDataSchema);
 
   const process = (monitor: MonitorData) => {
     const valid = validate(monitor);
@@ -186,29 +232,6 @@ export function validateMonitorSchema(
   if (Array.isArray(data)) {
     for (const monitor of data) {
       process(monitor);
-    }
-  } else {
-    process(data);
-  }
-}
-
-export function validateMonitorEntrySchema(
-  data: MonitorEntry | Array<MonitorEntry>,
-  failureHandle: SchemaValidationFailureHandler<MonitorEntry>,
-) {
-  const ajv = new Ajv();
-  const validate = ajv.compile(monitorEntry);
-
-  const process = (monitorEntry: MonitorEntry) => {
-    const valid = validate(monitorEntry);
-    if (!valid) {
-      failureHandle(validate.errors, monitorEntry);
-    }
-  };
-
-  if (Array.isArray(data)) {
-    for (const entry of data) {
-      process(entry);
     }
   } else {
     process(data);

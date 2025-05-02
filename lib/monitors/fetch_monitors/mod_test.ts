@@ -3,8 +3,8 @@ import { origin, setOrigin } from "$http";
 import { validateMonitorSchema } from "../schemas/monitor.ts";
 import { getMonitorsUrl } from "./request_builders.ts";
 import { fetchMonitorsHandler } from "./response_handlers.ts";
-import { fetchMonitorsRaw } from "./requests.ts";
-import { fetchMonitors } from "./mod.ts";
+import { fetchMonitors } from "./requests.ts";
+import { getMonitors } from "./mod.ts";
 import type { FetchMonitorsResponse } from "./types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
@@ -27,7 +27,7 @@ Deno.test({
       const rawResponseSuccess = await st.step(
         "Fetch raw response",
         async () => {
-          rawResponse = await fetchMonitorsRaw();
+          rawResponse = await fetchMonitors();
 
           assertEquals(rawResponse.status, 200);
         },
@@ -45,12 +45,12 @@ Deno.test({
     });
 
     await t.step("Prebuilt fetch monitors request", async (st) => {
-      let monitors: Awaited<ReturnType<typeof fetchMonitors>>;
+      let monitors: Awaited<ReturnType<typeof getMonitors>>;
 
       const fetchMonitorsSuccess = await st.step(
         "Fetch all monitors",
         async () => {
-          monitors = await fetchMonitors()
+          monitors = await getMonitors()
             .catch((err) => {
               console.error("Error(fetch all monitors):", err);
               fail(

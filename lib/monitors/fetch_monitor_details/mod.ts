@@ -1,16 +1,6 @@
-import { getApiUrl } from "$http";
-import type { MonitorData } from "../types.ts";
-
-/**
- * Constructs the URL for getting the "monitors/${monitorID}/entries" api endpoint.
- *
- * @param config An object containing the monitor ID and search parameters
- *
- * @returns An instance of URL configured for the "monitors/${monitorID}/entries" api endpoint.
- */
-export function getMonitorDetailsUrl(monitorId: string): URL {
-  return getApiUrl(`monitors/${monitorId}`);
-}
+import { fetchMonitorDetailsHandler } from "./response_handlers.ts";
+import { fetchMonitorDetails } from "./requests.ts";
+import type { MonitorDetails } from "./types.ts";
 
 /**
  * Fetch details about a monitor
@@ -19,15 +9,9 @@ export function getMonitorDetailsUrl(monitorId: string): URL {
  *
  * @returns A MonitorData object containing monitor details
  */
-export async function fetchMonitorDetails(
+export async function getMonitorDetails(
   monitorId: string,
-): Promise<MonitorData> {
-  const url = getMonitorDetailsUrl(monitorId);
-  return await fetch(url)
-    .then((raw) => raw.json())
-    .then((res) => res.data)
-    .catch((err) => {
-      console.error("Failed to fetch monitor details", err);
-      return {};
-    });
+): Promise<MonitorDetails> {
+  return await fetchMonitorDetails(monitorId)
+    .then(fetchMonitorDetailsHandler);
 }

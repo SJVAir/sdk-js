@@ -1,5 +1,4 @@
-import type { MonitorDevice, MonitorEntry } from "../types.ts";
-import { getDisplayFields } from "../monitors/display-fields.ts";
+import type { MonitorData, MonitorDevice, MonitorEntry } from "../types.ts";
 
 /**
  * Checks if a given monitor passes the conditions to be presented as the closest monitor
@@ -15,9 +14,7 @@ export function isValidClosestMonitor<
     latest: MonitorEntry | null;
   },
 >(monitor: T): boolean {
-  const [displayField] = getDisplayFields(monitor);
-
-  if (monitor.latest === null || monitor.latest[displayField] === null) {
+  if (monitor.latest === null || monitor.latest.pm25 === null) {
     return false;
   }
 
@@ -25,10 +22,49 @@ export function isValidClosestMonitor<
   const valueMax = 400;
   const valueMin = 0;
 
-  let latestValue = parseFloat(monitor.latest[displayField]);
+  let latestValue = parseFloat(monitor.latest.pm25);
   latestValue = (latestValue < 0 && latestValue >= negativeMin)
     ? 0
     : latestValue;
 
   return (latestValue >= valueMin && latestValue <= valueMax);
+}
+
+/**
+ * Validates the data returned from the "monitors/closest" API endpoint.
+ *
+ * @param monitors An array containing monitor data.
+ *
+ * @returns The closest monitor that passed validation
+ */
+export function validateClosestMonitorResponse(
+  monitors: Array<MonitorData>,
+): MonitorData {
+  if (!monitors.length) {
+    throw new Error("Failed to get list of closest validatedMonitors");
+  }
+
+  const validatedMonitors: Array<MonitorData> = monitors.filter(
+    isValidClosestMonitor,
+  );
+
+  if (!validatedMonitors.length) {
+    throw new Error("All validatedMonitors failed validation");
+  }
+
+  const monitor = validatedMonitors.shift()!;
+  if (monitor.latest && monitor.latest.pm25) {
+    if ("pm25" in monitor.latest && parseInt(monitor.latest.pm25, 10) < 0) {
+      monitor.latest.pm25 = "0";
+    }
+
+    if (
+      "pm25_avg_60" in monitor.latest &&
+      parseInt(monitor.latest.pm25_avg_60!, 10) < 0
+    ) {
+      monitor.latest.pm25_avg_60 = "0";
+    }
+  }
+
+  return monitor;
 }

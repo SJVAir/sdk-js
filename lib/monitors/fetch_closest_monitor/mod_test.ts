@@ -1,4 +1,5 @@
 import { assertEquals } from "@std/assert";
+import { setOrigin } from "$http";
 import {
   fetchClosestMonitor,
   getClosestMonitorUrl,
@@ -6,6 +7,10 @@ import {
 } from "./mod.ts";
 import { isValidClosestMonitor } from "./validation.ts";
 import type { MonitorData } from "../types.ts";
+
+if (!Deno.env.has("TEST_REMOTE")) {
+  setOrigin("http://127.0.0.1:8000");
+}
 
 const raMonitor: MonitorData = {
   id: "xudEmbncQ7iqwy3sZ0jZvQ",

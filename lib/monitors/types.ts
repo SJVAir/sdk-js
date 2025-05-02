@@ -1,46 +1,6 @@
 // Type utils:
 type NullableString = string | null;
 
-/** The specific brand/model of air monitor */
-export type MonitorDevice =
-  | "PurpleAir"
-  | "BAM 1020"
-  | "BAM 1022"
-  | "PA-I"
-  | "PA-I-LED"
-  | "PA-II-FLEX"
-  | "PA-II"
-  | "PA-II-SD"
-  | "UNKNOWN";
-
-/** The name of the field under which data is stored on a monitor object */
-export type MonitorDataFieldName =
-  | "pm10"
-  | "pm25"
-  | "pm25_avg_15"
-  | "pm25_avg_60"
-  | "pm100";
-
-export interface MonitorDataSource {
-  name:
-    | "AirNow.gov"
-    | "AirNow Partners"
-    | "AQview"
-    | "California Air Resources Board"
-    | "Central California Asthma Collaborative"
-    | "Eastern Kern Air Pollution Control District"
-    | "Forest Service"
-    | "National Park Service"
-    | "PurpleAir"
-    | "San Joaquin Valley APCD"
-    | "San Joaquin Valley Unified APCD";
-  url?: string;
-}
-
-export interface MonitorProvider {
-  name: string;
-  url: string;
-}
 /** A Monitor object returned from the SJVAir API */
 export interface MonitorData {
   /** County the monitor is located in */
@@ -50,7 +10,7 @@ export interface MonitorData {
   data_source: MonitorDataSource;
 
   /** The providers which we get monitor data from */
-  data_providers: Array<MonitorDataSource>;
+  data_providers: Array<MonitorDataProvider>;
 
   /** The brand/model of air monitor */
   device: MonitorDevice;
@@ -83,70 +43,74 @@ export interface MonitorData {
   purple_id?: number;
 }
 
-/** A data entry for a monitor */
-export interface MonitorEntry {
-  /** The temperature in celsius at the time of reporting */
-  celsius: NullableString;
+/** The name of the field under which data is stored on a monitor object */
+export type MonitorDataFieldName =
+  | "pm10"
+  | "pm25"
+  | "pm25_avg_15"
+  | "pm25_avg_60"
+  | "pm100";
 
-  /** The temperature in fahrenheit at the time of reporting */
-  fahrenheit: NullableString;
+/** The name of the field under which data is stored on a monitor object */
+export type MonitorDataField =
+  | "humidity"
+  | "o3"
+  | "particulates"
+  | "pm10"
+  | "pm25"
+  | "pm100"
+  | "pressure"
+  | "temperature";
 
-  /** The humidity at the time of reporting */
-  humidity: NullableString;
+export interface MonitorDataSource {
+  name:
+    | "PurpleAir"
+    | "AQview"
+    | "AirNow.gov"
+    | "Central California Asthma Collaborative";
+  url: string;
+}
 
-  /** PM1.0 value */
-  pm10: NullableString;
+export interface MonitorDataProvider {
+  name:
+    | MonitorDataSource["name"]
+    | "AirNow Partners"
+    | "California Air Resources Board"
+    | "Eastern Kern Air Pollution Control District"
+    | "Forest Service"
+    | "National Park Service"
+    | "San Joaquin Valley APCD"
+    | "San Joaquin Valley Unified APCD";
+  url?: string;
+}
 
-  /** Standard PM1.0 value */
-  pm10_standard?: NullableString;
+/** The specific brand/model of air monitor */
+export type MonitorDevice =
+  | "PurpleAir"
+  | "BAM 1020"
+  | "BAM 1022"
+  | "PA-I"
+  | "PA-I-LED"
+  | "PA-II-FLEX"
+  | "PA-II"
+  | "PA-II-SD"
+  | "UNKNOWN";
 
-  /** PM2.5 value */
-  pm25: NullableString;
-
-  /** 15 minute Average PM2.5 value */
-  pm25_avg_15: NullableString;
-
-  /** 60 minute Average PM2.5 value */
-  pm25_avg_60: NullableString;
-
-  /** The uncalibrated PM2.5 value */
-  pm25_reported: NullableString;
-
-  /** Standard PM2.5 value */
-  pm25_standard?: NullableString;
-
-  /** PM10 value */
-  pm100: NullableString;
-
-  /** Standard PM10 value */
-  pm100_standard?: NullableString;
-
-  /** 0.3um Particle Count */
-  particles_03um: NullableString;
-
-  /** 0.5um Particle Count */
-  particles_05um: NullableString;
-
-  /** 1.0um Particle Count */
-  particles_10um: NullableString;
-
-  /** 2.5um Particle Count */
-  particles_25um: NullableString;
-
-  /** 5.0um Particle Count */
-  particles_50um: NullableString;
-
-  /** 10.0um Particle Count */
-  particles_100um: NullableString;
-
-  /** The pressure at the time of reporting */
-  pressure: NullableString;
-
-  /** The sensor channel the data came from */
+export interface MonitorLatestEntry {
+  value: string;
   sensor: string;
-
-  /** The moment the data was reported */
   timestamp: string;
+  calibration: string | null;
+}
+
+export interface MonitorLatestParticulatesEntry
+  extends Omit<MonitorLatestEntry, "value"> {
+  particles_03um?: string;
+  particles_05um?: string;
+  particles_10um?: string;
+  particles_25um?: string;
+  particles_50um?: string;
+  particles_100um?: string;
 }
 
 /** The Geolocation of a monitor */
@@ -157,3 +121,16 @@ export interface MonitorPosition {
   /** The type of geometry for this position. Often "Point" */
   type: string;
 }
+
+/**
+ * The data structure for details on a monitor object
+ */
+export type MonitorDetails = MonitorData & {
+  latest:
+    & {
+      [key in Exclude<MonitorDataField, "particulates">]?: MonitorLatestEntry;
+    }
+    & {
+      particulates?: MonitorLatestParticulatesEntry;
+    };
+};

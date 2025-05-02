@@ -1,54 +1,49 @@
-import { assertEquals, fail } from "@std/assert";
-import { fetchMonitorDetails, getMonitorDetailsUrl } from "./mod.ts";
-import { validateMonitorSchema } from "../schemas/monitor.ts";
-import type { MonitorData } from "../types.ts";
+import { assertEquals } from "@std/assert";
+import { origin, setOrigin } from "$http";
+import { getMonitorDetailsUrl } from "./request_builders.ts";
+import { fetchMonitorDetailsHandler } from "./response_handlers.ts";
+import { fetchMonitorDetails } from "./requests.ts";
+import { getMonitorDetails } from "./mod.ts";
+
+if (!Deno.env.has("TEST_REMOTE")) {
+  setOrigin("http://127.0.0.1:8000");
+}
 
 Deno.test({
   name: "Module: Fetch Monitor Details",
   permissions: { net: true },
   async fn(t) {
-    const monitorId = "xudEmbncQ7iqwy3sZ0jZvQ";
-
-    async function getDetails(): Promise<MonitorData> {
-      return await fetchMonitorDetails(monitorId)
-        .catch((err) => {
-          console.error(err);
-          fail("Monitor entries request failed");
-        });
-    }
+    const monitorId = "WcfzWer6Re6OW5SP0Gs52g";
 
     const buildUrlSuccess = await t.step(
       "Build fetch monitor details url",
       () => {
         const url = getMonitorDetailsUrl(monitorId);
 
-        assertEquals(url.origin, "https://www.sjvair.com");
-        assertEquals(
-          url.pathname,
-          "/api/1.0/monitors/xudEmbncQ7iqwy3sZ0jZvQ/",
-        );
+        assertEquals(url.href, `${origin}/api/2.0/monitors/${monitorId}`);
       },
     );
 
     const fetchMonitorDetailsSuccess = await t.step({
-      name: "Fetch monitor details",
+      name: "Fetch raw response",
       ignore: !buildUrlSuccess,
-      async fn() {
-        const monitor = await getDetails();
-        assertEquals(monitor.name, "CCA Root Access Hackerspace #2");
+      async fn(st) {
+        const response = await fetchMonitorDetails(monitorId);
+        assertEquals(response.status, 200);
+
+        await st.step("Handle raw response", () => {
+          const monitor = fetchMonitorDetailsHandler(response);
+          assertEquals(monitor.id, monitorId);
+        });
       },
     });
 
     await t.step({
-      name: "Validate monitor data",
+      name: "Prebuild request and handler",
       ignore: !fetchMonitorDetailsSuccess,
       async fn() {
-        const details = await getDetails();
-        validateMonitorSchema(details, (errors, entry) => {
-          console.error(errors);
-          console.error(entry);
-          fail("Monitor entry did not pass schema validation");
-        });
+        const details = await getMonitorDetails(monitorId);
+        assertEquals(details.id, monitorId);
       },
     });
   },
