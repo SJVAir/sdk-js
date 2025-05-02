@@ -5,6 +5,8 @@ import type {
   MonitorDataSource,
   MonitorDetails,
   MonitorDevice,
+  MonitorLatestEntry,
+  MonitorLatestParticulatesEntry,
   MonitorPosition,
 } from "../types.ts";
 import type { SchemaValidationFailureHandler } from "./types.ts";
@@ -111,108 +113,65 @@ export const monitorDataSchema: JSONSchemaType<MonitorData> = {
   additionalProperties: false,
 };
 
-export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
+export const monitorLatestEntrySchema: JSONSchemaType<MonitorLatestEntry> = {
   type: "object",
   properties: {
-    ...monitorDataSchema.properties,
-    latest: {
-      type: "object",
-      properties: {
-        particulates: {
-          type: "object",
-          properties: {
-            particles_03um: { type: "string", nullable: true },
-            particles_05um: { type: "string", nullable: true },
-            particles_10um: { type: "string", nullable: true },
-            particles_25um: { type: "string", nullable: true },
-            particles_50um: { type: "string", nullable: true },
-            particles_100um: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-        temperature: {
-          type: "object",
-          properties: {
-            value: { type: "number", nullable: true },
-            unit: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-        humidity: {
-          type: "object",
-          properties: {
-            value: { type: "number", nullable: true },
-            unit: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-        pressure: {
-          type: "object",
-          properties: {
-            value: { type: "number", nullable: true },
-            unit: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-        pm10: {
-          type: "object",
-          properties: {
-            value: { type: "number", nullable: true },
-            unit: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-        pm25: {
-          type: "object",
-          properties: {
-            value: { type: "number", nullable: true },
-            unit: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-        pm100: {
-          type: "object",
-          properties: {
-            value: { type: "number", nullable: true },
-            unit: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-        o3: {
-          type: "object",
-          properties: {
-            value: { type: "number", nullable: true },
-            unit: { type: "string", nullable: true },
-          },
-          required: [],
-          nullable: true,
-        },
-      },
-      additionalProperties: true,
+    value: { type: "string" },
+    sensor: { type: "string" },
+    timestamp: { type: "string" },
+    calibration: {
+      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
     },
   },
-  required: [
-    "county",
-    "data_source",
-    "data_providers",
-    "device",
-    "id",
-    "is_active",
-    "is_sjvair",
-    "last_active_limit",
-    "location",
-    "name",
-    "position",
-    "latest",
+  required: ["value", "sensor", "timestamp", "calibration"],
+};
+
+export const monitorLatestParticulatesEntrySchema: JSONSchemaType<
+  MonitorLatestParticulatesEntry
+> = {
+  type: "object",
+  properties: {
+    particles_03um: { type: "string", nullable: true },
+    particles_05um: { type: "string", nullable: true },
+    particles_10um: { type: "string", nullable: true },
+    particles_25um: { type: "string", nullable: true },
+    particles_50um: { type: "string", nullable: true },
+    particles_100um: { type: "string", nullable: true },
+    sensor: { type: "string" },
+    timestamp: { type: "string" },
+    calibration: {
+      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
+    },
+  },
+  required: ["sensor", "timestamp", "calibration"],
+};
+
+export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
+  type: "object",
+  allOf: [
+    monitorDataSchema, // Reuse the monitorDataSchema for all MonitorData fields
+    {
+      type: "object",
+      properties: {
+        latest: {
+          type: "object",
+          properties: {
+            pm10: { nullable: true, ...monitorLatestEntrySchema },
+            pm25: { nullable: true, ...monitorLatestEntrySchema },
+            pm25_avg_15: { nullable: true, ...monitorLatestEntrySchema },
+            pm25_avg_60: { nullable: true, ...monitorLatestEntrySchema },
+            pm100: { nullable: true, ...monitorLatestEntrySchema },
+            particulates: {
+              nullable: true,
+              ...monitorLatestParticulatesEntrySchema,
+            },
+          },
+        },
+      },
+      required: ["latest"],
+    },
   ],
-  additionalProperties: false,
+  required: [],
 };
 
 export function validateMonitorSchema(
