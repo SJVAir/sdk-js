@@ -5,6 +5,7 @@ import type {
   MonitorDataSource,
   MonitorDetails,
   MonitorDevice,
+  MonitorLatest,
   MonitorLatestEntry,
   MonitorLatestParticulatesEntry,
   MonitorPosition,
@@ -146,27 +147,31 @@ export const monitorLatestParticulatesEntrySchema: JSONSchemaType<
   required: ["sensor", "timestamp", "calibration"],
 };
 
+export const monitorLatestSchema: JSONSchemaType<MonitorLatest> = {
+  type: "object",
+  properties: {
+    pm10: { ...monitorLatestEntrySchema, nullable: true },
+    pm25: { ...monitorLatestEntrySchema, nullable: true },
+    pm100: { ...monitorLatestEntrySchema, nullable: true },
+    humidity: { ...monitorLatestEntrySchema, nullable: true },
+    o3: { ...monitorLatestEntrySchema, nullable: true },
+    pressure: { ...monitorLatestEntrySchema, nullable: true },
+    temperature: { ...monitorLatestEntrySchema, nullable: true },
+    particulates: { ...monitorLatestParticulatesEntrySchema, nullable: true },
+  },
+};
+
 export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
   type: "object",
   allOf: [
-    monitorDataSchema, // Reuse the monitorDataSchema for all MonitorData fields
+    {
+      ...monitorDataSchema,
+      additionalProperties: true,
+    },
     {
       type: "object",
       properties: {
-        latest: {
-          type: "object",
-          properties: {
-            pm10: { nullable: true, ...monitorLatestEntrySchema },
-            pm25: { nullable: true, ...monitorLatestEntrySchema },
-            pm25_avg_15: { nullable: true, ...monitorLatestEntrySchema },
-            pm25_avg_60: { nullable: true, ...monitorLatestEntrySchema },
-            pm100: { nullable: true, ...monitorLatestEntrySchema },
-            particulates: {
-              nullable: true,
-              ...monitorLatestParticulatesEntrySchema,
-            },
-          },
-        },
+        latest: monitorLatestSchema,
       },
       required: ["latest"],
     },
