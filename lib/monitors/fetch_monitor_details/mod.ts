@@ -1,6 +1,6 @@
 import { fetchMonitorDetailsHandler } from "./response_handlers.ts";
 import { fetchMonitorDetails } from "./requests.ts";
-import type { MonitorDetails } from "./types.ts";
+import type { MonitorDetails } from "../types.ts";
 
 /**
  * Fetch details about a monitor
