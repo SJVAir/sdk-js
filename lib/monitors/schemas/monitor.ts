@@ -1,4 +1,4 @@
-import { Ajv, type JSONSchemaType } from "ajv";
+import type { JSONSchemaType } from "ajv";
 import type {
   MonitorData,
   MonitorDataProvider,
@@ -10,7 +10,7 @@ import type {
   MonitorLatestParticulatesEntry,
   MonitorPosition,
 } from "../types.ts";
-import type { SchemaValidationFailureHandler } from "./types.ts";
+import { schemaValidator } from "../../schema.ts";
 
 export const monitorDeviceSchema: JSONSchemaType<MonitorDevice> = {
   type: "string",
@@ -179,25 +179,8 @@ export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
   required: [],
 };
 
-export function validateMonitorSchema(
-  data: MonitorData | Array<MonitorData>,
-  failureHandle: SchemaValidationFailureHandler<MonitorData>,
-) {
-  const ajv = new Ajv();
-  const validate = ajv.compile(monitorDataSchema);
+export const validateMonitorDetailsSchema = schemaValidator(
+  monitorDetailsSchema,
+);
 
-  const process = (monitor: MonitorData) => {
-    const valid = validate(monitor);
-    if (!valid) {
-      failureHandle(validate.errors, monitor);
-    }
-  };
-
-  if (Array.isArray(data)) {
-    for (const monitor of data) {
-      process(monitor);
-    }
-  } else {
-    process(data);
-  }
-}
+export const validateMonitorDataSchema = schemaValidator(monitorDataSchema);
