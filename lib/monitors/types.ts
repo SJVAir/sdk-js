@@ -44,23 +44,7 @@ export interface MonitorData {
 }
 
 /** The name of the field under which data is stored on a monitor object */
-export type MonitorDataFieldName =
-  | "pm10"
-  | "pm25"
-  | "pm25_avg_15"
-  | "pm25_avg_60"
-  | "pm100";
-
-/** The name of the field under which data is stored on a monitor object */
-export type MonitorDataField =
-  | "humidity"
-  | "o3"
-  | "particulates"
-  | "pm10"
-  | "pm25"
-  | "pm100"
-  | "pressure"
-  | "temperature";
+export type MonitorDataField = keyof MonitorLatest;
 
 export interface MonitorDataSource {
   name:
@@ -123,14 +107,22 @@ export interface MonitorPosition {
 }
 
 /**
+ * The data structure for "latest" field on a MonitorDetails object
+ */
+export interface MonitorLatest {
+  pm10?: MonitorLatestEntry;
+  pm25?: MonitorLatestEntry;
+  pm100?: MonitorLatestEntry;
+  humidity?: MonitorLatestEntry;
+  o3?: MonitorLatestEntry;
+  pressure?: MonitorLatestEntry;
+  temperature?: MonitorLatestEntry;
+  particulates?: MonitorLatestParticulatesEntry;
+}
+
+/**
  * The data structure for details on a monitor object
  */
-export type MonitorDetails = MonitorData & {
-  latest:
-    & {
-      [key in Exclude<MonitorDataField, "particulates">]?: MonitorLatestEntry;
-    }
-    & {
-      particulates?: MonitorLatestParticulatesEntry;
-    };
-};
+export interface MonitorDetails extends MonitorData {
+  latest: MonitorLatest;
+}
