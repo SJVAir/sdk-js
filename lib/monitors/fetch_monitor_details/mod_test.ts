@@ -1,9 +1,10 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { getMonitorDetailsUrl } from "./request_builders.ts";
 import { fetchMonitorDetailsHandler } from "./response_handlers.ts";
 import { fetchMonitorDetails } from "./requests.ts";
 import { getMonitorDetails } from "./mod.ts";
+import { validateMonitorDetailsSchema } from "../schemas/monitor.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -20,7 +21,7 @@ Deno.test({
       () => {
         const url = getMonitorDetailsUrl(monitorId);
 
-        assertEquals(url.href, `${origin}/api/2.0/monitors/${monitorId}`);
+        assertEquals(url.href, `${origin}/api/2.0/monitors/${monitorId}/`);
       },
     );
 
@@ -32,8 +33,13 @@ Deno.test({
         assertEquals(response.status, 200);
 
         await st.step("Handle raw response", () => {
-          const monitor = fetchMonitorDetailsHandler(response);
-          assertEquals(monitor.id, monitorId);
+          const details = fetchMonitorDetailsHandler(response);
+          validateMonitorDetailsSchema(details, (errors, monitor) => {
+            console.error(errors);
+            console.error(monitor);
+            fail("Monitor data did not pass schema validation");
+          });
+          assertEquals(details.id, monitorId);
         });
       },
     });
@@ -43,6 +49,11 @@ Deno.test({
       ignore: !fetchMonitorDetailsSuccess,
       async fn() {
         const details = await getMonitorDetails(monitorId);
+        validateMonitorDetailsSchema(details, (errors, monitor) => {
+          console.error(errors);
+          console.error(monitor);
+          fail("Monitor data did not pass schema validation");
+        });
         assertEquals(details.id, monitorId);
       },
     });
