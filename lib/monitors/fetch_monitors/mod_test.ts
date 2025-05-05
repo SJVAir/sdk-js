@@ -1,6 +1,6 @@
 import { assertEquals, assertGreater, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { validateMonitorSchema } from "../schemas/monitor.ts";
+import { validateMonitorDataSchema } from "../schemas/monitor.ts";
 import { getMonitorsUrl } from "./request_builders.ts";
 import { fetchMonitorsHandler } from "./response_handlers.ts";
 import { fetchMonitors } from "./requests.ts";
@@ -65,7 +65,7 @@ Deno.test({
         name: "Validate monitor data",
         ignore: !fetchMonitorsSuccess,
         fn() {
-          validateMonitorSchema(monitors, (errors, monitor) => {
+          validateMonitorDataSchema(monitors, (errors, monitor) => {
             console.error(errors);
             console.error(monitor);
             fail("Monitor data did not pass schema validation");
