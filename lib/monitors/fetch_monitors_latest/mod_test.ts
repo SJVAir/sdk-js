@@ -14,10 +14,10 @@ if (!Deno.env.has("TEST_REMOTE")) {
 }
 
 Deno.test({
-  name: "Module: Fetch Monitors",
+  name: "Module: Fetch Monitors Latest",
   permissions: { net: true },
   async fn(t) {
-    await t.step("Build fetch monitors request", async (st) => {
+    await t.step("Build fetch monitors latest request", async (st) => {
       let rawResponse: FetchMonitorsLatestResponse<
         typeof DEFAULT_DISPLAY_FIELD
       >;
@@ -51,7 +51,7 @@ Deno.test({
       });
     });
 
-    await t.step("Prebuilt fetch monitors request", async (st) => {
+    await t.step("Prebuilt fetch monitors latest request", async (st) => {
       let monitors: Awaited<ReturnType<typeof getMonitorsLatest>>;
 
       const fetchMonitorsSuccess = await st.step(
@@ -67,17 +67,18 @@ Deno.test({
       );
 
       await st.step({
-        name: "Validate monitor data",
+        name: "Validate monitor latest data",
         ignore: !fetchMonitorsSuccess,
         fn() {
-          validateMonitorDetailsSchema(
-            monitors as Array<MonitorDetails>,
-            (errors, monitor) => {
-              console.error(errors);
-              console.error(monitor);
-              fail("Monitor data did not pass schema validation");
-            },
-          );
+          fail("Data types do not match, has processor, expects calibration");
+          //validateMonitorDetailsSchema(
+          //  monitors as Array<MonitorDetails>,
+          //  (errors, monitor) => {
+          //    console.error(errors);
+          //    console.error(monitor);
+          //    fail("Monitor data did not pass schema validation");
+          //  },
+          //);
         },
       });
     });

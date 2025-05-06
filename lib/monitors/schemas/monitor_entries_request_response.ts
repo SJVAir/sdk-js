@@ -1,7 +1,7 @@
 import { Ajv, type JSONSchemaType } from "ajv";
-import type { SchemaValidationFailureHandler } from "./types.ts";
+import type { SchemaValidationFailureHandler } from "../../schema.ts";
 import type { MonitorEntryRequestResponse } from "../fetch_monitor_entries/types.ts";
-import { monitorEntry } from "./monitor.ts";
+import { monitorLatestEntrySchema } from "./monitor.ts";
 
 export const monitorEntryRequestResponse: JSONSchemaType<
   MonitorEntryRequestResponse
@@ -10,7 +10,7 @@ export const monitorEntryRequestResponse: JSONSchemaType<
   properties: {
     data: {
       type: "array",
-      items: monitorEntry,
+      items: monitorLatestEntrySchema,
     },
     page: {
       type: "number",
