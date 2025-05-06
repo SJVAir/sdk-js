@@ -1,4 +1,5 @@
 import { getApiUrl } from "$http";
+import type { MonitorDataField } from "../types.ts";
 
 /**
  * Constructs the URL for getting the "monitors/closest" api endpoint.
@@ -9,7 +10,7 @@ import { getApiUrl } from "$http";
  * @returns An instance of URL configured for the "monitors/closest" api endpoint.
  */
 export function getClosestMonitorUrl(
-  entryType: string,
+  entryType: MonitorDataField,
   latitude: number | string,
   longitude: number | string,
 ): URL {
