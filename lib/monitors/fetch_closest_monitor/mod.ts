@@ -1,5 +1,4 @@
 import { apiRequest } from "$http";
-import { validateClosestMonitor } from "./validate_closest_monitor.ts";
 import type { MonitorData } from "../types.ts";
 //{
 //    "data": [
