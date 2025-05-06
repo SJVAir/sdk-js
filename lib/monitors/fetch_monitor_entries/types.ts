@@ -1,11 +1,11 @@
-import type { MonitorEntry } from "../types.ts";
+import type { MonitorDataField } from "../types.ts";
 
 /**
  * The configuration options for the monitor entries endpoint
  */
 export interface MonitorEntryRequestConfig {
   /** Fields to include on the monitor entry */
-  fields?: string;
+  field: MonitorDataField;
 
   /** The ID of the monitor for which entries will be fetched */
   monitorId: string;
