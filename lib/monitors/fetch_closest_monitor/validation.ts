@@ -1,4 +1,4 @@
-import type { MonitorData, MonitorDevice, MonitorEntry } from "../types.ts";
+import type { MonitorData, MonitorDevice, MonitorLatest } from "../types.ts";
 
 /**
  * Checks if a given monitor passes the conditions to be presented as the closest monitor
@@ -11,7 +11,7 @@ export function isValidClosestMonitor<
   T extends {
     id: string;
     device: MonitorDevice;
-    latest: MonitorEntry | null;
+    latest: MonitorLatestEntry | null;
   },
 >(monitor: T): boolean {
   if (monitor.latest === null || monitor.latest.pm25 === null) {
