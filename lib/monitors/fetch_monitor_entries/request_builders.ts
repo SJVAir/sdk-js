@@ -84,9 +84,6 @@ function getValidDateRange(
 class MonitorEntryRequestOptions {
   [key: string]: string;
 
-  /** Fields to include on the monitor entry */
-  fields: string;
-
   /** The results page number to fetch */
   page: string;
 
@@ -116,7 +113,6 @@ class MonitorEntryRequestOptions {
       options.timestampLte,
     );
 
-    this.fields = options.fields ?? "";
     this.page = options.page?.toString() ?? "1";
     this.sensor = options.sensor ?? "";
     this.timestamp__gte = apiDateFormat(timestamps.gte);
@@ -133,5 +129,8 @@ class MonitorEntryRequestOptions {
  */
 export function getMonitorEntriesUrl(config: MonitorEntryRequestConfig): URL {
   const params = new MonitorEntryRequestOptions(config);
-  return getApiUrl(`monitors/${config.monitorId}/entries`, params);
+  return getApiUrl(
+    `monitors/${config.monitorId}/entries/${config.field}`,
+    params,
+  );
 }

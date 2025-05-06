@@ -1,8 +1,8 @@
 import { apiRequest } from "$http";
-import type { MonitorEntry } from "../types.ts";
 import { getMonitorEntriesUrl } from "./request_builders.ts";
-import { gatherMonitorEntries } from "./response_handlers.ts";
+//import { gatherMonitorEntries } from "./response_handlers.ts";
 import type {
+  FetchMonitorEntriesResponse,
   MonitorEntryRequestConfig,
   MonitorEntryRequestResponse,
 } from "./types.ts";
@@ -16,11 +16,10 @@ import type {
  */
 export async function fetchMonitorEntriesPage(
   config: MonitorEntryRequestConfig,
-): Promise<MonitorEntryRequestResponse> {
+): Promise<FetchMonitorEntriesResponse> {
   const url = getMonitorEntriesUrl(config);
 
-  return await apiRequest<MonitorEntryRequestResponse>(url)
-    .then((response) => response.body);
+  return await apiRequest<MonitorEntryRequestResponse>(url);
 }
 
 /**
@@ -30,8 +29,8 @@ export async function fetchMonitorEntriesPage(
  *
  * @returns An array of monitor entries
  */
-export async function fetchMonitorEntries(
-  config: MonitorEntryRequestConfig,
-): Promise<Array<MonitorEntry>> {
-  return await gatherMonitorEntries(config, fetchMonitorEntriesPage);
-}
+//export async function fetchMonitorEntries(
+//  config: MonitorEntryRequestConfig,
+//): Promise<Array<MonitorEntry>> {
+//  return await gatherMonitorEntries(config, fetchMonitorEntriesPage);
+//}

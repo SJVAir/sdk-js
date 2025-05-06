@@ -1,30 +1,32 @@
-import { assertEquals, assertGreater, fail } from "@std/assert";
-import {
-  fetchMonitorEntries,
-  fetchMonitorEntriesPage,
-  gatherMonitorEntries,
-  getMonitorEntriesUrl,
-  type MonitorEntryRequestConfig,
-} from "./mod.ts";
-import { validateMonitorEntrySchema } from "../schemas/monitor.ts";
+import { assertEquals, fail } from "@std/assert";
+import { origin, setOrigin } from "$http";
+//import { validateMonitorEntrySchema } from "../schemas/monitor.ts";
 import { validateMonitorEntryRequestResponse } from "../schemas/monitor_entries_request_response.ts";
-import type { MonitorEntry } from "../types.ts";
+//import type { MonitorEntry } from "../types.ts";
+import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
+import { getMonitorEntriesUrl } from "./request_builders.ts";
+import { fetchMonitorEntriesPage } from "./requests.ts";
+import type { MonitorEntryRequestConfig } from "./types.ts";
+
+if (!Deno.env.has("TEST_REMOTE")) {
+  setOrigin("http://127.0.0.1:8000");
+}
 
 const requestConfig: MonitorEntryRequestConfig = {
-  monitorId: "xudEmbncQ7iqwy3sZ0jZvQ",
-  fields: "pm25",
+  monitorId: "HmeeUr66RpKHFx64nBV6hQ",
+  field: DEFAULT_DISPLAY_FIELD,
 };
 
-async function getEntries(): Promise<Array<MonitorEntry>> {
-  return await fetchMonitorEntries(requestConfig).catch((err) => {
-    console.error(err);
-    fail("Monitor entries request failed");
-  });
-}
+//async function getEntries(): Promise<Array<MonitorEntry>> {
+//  return await fetchMonitorEntries(requestConfig).catch((err) => {
+//    console.error(err);
+//    fail("Monitor entries request failed");
+//  });
+//}
 
-function validateEntries(entries: Array<MonitorEntry>) {
-  assertGreater(entries.length, 0);
-}
+//function validateEntries(entries: Array<MonitorEntry>) {
+//  assertGreater(entries.length, 0);
+//}
 
 Deno.test({
   name: "Module: Fetch Monitor Entries",
@@ -33,12 +35,11 @@ Deno.test({
     await t.step("Build fetch monitor entries url", () => {
       const url = getMonitorEntriesUrl(requestConfig);
 
-      assertEquals(url.origin, "https://www.sjvair.com");
+      assertEquals(url.origin, origin);
       assertEquals(
         url.pathname,
-        "/api/1.0/monitors/xudEmbncQ7iqwy3sZ0jZvQ/entries/",
+        `/api/2.0/monitors/${requestConfig.monitorId}/entries/${DEFAULT_DISPLAY_FIELD}/`,
       );
-      assertEquals(url.searchParams.has("fields"), true);
       assertEquals(url.searchParams.has("page"), true);
       assertEquals(url.searchParams.has("sensor"), true);
       assertEquals(url.searchParams.has("timestamp__gte"), true);
@@ -47,61 +48,57 @@ Deno.test({
 
     const fetchEntriesPageSuccess = await t.step(
       "Fetch single monitor entries page",
-      async () => {
-        await fetchMonitorEntriesPage(requestConfig)
+      async (st) => {
+        const response = await fetchMonitorEntriesPage(requestConfig)
           .catch((err) => {
             console.error(err);
             fail("failed to fetch single monitor entries page");
           });
+
+        assertEquals(response.status, 200);
+
+        await st.step("Validate single entries page", () => {
+          validateMonitorEntryRequestResponse(response.body, (errors, data) => {
+            console.error(errors);
+            console.error(data);
+            fail("Monitor entries page did not pass schema validation");
+          });
+        });
       },
     );
 
-    await t.step({
-      name: "Validate single entries page",
-      ignore: !fetchEntriesPageSuccess,
-      async fn() {
-        const entriesResponse = await fetchMonitorEntriesPage(requestConfig);
+    //await t.step({
+    //  name: "Aggregate monitor entries from custom request",
+    //  ignore: !fetchEntriesPageSuccess,
+    //  async fn() {
+    //    const entries = await gatherMonitorEntries(
+    //      requestConfig,
+    //      fetchMonitorEntriesPage,
+    //    );
+    //    validateEntries(entries);
+    //  },
+    //});
 
-        validateMonitorEntryRequestResponse(entriesResponse, (errors, data) => {
-          console.error(errors);
-          console.error(data);
-          fail("Monitor entries page did not pass schema validation");
-        });
-      },
-    });
+    //const fetchentriesSuccess = await t.step({
+    //  name: "Fetch all monitor entries",
+    //  ignore: !fetchEntriesPageSuccess,
+    //  async fn() {
+    //    const entries = await getEntries();
+    //    validateEntries(entries);
+    //  },
+    //});
 
-    await t.step({
-      name: "Aggregate monitor entries from custom request",
-      ignore: !fetchEntriesPageSuccess,
-      async fn() {
-        const entries = await gatherMonitorEntries(
-          requestConfig,
-          fetchMonitorEntriesPage,
-        );
-        validateEntries(entries);
-      },
-    });
-
-    const fetchentriesSuccess = await t.step({
-      name: "Fetch all monitor entries",
-      ignore: !fetchEntriesPageSuccess,
-      async fn() {
-        const entries = await getEntries();
-        validateEntries(entries);
-      },
-    });
-
-    await t.step({
-      name: "Validate monitor data",
-      ignore: !fetchentriesSuccess,
-      async fn() {
-        const entries = await getEntries();
-        validateMonitorEntrySchema(entries, (errors, entry) => {
-          console.error(errors);
-          console.error(entry);
-          fail("Monitor entry did not pass schema validation");
-        });
-      },
-    });
+    //await t.step({
+    //  name: "Validate monitor data",
+    //  ignore: !fetchentriesSuccess,
+    //  async fn() {
+    //    const entries = await getEntries();
+    //    validateMonitorEntrySchema(entries, (errors, entry) => {
+    //      console.error(errors);
+    //      console.error(entry);
+    //      fail("Monitor entry did not pass schema validation");
+    //    });
+    //  },
+    //});
   },
 });

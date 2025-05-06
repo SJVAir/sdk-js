@@ -1,4 +1,6 @@
-import type { MonitorDataField } from "../types.ts";
+import type { ValueOf } from "@tstk/types";
+import type { MonitorDataField, MonitorLatest } from "../types.ts";
+import { APIRequestResponse } from "$http";
 
 /**
  * The configuration options for the monitor entries endpoint
@@ -34,7 +36,7 @@ export interface MonitorEntryRequestConfig {
 /** The response object return from the "/monitors/{MONItOR_ID}/entries" endpoint */
 export interface MonitorEntryRequestResponse {
   /** The monitor entries included in the current page of results */
-  data: Array<MonitorEntry>;
+  data: Array<ValueOf<MonitorLatest>>;
 
   /** The current page of results fetched */
   page: number;
@@ -51,3 +53,10 @@ export interface MonitorEntryRequestResponse {
   /** Indicates wether there is a previous page of results */
   has_previous_page: boolean;
 }
+
+/**
+ * The data structure returned from the "/monitors/<monitor_id>/entries/<entry_type>/" endpoint
+ */
+export type FetchMonitorEntriesResponse = APIRequestResponse<
+  MonitorEntryRequestResponse
+>;
