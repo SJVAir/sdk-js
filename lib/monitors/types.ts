@@ -153,6 +153,11 @@ export interface MonitorLatest {
   particulates?: MonitorLatestParticulatesEntry;
 }
 
+export interface MonitorLatestValue<T extends MonitorDataField>
+  extends MonitorData {
+  latest: MonitorLatest[T];
+}
+
 /**
  * The data structure for details on a monitor object
  */
