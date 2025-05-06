@@ -14,7 +14,7 @@ Deno.test({
   name: "Module: Fetch Monitor Details",
   permissions: { net: true },
   async fn(t) {
-    const monitorId = "WcfzWer6Re6OW5SP0Gs52g";
+    const monitorId = "HmeeUr66RpKHFx64nBV6hQ";
 
     const buildUrlSuccess = await t.step(
       "Build fetch monitor details url",
