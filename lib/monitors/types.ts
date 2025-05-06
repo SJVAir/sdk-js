@@ -80,10 +80,43 @@ export type MonitorDevice =
   | "PA-II-SD"
   | "UNKNOWN";
 
-export interface MonitorLatestEntry {
-  value: string;
+export interface MonitorEntryBase {
   sensor: string;
   timestamp: string;
+}
+
+export interface MonitorListEntryBase extends MonitorEntryBase {
+  timestamp: string;
+  sensor: string;
+  stage: string;
+  processor: string;
+}
+
+export interface MonitorListEntry extends MonitorListEntryBase {
+  value: string;
+}
+
+export interface MonitorListTemperatureEntry extends MonitorListEntryBase {
+  temperature_f: string;
+  temperature_c: string;
+}
+
+export interface MonitorListPressureEntry extends MonitorListEntryBase {
+  pressure_mmhg: string;
+  pressure_hpa: string;
+}
+
+export interface MonitorListParticulatesEntry extends MonitorListEntryBase {
+  particles_03um?: string;
+  particles_05um?: string;
+  particles_10um?: string;
+  particles_25um?: string;
+  particles_50um?: string;
+  particles_100um?: string;
+}
+
+export interface MonitorLatestEntry extends MonitorEntryBase {
+  value: string;
   calibration: string | null;
 }
 
