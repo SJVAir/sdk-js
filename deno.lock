@@ -1,8 +1,9 @@
 {
-  "version": "4",
+  "version": "5",
   "specifiers": {
     "jsr:@std/assert@1": "1.0.8",
     "jsr:@std/internal@^1.0.5": "1.0.5",
+    "jsr:@tstk/types@^1.0.3": "1.0.3",
     "npm:ajv@^8.17.1": "8.17.1"
   },
   "jsr": {
@@ -14,6 +15,9 @@
     },
     "@std/internal@1.0.5": {
       "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
+    },
+    "@tstk/types@1.0.3": {
+      "integrity": "77c35a979a6d860436ddc2cd09dfce9d086c509b0c8ecb39f3953931242ca41f"
     }
   },
   "npm": {
@@ -42,6 +46,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
+      "jsr:@tstk/types@^1.0.3",
       "npm:ajv@^8.17.1"
     ]
   }
