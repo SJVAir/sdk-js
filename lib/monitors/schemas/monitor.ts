@@ -11,7 +11,11 @@ import type {
   MonitorDevice,
   MonitorEntry,
   MonitorEntryMeta,
+  MonitorParticulatesEntry,
+  MonitorParticulatesValues,
   MonitorPosition,
+  MonitorPressureEntry,
+  MonitorTemperatureEntry,
 } from "../types.ts";
 
 export const monitorDeviceSchema: JSONSchemaType<MonitorDevice> = {
@@ -116,6 +120,20 @@ export const monitorDataSchema: JSONSchemaType<MonitorData> = {
   additionalProperties: false,
 };
 
+export const monitorParticulatesValuesSchema: JSONSchemaType<
+  MonitorParticulatesValues
+> = {
+  type: "object",
+  properties: {
+    particles_03um: { type: "string", nullable: true },
+    particles_05um: { type: "string", nullable: true },
+    particles_10um: { type: "string", nullable: true },
+    particles_25um: { type: "string", nullable: true },
+    particles_50um: { type: "string", nullable: true },
+    particles_100um: { type: "string", nullable: true },
+  },
+};
+
 export const monitorEntryMetaSchema: JSONSchemaType<MonitorEntryMeta> = {
   type: "object",
   properties: {
@@ -127,18 +145,68 @@ export const monitorEntryMetaSchema: JSONSchemaType<MonitorEntryMeta> = {
   required: ["sensor", "timestamp", "stage", "processor"],
 };
 
-export const ZmonitorEntryMetaSchema: JSONSchemaType<MonitorEntry> = {
+export const monitorEntrySchema: JSONSchemaType<MonitorEntry> = {
   type: "object",
   properties: {
+    ...monitorEntryMetaSchema.properties as JSONSchemaType<
+      MonitorEntryMeta
+    >["properties"],
     value: { type: "string" },
-    sensor: { type: "string" },
-    timestamp: { type: "string" },
-    stage: { type: "string" },
-    processor: { type: "string" },
   },
-  required: ["value", "sensor", "timestamp", "stage", "processor"],
+  required: [...monitorEntryMetaSchema.required, "value"],
 };
-//export const monitorEntrySchema: JSONSchemaType<MonitorEntry> = {
+
+export const monitorTemperatureEntrySchema: JSONSchemaType<
+  MonitorTemperatureEntry
+> = {
+  type: "object",
+  properties: {
+    ...monitorEntryMetaSchema.properties as JSONSchemaType<
+      MonitorEntryMeta
+    >["properties"],
+    temperature_f: { type: "string" },
+    temperature_c: { type: "string" },
+  },
+  required: [
+    ...monitorEntryMetaSchema.required,
+    "temperature_f",
+    "temperature_c",
+  ],
+};
+
+export const monitorPressureEntrySchema: JSONSchemaType<
+  MonitorPressureEntry
+> = {
+  type: "object",
+  properties: {
+    ...monitorEntryMetaSchema.properties as JSONSchemaType<
+      MonitorEntryMeta
+    >["properties"],
+    pressure_hpa: { type: "string" },
+    pressure_mmhg: { type: "string" },
+  },
+  required: [
+    ...monitorEntryMetaSchema.required,
+    "pressure_hpa",
+    "pressure_mmhg",
+  ],
+};
+
+export const monitorParticulatesEntrySchema: JSONSchemaType<
+  MonitorParticulatesEntry
+> = {
+  type: "object",
+  properties: {
+    ...monitorEntryMetaSchema.properties as JSONSchemaType<
+      MonitorEntryMeta
+    >["properties"],
+    ...monitorParticulatesValuesSchema.properties,
+  },
+  required: [
+    ...monitorEntryMetaSchema.required,
+  ],
+};
+
 //  type: "object",
 //  allOf: [
 //    {
