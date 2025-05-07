@@ -44,7 +44,7 @@ export interface MonitorData {
 }
 
 /** The name of the field under which data is stored on a monitor object */
-export type MonitorDataField = keyof MonitorLatest;
+export type MonitorDataField = keyof MonitorEntries;
 
 export interface MonitorDataSource {
   name:
@@ -80,56 +80,6 @@ export type MonitorDevice =
   | "PA-II-SD"
   | "UNKNOWN";
 
-export interface MonitorEntryBase {
-  sensor: string;
-  timestamp: string;
-}
-
-export interface MonitorListEntryBase extends MonitorEntryBase {
-  timestamp: string;
-  sensor: string;
-  stage: string;
-  processor: string;
-}
-
-export interface MonitorListEntry extends MonitorListEntryBase {
-  value: string;
-}
-
-export interface MonitorListTemperatureEntry extends MonitorListEntryBase {
-  temperature_f: string;
-  temperature_c: string;
-}
-
-export interface MonitorListPressureEntry extends MonitorListEntryBase {
-  pressure_mmhg: string;
-  pressure_hpa: string;
-}
-
-export interface MonitorListParticulatesEntry extends MonitorListEntryBase {
-  particles_03um?: string;
-  particles_05um?: string;
-  particles_10um?: string;
-  particles_25um?: string;
-  particles_50um?: string;
-  particles_100um?: string;
-}
-
-export interface MonitorLatestEntry extends MonitorEntryBase {
-  value: string;
-  calibration: string | null;
-}
-
-export interface MonitorLatestParticulatesEntry
-  extends Omit<MonitorLatestEntry, "value"> {
-  particles_03um?: string;
-  particles_05um?: string;
-  particles_10um?: string;
-  particles_25um?: string;
-  particles_50um?: string;
-  particles_100um?: string;
-}
-
 /** The Geolocation of a monitor */
 export interface MonitorPosition {
   /** The longitude and latitude of the monitor */
@@ -140,27 +90,110 @@ export interface MonitorPosition {
 }
 
 /**
- * The data structure for "latest" field on a MonitorDetails object
+ * The data fields for all Particulates entries
  */
-export interface MonitorLatest {
-  pm10?: MonitorLatestEntry;
-  pm25?: MonitorLatestEntry;
-  pm100?: MonitorLatestEntry;
-  humidity?: MonitorLatestEntry;
-  o3?: MonitorLatestEntry;
-  pressure?: MonitorLatestEntry;
-  temperature?: MonitorLatestEntry;
-  particulates?: MonitorLatestParticulatesEntry;
+export interface MonitorParticulatesValues {
+  particles_03um?: string;
+  particles_05um?: string;
+  particles_10um?: string;
+  particles_25um?: string;
+  particles_50um?: string;
+  particles_100um?: string;
 }
 
-export interface MonitorLatestValue<T extends MonitorDataField>
-  extends MonitorData {
-  latest: MonitorLatest[T];
+/**
+ * The metadata found on all monitor entries
+ */
+export interface MonitorEntryMeta {
+  timestamp: string;
+  sensor: string;
+  stage: string;
+  processor: string;
+}
+
+/**
+ * An entry type with a singular value
+ */
+export interface MonitorEntry extends MonitorEntryMeta {
+  value: string;
+}
+
+/**
+ * The Entry type for temperature values
+ */
+export interface MonitorTemperatureEntry extends MonitorEntryMeta {
+  temperature_f: string;
+  temperature_c: string;
+}
+
+/**
+ * The Entry type for pressure values
+ */
+export interface MonitorPressureEntry extends MonitorEntryMeta {
+  pressure_mmhg: string;
+  pressure_hpa: string;
+}
+
+/**
+ * The Entry type for particulates entry lists
+ */
+export type MonitorParticulatesEntry =
+  & MonitorEntryMeta
+  & MonitorParticulatesValues;
+
+export interface MonitorEntries {
+  pm10?: MonitorEntry;
+  pm25?: MonitorEntry;
+  pm100?: MonitorEntry;
+  humidity?: MonitorEntry;
+  o3?: MonitorEntry;
+  no2?: MonitorEntry;
+  pressure?: MonitorPressureEntry;
+  temperature?: MonitorTemperatureEntry;
+  particulates?: MonitorParticulatesEntry;
+}
+
+/**
+ * The monitor data structure for the latest value of a specific entry type
+ */
+export interface MonitorLatest<T extends MonitorDataField> extends MonitorData {
+  latest: MonitorEntries[T];
+}
+
+export interface MonitorDetailsEntryMeta
+  extends Omit<MonitorEntryMeta, "stage" | "processor"> {
+  calibration: string | null;
+}
+
+export interface MonitorDetailsEntry extends MonitorDetailsEntryMeta {
+  value: string;
+}
+
+/**
+ * The particulates entry specific to MonitorDetails
+ */
+export type MonitorDetailsParticulatesEntry =
+  & MonitorDetailsEntryMeta
+  & MonitorParticulatesValues;
+
+/**
+ * The data structure for "latest" field on a MonitorDetails object
+ */
+export interface MonitorDetailsEntries {
+  pm10?: MonitorDetailsEntry;
+  pm25?: MonitorDetailsEntry;
+  pm100?: MonitorDetailsEntry;
+  humidity?: MonitorDetailsEntry;
+  o3?: MonitorDetailsEntry;
+  no2?: MonitorDetailsEntry;
+  pressure?: MonitorDetailsEntry;
+  temperature?: MonitorDetailsEntry;
+  particulates?: MonitorDetailsParticulatesEntry;
 }
 
 /**
  * The data structure for details on a monitor object
  */
 export interface MonitorDetails extends MonitorData {
-  latest: MonitorLatest;
+  latest: MonitorDetailsEntries;
 }
