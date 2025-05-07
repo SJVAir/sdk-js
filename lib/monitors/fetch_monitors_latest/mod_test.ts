@@ -70,15 +70,14 @@ Deno.test({
         name: "Validate monitor latest data",
         ignore: !fetchMonitorsSuccess,
         fn() {
-          fail("Data types do not match, has processor, expects calibration");
-          //validateMonitorDetailsSchema(
-          //  monitors as Array<MonitorDetails>,
-          //  (errors, monitor) => {
-          //    console.error(errors);
-          //    console.error(monitor);
-          //    fail("Monitor data did not pass schema validation");
-          //  },
-          //);
+          validateMonitorDetailsSchema(
+            monitors as Array<MonitorDetails>,
+            (errors, monitor) => {
+              console.error(errors);
+              console.error(monitor);
+              fail("Monitor data did not pass schema validation");
+            },
+          );
         },
       });
     });
