@@ -1,4 +1,8 @@
-import type { MonitorData, MonitorDevice, MonitorLatest } from "../types.ts";
+import type {
+  MonitorData,
+  MonitorDetailsLatest,
+  MonitorDevice,
+} from "../types.ts";
 
 /**
  * Checks if a given monitor passes the conditions to be presented as the closest monitor

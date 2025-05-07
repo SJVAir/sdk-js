@@ -1,5 +1,5 @@
 import type { ValueOf } from "@tstk/types";
-import type { MonitorDataField, MonitorLatest } from "../types.ts";
+import type { MonitorDataField, MonitorDetailsLatest } from "../types.ts";
 import { APIRequestResponse } from "$http";
 
 /**
@@ -36,7 +36,7 @@ export interface MonitorEntryRequestConfig {
 /** The response object return from the "/monitors/{MONItOR_ID}/entries" endpoint */
 export interface MonitorEntryRequestResponse {
   /** The monitor entries included in the current page of results */
-  data: Array<ValueOf<MonitorLatest>>;
+  data: Array<ValueOf<MonitorDetailsLatest>>;
 
   /** The current page of results fetched */
   page: number;
