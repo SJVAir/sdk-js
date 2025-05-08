@@ -2,6 +2,7 @@ import type { JSONSchemaType } from "ajv";
 import { schemaValidator } from "../../schema.ts";
 import type {
   MonitorData,
+  MonitorDataField,
   MonitorDataProvider,
   MonitorDataSource,
   MonitorDetails,
@@ -11,6 +12,7 @@ import type {
   MonitorDevice,
   MonitorEntry,
   MonitorEntryMeta,
+  MonitorLatest,
   MonitorParticulatesEntry,
   MonitorParticulatesValues,
   MonitorPosition,
@@ -207,21 +209,32 @@ export const monitorParticulatesEntrySchema: JSONSchemaType<
   ],
 };
 
-//  type: "object",
-//  allOf: [
-//    {
-//      ...monitorDataSchema,
-//    },
-//    {
-//      type: "object",
-//      properties: {
-//        latest: monitorDetailsEntriesSchema,
-//      },
-//      required: ["latest"],
-//    },
-//  ],
-//  required: [],
-//};
+export const monitorLatestSchema: JSONSchemaType<
+  MonitorLatest<MonitorDataField>
+> = {
+  type: "object",
+  properties: {
+    // Type casting required as ajv has trouble with extended interfaces or extended schemas
+    ...monitorDataSchema.properties as JSONSchemaType<
+      MonitorDetails
+    >["properties"],
+    latest: {
+      anyOf: [
+        monitorEntrySchema,
+        monitorTemperatureEntrySchema,
+        monitorPressureEntrySchema,
+        monitorParticulatesEntrySchema,
+      ],
+    },
+  },
+  required: [
+    ...(monitorDataSchema.required as JSONSchemaType<
+      MonitorDetails
+    >["required"]),
+    "latest",
+  ],
+  additionalProperties: false,
+};
 
 export const monitorDetailsEntrySchema: JSONSchemaType<MonitorDetailsEntry> = {
   type: "object",
@@ -287,8 +300,10 @@ export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
   additionalProperties: false,
 };
 
+export const validateMonitorDataSchema = schemaValidator(monitorDataSchema);
+
+export const validateMonitorLatestSchema = schemaValidator(monitorLatestSchema);
+
 export const validateMonitorDetailsSchema = schemaValidator(
   monitorDetailsSchema,
 );
-
-export const validateMonitorDataSchema = schemaValidator(monitorDataSchema);
