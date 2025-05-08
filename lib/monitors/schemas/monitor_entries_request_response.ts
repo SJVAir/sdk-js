@@ -2,9 +2,10 @@ import { Ajv, type JSONSchemaType } from "ajv";
 import type { SchemaValidationFailureHandler } from "../../schema.ts";
 import type { MonitorEntryRequestResponse } from "../fetch_monitor_entries/types.ts";
 import { monitorDetailsEntrySchema } from "./monitor.ts";
+import { MonitorDataField } from "../types.ts";
 
 export const monitorEntryRequestResponse: JSONSchemaType<
-  MonitorEntryRequestResponse
+  MonitorEntryRequestResponse<MonitorDataField>
 > = {
   type: "object",
   properties: {
