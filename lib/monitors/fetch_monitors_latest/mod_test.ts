@@ -1,6 +1,6 @@
 import { assertEquals, assertGreater, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { validateMonitorDetailsSchema } from "../schemas/monitor.ts";
+import { validateMonitorLatestSchema } from "../schemas/monitor.ts";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import { getMonitorsLatestUrl } from "./request_builders.ts";
 import { fetchMonitorsLatestHandler } from "./response_handlers.ts";
@@ -34,7 +34,7 @@ Deno.test({
       const rawResponseSuccess = await st.step(
         "Fetch raw response",
         async () => {
-          rawResponse = await fetchMonitorsLatest(DEFAULT_DISPLAY_FIELD);
+          rawResponse = await fetchMonitorsLatest("particulates");
 
           assertEquals(rawResponse.status, 200);
         },
@@ -47,6 +47,14 @@ Deno.test({
           const monitors = fetchMonitorsLatestHandler(rawResponse);
 
           assertEquals(Array.isArray(monitors), true);
+          validateMonitorLatestSchema(
+            monitors,
+            (errors, monitor) => {
+              console.error(errors);
+              console.error(monitor);
+              fail("Monitor data did not pass schema validation");
+            },
+          );
         },
       });
     });
@@ -70,8 +78,8 @@ Deno.test({
         name: "Validate monitor latest data",
         ignore: !fetchMonitorsSuccess,
         fn() {
-          validateMonitorDetailsSchema(
-            monitors as Array<MonitorDetails>,
+          validateMonitorLatestSchema(
+            monitors,
             (errors, monitor) => {
               console.error(errors);
               console.error(monitor);
