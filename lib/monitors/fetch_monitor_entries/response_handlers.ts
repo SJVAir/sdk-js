@@ -1,7 +1,7 @@
-import type { MonitorEntry } from "../types.ts";
+import type { MonitorEntries } from "../types.ts";
 import type {
+  FetchMonitorEntriesResponse,
   MonitorEntryRequestConfig,
-  MonitorEntryRequestResponse,
 } from "./types.ts";
 
 /**
@@ -11,22 +11,22 @@ import type {
  *
  * @returns An array of monitor entries
  */
-export async function gatherMonitorEntries(
-  config: MonitorEntryRequestConfig,
+export async function gatherMonitorEntries<T extends MonitorEntryRequestConfig>(
+  config: T,
   cb: (
-    config: MonitorEntryRequestConfig,
-  ) => Promise<MonitorEntryRequestResponse>,
-): Promise<Array<MonitorEntry>> {
-  const totalEntries: Array<MonitorEntry> = [];
+    config: T,
+  ) => Promise<FetchMonitorEntriesResponse<T["field"]>>,
+): Promise<Array<MonitorEntries[T["field"]]>> {
+  const totalEntries: Array<MonitorEntries[T["field"]]> = [];
 
   try {
-    const entriesResponse = await cb(config);
+    const { body: { data, has_next_page, page } } = await cb(config);
 
-    if (entriesResponse.data.length) {
-      totalEntries.push(...entriesResponse.data);
+    if (data.length) {
+      totalEntries.push(...data);
 
-      if (entriesResponse.has_next_page) {
-        Object.assign(config, { page: `${++entriesResponse.page}` });
+      if (has_next_page) {
+        Object.assign(config, { page: `${page + 1}` });
         await cb(config);
       }
     }
@@ -34,6 +34,6 @@ export async function gatherMonitorEntries(
     return totalEntries;
   } catch (err) {
     console.error("Failed to fetch monitor entries", err);
-    return [];
+    return [] as Array<MonitorEntries[T["field"]]>;
   }
 }
