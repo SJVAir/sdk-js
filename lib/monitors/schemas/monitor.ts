@@ -156,6 +156,7 @@ export const monitorEntrySchema: JSONSchemaType<MonitorEntry> = {
     value: { type: "string" },
   },
   required: [...monitorEntryMetaSchema.required, "value"],
+  additionalProperties: false,
 };
 
 export const monitorTemperatureEntrySchema: JSONSchemaType<
@@ -174,6 +175,7 @@ export const monitorTemperatureEntrySchema: JSONSchemaType<
     "temperature_f",
     "temperature_c",
   ],
+  additionalProperties: false,
 };
 
 export const monitorPressureEntrySchema: JSONSchemaType<
@@ -192,6 +194,7 @@ export const monitorPressureEntrySchema: JSONSchemaType<
     "pressure_hpa",
     "pressure_mmhg",
   ],
+  additionalProperties: false,
 };
 
 export const monitorParticulatesEntrySchema: JSONSchemaType<
@@ -207,6 +210,7 @@ export const monitorParticulatesEntrySchema: JSONSchemaType<
   required: [
     ...monitorEntryMetaSchema.required,
   ],
+  additionalProperties: false,
 };
 
 export const monitorLatestSchema: JSONSchemaType<
@@ -219,7 +223,7 @@ export const monitorLatestSchema: JSONSchemaType<
       MonitorDetails
     >["properties"],
     latest: {
-      anyOf: [
+      oneOf: [
         monitorEntrySchema,
         monitorTemperatureEntrySchema,
         monitorPressureEntrySchema,
