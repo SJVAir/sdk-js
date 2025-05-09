@@ -24,15 +24,16 @@ Deno.test({
   permissions: { net: true },
   async fn(t) {
     const success = await t.step("Build fetch monitors request", async (t2) => {
-      await t2.step("Get URL", () => {
+      const canBuildUrl = await t2.step("Get URL", () => {
         const url = getMonitorsUrl();
 
         assertEquals(url.href, `${origin}/api/2.0/monitors/`);
       });
 
-      await t2.step(
-        "Fetch raw response",
-        async (t3) => {
+      await t2.step({
+        name: "Fetch raw response",
+        ignore: !canBuildUrl,
+        async fn(t3) {
           const rawResponse = await fetchMonitors();
 
           assertEquals(rawResponse.status, 200);
@@ -51,7 +52,7 @@ Deno.test({
             },
           );
         },
-      );
+      });
     });
 
     await t.step({
