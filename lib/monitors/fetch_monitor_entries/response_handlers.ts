@@ -27,7 +27,7 @@ export async function gatherMonitorEntries<T extends MonitorEntryRequestConfig>(
 
       if (has_next_page) {
         Object.assign(config, { page: `${page + 1}` });
-        await cb(config);
+        totalEntries.push(...(await gatherMonitorEntries(config, cb)));
       }
     }
 
