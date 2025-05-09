@@ -30,8 +30,8 @@ Deno.test({
     const success = await t.step(
       "Build fetch monitor details request",
       async (t2) => {
-        const buildUrlSuccess = await t2.step(
-          "Build fetch monitor details url",
+        const canBuildUrl = await t2.step(
+          "Get URL",
           () => {
             const url = getMonitorDetailsUrl(monitorId);
 
@@ -41,16 +41,24 @@ Deno.test({
 
         await t2.step({
           name: "Fetch raw response",
-          ignore: !buildUrlSuccess,
+          ignore: !canBuildUrl,
           async fn(t3) {
             const response = await fetchMonitorDetails(monitorId);
             assertEquals(response.status, 200);
 
-            await t3.step("Handle raw response", () => {
-              const details = fetchMonitorDetailsHandler(response);
-              validateMonitorDetails(details);
-              assertEquals(details.id, monitorId);
-            });
+            await t3.step(
+              "Handle raw response",
+              async (t4) => {
+                const details = fetchMonitorDetailsHandler(response);
+
+                await t4.step(
+                  "Validate monitor data",
+                  () => validateMonitorDetails(details),
+                );
+
+                assertEquals(details.id, monitorId);
+              },
+            );
           },
         });
       },
@@ -59,10 +67,20 @@ Deno.test({
     await t.step({
       name: "Prebuild request and handler",
       ignore: !success,
-      async fn() {
-        const details = await getMonitorDetails(monitorId);
-        validateMonitorDetails(details);
-        assertEquals(details.id, monitorId);
+      async fn(t2) {
+        await t2.step(
+          "Fetch monitor details",
+          async (t3) => {
+            const details = await getMonitorDetails(monitorId);
+
+            await t3.step(
+              "Validate monitor data",
+              () => validateMonitorDetails(details),
+            );
+
+            assertEquals(details.id, monitorId);
+          },
+        );
       },
     });
   },
