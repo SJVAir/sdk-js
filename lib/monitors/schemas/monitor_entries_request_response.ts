@@ -1,8 +1,13 @@
 import { Ajv, type JSONSchemaType } from "ajv";
 import type { SchemaValidationFailureHandler } from "../../schema.ts";
 import type { MonitorEntryRequestResponse } from "../fetch_monitor_entries/types.ts";
-import { monitorDetailsEntrySchema } from "./monitor.ts";
-import { MonitorDataField } from "../types.ts";
+import {
+  monitorEntrySchema,
+  monitorParticulatesEntrySchema,
+  monitorPressureEntrySchema,
+  monitorTemperatureEntrySchema,
+} from "./monitor.ts";
+import type { MonitorDataField } from "../types.ts";
 
 export const monitorEntryRequestResponse: JSONSchemaType<
   MonitorEntryRequestResponse<MonitorDataField>
@@ -11,7 +16,14 @@ export const monitorEntryRequestResponse: JSONSchemaType<
   properties: {
     data: {
       type: "array",
-      items: monitorDetailsEntrySchema,
+      items: {
+        oneOf: [
+          monitorEntrySchema,
+          monitorTemperatureEntrySchema,
+          monitorPressureEntrySchema,
+          monitorParticulatesEntrySchema,
+        ],
+      },
     },
     page: {
       type: "number",
@@ -39,9 +51,11 @@ export const monitorEntryRequestResponse: JSONSchemaType<
   ],
 };
 
-export function validateMonitorEntryRequestResponse(
-  data: MonitorEntryRequestResponse,
-  failureHandle: SchemaValidationFailureHandler<MonitorEntryRequestResponse>,
+export function validateMonitorEntryRequestResponseSchema(
+  data: MonitorEntryRequestResponse<MonitorDataField>,
+  failureHandle: SchemaValidationFailureHandler<
+    MonitorEntryRequestResponse<MonitorDataField>
+  >,
 ) {
   const ajv = new Ajv();
   const validate = ajv.compile(monitorEntryRequestResponse);
