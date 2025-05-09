@@ -1,4 +1,4 @@
-import { assertEquals, assertGreater, fail } from "@std/assert";
+import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { validateMonitorDataSchema } from "../schemas/monitor.ts";
 import { getMonitorsUrl } from "./request_builders.ts";
