@@ -11,7 +11,7 @@ if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-function validateMonitorData(monitors: Array<MonitorData>) {
+function validateMonitorData(monitors: MonitorData | Array<MonitorData>) {
   validateMonitorDataSchema(monitors, (errors, monitor) => {
     console.error(errors);
     console.error(monitor);
