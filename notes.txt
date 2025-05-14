@@ -1,6 +1,6 @@
-Issues:
+Issue:
   - The /monitors/<entry_type>/closest/ endpoint does not return a latest entry for the
-    specified entry_type
-  - The /monitors/<monitor_id>/entries/<entry_type>/ endpoint does not take into account
-    timestamp__gte or timestamp__lte
+    specified entry_type, and does not exclude inside monitors
+
+Inconsistency (Doesn't really matter to me, just noting it in case it bothers you):
   - The /monitors/<monitor_id>/ endpoint includes calibrations in latest entries instead of processor, and is the only endpoint to do so
