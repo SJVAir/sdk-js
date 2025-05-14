@@ -1,8 +1,4 @@
-import type {
-  MonitorData,
-  MonitorDetailsLatest,
-  MonitorDevice,
-} from "../types.ts";
+import type { DefaultLatestMonitor } from "./types.ts";
 
 /**
  * Checks if a given monitor passes the conditions to be presented as the closest monitor
@@ -11,14 +7,10 @@ import type {
  *
  * @returns A boolean indicating whether or not the monitor has passed the conditions
  */
-export function isValidClosestMonitor<
-  T extends {
-    id: string;
-    device: MonitorDevice;
-    latest: MonitorLatestEntry | null;
-  },
->(monitor: T): boolean {
-  if (monitor.latest === null || monitor.latest.pm25 === null) {
+export function isValidClosestMonitor(
+  monitor: DefaultLatestMonitor,
+): boolean {
+  if (monitor.latest === null || monitor.latest?.value === null) {
     return false;
   }
 
@@ -26,7 +18,7 @@ export function isValidClosestMonitor<
   const valueMax = 400;
   const valueMin = 0;
 
-  let latestValue = parseFloat(monitor.latest.pm25);
+  let latestValue = parseFloat(monitor.latest!.value);
   latestValue = (latestValue < 0 && latestValue >= negativeMin)
     ? 0
     : latestValue;
@@ -41,14 +33,14 @@ export function isValidClosestMonitor<
  *
  * @returns The closest monitor that passed validation
  */
-export function validateClosestMonitorResponse(
-  monitors: Array<MonitorData>,
-): MonitorData {
+export function validateClosestMonitors(
+  monitors: Array<DefaultLatestMonitor>,
+): DefaultLatestMonitor {
   if (!monitors.length) {
     throw new Error("Failed to get list of closest validatedMonitors");
   }
 
-  const validatedMonitors: Array<MonitorData> = monitors.filter(
+  const validatedMonitors: Array<DefaultLatestMonitor> = monitors.filter(
     isValidClosestMonitor,
   );
 
@@ -57,16 +49,9 @@ export function validateClosestMonitorResponse(
   }
 
   const monitor = validatedMonitors.shift()!;
-  if (monitor.latest && monitor.latest.pm25) {
-    if ("pm25" in monitor.latest && parseInt(monitor.latest.pm25, 10) < 0) {
-      monitor.latest.pm25 = "0";
-    }
-
-    if (
-      "pm25_avg_60" in monitor.latest &&
-      parseInt(monitor.latest.pm25_avg_60!, 10) < 0
-    ) {
-      monitor.latest.pm25_avg_60 = "0";
+  if (monitor.latest && monitor.latest.value) {
+    if (parseInt(monitor.latest.value, 10) < 0) {
+      monitor.latest.value = "0";
     }
   }
 
