@@ -1,30 +1,38 @@
-import { Ajv, type JSONSchemaType } from "ajv";
-import type { SchemaValidationFailureHandler } from "../../schema.ts";
-import type { MonitorEntryRequestResponse } from "../fetch_monitor_entries/types.ts";
+import { schemaValidator } from "../../schema.ts";
 import {
   monitorEntrySchema,
   monitorParticulatesEntrySchema,
   monitorPressureEntrySchema,
   monitorTemperatureEntrySchema,
 } from "./monitor.ts";
+import type { JSONSchemaType } from "ajv";
+import type { MonitorEntryRequestResponse } from "../fetch_monitor_entries/types.ts";
 import type { MonitorDataField } from "../types.ts";
 
-export const monitorEntryRequestResponse: JSONSchemaType<
+type MonitorEntriesCollection = MonitorEntryRequestResponse<
+  MonitorDataField
+>["data"];
+
+export const monitorEntriesCollectionSchema: JSONSchemaType<
+  MonitorEntriesCollection
+> = {
+  type: "array",
+  items: {
+    oneOf: [
+      monitorEntrySchema,
+      monitorTemperatureEntrySchema,
+      monitorPressureEntrySchema,
+      monitorParticulatesEntrySchema,
+    ],
+  },
+};
+
+export const monitorEntryRequestResponseSchema: JSONSchemaType<
   MonitorEntryRequestResponse<MonitorDataField>
 > = {
   type: "object",
   properties: {
-    data: {
-      type: "array",
-      items: {
-        oneOf: [
-          monitorEntrySchema,
-          monitorTemperatureEntrySchema,
-          monitorPressureEntrySchema,
-          monitorParticulatesEntrySchema,
-        ],
-      },
-    },
+    data: monitorEntriesCollectionSchema,
     page: {
       type: "number",
     },
@@ -51,17 +59,25 @@ export const monitorEntryRequestResponse: JSONSchemaType<
   ],
 };
 
-export function validateMonitorEntryRequestResponseSchema(
-  data: MonitorEntryRequestResponse<MonitorDataField>,
-  failureHandle: SchemaValidationFailureHandler<
-    MonitorEntryRequestResponse<MonitorDataField>
-  >,
-) {
-  const ajv = new Ajv();
-  const validate = ajv.compile(monitorEntryRequestResponse);
+export const validateMonitorEntriesCollection = schemaValidator(
+  monitorEntriesCollectionSchema,
+  { checkArray: true },
+);
 
-  const valid = validate(data);
-  if (!valid) {
-    failureHandle(validate.errors, data);
-  }
-}
+export const validateMonitorEntryRequestResponseSchema = schemaValidator(
+  monitorEntryRequestResponseSchema,
+);
+//export function validateMonitorEntryRequestResponseSchema(
+//  data: MonitorEntryRequestResponse<MonitorDataField>,
+//  failureHandle: SchemaValidationFailureHandler<
+//    MonitorEntryRequestResponse<MonitorDataField>
+//  >,
+//) {
+//  const ajv = new Ajv();
+//  const validate = ajv.compile(monitorEntryRequestResponseSchema);
+//
+//  const valid = validate(data);
+//  if (!valid) {
+//    failureHandle(validate.errors, data);
+//  }
+//}
