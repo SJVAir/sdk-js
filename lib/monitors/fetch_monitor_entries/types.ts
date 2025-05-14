@@ -1,4 +1,8 @@
-import type { MonitorDataField, MonitorEntries } from "../types.ts";
+import type {
+  MonitorDataField,
+  MonitorEntries,
+  PaginatedResponse,
+} from "../types.ts";
 import type { APIRequestResponse } from "$http";
 
 /**
@@ -33,25 +37,8 @@ export interface MonitorEntryRequestConfig {
 }
 
 /** The response object return from the "/monitors/{MONItOR_ID}/entries" endpoint */
-export interface MonitorEntryRequestResponse<T extends MonitorDataField> {
-  /** The monitor entries included in the current page of results */
-  data: Array<MonitorEntries[T]>;
-
-  /** The current page of results fetched */
-  page: number;
-
-  /** The total count of results */
-  count: number;
-
-  /** The total amount of results pages */
-  pages: number;
-
-  /** Indicates whether there is a next page of results */
-  has_next_page: boolean;
-
-  /** Indicates wether there is a previous page of results */
-  has_previous_page: boolean;
-}
+export type MonitorEntryRequestResponse<T extends MonitorDataField> =
+  PaginatedResponse<MonitorEntries[T]>;
 
 /**
  * The data structure returned from the "/monitors/<monitor_id>/entries/<entry_type>/" endpoint
