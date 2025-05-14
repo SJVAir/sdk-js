@@ -5,21 +5,22 @@ import {
   validateMonitorEntryRequestResponseSchema,
 } from "../schemas/monitor_entries_request_response.ts";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
+import { monitorId } from "../test_constants.ts";
 import { getMonitorEntriesUrl } from "./request_builders.ts";
+import { gatherMonitorEntries } from "./response_handlers.ts";
 import { fetchMonitorEntriesPage } from "./requests.ts";
 import type { MonitorDataField } from "../types.ts";
 import type {
   MonitorEntryRequestConfig,
   MonitorEntryRequestResponse,
 } from "./types.ts";
-import { gatherMonitorEntries } from "./response_handlers.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
 const requestConfig: MonitorEntryRequestConfig = {
-  monitorId: "HmeeUr66RpKHFx64nBV6hQ",
+  monitorId,
   field: DEFAULT_DISPLAY_FIELD,
 };
 
