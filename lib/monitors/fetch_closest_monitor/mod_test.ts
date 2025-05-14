@@ -77,7 +77,7 @@ Deno.test({
               async (t4) => {
                 const monitors = fetchClosestMonitorsHandler(response);
 
-                // This simulates the correct response form the endpoint
+                // This simulates the correct response from the endpoint
                 //monitors.map((m) => {
                 //  m.latest = {
                 //    processor: "fake",
@@ -90,12 +90,11 @@ Deno.test({
 
                 assertEquals(Array.isArray(monitors), true);
 
-                console.log(monitors);
                 await t4.step("Validate closest monitor", () => {
                   const closestMonitor = validateClosestMonitors(monitors);
 
                   assertEquals(Array.isArray(closestMonitor), false);
-                  // This simulates the correct response form the endpoint
+                  // This simulates the correct response from the endpoint
                   //assertEquals(
                   //  closestMonitor.name,
                   //  "CCA Root Access Hackerspace #1",
