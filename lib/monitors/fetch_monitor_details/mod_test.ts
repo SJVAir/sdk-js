@@ -1,17 +1,16 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
+import { validateMonitorDetailsSchema } from "../schemas/monitor.ts";
+import { monitorId } from "../test_constants.ts";
 import { getMonitorDetailsUrl } from "./request_builders.ts";
 import { fetchMonitorDetailsHandler } from "./response_handlers.ts";
 import { fetchMonitorDetails } from "./requests.ts";
 import { getMonitorDetails } from "./mod.ts";
-import { validateMonitorDetailsSchema } from "../schemas/monitor.ts";
 import type { MonitorDetails } from "../types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
-
-const monitorId = "HmeeUr66RpKHFx64nBV6hQ";
 
 function validateMonitorDetails(
   details: MonitorDetails | Array<MonitorDetails>,
