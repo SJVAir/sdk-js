@@ -1,6 +1,9 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { validateMonitorEntryRequestResponseSchema } from "../schemas/monitor_entries_request_response.ts";
+import {
+  validateMonitorEntriesCollection,
+  validateMonitorEntryRequestResponseSchema,
+} from "../schemas/monitor_entries_request_response.ts";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import { getMonitorEntriesUrl } from "./request_builders.ts";
 import { fetchMonitorEntriesPage } from "./requests.ts";
@@ -19,17 +22,6 @@ const requestConfig: MonitorEntryRequestConfig = {
   monitorId: "HmeeUr66RpKHFx64nBV6hQ",
   field: DEFAULT_DISPLAY_FIELD,
 };
-
-//async function getEntries(): Promise<Array<MonitorEntry>> {
-//  return await fetchMonitorEntries(requestConfig).catch((err) => {
-//    console.error(err);
-//    fail("Monitor entries request failed");
-//  });
-//}
-
-//function validateEntries(entries: Array<MonitorEntry>) {
-//  assertGreater(entries.length, 0);
-//}
 
 function validateMonitorEntryRequestResponse(
   response: MonitorEntryRequestResponse<MonitorDataField>,
@@ -94,37 +86,25 @@ Deno.test({
                 assertEquals(Array.isArray(entries), true);
 
                 // Left off here
-                //await t4.step(
-                //  "Validate entries",
-                //  () => validateEntries(),
-                //);
+                await t4.step(
+                  "Validate entries",
+                  () =>
+                    validateMonitorEntriesCollection(
+                      entries,
+                      (errors, data) => {
+                        console.error(errors);
+                        console.error(data);
+                        fail(
+                          "Monitor entries array did not pass schema validation",
+                        );
+                      },
+                    ),
+                );
               },
             });
           },
         });
       },
     );
-
-    //const fetchentriesSuccess = await t.step({
-    //  name: "Fetch all monitor entries",
-    //  ignore: !fetchEntriesPageSuccess,
-    //  async fn() {
-    //    const entries = await getEntries();
-    //    validateEntries(entries);
-    //  },
-    //});
-
-    //await t.step({
-    //  name: "Validate monitor data",
-    //  ignore: !fetchentriesSuccess,
-    //  async fn() {
-    //    const entries = await getEntries();
-    //    validateMonitorEntrySchema(entries, (errors, entry) => {
-    //      console.error(errors);
-    //      console.error(entry);
-    //      fail("Monitor entry did not pass schema validation");
-    //    });
-    //  },
-    //});
   },
 });
