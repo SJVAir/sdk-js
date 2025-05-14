@@ -197,3 +197,26 @@ export interface MonitorDetailsEntries {
 export interface MonitorDetails extends MonitorData {
   latest: MonitorDetailsEntries;
 }
+
+/**
+ * The data structure a paginated response from the server
+ */
+export interface PaginatedResponse<T> {
+  /** The monitor entries included in the current page of results */
+  data: Array<T>;
+
+  /** The current page of results fetched */
+  page: number;
+
+  /** The total count of results */
+  count: number;
+
+  /** The total amount of results pages */
+  pages: number;
+
+  /** Indicates whether there is a next page of results */
+  has_next_page: boolean;
+
+  /** Indicates wether there is a previous page of results */
+  has_previous_page: boolean;
+}
