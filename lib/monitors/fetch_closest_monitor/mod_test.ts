@@ -77,17 +77,6 @@ Deno.test({
               async (t4) => {
                 const monitors = fetchClosestMonitorsHandler(response);
 
-                // This simulates the correct response from the endpoint
-                //monitors.map((m) => {
-                //  m.latest = {
-                //    processor: "fake",
-                //    sensor: "none",
-                //    stage: "maybe?",
-                //    timestamp: "nowish",
-                //    value: "2.0",
-                //  };
-                //});
-
                 assertEquals(Array.isArray(monitors), true);
 
                 await t4.step("Validate closest monitor", () => {
