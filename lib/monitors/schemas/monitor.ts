@@ -7,8 +7,6 @@ import type {
   MonitorDataSource,
   MonitorDetails,
   MonitorDetailsEntries,
-  //MonitorDetailsEntry,
-  //MonitorDetailsParticulatesEntry,
   MonitorDevice,
   MonitorEntry,
   MonitorEntryMeta,
