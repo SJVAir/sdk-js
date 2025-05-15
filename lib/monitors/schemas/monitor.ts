@@ -7,8 +7,8 @@ import type {
   MonitorDataSource,
   MonitorDetails,
   MonitorDetailsEntries,
-  MonitorDetailsEntry,
-  MonitorDetailsParticulatesEntry,
+  //MonitorDetailsEntry,
+  //MonitorDetailsParticulatesEntry,
   MonitorDevice,
   MonitorEntry,
   MonitorEntryMeta,
@@ -18,7 +18,20 @@ import type {
   MonitorPosition,
   MonitorPressureEntry,
   MonitorTemperatureEntry,
+  MonitorType,
 } from "../types.ts";
+
+export const monitorTypeSchema: JSONSchemaType<MonitorType> = {
+  type: "string",
+  enum: [
+    "airgradient",
+    "airnow",
+    "aqview",
+    "bam",
+    "methane",
+    "purpleair",
+  ],
+};
 
 export const monitorDeviceSchema: JSONSchemaType<MonitorDevice> = {
   type: "string",
@@ -105,6 +118,7 @@ export const monitorDataSchema: JSONSchemaType<MonitorData> = {
     name: { type: "string" },
     position: monitorPositionSchema,
     purple_id: { type: "number", nullable: true },
+    type: monitorTypeSchema,
   },
   required: [
     "county",
@@ -240,53 +254,20 @@ export const monitorLatestSchema: JSONSchemaType<
   additionalProperties: false,
 };
 
-export const monitorDetailsEntrySchema: JSONSchemaType<MonitorDetailsEntry> = {
-  type: "object",
-  properties: {
-    value: { type: "string" },
-    sensor: { type: "string" },
-    timestamp: { type: "string" },
-    calibration: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-  },
-  required: ["value", "sensor", "timestamp", "calibration"],
-};
-
-export const monitorDetailsParticulatesEntrySchema: JSONSchemaType<
-  MonitorDetailsParticulatesEntry
-> = {
-  type: "object",
-  properties: {
-    particles_03um: { type: "string", nullable: true },
-    particles_05um: { type: "string", nullable: true },
-    particles_10um: { type: "string", nullable: true },
-    particles_25um: { type: "string", nullable: true },
-    particles_50um: { type: "string", nullable: true },
-    particles_100um: { type: "string", nullable: true },
-    sensor: { type: "string" },
-    timestamp: { type: "string" },
-    calibration: {
-      oneOf: [{ type: "string" }, { type: "null", nullable: true }],
-    },
-  },
-  required: ["sensor", "timestamp", "calibration"],
-};
-
 export const monitorDetailsEntriesSchema: JSONSchemaType<
   MonitorDetailsEntries
 > = {
   type: "object",
   properties: {
-    pm10: { ...monitorDetailsEntrySchema, nullable: true },
-    pm25: { ...monitorDetailsEntrySchema, nullable: true },
-    pm100: { ...monitorDetailsEntrySchema, nullable: true },
-    humidity: { ...monitorDetailsEntrySchema, nullable: true },
-    o3: { ...monitorDetailsEntrySchema, nullable: true },
-    no2: { ...monitorDetailsEntrySchema, nullable: true },
-    pressure: { ...monitorDetailsEntrySchema, nullable: true },
-    temperature: { ...monitorDetailsEntrySchema, nullable: true },
-    particulates: { ...monitorDetailsParticulatesEntrySchema, nullable: true },
+    pm10: { ...monitorEntrySchema, nullable: true },
+    pm25: { ...monitorEntrySchema, nullable: true },
+    pm100: { ...monitorEntrySchema, nullable: true },
+    humidity: { ...monitorEntrySchema, nullable: true },
+    o3: { ...monitorEntrySchema, nullable: true },
+    no2: { ...monitorEntrySchema, nullable: true },
+    pressure: { ...monitorEntrySchema, nullable: true },
+    temperature: { ...monitorEntrySchema, nullable: true },
+    particulates: { ...monitorParticulatesEntrySchema, nullable: true },
   },
   additionalProperties: false,
 };
