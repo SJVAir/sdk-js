@@ -1,6 +1,3 @@
-// Type utils:
-type NullableString = string | null;
-
 /** A Monitor object returned from the SJVAir API */
 export interface MonitorData {
   /** County the monitor is located in */
@@ -37,11 +34,29 @@ export interface MonitorData {
   position: MonitorPosition;
 
   /**
+   * The specific type of a monitor.
+   * This corresponds to the class name of the model used on the server
+   */
+  type: MonitorType;
+
+  /**
    * The PurpleAir ID of the monitor
    * @remarks This field is only present if the device type is "PurpleAir"
    */
   purple_id?: number;
 }
+
+/**
+ * The specific type of a monitor.
+ * This corresponds to the class name of the model used on the server
+ */
+export type MonitorType =
+  | "airgradient"
+  | "airnow"
+  | "aqview"
+  | "bam"
+  | "methane"
+  | "purpleair";
 
 /** The name of the field under which data is stored on a monitor object */
 export type MonitorDataField = keyof MonitorEntries;
@@ -160,35 +175,19 @@ export interface MonitorLatest<T extends MonitorDataField> extends MonitorData {
   latest: MonitorEntries[T];
 }
 
-export interface MonitorDetailsEntryMeta
-  extends Omit<MonitorEntryMeta, "stage" | "processor"> {
-  calibration: string | null;
-}
-
-export interface MonitorDetailsEntry extends MonitorDetailsEntryMeta {
-  value: string;
-}
-
-/**
- * The particulates entry specific to MonitorDetails
- */
-export type MonitorDetailsParticulatesEntry =
-  & MonitorDetailsEntryMeta
-  & MonitorParticulatesValues;
-
 /**
  * The data structure for "latest" field on a MonitorDetails object
  */
 export interface MonitorDetailsEntries {
-  pm10?: MonitorDetailsEntry;
-  pm25?: MonitorDetailsEntry;
-  pm100?: MonitorDetailsEntry;
-  humidity?: MonitorDetailsEntry;
-  o3?: MonitorDetailsEntry;
-  no2?: MonitorDetailsEntry;
-  pressure?: MonitorDetailsEntry;
-  temperature?: MonitorDetailsEntry;
-  particulates?: MonitorDetailsParticulatesEntry;
+  pm10?: MonitorEntry;
+  pm25?: MonitorEntry;
+  pm100?: MonitorEntry;
+  humidity?: MonitorEntry;
+  o3?: MonitorEntry;
+  no2?: MonitorEntry;
+  pressure?: MonitorEntry;
+  temperature?: MonitorEntry;
+  particulates?: MonitorParticulatesEntry;
 }
 
 /**
