@@ -1,0 +1,53 @@
+name: Publish @sjvair/sdk
+
+env:
+  NODE_VERSION: lts/*
+  DENO_VERSION: v2.x
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  jsr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+      - name: Publish to jsr
+        run: deno publish
+
+  npm:
+    needs:
+      - jsr
+    runs-on: ubuntu-latest
+    # if you need publish with provenance, you should set permissions
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://registry.npmjs.org" # needed for npm publish
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+      - name: Publish to npm
+        run: deno run -A jsr:@ryoppippi/mirror-jsr-to-npm
+        env:
+          PACKAGE_DESCRIPTION: "Your package description"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Set your npm token as a GitHub secret
+          NPM_CONFIG_PROVENANCE: true # If you publish with provenance
