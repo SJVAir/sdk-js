@@ -101,5 +101,25 @@ Deno.test({
         });
       },
     );
+
+    await t.step({
+      name: "Prebuild request and handler",
+      ignore: !success,
+      async fn(t2) {
+        await t2.step(
+          "Fetch closest monitor",
+          async (t3) => {
+            const closestMonitor = await getClosestMonitor(latitude, longitude);
+
+            assertClosestMonitor(closestMonitor);
+
+            await t3.step(
+              "Validate monitor data",
+              () => validateClosestMonitorSchema(closestMonitor),
+            );
+          },
+        );
+      },
+    });
   },
 });
