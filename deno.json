@@ -1,0 +1,45 @@
+{
+  "name": "@sjvair/sdk",
+  "version": "2.0.0-rc.4",
+  "license": "MIT",
+  "exports": {
+    ".": "./mod.ts",
+    "./fetch_closest_monitor": "./lib/monitors/fetch_closest_monitor/mod.ts",
+    "./fetch_closest_monitor/request_builders": "./lib/monitors/fetch_closest_monitor/request_builders.ts",
+    "./fetch_closest_monitor/requests": "./lib/monitors/fetch_closest_monitor/requests.ts",
+    "./fetch_closest_monitor/response_handlers": "./lib/monitors/fetch_closest_monitor/response_handlers.ts",
+    "./fetch_closest_monitor/types": "./lib/monitors/fetch_closest_monitor/types.ts",
+    "./fetch_closest_monitor/validation": "./lib/monitors/fetch_closest_monitor/validation.ts",
+    "./fetch_monitor_details": "./lib/monitors/fetch_monitor_details/mod.ts",
+    "./fetch_monitor_details/request_builders": "./lib/monitors/fetch_monitor_details/request_builders.ts",
+    "./fetch_monitor_details/requests": "./lib/monitors/fetch_monitor_details/requests.ts",
+    "./fetch_monitor_details/response_handlers": "./lib/monitors/fetch_monitor_details/response_handlers.ts",
+    "./fetch_monitor_details/types": "./lib/monitors/fetch_monitor_details/types.ts",
+    "./fetch_monitor_entries": "./lib/monitors/fetch_monitor_entries/mod.ts",
+    "./fetch_monitor_entries/request_builders": "./lib/monitors/fetch_monitor_entries/request_builders.ts",
+    "./fetch_monitor_entries/requests": "./lib/monitors/fetch_monitor_entries/requests.ts",
+    "./fetch_monitor_entries/response_handlers": "./lib/monitors/fetch_monitor_entries/response_handlers.ts",
+    "./fetch_monitor_entries/types": "./lib/monitors/fetch_monitor_entries/types.ts",
+    "./fetch_monitors": "./lib/monitors/fetch_monitors/mod.ts",
+    "./fetch_monitors/request_builders": "./lib/monitors/fetch_monitors/request_builders.ts",
+    "./fetch_monitors/requests": "./lib/monitors/fetch_monitors/requests.ts",
+    "./fetch_monitors/response_handlers": "./lib/monitors/fetch_monitors/response_handlers.ts",
+    "./fetch_monitors/types": "./lib/monitors/fetch_monitors/types.ts",
+    "./fetch_monitors_latest": "./lib/monitors/fetch_monitors_latest/mod.ts",
+    "./fetch_monitors_latest/request_builders": "./lib/monitors/fetch_monitors_latest/request_builders.ts",
+    "./fetch_monitors_latest/requests": "./lib/monitors/fetch_monitors_latest/requests.ts",
+    "./fetch_monitors_latest/response_handlers": "./lib/monitors/fetch_monitors_latest/response_handlers.ts",
+    "./fetch_monitors_latest/types": "./lib/monitors/fetch_monitors_latest/types.ts"
+  },
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "@tstk/types": "jsr:@tstk/types@^1.0.3",
+    "ajv": "npm:ajv@^8.17.1",
+    "$apiDateFormat": "./lib/api_date_format/mod.ts",
+    "$http": "./lib/http/mod.ts",
+    "$monitors/": "./lib/monitors/"
+  }
+}
