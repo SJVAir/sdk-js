@@ -74,11 +74,10 @@ Deno.test({
               DEFAULT_DISPLAY_FIELD,
               latitude,
               longitude,
-            )
-              .catch((err) => {
-                console.error(err);
-                fail("failed to fetch single monitor entries page");
-              });
+            ).catch((err) => {
+              console.error(err);
+              fail("failed to fetch single monitor entries page");
+            });
 
             assertEquals(response.status, 200);
 
