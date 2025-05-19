@@ -48,6 +48,8 @@ jobs:
       - name: Publish to npm
         run: deno run -A jsr:@ryoppippi/mirror-jsr-to-npm
         env:
-          PACKAGE_DESCRIPTION: "Your package description"
+          PACKAGE_NAME: "@sjvair/sdk"
+          PACKAGE_AUTHOR: "Alex McCormick (alexandermccormick)"
+          PACKAGE_DESCRIPTION: "Official SDK for the SJVAir API"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Set your npm token as a GitHub secret
           NPM_CONFIG_PROVENANCE: true # If you publish with provenance
