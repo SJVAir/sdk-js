@@ -1,6 +1,7 @@
 import type { JSONSchemaType } from "ajv";
 import { schemaValidator } from "../../schema.ts";
 import type {
+  MonitorClosest,
   MonitorData,
   MonitorDataField,
   MonitorDataProvider,
@@ -269,6 +270,26 @@ export const monitorLatestSchema: JSONSchemaType<
   additionalProperties: false,
 };
 
+export const monitorClosestSchema: JSONSchemaType<
+  MonitorClosest<MonitorDataField>
+> = {
+  type: "object",
+  properties: {
+    // Type casting required as ajv has trouble with extended interfaces or extended schemas
+    ...monitorLatestSchema.properties as JSONSchemaType<
+      MonitorLatest<MonitorDataField>
+    >["properties"],
+    distance: { type: "number" },
+  },
+  required: [
+    ...(monitorLatestSchema.required as JSONSchemaType<
+      MonitorLatest<MonitorDataField>
+    >["required"]),
+    "distance",
+  ],
+  additionalProperties: false,
+};
+
 export const monitorDetailsEntriesSchema: JSONSchemaType<
   MonitorDetailsEntries
 > = {
@@ -303,6 +324,10 @@ export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
 export const validateMonitorDataSchema = schemaValidator(monitorDataSchema);
 
 export const validateMonitorLatestSchema = schemaValidator(monitorLatestSchema);
+
+export const validateMonitorClosestSchema = schemaValidator(
+  monitorClosestSchema,
+);
 
 export const validateMonitorDetailsSchema = schemaValidator(
   monitorDetailsSchema,
