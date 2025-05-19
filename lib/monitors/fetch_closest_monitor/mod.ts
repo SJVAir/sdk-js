@@ -13,8 +13,8 @@ import { fetchClosestMonitorsHandler } from "./response_handlers.ts";
  * @returns An Array containing the 3 closest monitors to a given set of coordinates.
  */
 export async function getClosestMonitor(
-  latitude: number,
-  longitude: number,
+  latitude: number | string,
+  longitude: number | string,
 ): Promise<DefaultLatestMonitor> {
   return await fetchClosestMonitor(
     DEFAULT_DISPLAY_FIELD,
