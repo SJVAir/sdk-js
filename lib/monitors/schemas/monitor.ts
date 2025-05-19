@@ -10,6 +10,7 @@ import type {
   MonitorDevice,
   MonitorEntry,
   MonitorEntryMeta,
+  MonitorEntryType,
   MonitorLatest,
   MonitorParticulatesEntry,
   MonitorParticulatesValues,
@@ -28,6 +29,21 @@ export const monitorTypeSchema: JSONSchemaType<MonitorType> = {
     "bam",
     "methane",
     "purpleair",
+  ],
+};
+
+export const monitorEntryTypeSchema: JSONSchemaType<MonitorEntryType> = {
+  type: "string",
+  enum: [
+    "pm10",
+    "pm25",
+    "pm100",
+    "humidity",
+    "o3",
+    "no2",
+    "pressure",
+    "temperature",
+    "particulates",
   ],
 };
 
@@ -155,6 +171,7 @@ export const monitorEntryMetaSchema: JSONSchemaType<MonitorEntryMeta> = {
     timestamp: { type: "string" },
     stage: { type: "string" },
     processor: { type: "string" },
+    entry_type: monitorEntryTypeSchema,
   },
   required: ["sensor", "timestamp", "stage", "processor"],
 };
