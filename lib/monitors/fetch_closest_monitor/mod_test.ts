@@ -1,13 +1,14 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
-import { validateMonitorLatestSchema } from "../schemas/monitor.ts";
+import { validateMonitorClosestSchema } from "../schemas/monitor.ts";
 import { coordinates } from "../test_constants.ts";
 import { validateClosestMonitors } from "./validation.ts";
 import { getClosestMonitorUrl } from "./request_builders.ts";
 import { fetchClosestMonitor } from "./requests.ts";
-import type { MonitorEntries, MonitorLatest } from "../types.ts";
+import type { MonitorClosest, MonitorEntries } from "../types.ts";
 import { fetchClosestMonitorsHandler } from "./response_handlers.ts";
+import { getClosestMonitor } from "./mod.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -15,12 +16,21 @@ if (!Deno.env.has("TEST_REMOTE")) {
 
 const { longitude, latitude } = coordinates;
 
-type MonitorLatestObject = MonitorLatest<keyof MonitorEntries>;
+type MonitorClosestObject = MonitorClosest<keyof MonitorEntries>;
 
-function validateMonitorLatest(
-  monitors: MonitorLatestObject | Array<MonitorLatestObject>,
+function assertClosestMonitor(monitor: MonitorClosestObject) {
+  assertEquals(Array.isArray(monitor), false);
+  assertEquals(monitor.location, "outside");
+  assertEquals(
+    monitor.name,
+    "CCA Root Access Hackerspace #2",
+  );
+}
+
+function validateClosestMonitorSchema(
+  monitors: MonitorClosestObject | Array<MonitorClosestObject>,
 ) {
-  validateMonitorLatestSchema(
+  validateMonitorClosestSchema(
     monitors,
     (errors, monitor) => {
       console.error(errors);
@@ -34,7 +44,7 @@ Deno.test({
   name: "Module: Fetch Closest Monitor",
   permissions: { net: true },
   async fn(t) {
-    await t.step(
+    const success = await t.step(
       "Build fetch closest monitor request",
       async (t2) => {
         const canBuildUrl = await t2.step(
@@ -82,20 +92,11 @@ Deno.test({
                 await t4.step("Validate closest monitor", () => {
                   const closestMonitor = validateClosestMonitors(monitors);
 
-                  assertEquals(Array.isArray(closestMonitor), false);
-                  // This simulates the correct response from the endpoint
-                  //assertEquals(
-                  //  closestMonitor.name,
-                  //  "CCA Root Access Hackerspace #1",
-                  //);
-                  assertEquals(
-                    closestMonitor.name,
-                    "CCA Root Access Hackerspace #2",
-                  );
+                  assertClosestMonitor(closestMonitor);
+                  validateClosestMonitorSchema(closestMonitor);
                 });
               },
             );
-            // STILL NEED TO TEST PREBUILT FUNCTION
           },
         });
       },
