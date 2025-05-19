@@ -187,6 +187,11 @@ export interface MonitorLatest<T extends MonitorDataField> extends MonitorData {
   latest: MonitorEntries[T];
 }
 
+export interface MonitorClosest<T extends MonitorDataField>
+  extends MonitorLatest<T> {
+  distance: number;
+}
+
 /**
  * The data structure for "latest" field on a MonitorDetails object
  */
