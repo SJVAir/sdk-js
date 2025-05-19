@@ -103,7 +103,7 @@ Deno.test({
     );
 
     await t.step({
-      name: "Prebuild request and handler",
+      name: "Prebuilt request and handler",
       ignore: !success,
       async fn(t2) {
         await t2.step(
