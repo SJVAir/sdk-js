@@ -1,16 +1,16 @@
 import type { APIRequestResponse } from "$http";
 import type { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import type {
+  MonitorClosest,
   MonitorDataField,
-  MonitorLatest,
   PaginatedResponse,
 } from "../types.ts";
 
-export type DefaultLatestMonitor = MonitorLatest<typeof DEFAULT_DISPLAY_FIELD>;
+export type DefaultLatestMonitor = MonitorClosest<typeof DEFAULT_DISPLAY_FIELD>;
 
 export type ClosestMonitorsResponse<T extends MonitorDataField> =
   PaginatedResponse<
-    MonitorLatest<T>
+    MonitorClosest<T>
   >;
 
 /**
