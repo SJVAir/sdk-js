@@ -95,6 +95,17 @@ export type MonitorDevice =
   | "PA-II-SD"
   | "UNKNOWN";
 
+export type MonitorEntryType =
+  | "pm10"
+  | "pm25"
+  | "pm100"
+  | "humidity"
+  | "o3"
+  | "no2"
+  | "pressure"
+  | "temperature"
+  | "particulates";
+
 /** The Geolocation of a monitor */
 export interface MonitorPosition {
   /** The longitude and latitude of the monitor */
@@ -124,6 +135,7 @@ export interface MonitorEntryMeta {
   sensor: string;
   stage: string;
   processor: string;
+  entry_type: MonitorEntryType;
 }
 
 /**
