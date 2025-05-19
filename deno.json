@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "2.0.0-rc.4",
+  "version": "2.0.0-alpha.4",
   "license": "MIT",
   "exports": {
     ".": "./mod.ts",
