@@ -53,4 +53,4 @@ jobs:
           PACKAGE_DESCRIPTION: "Official SDK for the SJVAir API"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Set your npm token as a GitHub secret
           NPM_CONFIG_PROVENANCE: true # If you publish with provenance
-          NPM_OPTIONS: "--provenance --access public"
+          NPM_CONFIG_ACCESS: "public" # If you publish with provenance
