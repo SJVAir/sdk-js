@@ -1,7 +1,6 @@
 name: Publish @sjvair/sdk
 
 env:
-  NODE_VERSION: lts/*
   DENO_VERSION: v2.x
 
 on:
@@ -25,32 +24,3 @@ jobs:
           deno-version: ${{ env.DENO_VERSION }}
       - name: Publish to jsr
         run: deno publish
-
-  npm:
-    needs:
-      - jsr
-    runs-on: ubuntu-latest
-    # if you need publish with provenance, you should set permissions
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: "https://registry.npmjs.org" # needed for npm publish
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: ${{ env.DENO_VERSION }}
-      - name: Publish to npm
-        run: deno run -A jsr:@ryoppippi/mirror-jsr-to-npm
-        env:
-          PACKAGE_NAME: "@sjvair/sdk"
-          PACKAGE_AUTHOR: "Alex McCormick (alexandermccormick)"
-          PACKAGE_DESCRIPTION: "Official SDK for the SJVAir API"
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Set your npm token as a GitHub secret
-          NPM_CONFIG_PROVENANCE: true # If you publish with provenance
-          NPM_CONFIG_ACCESS: "public" # If you publish with provenance
