@@ -1,9 +1,5 @@
-import type {
-  MonitorDataField,
-  MonitorEntries,
-  PaginatedResponse,
-} from "../types.ts";
-import type { APIRequestResponse } from "$http";
+import type { MonitorDataField, MonitorEntries } from "../types.ts";
+import type { APIRequestResponse, PaginatedResponse } from "$http";
 
 /**
  * The configuration options for the monitor entries endpoint
