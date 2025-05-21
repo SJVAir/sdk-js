@@ -1,6 +1,7 @@
 import type { JSONSchemaType } from "ajv";
 import { schemaValidator } from "../../schema.ts";
 import type {
+  Collocation,
   MonitorClosest,
   MonitorData,
   MonitorDataField,
@@ -321,6 +322,19 @@ export const monitorDetailsSchema: JSONSchemaType<MonitorDetails> = {
   additionalProperties: false,
 };
 
+export const collocationSchema: JSONSchemaType<Collocation> = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    reference_id: { type: "string" },
+    colocated_id: { type: "string" },
+    name: { type: "string" },
+    position: monitorPositionSchema,
+  },
+  required: ["id", "reference_id", "colocated_id", "name", "position"],
+  additionalProperties: false,
+};
+
 export const validateMonitorDataSchema = schemaValidator(monitorDataSchema);
 
 export const validateMonitorLatestSchema = schemaValidator(monitorLatestSchema);
@@ -332,3 +346,5 @@ export const validateMonitorClosestSchema = schemaValidator(
 export const validateMonitorDetailsSchema = schemaValidator(
   monitorDetailsSchema,
 );
+
+export const validateCollocationSchema = schemaValidator(collocationSchema);
