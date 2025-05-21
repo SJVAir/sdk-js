@@ -213,3 +213,14 @@ export interface MonitorDetailsEntries {
 export interface MonitorDetails extends MonitorData {
   latest: MonitorDetailsEntries;
 }
+
+/**
+ * The data structure describing colocation relationships
+ */
+export interface Collocation {
+  id: string;
+  reference_id: string;
+  colocated_id: string;
+  name: string;
+  position: MonitorPosition;
+}
