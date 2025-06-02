@@ -1,10 +1,8 @@
-import { apiRequest } from "$http";
-import { getClosestMonitorUrl } from "./request_builders.ts";
-import type { MonitorDataField } from "../types.ts";
-import type {
-  ClosestMonitorsResponse,
-  FetchClosestMonitorsResponse,
-} from "./types.ts";
+import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
+import { fetchClosestMonitor } from "./fetchers.ts";
+import { validateClosestMonitors } from "./validation.ts";
+import type { DefaultLatestMonitor } from "./types.ts";
+import { fetchClosestMonitorsHandler } from "./response_handlers.ts";
 
 /**
  * Fetches the closest monitors to a given set of coordinates.
@@ -14,14 +12,14 @@ import type {
  *
  * @returns An Array containing the 3 closest monitors to a given set of coordinates.
  */
-export async function fetchClosestMonitor<T extends MonitorDataField>(
-  entryType: T,
+export async function getClosestMonitor(
   latitude: number | string,
   longitude: number | string,
-): Promise<FetchClosestMonitorsResponse<T>> {
-  const requestUrl = getClosestMonitorUrl(entryType, latitude, longitude);
-
-  return await apiRequest<ClosestMonitorsResponse<T>>(
-    requestUrl,
-  );
+): Promise<DefaultLatestMonitor> {
+  return await fetchClosestMonitor(
+    DEFAULT_DISPLAY_FIELD,
+    latitude,
+    longitude,
+  ).then(fetchClosestMonitorsHandler)
+    .then(validateClosestMonitors);
 }

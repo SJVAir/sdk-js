@@ -1,15 +1,13 @@
-import { apiRequest, type PaginatedResponse } from "$http";
-import { getCollocationsUrl } from "./request_builders.ts";
 import type { Collocation } from "../types.ts";
-import type { FetchCollocationsResponse } from "./types.ts";
+import { fetchCollocations } from "./fetchers.ts";
+import { fetchCollocationsHandler } from "./response_handlers.ts";
 
 /**
  * Fetches all collocations.
  *
- * @returns The raw "/calibrations" endpoint response
+ * @returns An array containing all collocations.
  */
-export async function fetchCollocations(): Promise<FetchCollocationsResponse> {
-  const requestUrl = getCollocationsUrl();
-
-  return await apiRequest<PaginatedResponse<Collocation>>(requestUrl);
+export async function getCollocations(): Promise<Array<Collocation>> {
+  return await fetchCollocations()
+    .then(fetchCollocationsHandler);
 }

@@ -1,13 +1,5 @@
-import type { MonitorData } from "../types.ts";
-import { fetchMonitors } from "./requests.ts";
-import { fetchMonitorsHandler } from "./response_handlers.ts";
-
-/**
- * Fetches all monitors.
- *
- * @returns An array containing all monitors.
- */
-export async function getMonitors(): Promise<Array<MonitorData>> {
-  return await fetchMonitors()
-    .then(fetchMonitorsHandler);
-}
+export { fetchMonitors } from "./fetchers.ts";
+export { getMonitorsUrl } from "./request_builders.ts";
+export { getMonitors } from "./requests.ts";
+export { fetchMonitorsHandler } from "./response_handlers.ts";
+export * from "./types.ts";

@@ -1,15 +1,13 @@
-import { apiRequest } from "$http";
-import { getMonitorsUrl } from "./request_builders.ts";
 import type { MonitorData } from "../types.ts";
-import type { FetchMonitorsResponse } from "./types.ts";
+import { fetchMonitors } from "./fetchers.ts";
+import { fetchMonitorsHandler } from "./response_handlers.ts";
 
 /**
  * Fetches all monitors.
  *
- * @returns The raw "/monitors" endpoint response
+ * @returns An array containing all monitors.
  */
-export async function fetchMonitors(): Promise<FetchMonitorsResponse> {
-  const requestUrl = getMonitorsUrl();
-
-  return await apiRequest<{ data: Array<MonitorData> }>(requestUrl);
+export async function getMonitors(): Promise<Array<MonitorData>> {
+  return await fetchMonitors()
+    .then(fetchMonitorsHandler);
 }

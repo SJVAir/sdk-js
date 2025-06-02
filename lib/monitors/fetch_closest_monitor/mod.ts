@@ -1,25 +1,6 @@
-import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
-import { fetchClosestMonitor } from "./requests.ts";
-import { validateClosestMonitors } from "./validation.ts";
-import type { DefaultLatestMonitor } from "./types.ts";
-import { fetchClosestMonitorsHandler } from "./response_handlers.ts";
-
-/**
- * Fetches the closest monitors to a given set of coordinates.
- *
- * @param latitude The latitudinal coordinate of the desired location
- * @param longitude The longitudinal coordinate of the desired location
- *
- * @returns An Array containing the 3 closest monitors to a given set of coordinates.
- */
-export async function getClosestMonitor(
-  latitude: number | string,
-  longitude: number | string,
-): Promise<DefaultLatestMonitor> {
-  return await fetchClosestMonitor(
-    DEFAULT_DISPLAY_FIELD,
-    latitude,
-    longitude,
-  ).then(fetchClosestMonitorsHandler)
-    .then(validateClosestMonitors);
-}
+export { fetchClosestMonitor } from "./fetchers.ts";
+export { getClosestMonitorUrl } from "./request_builders.ts";
+export { getClosestMonitor } from "./requests.ts";
+export { fetchClosestMonitorsHandler } from "./response_handlers.ts";
+export * from "./types.ts";
+export { validateClosestMonitors } from "./validation.ts";

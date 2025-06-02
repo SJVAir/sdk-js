@@ -1,24 +1,19 @@
-import { apiRequest } from "$http";
-import { getMonitorEntriesUrl } from "./request_builders.ts";
-import type {
-  FetchMonitorEntriesResponse,
-  MonitorEntryRequestConfig,
-  MonitorEntryRequestResponse,
-} from "./types.ts";
+import { fetchMonitorEntriesPage } from "./fetchers.ts";
+import { gatherMonitorEntries } from "./response_handlers.ts";
+import type { MonitorEntries } from "../types.ts";
+import type { MonitorEntryRequestConfig } from "./types.ts";
 
 /**
- * Fetch a single page of entries for a given monitor
+ * Fetch all pages of entries for a given monitor, using native fetch api
  *
  * @param config An object containing the monitor ID and search parameters
  *
  * @returns An array of monitor entries
  */
-export async function fetchMonitorEntriesPage<
+export async function getMonitorEntries<
   T extends MonitorEntryRequestConfig,
 >(
   config: T,
-): Promise<FetchMonitorEntriesResponse<T["field"]>> {
-  const url = getMonitorEntriesUrl(config);
-
-  return await apiRequest<MonitorEntryRequestResponse<T["field"]>>(url);
+): Promise<Array<MonitorEntries[T["field"]]>> {
+  return await gatherMonitorEntries(config, fetchMonitorEntriesPage);
 }

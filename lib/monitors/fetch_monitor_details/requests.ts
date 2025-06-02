@@ -1,6 +1,6 @@
-import { apiRequest } from "$http";
-import { getMonitorDetailsUrl } from "./request_builders.ts";
-import type { FetchMonitorDetailssResponse } from "./types.ts";
+import { fetchMonitorDetailsHandler } from "./response_handlers.ts";
+import { fetchMonitorDetails } from "./fetchers.ts";
+import type { MonitorDetails } from "../types.ts";
 
 /**
  * Fetch details about a monitor
@@ -9,9 +9,9 @@ import type { FetchMonitorDetailssResponse } from "./types.ts";
  *
  * @returns A MonitorData object containing monitor details
  */
-export async function fetchMonitorDetails(
+export async function getMonitorDetails(
   monitorId: string,
-): Promise<FetchMonitorDetailssResponse> {
-  const url = getMonitorDetailsUrl(monitorId);
-  return await apiRequest(url);
+): Promise<MonitorDetails> {
+  return await fetchMonitorDetails(monitorId)
+    .then(fetchMonitorDetailsHandler);
 }
