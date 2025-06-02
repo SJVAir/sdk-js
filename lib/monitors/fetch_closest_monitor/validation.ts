@@ -1,4 +1,4 @@
-import type { DefaultLatestMonitor } from "./types.ts";
+import type { DefaultClosestMonitor } from "./types.ts";
 
 /**
  * Checks if a given monitor passes the conditions to be presented as the closest monitor
@@ -8,7 +8,7 @@ import type { DefaultLatestMonitor } from "./types.ts";
  * @returns A boolean indicating whether or not the monitor has passed the conditions
  */
 export function isValidClosestMonitor(
-  monitor: DefaultLatestMonitor,
+  monitor: DefaultClosestMonitor,
 ): boolean {
   if (monitor.latest === null || monitor.latest?.value === null) {
     return false;
@@ -34,13 +34,13 @@ export function isValidClosestMonitor(
  * @returns The closest monitor that passed validation
  */
 export function validateClosestMonitors(
-  monitors: Array<DefaultLatestMonitor>,
-): DefaultLatestMonitor {
+  monitors: Array<DefaultClosestMonitor>,
+): DefaultClosestMonitor {
   if (!monitors.length) {
     throw new Error("Failed to get list of closest validatedMonitors");
   }
 
-  const validatedMonitors: Array<DefaultLatestMonitor> = monitors.filter(
+  const validatedMonitors: Array<DefaultClosestMonitor> = monitors.filter(
     isValidClosestMonitor,
   );
 

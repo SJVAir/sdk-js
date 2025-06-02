@@ -1,7 +1,7 @@
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import { fetchClosestMonitor } from "./fetchers.ts";
 import { validateClosestMonitors } from "./validation.ts";
-import type { DefaultLatestMonitor } from "./types.ts";
+import type { DefaultClosestMonitor } from "./types.ts";
 import { fetchClosestMonitorsHandler } from "./response_handlers.ts";
 
 /**
@@ -15,7 +15,7 @@ import { fetchClosestMonitorsHandler } from "./response_handlers.ts";
 export async function getClosestMonitor(
   latitude: number | string,
   longitude: number | string,
-): Promise<DefaultLatestMonitor> {
+): Promise<DefaultClosestMonitor> {
   return await fetchClosestMonitor(
     DEFAULT_DISPLAY_FIELD,
     latitude,
