@@ -3,12 +3,14 @@ import { origin, setOrigin } from "$http";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import { validateMonitorClosestSchema } from "../schemas/monitor.ts";
 import { coordinates } from "../test_constants.ts";
-import { validateClosestMonitors } from "./validation.ts";
-import { getClosestMonitorUrl } from "./request_builders.ts";
-import { fetchClosestMonitor } from "./requests.ts";
 import type { MonitorClosest, MonitorEntries } from "../types.ts";
-import { fetchClosestMonitorsHandler } from "./response_handlers.ts";
-import { getClosestMonitor } from "./mod.ts";
+import {
+  fetchClosestMonitor,
+  fetchClosestMonitorsHandler,
+  getClosestMonitor,
+  getClosestMonitorUrl,
+  validateClosestMonitors,
+} from "./mod.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");

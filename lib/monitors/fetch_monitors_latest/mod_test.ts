@@ -2,10 +2,12 @@ import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { validateMonitorLatestSchema } from "../schemas/monitor.ts";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
-import { getMonitorsLatestUrl } from "./request_builders.ts";
-import { fetchMonitorsLatestHandler } from "./response_handlers.ts";
-import { fetchMonitorsLatest } from "./requests.ts";
-import { getMonitorsLatest } from "./mod.ts";
+import {
+  fetchMonitorsLatest,
+  fetchMonitorsLatestHandler,
+  getMonitorsLatest,
+  getMonitorsLatestUrl,
+} from "./mod.ts";
 import type { MonitorEntries, MonitorLatest } from "../types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {

@@ -1,11 +1,13 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { validateCollocationSchema } from "../schemas/monitor.ts";
-import { getCollocationsUrl } from "./request_builders.ts";
-import { fetchCollocationsHandler } from "./response_handlers.ts";
-import { fetchCollocations } from "./requests.ts";
-import { getCollocations } from "./mod.ts";
-import type { Collocation, MonitorData } from "../types.ts";
+import {
+  fetchCollocations,
+  fetchCollocationsHandler,
+  getCollocations,
+  getCollocationsUrl,
+} from "./mod.ts";
+import type { Collocation } from "../types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");

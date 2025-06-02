@@ -1,10 +1,12 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { validateMonitorDataSchema } from "../schemas/monitor.ts";
-import { getMonitorsUrl } from "./request_builders.ts";
-import { fetchMonitorsHandler } from "./response_handlers.ts";
-import { fetchMonitors } from "./requests.ts";
-import { getMonitors } from "./mod.ts";
+import {
+  fetchMonitors,
+  fetchMonitorsHandler,
+  getMonitors,
+  getMonitorsUrl,
+} from "./mod.ts";
 import type { MonitorData } from "../types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {

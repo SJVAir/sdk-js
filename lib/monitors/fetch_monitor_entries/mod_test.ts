@@ -6,10 +6,13 @@ import {
 } from "../schemas/monitor_entries_request_response.ts";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import { monitorId } from "../test_constants.ts";
-import { getMonitorEntriesUrl } from "./request_builders.ts";
-import { gatherMonitorEntries } from "./response_handlers.ts";
-import { fetchMonitorEntriesPage } from "./requests.ts";
-import type { MonitorDataField } from "../types.ts";
+import {
+  fetchMonitorEntriesPage,
+  gatherMonitorEntries,
+  getMonitorEntries,
+  getMonitorEntriesUrl,
+} from "./mod.ts";
+import type { MonitorDataField, MonitorEntries } from "../types.ts";
 import type {
   MonitorEntryRequestConfig,
   MonitorEntryRequestResponse,
@@ -34,11 +37,26 @@ function validateMonitorEntryRequestResponse(
   });
 }
 
+function validateMonitorEntries<
+  T extends MonitorEntryRequestConfig,
+>(entries: Array<MonitorEntries[T["field"]]>) {
+  validateMonitorEntriesCollection(
+    entries,
+    (errors, data) => {
+      console.error(errors);
+      console.error(data);
+      fail(
+        "Monitor entries array did not pass schema validation",
+      );
+    },
+  );
+}
+
 Deno.test({
   name: "Module: Fetch Monitor Entries",
   permissions: { net: true },
   async fn(t) {
-    await t.step(
+    const success = await t.step(
       "Build fetch monitor entries request",
       async (t2) => {
         const canBuildUrl = await t2.step(
@@ -107,5 +125,25 @@ Deno.test({
         });
       },
     );
+
+    await t.step({
+      name: "Prebuilt request and handler",
+      ignore: !success,
+      async fn(t2) {
+        await t2.step(
+          "Get monitor entries",
+          async (t3) => {
+            const entries = await getMonitorEntries(requestConfig);
+
+            assertEquals(Array.isArray(entries), true);
+
+            await t3.step(
+              "Validate monitor data",
+              () => validateMonitorEntries(entries),
+            );
+          },
+        );
+      },
+    });
   },
 });
