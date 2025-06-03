@@ -1,17 +1,20 @@
-import { apiRequest } from "$http";
+import { apiRequest, type PaginatedResponse } from "$http";
 import { getMonitorsLatestUrl } from "./request_builders.ts";
 import type { MonitorDataField, MonitorLatest } from "../types.ts";
-import type { FetchMonitorsLatestResponse } from "./types.ts";
+import type {
+  FetchMonitorsLatestResponse,
+  MonitorsLatestRequestConfig,
+} from "./types.ts";
 
 /**
- * Fetches all monitors.
+ * Fetches all monitors with a "latest" entry.
  *
- * @returns The raw "/monitors" endpoint response
+ * @returns The raw "/monitors/<entry_type>/current/" endpoint response
  */
-export async function fetchMonitorsLatest<T extends MonitorDataField>(
-  entryType: T,
+export async function fetchMonitorsLatestPage<T extends MonitorDataField>(
+  config: MonitorsLatestRequestConfig,
 ): Promise<FetchMonitorsLatestResponse<T>> {
-  const requestUrl = getMonitorsLatestUrl(entryType);
+  const requestUrl = getMonitorsLatestUrl(config);
 
-  return await apiRequest<{ data: Array<MonitorLatest<T>> }>(requestUrl);
+  return await apiRequest<PaginatedResponse<MonitorLatest<T>>>(requestUrl);
 }
