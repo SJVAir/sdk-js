@@ -1,7 +1,20 @@
-import { consolidateApiRequest } from "$http";
+import { consolidatePaginatedRequest } from "$http";
 import { fetchMonitorEntriesPage } from "./fetchers.ts";
 import type { MonitorEntries } from "../types.ts";
 import type { MonitorEntryRequestConfig } from "./types.ts";
+
+async function getMonitorEntriesPage<
+  T extends MonitorEntryRequestConfig,
+>(
+  config: T,
+) {
+  try {
+    const result = await fetchMonitorEntriesPage(config);
+    return result.body;
+  } catch (error) {
+    throw new Error("Failed to fetch monitor entries page", { cause: error });
+  }
+}
 
 /**
  * Fetch all pages of entries for a given monitor, using native fetch api
@@ -15,5 +28,5 @@ export async function getMonitorEntries<
 >(
   config: T,
 ): Promise<Array<MonitorEntries[T["field"]]>> {
-  return await consolidateApiRequest(config, fetchMonitorEntriesPage);
+  return await consolidatePaginatedRequest(config, getMonitorEntriesPage);
 }

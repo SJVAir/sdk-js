@@ -1,4 +1,4 @@
-import { consolidateApiRequest } from "$http";
+import { consolidatePaginatedRequest } from "$http";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import type { MonitorLatest } from "../types.ts";
 import { fetchMonitorsLatestPage } from "./fetchers.ts";
@@ -6,6 +6,19 @@ import type {
   DefaultLatestMonitor,
   MonitorsLatestRequestConfig,
 } from "./types.ts";
+
+async function getMonitorsLatestPage<
+  T extends MonitorsLatestRequestConfig,
+>(
+  config: T,
+) {
+  try {
+    const result = await fetchMonitorsLatestPage(config);
+    return result.body;
+  } catch (error) {
+    throw new Error("Failed to fetch monitors latest page", { cause: error });
+  }
+}
 
 /**
  * Fetches all monitors with a "latest" entry.
@@ -19,7 +32,7 @@ export async function consolidateMonitorsLatest<
 ): Promise<
   Array<MonitorLatest<T["field"]>>
 > {
-  return await consolidateApiRequest(config, fetchMonitorsLatestPage);
+  return await consolidatePaginatedRequest(config, getMonitorsLatestPage);
 }
 
 /**
