@@ -111,23 +111,26 @@ export async function apiRequest<T>(
  *
  * @returns An array of the consolidated response items
  */
-export async function consolidateApiRequest<T, K extends { page?: number }>(
+export async function consolidatePaginatedRequest<
+  T,
+  K extends { page?: number },
+>(
   config: K,
   cb: (
     config: K,
-  ) => Promise<APIRequestResponse<PaginatedResponse<T>>>,
+  ) => Promise<PaginatedResponse<T>>,
 ): Promise<Array<T>> {
   const totalEntries: Array<T> = [];
 
   try {
-    const { body: { data, has_next_page, page } } = await cb(config);
+    const { data, has_next_page, page } = await cb(config);
 
     if (data.length) {
       totalEntries.push(...data);
 
       if (has_next_page) {
         Object.assign(config, { page: `${page + 1}` });
-        totalEntries.push(...(await consolidateApiRequest(config, cb)));
+        totalEntries.push(...(await consolidatePaginatedRequest(config, cb)));
       }
     }
 
