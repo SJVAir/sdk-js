@@ -1,5 +1,5 @@
+import { consolidateApiRequest } from "$http";
 import { fetchMonitorEntriesPage } from "./fetchers.ts";
-import { gatherMonitorEntries } from "./response_handlers.ts";
 import type { MonitorEntries } from "../types.ts";
 import type { MonitorEntryRequestConfig } from "./types.ts";
 
@@ -15,5 +15,5 @@ export async function getMonitorEntries<
 >(
   config: T,
 ): Promise<Array<MonitorEntries[T["field"]]>> {
-  return await gatherMonitorEntries(config, fetchMonitorEntriesPage);
+  return await consolidateApiRequest(config, fetchMonitorEntriesPage);
 }
