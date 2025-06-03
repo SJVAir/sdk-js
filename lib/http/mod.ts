@@ -103,3 +103,37 @@ export async function apiRequest<T>(
       };
     });
 }
+
+/**
+ * Fetch all pages of a paginated endpoint, with the provided request callback.
+ *
+ * @param config An object containing the desired page number, and any other options for the provided request callback.
+ *
+ * @returns An array of the consolidated response items
+ */
+export async function consolidateApiRequest<T, K extends { page?: number }>(
+  config: K,
+  cb: (
+    config: K,
+  ) => Promise<APIRequestResponse<PaginatedResponse<T>>>,
+): Promise<Array<T>> {
+  const totalEntries: Array<T> = [];
+
+  try {
+    const { body: { data, has_next_page, page } } = await cb(config);
+
+    if (data.length) {
+      totalEntries.push(...data);
+
+      if (has_next_page) {
+        Object.assign(config, { page: `${page + 1}` });
+        totalEntries.push(...(await consolidateApiRequest(config, cb)));
+      }
+    }
+
+    return totalEntries;
+  } catch (err) {
+    console.error("Failed to fetch monitor entries", err);
+    return [] as Array<T>;
+  }
+}
