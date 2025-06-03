@@ -3,16 +3,21 @@ import { origin, setOrigin } from "$http";
 import { validateMonitorLatestSchema } from "../schemas/monitor.ts";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import {
-  fetchMonitorsLatest,
-  fetchMonitorsLatestHandler,
+  consolidateMonitorsLatest,
+  fetchMonitorsLatestPage,
   getMonitorsLatest,
   getMonitorsLatestUrl,
+  type MonitorsLatestRequestConfig,
 } from "./mod.ts";
 import type { MonitorEntries, MonitorLatest } from "../types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
+
+const requestConfig: MonitorsLatestRequestConfig = {
+  field: DEFAULT_DISPLAY_FIELD,
+};
 
 type MonitorLatestObject = MonitorLatest<keyof MonitorEntries>;
 
@@ -37,34 +42,28 @@ Deno.test({
       "Build fetch monitors latest request",
       async (t2) => {
         const canBuildUrl = await t2.step("Get URL", () => {
-          const url = getMonitorsLatestUrl(DEFAULT_DISPLAY_FIELD);
+          const url = getMonitorsLatestUrl(requestConfig);
 
           assertEquals(
-            url.href,
+            url.origin + url.pathname,
             `${origin}/api/2.0/monitors/${DEFAULT_DISPLAY_FIELD}/current/`,
           );
+
+          assertEquals(url.searchParams.get("page"), "1");
         });
 
         await t2.step({
           name: "Fetch raw response",
           ignore: !canBuildUrl,
           async fn(t3) {
-            const rawResponse = await fetchMonitorsLatest("particulates");
+            const rawResponse = await fetchMonitorsLatestPage(requestConfig);
 
             assertEquals(rawResponse.status, 200);
+            assertEquals(Array.isArray(rawResponse.body.data), true);
 
             await t3.step(
-              "Handle raw response",
-              async (t4) => {
-                const monitors = fetchMonitorsLatestHandler(rawResponse);
-
-                assertEquals(Array.isArray(monitors), true);
-
-                await t4.step(
-                  "Validate monitor latest data",
-                  () => validateMonitorLatest(monitors),
-                );
-              },
+              "Validate monitor latest data",
+              () => validateMonitorLatest(rawResponse.body.data),
             );
           },
         });
@@ -72,7 +71,31 @@ Deno.test({
     );
 
     await t.step({
-      name: "Prebuilt fetch monitors latest request",
+      name: "Prebuilt, generic, fetch monitors latest request",
+      ignore: !success,
+      async fn(t2) {
+        await t2.step(
+          "Fetch latest monitor readings",
+          async (t3) => {
+            const monitors = await consolidateMonitorsLatest(requestConfig)
+              .catch((err) => {
+                console.error("Error(fetch all monitors):", err);
+                fail("Prebuilt fetchMonitorsLatest request failed!");
+              });
+
+            assertEquals(Array.isArray(monitors), true);
+
+            await t3.step(
+              "Validate monitor latest data",
+              () => validateMonitorLatest(monitors),
+            );
+          },
+        );
+      },
+    });
+
+    await t.step({
+      name: "Prebuilt, default, fetch monitors latest request",
       ignore: !success,
       async fn(t2) {
         await t2.step(
