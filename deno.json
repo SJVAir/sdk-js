@@ -29,7 +29,6 @@
     "./fetch_monitor_entries/fetchers": "./lib/monitors/fetch_monitor_entries/fetchers.ts",
     "./fetch_monitor_entries/request_builders": "./lib/monitors/fetch_monitor_entries/request_builders.ts",
     "./fetch_monitor_entries/requests": "./lib/monitors/fetch_monitor_entries/requests.ts",
-    "./fetch_monitor_entries/response_handlers": "./lib/monitors/fetch_monitor_entries/response_handlers.ts",
     "./fetch_monitor_entries/types": "./lib/monitors/fetch_monitor_entries/types.ts",
     "./fetch_monitors": "./lib/monitors/fetch_monitors/mod.ts",
     "./fetch_monitors/fetchers": "./lib/monitors/fetch_monitors/fetchers.ts",
