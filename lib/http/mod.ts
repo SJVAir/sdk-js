@@ -123,14 +123,21 @@ export async function consolidatePaginatedRequest<
   const totalEntries: Array<T> = [];
 
   try {
-    const { data, has_next_page, page } = await cb(config);
+    const { data, has_next_page, page, pages } = await cb(config);
 
     if (data.length) {
       totalEntries.push(...data);
 
       if (has_next_page) {
-        Object.assign(config, { page: `${page + 1}` });
-        totalEntries.push(...(await consolidatePaginatedRequest(config, cb)));
+        //Object.assign(config, { page: `${page + 1}` });
+        //totalEntries.push(...(await consolidatePaginatedRequest(config, cb)));
+        const items = await Promise.all(
+          Array.from(
+            { length: pages - 1 },
+            (_, idx) => cb({ ...config, page: `${idx + 2}` }),
+          ),
+        );
+        totalEntries.push(...items.flatMap((response) => response.data));
       }
     }
 
