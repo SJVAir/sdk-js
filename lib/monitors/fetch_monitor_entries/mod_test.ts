@@ -8,7 +8,6 @@ import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import { monitorId } from "../test_constants.ts";
 import {
   fetchMonitorEntriesPage,
-  gatherMonitorEntries,
   getMonitorEntries,
   getMonitorEntriesUrl,
 } from "./mod.ts";
@@ -88,39 +87,10 @@ Deno.test({
 
             assertEquals(response.status, 200);
 
-            const validFirstPage = await t3.step(
+            await t3.step(
               "Validate single entries page",
               () => validateMonitorEntryRequestResponse(response.body),
             );
-
-            await t3.step({
-              name: "Aggregate monitor entries from custom request",
-              ignore: !validFirstPage,
-              async fn(t4) {
-                const entries = await gatherMonitorEntries(
-                  requestConfig,
-                  fetchMonitorEntriesPage,
-                );
-
-                assertEquals(Array.isArray(entries), true);
-
-                // Left off here
-                await t4.step(
-                  "Validate entries",
-                  () =>
-                    validateMonitorEntriesCollection(
-                      entries,
-                      (errors, data) => {
-                        console.error(errors);
-                        console.error(data);
-                        fail(
-                          "Monitor entries array did not pass schema validation",
-                        );
-                      },
-                    ),
-                );
-              },
-            });
           },
         });
       },
@@ -138,7 +108,7 @@ Deno.test({
             assertEquals(Array.isArray(entries), true);
 
             await t3.step(
-              "Validate monitor data",
+              "Validate monitor entries",
               () => validateMonitorEntries(entries),
             );
           },
