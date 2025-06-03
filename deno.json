@@ -41,7 +41,6 @@
     "./fetch_monitors_latest/fetchers": "./lib/monitors/fetch_monitors_latest/fetchers.ts",
     "./fetch_monitors_latest/request_builders": "./lib/monitors/fetch_monitors_latest/request_builders.ts",
     "./fetch_monitors_latest/requests": "./lib/monitors/fetch_monitors_latest/requests.ts",
-    "./fetch_monitors_latest/response_handlers": "./lib/monitors/fetch_monitors_latest/response_handlers.ts",
     "./fetch_monitors_latest/types": "./lib/monitors/fetch_monitors_latest/types.ts"
   },
   "tasks": {
