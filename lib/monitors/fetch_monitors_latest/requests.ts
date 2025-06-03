@@ -3,6 +3,7 @@ import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import type { MonitorLatest } from "../types.ts";
 import { fetchMonitorsLatestPage } from "./fetchers.ts";
 import type {
+  DefaultLatestMonitor,
   MonitorsLatestRequestConfig,
 } from "./types.ts";
 
@@ -20,10 +21,14 @@ export async function consolidateMonitorsLatest<
 > {
   return await consolidateApiRequest(config, fetchMonitorsLatestPage);
 }
+
+/**
+ * Fetch all monitors with a "latest" PM2.5 entry
+ *
+ * @returns An array containing all monitors with a "latest" PM2.5 entry.
  */
 export async function getMonitorsLatest(): Promise<
-  Array<MonitorLatest<typeof DEFAULT_DISPLAY_FIELD>>
+  Array<DefaultLatestMonitor>
 > {
-  return await fetchMonitorsLatest(DEFAULT_DISPLAY_FIELD)
-    .then(fetchMonitorsLatestHandler);
+  return await consolidateMonitorsLatest({ field: DEFAULT_DISPLAY_FIELD });
 }
