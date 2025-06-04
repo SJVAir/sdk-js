@@ -168,16 +168,19 @@ export type MonitorParticulatesEntry =
   & MonitorEntryMeta
   & MonitorParticulatesValues;
 
+/**
+ * A lookup table for entry types
+ */
 export interface MonitorEntries {
-  pm10?: MonitorEntry;
-  pm25?: MonitorEntry;
-  pm100?: MonitorEntry;
-  humidity?: MonitorEntry;
-  o3?: MonitorEntry;
-  no2?: MonitorEntry;
-  pressure?: MonitorPressureEntry;
-  temperature?: MonitorTemperatureEntry;
-  particulates?: MonitorParticulatesEntry;
+  pm10: MonitorEntry;
+  pm25: MonitorEntry;
+  pm100: MonitorEntry;
+  humidity: MonitorEntry;
+  o3: MonitorEntry;
+  no2: MonitorEntry;
+  pressure: MonitorPressureEntry;
+  temperature: MonitorTemperatureEntry;
+  particulates: MonitorParticulatesEntry;
 }
 
 /**
