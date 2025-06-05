@@ -64,6 +64,7 @@ export type MonitorDataField = keyof MonitorEntries;
 export interface MonitorDataSource {
   name:
     | "PurpleAir"
+    | "AirGradient"
     | "AQview"
     | "AirNow.gov"
     | "Central California Asthma Collaborative";

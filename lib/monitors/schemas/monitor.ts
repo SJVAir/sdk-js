@@ -71,6 +71,7 @@ export const monitorDataSourceSchema: JSONSchemaType<MonitorDataSource> = {
       type: "string",
       enum: [
         "PurpleAir",
+        "AirGradient",
         "AQview",
         "AirNow.gov",
         "Central California Asthma Collaborative",
@@ -88,6 +89,7 @@ export const monitorDataProvidersSchema: JSONSchemaType<MonitorDataProvider> = {
       type: "string",
       enum: [
         "PurpleAir",
+        "AirGradient",
         "AQview",
         "AirNow.gov",
         "California Air Resources Board",
