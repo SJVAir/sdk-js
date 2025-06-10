@@ -57,9 +57,11 @@ export const monitorDeviceSchema: JSONSchemaType<MonitorDevice> = {
     "BAM 1022",
     "PA-I",
     "PA-I-LED",
-    "PA-II-FLEX",
+    "PA-I-TOUCH",
     "PA-II",
+    "PA-II-FLEX",
     "PA-II-SD",
+    "PA-II-ZEN",
     "UNKNOWN",
   ],
 };
