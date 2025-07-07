@@ -12,7 +12,7 @@ const ModuleFiles = [
   "validation.ts",
 ];
 
-const newModule = new Command()
+const createModule = new Command()
   .description("Generpte directory and files for a new SJVAir SDK module")
   .arguments("<moduleName:string>")
   .action(async (_, modulePath) => {
@@ -31,11 +31,11 @@ const newModule = new Command()
     }
   });
 
-export const modManager = new Command()
+export const moduleManager = new Command()
   .description("SDK Module Utilities")
-  .command("create", newModule);
+  .command("create", createModule);
 
 const commands = new Command()
-  .command("module", modManager);
+  .command("module", moduleManager);
 
 await commands.parse(Deno.args);
