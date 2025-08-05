@@ -47,6 +47,10 @@
 /api/1.0/calibrations/
 /api/2.0/calibrations/
 
+/api/2.0/hms-smoke/
+/api/2.0/hms-smoke/<smoke_id>/
+/api/2.0/hms-smoke/ongoing/
+
 /api/1.0/monitors/
 /api/2.0/monitors/
 
