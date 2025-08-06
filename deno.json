@@ -48,6 +48,7 @@
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
     "@tstk/types": "jsr:@tstk/types@^1.0.3",
+    "geojson": "npm:@types/geojson@^7946.0.16",
     "ajv": "npm:ajv@^8.17.1",
     "$apiDateFormat": "./lib/api_date_format/mod.ts",
     "$http": "./lib/http/mod.ts",
