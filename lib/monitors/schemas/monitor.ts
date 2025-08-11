@@ -13,6 +13,7 @@ import type {
   MonitorEntry,
   MonitorEntryMeta,
   MonitorEntryType,
+  MonitorHealth,
   MonitorLatest,
   MonitorParticulatesEntry,
   MonitorParticulatesValues,
@@ -63,6 +64,28 @@ export const monitorDeviceSchema: JSONSchemaType<MonitorDevice> = {
     "PA-II-SD",
     "PA-II-ZEN",
     "UNKNOWN",
+  ],
+};
+
+export const monitorHealthSchema: JSONSchemaType<MonitorHealth> = {
+  type: "object",
+  items: {
+    hour: { type: "string" },
+    score: { type: "number" },
+    rpd_pairwise: { type: "number" },
+    correlation: { type: "number" },
+    channel_a_sanity: { type: "boolean" },
+    channel_b_sanity: { type: "boolean" },
+    grade: { type: "string" },
+  },
+  required: [
+    "hour",
+    "score",
+    "rpd_pairwise",
+    "correlation",
+    "channel_a_sanity",
+    "channel_b_sanity",
+    "grade",
   ],
 };
 
@@ -130,6 +153,7 @@ export const monitorDataSchema: JSONSchemaType<MonitorData> = {
     data_source: monitorDataSourceSchema,
     data_providers: { type: "array", items: monitorDataProvidersSchema },
     device: monitorDeviceSchema,
+    health: monitorHealthSchema,
     id: { type: "string" },
     is_active: { type: "boolean" },
     is_sjvair: { type: "boolean" },
@@ -145,6 +169,7 @@ export const monitorDataSchema: JSONSchemaType<MonitorData> = {
     "data_source",
     "data_providers",
     "device",
+    "health",
     "id",
     "is_active",
     "is_sjvair",

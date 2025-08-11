@@ -12,6 +12,9 @@ export interface MonitorData {
   /** The brand/model of air monitor */
   device: MonitorDevice;
 
+  /** The current health of the monitor */
+  health: MonitorHealth;
+
   /** The ID of the monitor */
   id: string;
 
@@ -108,6 +111,16 @@ export type MonitorEntryType =
   | "pressure"
   | "temperature"
   | "particulates";
+
+export interface MonitorHealth {
+  hour: string;
+  score: number;
+  rpd_pairwise: number;
+  correlation: number;
+  channel_a_sanity: boolean;
+  channel_b_sanity: boolean;
+  grade: string;
+}
 
 /** The Geolocation of a monitor */
 export interface MonitorPosition {
