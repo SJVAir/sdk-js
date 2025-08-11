@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "2.0.0-alpha.14",
+  "version": "2.0.0-alpha.15",
   "license": "MIT",
   "exports": {
     ".": "./mod.ts",
@@ -51,6 +51,7 @@
     "geojson": "npm:@types/geojson@^7946.0.16",
     "ajv": "npm:ajv@^8.17.1",
     "$apiDateFormat": "./lib/api_date_format/mod.ts",
+    "$hmsSmoke": "./lib/hms_smoke/",
     "$http": "./lib/http/mod.ts",
     "$monitors/": "./lib/monitors/"
   }
