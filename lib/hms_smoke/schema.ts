@@ -1,15 +1,6 @@
 import type { JSONSchemaType } from "ajv";
 import type { HMSSmokeGeoJSON } from "./types.ts";
-//import { schemaValidator } from "../../schema.ts";
-
-//  id: string;
-//  satellite: string;
-//  density: "light" | "medium" | "heavy";
-//  end: string;
-//  start: string;
-//  date: string;
-//  geometry: MultiPolygon;
-//  is_final: boolean;
+import { multiPolygonSchema, schemaValidator } from "../schema.ts";
 
 export const hmsSmokeSchema: JSONSchemaType<HMSSmokeGeoJSON> = {
   type: "object",
@@ -20,19 +11,19 @@ export const hmsSmokeSchema: JSONSchemaType<HMSSmokeGeoJSON> = {
     end: { type: "string" },
     start: { type: "string" },
     date: { type: "string" },
-    geometry: {
-      type: "object",
-      properties: {
-        coordinates: [],
-        type: "MultiPolygon",
-        bbox: undefined,
-      },
-      required: ["coordinates", "type"],
-    },
+    geometry: multiPolygonSchema,
     is_final: { type: "boolean" },
   },
-  required: ["id", "reference_id", "colocated_id", "name", "position"],
-  additionalProperties: false,
+  required: [
+    "id",
+    "satellite",
+    "density",
+    "end",
+    "start",
+    "date",
+    "geometry",
+    "is_final",
+  ],
 };
 
-//export const validateMonitorDataSchema = schemaValidator(monitorDataSchema);
+export const validateHMSSmokeSchema = schemaValidator(hmsSmokeSchema);

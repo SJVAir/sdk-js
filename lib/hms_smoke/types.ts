@@ -1,8 +1,4 @@
 import type { MultiPolygon } from "geojson";
-const a: MultiPolygon = {
-  coordinates: [],
-  type: "MultiPolygon",
-};
 
 export interface HMSSmokeGeoJSON {
   id: string;
@@ -11,7 +7,7 @@ export interface HMSSmokeGeoJSON {
   end: string;
   start: string;
   date: string;
-  geometry: MultiPolygon;
+  geometry: Omit<MultiPolygon, "bbox">;
   is_final: boolean;
 }
 
