@@ -38,63 +38,27 @@ export function schemaValidator<T>(
   };
 }
 
-export const bboxSchema: JSONSchemaType<BBox> = {
-  type: "array",
-  oneOf: [
-    {
-      type: "array",
-      items: [
-        { type: "number" },
-        { type: "number" },
-        { type: "number" },
-        { type: "number" },
-      ],
-      minItems: 4,
-      maxItems: 4,
-    },
-    {
-      type: "array",
-      items: [
-        { type: "number" },
-        { type: "number" },
-        { type: "number" },
-        { type: "number" },
-        { type: "number" },
-        { type: "number" },
-      ],
-      minItems: 6,
-      maxItems: 6,
-    },
-  ],
-};
-//export const multipolygonSchema: JSONSchemaType<MultiPolygon> = {
-//  type: "object",
-//  properties: {
-//    coordinates: [],
-//    type: { type: "string", const: "MultiPolygon" },
-//    bbox: bboxSchema,
-//  },
-//  required: ["coordinates", "type"],
-//};
-export const multiPolygonSchema: JSONSchemaType<MultiPolygon> = {
+export const multiPolygonSchema: JSONSchemaType<Omit<MultiPolygon, "bbox">> = {
   type: "object",
   properties: {
     type: { type: "string", const: "MultiPolygon" },
     coordinates: {
       type: "array",
-      items: {
+      items: { // Each item in the coordinates array is a Polygon
         type: "array",
-        items: {
+        items: { // Each item in a Polygon array is a LinearRing
           type: "array",
-          items: [{ type: "number" }, { type: "number" }],
-          minItems: 2,
-          maxItems: 2,
+          minItems: 4, // A LinearRing must have at least 4 positions
+          items: { // Each item in a LinearRing array is a position (array of numbers)
+            type: "array",
+            minItems: 2, // A position must have at least longitude and latitude
+            maxItems: 3, // Optional altitude can be included
+            items: { type: "number" },
+          },
         },
-        minItems: 4,
       },
     },
-    bbox: bboxSchema,
   },
   required: ["type", "coordinates"],
-  additionalProperties: false,
-};
+  additionalProperties: true,
+} as JSONSchemaType<Omit<MultiPolygon, "bbox">>;
