@@ -1,32 +1,19 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { validateMonitorLatestSchema } from "../schemas/monitor.ts";
+import { monitorLatestSchema } from "../schemas/monitor_data.ts";
 import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import {
   fetchMonitorsLatest,
   getMonitorsLatest,
   getMonitorsLatestUrl,
 } from "./mod.ts";
-import type { MonitorEntries, MonitorLatest } from "../types.ts";
+import { getSimpleValidation } from "../../schema.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-type MonitorLatestObject = MonitorLatest<keyof MonitorEntries>;
-
-function validateMonitorLatest(
-  monitors: MonitorLatestObject | Array<MonitorLatestObject>,
-) {
-  validateMonitorLatestSchema(
-    monitors,
-    (errors, monitor) => {
-      console.error(errors);
-      console.error(monitor);
-      fail("Monitor data did not pass schema validation");
-    },
-  );
-}
+const validateMonitorLatest = getSimpleValidation(monitorLatestSchema);
 
 Deno.test({
   name: "Module: Fetch Monitors Latest",
@@ -54,6 +41,7 @@ Deno.test({
 
             assertEquals(rawResponse.status, 200);
             assertEquals(Array.isArray(rawResponse.body.data), true);
+            console.log(rawResponse.body.data);
 
             await t3.step(
               "Validate monitor latest data",
