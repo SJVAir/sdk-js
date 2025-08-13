@@ -153,9 +153,18 @@ export const monitorDetailsSchema = monitorDataSchema.extend({
 });
 
 export const collocationSchema = z.object({
+  /** The ID of the collocation entry */
   id: z.string(),
+
+  /** The ID of the reference monitor */
   reference_id: z.string(),
+
+  /** The ID of the collocated monitor */
   colocated_id: z.string(),
+
+  /** The name of the reference monitor */
   name: z.string(),
+
+  /** The position of the reference monitor */
   position: monitorPositionSchema,
 });
