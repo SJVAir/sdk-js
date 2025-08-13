@@ -101,6 +101,15 @@ export type MonitorEntriesMap<T extends keyof MonitorEntries> =
 export type MonitorLatest = zinfer<typeof monitorLatestSchema>;
 
 /**
+ * The monitor data structure for the monitor with a specific
+ * latest entry type
+ */
+export interface MonitorLatestType<T extends keyof MonitorEntries>
+  extends Omit<MonitorLatest, "latest"> {
+  latest: MonitorEntries[T];
+}
+
+/**
  * The monitor data structure for the closest monitor
  */
 export type MonitorClosest = zinfer<typeof monitorClosestSchema>;
