@@ -2,8 +2,7 @@ import * as z from "zod";
 import {
   monitorEntrySchema,
   monitorParticulatesEntrySchema,
-  monitorPressureEntrySchema,
-  monitorTemperatureEntrySchema,
+  someMonitorEntrySchema,
 } from "./monitor_entry.ts";
 
 export const monitorDataVendorSchema = z.object({
@@ -108,12 +107,7 @@ export const monitorDataSchema = z.object({
 
 export const monitorLatestSchema = monitorDataSchema.extend({
   /** The latest specified entry for a given monitor */
-  latest: z.union([
-    monitorEntrySchema,
-    monitorTemperatureEntrySchema,
-    monitorPressureEntrySchema,
-    monitorParticulatesEntrySchema,
-  ]),
+  latest: someMonitorEntrySchema,
 });
 
 export const monitorClosestSchema = monitorLatestSchema.extend({
