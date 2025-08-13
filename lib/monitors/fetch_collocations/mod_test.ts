@@ -1,25 +1,20 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { validateCollocationSchema } from "../schemas/monitor.ts";
+
 import {
   fetchCollocations,
   fetchCollocationsHandler,
   getCollocations,
   getCollocationsUrl,
 } from "./mod.ts";
-import type { Collocation } from "../types.ts";
+import { getSimpleValidation } from "../../schema.ts";
+import { collocationSchema } from "../schemas/monitor_data.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-function validateCollocation(collocations: Collocation | Array<Collocation>) {
-  validateCollocationSchema(collocations, (errors, collocation) => {
-    console.error(errors);
-    console.error(collocation);
-    fail("Monitor data did not pass schema validation");
-  });
-}
+const validateCollocation = getSimpleValidation(collocationSchema);
 
 Deno.test({
   name: "Module: Fetch Collocations",
