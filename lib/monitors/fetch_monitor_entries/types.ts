@@ -1,4 +1,4 @@
-import type { MonitorDataField, MonitorEntries } from "../types.ts";
+import type { MonitorEntries, MonitorEntryType } from "../types.ts";
 import type { APIRequestResponse, PaginatedResponse } from "$http";
 
 /**
@@ -6,7 +6,7 @@ import type { APIRequestResponse, PaginatedResponse } from "$http";
  */
 export interface MonitorEntryRequestConfig {
   /** Fields to include on the monitor entry */
-  field: MonitorDataField;
+  field: MonitorEntryType;
 
   /** The ID of the monitor for which entries will be fetched */
   monitorId: string;
@@ -33,11 +33,11 @@ export interface MonitorEntryRequestConfig {
 }
 
 /** The response object return from the "/monitors/{MONItOR_ID}/entries" endpoint */
-export type MonitorEntryRequestResponse<T extends MonitorDataField> =
+export type MonitorEntryRequestResponse<T extends MonitorEntryType> =
   PaginatedResponse<MonitorEntries[T]>;
 
 /**
  * The data structure returned from the "/monitors/<monitor_id>/entries/<entry_type>/" endpoint
  */
-export type FetchMonitorEntriesResponse<T extends MonitorDataField> =
+export type FetchMonitorEntriesResponse<T extends MonitorEntryType> =
   APIRequestResponse<MonitorEntryRequestResponse<T>>;
