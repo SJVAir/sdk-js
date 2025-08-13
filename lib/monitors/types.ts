@@ -89,7 +89,14 @@ export interface MonitorEntries {
 }
 
 /**
- * The monitor data structure for the latest value of a specific entry type
+ * A utility type to leverage the MonitorEntries lookup table
+ */
+export type MonitorEntriesMap<T extends keyof MonitorEntries> =
+  MonitorEntries[T];
+
+/**
+ * The monitor data structure for the latest value of a specific
+ * entry type
  */
 export type MonitorLatest = zinfer<typeof monitorLatestSchema>;
 
