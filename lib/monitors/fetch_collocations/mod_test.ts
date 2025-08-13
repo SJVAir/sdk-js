@@ -14,7 +14,14 @@ if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-const validateCollocation = getSimpleValidation(collocationSchema);
+const validateCollocation = getSimpleValidation(
+  collocationSchema,
+  (error, collocation) => {
+    console.error(error);
+    console.error(collocation);
+    fail("Collocation data did not pass schema validation");
+  },
+);
 
 Deno.test({
   name: "Module: Fetch Collocations",

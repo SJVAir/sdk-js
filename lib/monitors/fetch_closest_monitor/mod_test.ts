@@ -27,7 +27,14 @@ function assertClosestMonitor(monitor: MonitorClosest) {
   //);
 }
 
-const validateClosestMonitorSchema = getSimpleValidation(monitorClosestSchema);
+const validateClosestMonitorSchema = getSimpleValidation(
+  monitorClosestSchema,
+  (error, monitor) => {
+    console.error(error);
+    console.error(monitor);
+    fail("Monitor data did not pass schema validation");
+  },
+);
 
 Deno.test({
   name: "Module: Fetch Closest Monitor",
