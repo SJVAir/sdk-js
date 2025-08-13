@@ -83,7 +83,7 @@ export const monitorParticulatesEntrySchema = monitorEntryMetaSchema.extend({
 });
 
 /** A utility schema for validating all possigle entry types */
-export const someMonitorEntry = z.union([
+export const someMonitorEntrySchema = z.union([
   monitorEntrySchema,
   monitorTemperatureEntrySchema,
   monitorPressureEntrySchema,
