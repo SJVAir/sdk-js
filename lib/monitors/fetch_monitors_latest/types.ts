@@ -1,14 +1,15 @@
 import type { APIRequestResponse } from "$http";
-import type { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
-import type { MonitorDataField, MonitorLatest } from "../types.ts";
-
-/**
- * The default data structure for monitors including a "latest" field
- */
-export type DefaultLatestMonitor = MonitorLatest<typeof DEFAULT_DISPLAY_FIELD>;
+import type { MonitorEntryType, MonitorLatestType } from "../types.ts";
 
 /**
  * The data structure returned from the "/monitors/" endpoint
  */
-export type FetchMonitorsLatestResponse<T extends MonitorDataField> =
-  APIRequestResponse<{ data: Array<MonitorLatest<T>> }>;
+export type MonitorsLatestResponse<T extends MonitorEntryType> = {
+  data: Array<MonitorLatestType<T>>;
+};
+
+/**
+ * The data structure returned from the "/monitors/" endpoint
+ */
+export type FetchMonitorsLatestResponse<T extends MonitorEntryType> =
+  APIRequestResponse<MonitorsLatestResponse<T>>;

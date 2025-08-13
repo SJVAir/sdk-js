@@ -1,5 +1,5 @@
 import { fetchMonitorsLatest } from "./fetchers.ts";
-import type { MonitorDataField, MonitorLatest } from "../types.ts";
+import type { MonitorEntryType, MonitorLatestType } from "../types.ts";
 
 /**
  * Fetches all monitors with a "latest" entry.
@@ -7,10 +7,10 @@ import type { MonitorDataField, MonitorLatest } from "../types.ts";
  * @returns An array containing all monitors with a "latest" entry.
  */
 export async function getMonitorsLatest<
-  T extends MonitorDataField,
+  T extends MonitorEntryType,
 >(
   field: T,
-): Promise<Array<MonitorLatest<T>>> {
+): Promise<Array<MonitorLatestType<T>>> {
   try {
     const result = await fetchMonitorsLatest(field);
     return result.body.data;

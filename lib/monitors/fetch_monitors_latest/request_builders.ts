@@ -1,5 +1,5 @@
 import { getApiUrl } from "$http";
-import type { MonitorDataField } from "../types.ts";
+import type { MonitorEntryType } from "../types.ts";
 
 /**
  * Constructs the URL for getting the "monitors" api endpoint.
@@ -7,7 +7,7 @@ import type { MonitorDataField } from "../types.ts";
  * @returns An instance of URL configured for the "monitors" api endpoint.
  */
 export function getMonitorsLatestUrl(
-  field: MonitorDataField,
+  field: MonitorEntryType,
 ): URL {
   return getApiUrl(`monitors/${field}/current`);
 }
