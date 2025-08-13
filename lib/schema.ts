@@ -1,6 +1,9 @@
 import { type infer as zinfer, ZodError, type ZodType } from "zod";
 
-export function getSimpleValidation<T extends ZodType>(schema: T) {
+export function getSimpleValidation<T extends ZodType>(
+  schema: T,
+  errorHandler: (error: ZodError, item: zinfer<T>) => void,
+) {
   return (items: zinfer<T> | Array<zinfer<T>>) => {
     if (Array.isArray(items)) {
       items.forEach((i) => {
@@ -8,7 +11,7 @@ export function getSimpleValidation<T extends ZodType>(schema: T) {
           schema.parse(i);
         } catch (error) {
           if (error instanceof ZodError) {
-            console.log(i, error.message);
+            errorHandler(error, i);
           }
         }
       });
@@ -17,7 +20,7 @@ export function getSimpleValidation<T extends ZodType>(schema: T) {
         schema.parse(items);
       } catch (error) {
         if (error instanceof ZodError) {
-          console.log(items, error.message);
+          errorHandler(error, items);
         }
       }
     }
