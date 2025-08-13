@@ -1,6 +1,6 @@
 import { apiRequest } from "$http";
 import { getClosestMonitorUrl } from "./request_builders.ts";
-import type { MonitorDataField } from "../types.ts";
+import type { MonitorEntryType } from "../types.ts";
 import type {
   ClosestMonitorsResponse,
   FetchClosestMonitorsResponse,
@@ -9,12 +9,13 @@ import type {
 /**
  * Fetches the closest monitors to a given set of coordinates.
  *
+ * @param entryType The type of entry to include in the "latest" field
  * @param latitude The latitudinal coordinate of the desired location
  * @param longitude The longitudinal coordinate of the desired location
  *
  * @returns An Array containing the 3 closest monitors to a given set of coordinates.
  */
-export async function fetchClosestMonitor<T extends MonitorDataField>(
+export async function fetchClosestMonitor<T extends MonitorEntryType>(
   entryType: T,
   latitude: number | string,
   longitude: number | string,
