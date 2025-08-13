@@ -121,34 +121,39 @@ export const monitorClosestSchema = monitorLatestSchema.extend({
   distance: z.number(),
 });
 
+/** A utility schema for defining the monitorDetailsSchema */
+const detailsEntrySchema = monitorEntrySchema.omit({ entry_type: true });
+
 export const monitorDetailsSchema = monitorDataSchema.extend({
   latest: {
     /** The latest entry for the pm10 field */
-    pm10: z.optional(monitorEntrySchema),
+    pm10: z.optional(detailsEntrySchema),
 
     /** The latest entry for the pm25 field */
-    pm25: z.optional(monitorEntrySchema),
+    pm25: z.optional(detailsEntrySchema),
 
     /** The latest entry for the pm100 field */
-    pm100: z.optional(monitorEntrySchema),
+    pm100: z.optional(detailsEntrySchema),
 
     /** The latest entry for the humidity field */
-    humidity: z.optional(monitorEntrySchema),
+    humidity: z.optional(detailsEntrySchema),
 
     /** The latest entry for the o3 (ozone) field */
-    o3: z.optional(monitorEntrySchema),
+    o3: z.optional(detailsEntrySchema),
 
     /** The latest entry for the no2 (nitrogen dioxide) field */
-    no2: z.optional(monitorEntrySchema),
+    no2: z.optional(detailsEntrySchema),
 
     /** The latest entry for the pressure field */
-    pressure: z.optional(monitorEntrySchema),
+    pressure: z.optional(detailsEntrySchema),
 
     /** The latest entry for the temperature field */
-    temperature: z.optional(monitorEntrySchema),
+    temperature: z.optional(detailsEntrySchema),
 
     /** The latest entry for the particulates field */
-    particulates: z.optional(monitorParticulatesEntrySchema),
+    particulates: z.optional(
+      monitorParticulatesEntrySchema.omit({ entry_type: true }),
+    ),
   },
 });
 
