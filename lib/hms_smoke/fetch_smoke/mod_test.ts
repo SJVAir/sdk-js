@@ -1,22 +1,21 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { validateHMSSmokeSchema } from "../schema.ts";
 import { fetchHMSSmoke, getHMSSmoke, getHMSSmokeUrl } from "./mod.ts";
-import type { HMSSmokeGeoJSON } from "../types.ts";
+import { getSimpleValidation } from "../../schema.ts";
+import { hmsSmokeSchema } from "../schema.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-function validateHMSSmokeData(
-  response: HMSSmokeGeoJSON | Array<HMSSmokeGeoJSON>,
-) {
-  validateHMSSmokeSchema(response, (errors, monitor) => {
+const validateHMSSmokeData = getSimpleValidation(
+  hmsSmokeSchema,
+  (errors, monitor) => {
     console.error(errors);
     console.error(monitor);
     fail("Monitor data did not pass schema validation");
-  });
-}
+  },
+);
 
 Deno.test({
   name: "Module: Fetch HMS Smoke",
