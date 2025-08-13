@@ -27,9 +27,6 @@ export type MonitorData = zinfer<typeof monitorDataSchema>;
  */
 export type MonitorType = zinfer<typeof monitorTypeSchema>;
 
-/** The name of the field under which data is stored on a monitor object */
-export type MonitorDataField = keyof MonitorEntries;
-
 /** A data source or provider */
 export type MonitorDataVendor = zinfer<typeof monitorDataVendorSchema>;
 
