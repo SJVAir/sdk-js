@@ -68,16 +68,21 @@ export type MonitorParticulatesEntry = zinfer<
   typeof monitorParticulatesEntrySchema
 >;
 
+/** A utility type for defining the lookup table */
+interface ExplicitMonitorEntry<T extends MonitorEntryType>
+  extends Omit<MonitorEntry, "entry_type"> {
+  entry_type: T;
+}
 /**
  * A lookup table for entry types
  */
 export interface MonitorEntries {
-  pm10: MonitorEntry;
-  pm25: MonitorEntry;
-  pm100: MonitorEntry;
-  humidity: MonitorEntry;
-  o3: MonitorEntry;
-  no2: MonitorEntry;
+  pm10: ExplicitMonitorEntry<"pm10">;
+  pm25: ExplicitMonitorEntry<"pm25">;
+  pm100: ExplicitMonitorEntry<"pm100">;
+  humidity: ExplicitMonitorEntry<"humidity">;
+  o3: ExplicitMonitorEntry<"o3">;
+  no2: ExplicitMonitorEntry<"no2">;
   pressure: MonitorPressureEntry;
   temperature: MonitorTemperatureEntry;
   particulates: MonitorParticulatesEntry;

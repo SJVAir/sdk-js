@@ -38,6 +38,9 @@ export const monitorEntrySchema = monitorEntryMetaSchema.extend({
 });
 
 export const monitorTemperatureEntrySchema = monitorEntryMetaSchema.extend({
+  /** The type of data this entry represents */
+  entry_type: z.literal("temperature"),
+
   /** The value in fahrenheit */
   temperature_f: z.string(),
 
@@ -46,6 +49,9 @@ export const monitorTemperatureEntrySchema = monitorEntryMetaSchema.extend({
 });
 
 export const monitorPressureEntrySchema = monitorEntryMetaSchema.extend({
+  /** The type of data this entry represents */
+  entry_type: z.literal("pressure"),
+
   /** The pressure in millimeters of mercury */
   pressure_mmhg: z.string(),
 
@@ -54,6 +60,9 @@ export const monitorPressureEntrySchema = monitorEntryMetaSchema.extend({
 });
 
 export const monitorParticulatesEntrySchema = monitorEntryMetaSchema.extend({
+  /** The type of data this entry represents */
+  entry_type: z.literal("particulates"),
+
   /** The count for particulates 0.3 microns */
   particles_03um: z.nullable(z.string()),
 
