@@ -81,3 +81,11 @@ export const monitorParticulatesEntrySchema = monitorEntryMetaSchema.extend({
   /** The count for particulates of 10 microns */
   particles_100um: z.nullable(z.string()),
 });
+
+/** A utility schema for validating all possigle entry types */
+export const someMonitorEntry = z.union([
+  monitorEntrySchema,
+  monitorTemperatureEntrySchema,
+  monitorPressureEntrySchema,
+  monitorParticulatesEntrySchema,
+]);
