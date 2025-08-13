@@ -1,29 +1,23 @@
-import type { JSONSchemaType } from "ajv";
-import type { HMSSmokeGeoJSON } from "./types.ts";
-import { multiPolygonSchema, schemaValidator } from "../schema.ts";
+import * as z from "zod";
 
-export const hmsSmokeSchema: JSONSchemaType<HMSSmokeGeoJSON> = {
-  type: "object",
-  properties: {
-    id: { type: "string" },
-    satellite: { type: "string" },
-    density: { type: "string", enum: ["light", "medium", "heavy"] },
-    end: { type: "string" },
-    start: { type: "string" },
-    date: { type: "string" },
-    geometry: multiPolygonSchema,
-    is_final: { type: "boolean" },
-  },
-  required: [
-    "id",
-    "satellite",
-    "density",
-    "end",
-    "start",
-    "date",
-    "geometry",
-    "is_final",
-  ],
-};
+export const multiPolygonSchema = z.object({
+  type: z.literal("MultiPolygon"),
+  coordinates: z.array(
+    z.array(
+      z.array(
+        z.tuple([z.number(), z.number()]),
+      ),
+    ),
+  ),
+});
 
-export const validateHMSSmokeSchema = schemaValidator(hmsSmokeSchema);
+export const hmsSmokeSchema = z.object({
+  id: z.string(),
+  satellite: z.string(),
+  density: z.enum(["light", "medium", "heavy"]),
+  end: z.string(),
+  start: z.string(),
+  date: z.string(),
+  geometry: multiPolygonSchema,
+  is_final: z.boolean(),
+});
