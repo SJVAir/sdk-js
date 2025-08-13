@@ -106,6 +106,14 @@ export type MonitorLatest = zinfer<typeof monitorLatestSchema>;
 export type MonitorClosest = zinfer<typeof monitorClosestSchema>;
 
 /**
+ * The monitor data structure for the closest monitor with a
+ * specific latest entry type
+ */
+export interface MonitorClosestType<T extends keyof MonitorEntries>
+  extends Omit<MonitorClosest, "latest"> {
+  latest: MonitorEntries[T];
+}
+/**
  * The data structure for details on a monitor object
  */
 export type MonitorDetails = zinfer<typeof monitorDetailsSchema>;
