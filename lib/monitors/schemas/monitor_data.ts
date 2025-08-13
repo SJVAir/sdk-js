@@ -21,10 +21,10 @@ export const monitorHealthSchema = z.object({
   /** The number representation of the monitor's health */
   score: z.number(),
 
-  /** FIXME: Some stat */
+  /** The relative percent difference between channels */
   rpd_pairwise: z.nullable(z.number()),
 
-  /** FIXME: Some stat */
+  /** The correlation between channels */
   correlation: z.nullable(z.number()),
 
   /** States whether or not the sensor is returning valid data */
