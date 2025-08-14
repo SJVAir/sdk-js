@@ -1,4 +1,3 @@
-export * from "./constants.ts";
 export * from "./fetch_closest_monitor/mod.ts";
 export * from "./fetch_collocations/mod.ts";
 export * from "./fetch_monitor_details/mod.ts";
