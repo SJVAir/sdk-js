@@ -8,8 +8,8 @@ import {
 } from "./mod.ts";
 import type { MonitorEntryType } from "../types.ts";
 import type { MonitorEntryRequestConfig } from "./types.ts";
-import { getSimpleValidation } from "../../schema.ts";
 import { someMonitorEntrySchema } from "../schemas/monitor_entry.ts";
+import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -21,14 +21,7 @@ const requestConfig: MonitorEntryRequestConfig = {
   field: pollutant,
 };
 
-const validateMonitorEntries = getSimpleValidation(
-  someMonitorEntrySchema,
-  (errors, data) => {
-    console.error(errors);
-    console.error(data);
-    fail("Monitor entries page did not pass schema validation");
-  },
-);
+const validateMonitorEntries = getSimpleValidationTest(someMonitorEntrySchema);
 
 Deno.test({
   name: "Module: Fetch Monitor Entries",

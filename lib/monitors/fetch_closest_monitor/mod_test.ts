@@ -1,7 +1,6 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { coordinates } from "../test_constants.ts";
-import { getSimpleValidation } from "../../schema.ts";
 import type { MonitorClosest } from "../types.ts";
 import {
   fetchClosestMonitor,
@@ -11,6 +10,7 @@ import {
   validateClosestMonitors,
 } from "./mod.ts";
 import { monitorClosestSchema } from "../schemas/monitor_data.ts";
+import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -27,13 +27,8 @@ function assertClosestMonitor(monitor: MonitorClosest) {
   //);
 }
 
-const validateClosestMonitorSchema = getSimpleValidation(
+const validateClosestMonitorSchema = getSimpleValidationTest(
   monitorClosestSchema,
-  (error, monitor) => {
-    console.error(error);
-    console.error(monitor);
-    fail("Monitor data did not pass schema validation");
-  },
 );
 
 Deno.test({

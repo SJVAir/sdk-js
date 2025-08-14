@@ -7,20 +7,13 @@ import {
   getMonitors,
   getMonitorsUrl,
 } from "./mod.ts";
-import { getSimpleValidation } from "../../schema.ts";
+import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-const validateMonitorData = getSimpleValidation(
-  monitorDataSchema,
-  (error, monitor) => {
-    console.error(error);
-    console.error(monitor);
-    fail("Monitor data did not pass schema validation");
-  },
-);
+const validateMonitorData = getSimpleValidationTest(monitorDataSchema);
 
 Deno.test({
   name: "Module: Fetch Monitors",

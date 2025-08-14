@@ -6,8 +6,8 @@ import {
   getMonitorsLatest,
   getMonitorsLatestUrl,
 } from "./mod.ts";
-import { getSimpleValidation } from "../../schema.ts";
 import type { MonitorEntryType } from "../types.ts";
+import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -15,14 +15,7 @@ if (!Deno.env.has("TEST_REMOTE")) {
 
 const pollutant: MonitorEntryType = "pm25";
 
-const validateMonitorLatest = getSimpleValidation(
-  monitorLatestSchema,
-  (error, monitor) => {
-    console.error(error);
-    console.error(monitor);
-    fail("Monitor data did not pass schema validation");
-  },
-);
+const validateMonitorLatest = getSimpleValidationTest(monitorLatestSchema);
 
 Deno.test({
   name: "Module: Fetch Monitors Latest",

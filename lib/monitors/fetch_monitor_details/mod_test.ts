@@ -1,6 +1,5 @@
-import { assertEquals, fail } from "@std/assert";
+import { assertEquals } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { getSimpleValidation } from "../../schema.ts";
 import { monitorDetailsSchema } from "../schemas/monitor_data.ts";
 import { monitorId } from "../test_constants.ts";
 import {
@@ -9,19 +8,13 @@ import {
   getMonitorDetails,
   getMonitorDetailsUrl,
 } from "./mod.ts";
+import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-const validateMonitorDetails = getSimpleValidation(
-  monitorDetailsSchema,
-  (error, monitor) => {
-    console.error(error);
-    console.error(monitor);
-    fail("Monitor data did not pass schema validation");
-  },
-);
+const validateMonitorDetails = getSimpleValidationTest(monitorDetailsSchema);
 
 Deno.test({
   name: "Module: Fetch Monitor Details",
