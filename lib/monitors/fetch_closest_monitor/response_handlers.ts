@@ -1,9 +1,9 @@
-import type { MonitorClosest, MonitorDataField } from "../types.ts";
+import type { MonitorClosestType, MonitorEntryType } from "../types.ts";
 import type { FetchClosestMonitorsResponse } from "./types.ts";
 
-export function fetchClosestMonitorsHandler<T extends MonitorDataField>(
+export function fetchClosestMonitorsHandler<T extends MonitorEntryType>(
   response: FetchClosestMonitorsResponse<T>,
-): Array<MonitorClosest<T>> {
+): Array<MonitorClosestType<T>> {
   const { data } = response.body;
   return (data && Array.isArray(data)) ? data : [];
 }

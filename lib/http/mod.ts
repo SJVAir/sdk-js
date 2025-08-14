@@ -123,7 +123,7 @@ export async function consolidatePaginatedRequest<
   const totalEntries: Array<T> = [];
 
   try {
-    const { data, has_next_page, page, pages } = await cb(config);
+    const { data, has_next_page, page: _page, pages } = await cb(config);
 
     if (data.length) {
       totalEntries.push(...data);

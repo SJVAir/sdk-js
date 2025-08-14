@@ -1,32 +1,21 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { validateMonitorLatestSchema } from "../schemas/monitor.ts";
-import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
+import { monitorLatestSchema } from "../schemas/monitor_data.ts";
 import {
   fetchMonitorsLatest,
   getMonitorsLatest,
   getMonitorsLatestUrl,
 } from "./mod.ts";
-import type { MonitorEntries, MonitorLatest } from "../types.ts";
+import type { MonitorEntryType } from "../types.ts";
+import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-type MonitorLatestObject = MonitorLatest<keyof MonitorEntries>;
+const pollutant: MonitorEntryType = "pm25";
 
-function validateMonitorLatest(
-  monitors: MonitorLatestObject | Array<MonitorLatestObject>,
-) {
-  validateMonitorLatestSchema(
-    monitors,
-    (errors, monitor) => {
-      console.error(errors);
-      console.error(monitor);
-      fail("Monitor data did not pass schema validation");
-    },
-  );
-}
+const validateMonitorLatest = getSimpleValidationTest(monitorLatestSchema);
 
 Deno.test({
   name: "Module: Fetch Monitors Latest",
@@ -36,11 +25,11 @@ Deno.test({
       "Build fetch monitors latest request",
       async (t2) => {
         const canBuildUrl = await t2.step("Get URL", () => {
-          const url = getMonitorsLatestUrl(DEFAULT_DISPLAY_FIELD);
+          const url = getMonitorsLatestUrl(pollutant);
 
           assertEquals(
             url.origin + url.pathname,
-            `${origin}/api/2.0/monitors/${DEFAULT_DISPLAY_FIELD}/current/`,
+            `${origin}/api/2.0/monitors/${pollutant}/current/`,
           );
         });
 
@@ -49,7 +38,7 @@ Deno.test({
           ignore: !canBuildUrl,
           async fn(t3) {
             const rawResponse = await fetchMonitorsLatest(
-              DEFAULT_DISPLAY_FIELD,
+              pollutant,
             );
 
             assertEquals(rawResponse.status, 200);
@@ -71,7 +60,7 @@ Deno.test({
         await t2.step(
           "Fetch latest monitor readings",
           async (t3) => {
-            const monitors = await getMonitorsLatest(DEFAULT_DISPLAY_FIELD)
+            const monitors = await getMonitorsLatest(pollutant)
               .catch((err) => {
                 console.error("Error(fetch all monitors):", err);
                 fail("Prebuilt fetchMonitorsLatest request failed!");
@@ -95,7 +84,7 @@ Deno.test({
         await t2.step(
           "Fetch latest monitor readings",
           async (t3) => {
-            const monitors = await getMonitorsLatest(DEFAULT_DISPLAY_FIELD)
+            const monitors = await getMonitorsLatest(pollutant)
               .catch((err) => {
                 console.error("Error(fetch all monitors):", err);
                 fail("Prebuilt fetchMonitorsLatest request failed!");

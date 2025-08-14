@@ -1,55 +1,27 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import {
-  validateMonitorEntriesCollection,
-  validateMonitorEntryRequestResponseSchema,
-} from "../schemas/monitor_entries_request_response.ts";
-import { DEFAULT_DISPLAY_FIELD } from "../constants.ts";
 import { monitorId } from "../test_constants.ts";
 import {
   fetchMonitorEntriesPage,
   getMonitorEntries,
   getMonitorEntriesUrl,
 } from "./mod.ts";
-import type { MonitorDataField, MonitorEntries } from "../types.ts";
-import type {
-  MonitorEntryRequestConfig,
-  MonitorEntryRequestResponse,
-} from "./types.ts";
+import type { MonitorEntryType } from "../types.ts";
+import type { MonitorEntryRequestConfig } from "./types.ts";
+import { someMonitorEntrySchema } from "../schemas/monitor_entry.ts";
+import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
+const pollutant: MonitorEntryType = "pm25";
 const requestConfig: MonitorEntryRequestConfig = {
   monitorId,
-  field: DEFAULT_DISPLAY_FIELD,
+  field: pollutant,
 };
 
-function validateMonitorEntryRequestResponse(
-  response: MonitorEntryRequestResponse<MonitorDataField>,
-) {
-  validateMonitorEntryRequestResponseSchema(response, (errors, data) => {
-    console.error(errors);
-    console.error(data);
-    fail("Monitor entries page did not pass schema validation");
-  });
-}
-
-function validateMonitorEntries<
-  T extends MonitorEntryRequestConfig,
->(entries: Array<MonitorEntries[T["field"]]>) {
-  validateMonitorEntriesCollection(
-    entries,
-    (errors, data) => {
-      console.error(errors);
-      console.error(data);
-      fail(
-        "Monitor entries array did not pass schema validation",
-      );
-    },
-  );
-}
+const validateMonitorEntries = getSimpleValidationTest(someMonitorEntrySchema);
 
 Deno.test({
   name: "Module: Fetch Monitor Entries",
@@ -66,7 +38,7 @@ Deno.test({
             assertEquals(url.origin, origin);
             assertEquals(
               url.pathname,
-              `/api/2.0/monitors/${requestConfig.monitorId}/entries/${DEFAULT_DISPLAY_FIELD}/`,
+              `/api/2.0/monitors/${requestConfig.monitorId}/entries/${pollutant}/`,
             );
             assertEquals(url.searchParams.has("page"), true);
             assertEquals(url.searchParams.has("sensor"), true);
@@ -88,8 +60,8 @@ Deno.test({
             assertEquals(response.status, 200);
 
             await t3.step(
-              "Validate single entries page",
-              () => validateMonitorEntryRequestResponse(response.body),
+              "Validate monitor entries",
+              () => validateMonitorEntries(response.body.data),
             );
           },
         });

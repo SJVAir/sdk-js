@@ -13,7 +13,9 @@
     "jsr:@std/path@^1.0.8": "1.0.8",
     "jsr:@std/text@~1.0.7": "1.0.15",
     "jsr:@tstk/types@^1.0.3": "1.0.3",
-    "npm:ajv@^8.17.1": "8.17.1"
+    "npm:@types/geojson@^7946.0.16": "7946.0.16",
+    "npm:ajv@^8.17.1": "8.17.1",
+    "npm:zod@^4.0.17": "4.0.17"
   },
   "jsr": {
     "@cliffy/ansi@1.0.0-rc.8": {
@@ -76,6 +78,9 @@
     }
   },
   "npm": {
+    "@types/geojson@7946.0.16": {
+      "integrity": "sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg=="
+    },
     "ajv@8.17.1": {
       "integrity": "sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==",
       "dependencies": [
@@ -96,13 +101,18 @@
     },
     "require-from-string@2.0.2": {
       "integrity": "sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw=="
+    },
+    "zod@4.0.17": {
+      "integrity": "sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ=="
     }
   },
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
       "jsr:@tstk/types@^1.0.3",
-      "npm:ajv@^8.17.1"
+      "npm:@types/geojson@^7946.0.16",
+      "npm:ajv@^8.17.1",
+      "npm:zod@^4.0.17"
     ]
   }
 }

@@ -1,38 +1,28 @@
-import { Ajv, type JSONSchemaType, type ValidateFunction } from "ajv";
+import { type infer as zinfer, ZodError, type ZodType } from "zod";
 
-export type SchemaValidationFailureHandler<T> = (
-  errors: ValidateFunction<T>["errors"],
-  response: T,
-) => void;
-
-export interface SchemaValidatorOptions {
-  checkArray: boolean;
-}
-
-export function schemaValidator<T>(
-  schema: JSONSchemaType<T>,
-  options?: SchemaValidatorOptions,
+export function getSimpleValidation<T extends ZodType>(
+  schema: T,
+  errorHandler: (error: ZodError, item: zinfer<T>) => void,
 ) {
-  return function (
-    data: T | Array<T>,
-    failureHandle: SchemaValidationFailureHandler<T | Array<T>>,
-  ) {
-    const ajv = new Ajv();
-    const validate = ajv.compile(schema);
-
-    const process = (item: T | Array<T>) => {
-      const valid = validate(item);
-      if (!valid) {
-        failureHandle(validate.errors, item);
-      }
-    };
-
-    if (Array.isArray(data) && !options?.checkArray) {
-      for (const item of data) {
-        process(item);
-      }
+  return (items: zinfer<T> | Array<zinfer<T>>) => {
+    if (Array.isArray(items)) {
+      items.forEach((i) => {
+        try {
+          schema.parse(i);
+        } catch (error) {
+          if (error instanceof ZodError) {
+            errorHandler(error, i);
+          }
+        }
+      });
     } else {
-      process(data);
+      try {
+        schema.parse(items);
+      } catch (error) {
+        if (error instanceof ZodError) {
+          errorHandler(error, items);
+        }
+      }
     }
   };
 }
