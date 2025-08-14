@@ -23,4 +23,4 @@ jobs:
         with:
           deno-version: ${{ env.DENO_VERSION }}
       - name: Publish to jsr
-        run: deno publish --allow-slow-types
+        run: deno publish
