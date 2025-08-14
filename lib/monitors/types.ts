@@ -3,21 +3,21 @@ import type {
   collocationSchema,
   monitorClosestSchema,
   monitorDataSchema,
-  monitorDataVendorSchema,
   monitorDetailsSchema,
-  monitorHealthSchema,
   monitorLatestSchema,
-  monitorPositionSchema,
-  monitorTypeSchema,
 } from "./schemas/monitor_data.ts";
 import type {
-  monitorEntryMetaSchema,
   monitorEntrySchema,
-  monitorEntryTypeSchema,
   monitorParticulatesEntrySchema,
   monitorPressureEntrySchema,
   monitorTemperatureEntrySchema,
 } from "./schemas/monitor_entry.ts";
+import type { monitorTypeSchema } from "./schemas/monitor_type.ts";
+import type { monitorDataVendorSchema } from "./schemas/monitor_data_vendor.ts";
+import type { monitorHealthSchema } from "./schemas/monitor_health.ts";
+import type { monitorEntryTypeSchema } from "./schemas/monitor_entry_type.ts";
+import type { monitorPositionSchema } from "./schemas/monitor_position.ts";
+import type { monitorEntryMetaSchema } from "./schemas/monitor_entry_meta.ts";
 
 /** A Monitor object returned from the SJVAir API */
 export type MonitorData = zinfer<typeof monitorDataSchema>;
