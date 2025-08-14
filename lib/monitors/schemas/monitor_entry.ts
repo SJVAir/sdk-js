@@ -1,89 +1,120 @@
 import * as z from "zod";
+import {
+  type MonitorEntryMetaSchema,
+  monitorEntryMetaSchema,
+} from "./monitor_entry_meta.ts";
 
-/** The type of a given entry */
-export const monitorEntryTypeSchema = z.enum(
-  [
-    "pm10",
-    "pm25",
-    "pm100",
-    "humidity",
-    "o3",
-    "no2",
-    "pressure",
-    "temperature",
-    "particulates",
-  ] as const,
-);
+/** A utility type for defining other entry schemas */
+//interface BaseMonitorEntryMetaSchema extends Omit<
+//  MonitorEntryMetaSchema["shape"],
+//  "entry_type"
+//> {};
+interface BaseMonitorEntryMetaSchema extends
+  z.ZodObject<
+    Omit<MonitorEntryMetaSchema["shape"], "entry_type">
+  > {}
 
-export const monitorEntryMetaSchema = z.object({
-  /** The specific sensor on a dual sensor monitor which this entry came from */
-  sensor: z.string(),
+export interface MonitorEntrySchema extends
+  z.ZodObject<
+    MonitorEntryMetaSchema["shape"] & {
+      /** The single value for this entry type */
+      value: z.ZodString;
+    }
+  > {}
 
-  /** The timestamp at which this entry was recieved */
-  timestamp: z.string(),
+export const monitorEntrySchema: MonitorEntrySchema = monitorEntryMetaSchema
+  .extend({
+    value: z.string(),
+  });
 
-  /** The stage at which this entry is currently processed */
-  stage: z.string(),
+export interface MonitorTemperatureEntrySchema extends
+  z.ZodObject<
+    BaseMonitorEntryMetaSchema["shape"] & {
+      /** The type of data this entry represents */
+      entry_type: z.ZodLiteral<"temperature">;
 
-  /** The processor, if any, for the current entry */
-  processor: z.string(),
+      /** The value in fahrenheit */
+      temperature_f: z.ZodString;
 
-  /** The type of data this entry represents */
-  entry_type: monitorEntryTypeSchema,
-});
+      /** The value in celsius */
+      temperature_c: z.ZodString;
+    }
+  > {}
 
-export const monitorEntrySchema = monitorEntryMetaSchema.extend({
-  /** The single value for this entry type */
-  value: z.string(),
-});
+export const monitorTemperatureEntrySchema: MonitorTemperatureEntrySchema =
+  monitorEntryMetaSchema.extend({
+    entry_type: z.literal("temperature"),
+    temperature_f: z.string(),
+    temperature_c: z.string(),
+  });
 
-export const monitorTemperatureEntrySchema = monitorEntryMetaSchema.extend({
-  /** The type of data this entry represents */
-  entry_type: z.literal("temperature"),
+export interface MonitorPressureEntrySchema extends
+  z.ZodObject<
+    BaseMonitorEntryMetaSchema["shape"] & {
+      /** The type of data this entry represents */
+      entry_type: z.ZodLiteral<"pressure">;
 
-  /** The value in fahrenheit */
-  temperature_f: z.string(),
+      /** The pressure in millimeters of mercury */
+      pressure_mmhg: z.ZodString;
 
-  /** The value in celsius */
-  temperature_c: z.string(),
-});
+      /** The pressure in hectopascals */
+      pressure_hpa: z.ZodString;
+    }
+  > {}
 
-export const monitorPressureEntrySchema = monitorEntryMetaSchema.extend({
-  /** The type of data this entry represents */
-  entry_type: z.literal("pressure"),
+export const monitorPressureEntrySchema: MonitorPressureEntrySchema =
+  monitorEntryMetaSchema.extend({
+    entry_type: z.literal("pressure"),
+    pressure_mmhg: z.string(),
+    pressure_hpa: z.string(),
+  });
 
-  /** The pressure in millimeters of mercury */
-  pressure_mmhg: z.string(),
+export interface MonitorParticulatesEntrySchema extends
+  z.ZodObject<
+    BaseMonitorEntryMetaSchema["shape"] & {
+      /** The type of data this entry represents */
+      entry_type: z.ZodLiteral<"particulates">;
 
-  /** The pressure in hectopascals */
-  pressure_hpa: z.string(),
-});
+      /** The count for particulates 0.3 microns */
+      particles_03um: z.ZodNullable<z.ZodString>;
 
-export const monitorParticulatesEntrySchema = monitorEntryMetaSchema.extend({
-  /** The type of data this entry represents */
-  entry_type: z.literal("particulates"),
+      /** The count for particulates of 0.5 microns */
+      particles_05um: z.ZodNullable<z.ZodString>;
 
-  /** The count for particulates 0.3 microns */
-  particles_03um: z.nullable(z.string()),
+      /** The count for particulates of 1 micron */
+      particles_10um: z.ZodNullable<z.ZodString>;
 
-  /** The count for particulates of 0.5 microns */
-  particles_05um: z.nullable(z.string()),
+      /** The count for particulates for 2.5 microns */
+      particles_25um: z.ZodNullable<z.ZodString>;
 
-  /** The count for particulates of 1 micron */
-  particles_10um: z.nullable(z.string()),
+      /** The count for particulates of 5 microns */
+      particles_50um: z.ZodNullable<z.ZodString>;
 
-  /** The count for particulates for 2.5 microns */
-  particles_25um: z.nullable(z.string()),
+      /** The count for particulates of 10 microns */
+      particles_100um: z.ZodNullable<z.ZodString>;
+    }
+  > {}
 
-  /** The count for particulates of 5 microns */
-  particles_50um: z.nullable(z.string()),
+export const monitorParticulatesEntrySchema: MonitorParticulatesEntrySchema =
+  monitorEntryMetaSchema.extend({
+    entry_type: z.literal("particulates"),
+    particles_03um: z.nullable(z.string()),
+    particles_05um: z.nullable(z.string()),
+    particles_10um: z.nullable(z.string()),
+    particles_25um: z.nullable(z.string()),
+    particles_50um: z.nullable(z.string()),
+    particles_100um: z.nullable(z.string()),
+  });
 
-  /** The count for particulates of 10 microns */
-  particles_100um: z.nullable(z.string()),
-});
+export type SomeMonitorEntrySchema = z.ZodUnion<[
+  MonitorEntrySchema,
+  MonitorTemperatureEntrySchema,
+  MonitorPressureEntrySchema,
+  MonitorParticulatesEntrySchema,
+]>;
 
 /** A utility schema for validating all possigle entry types */
-export const someMonitorEntrySchema = z.union([
+export const someMonitorEntrySchema: SomeMonitorEntrySchema = z.union([
   monitorEntrySchema,
   monitorTemperatureEntrySchema,
   monitorPressureEntrySchema,

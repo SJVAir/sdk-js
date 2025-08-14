@@ -1,157 +1,249 @@
 import * as z from "zod";
 import {
+  type MonitorDataVendorSchema,
+  monitorDataVendorSchema,
+} from "./monitor_data_vendor.ts";
+import {
+  type MonitorEntrySchema,
   monitorEntrySchema,
+  type MonitorParticulatesEntrySchema,
   monitorParticulatesEntrySchema,
+  type SomeMonitorEntrySchema,
   someMonitorEntrySchema,
 } from "./monitor_entry.ts";
+import {
+  type MonitorHealthSchema,
+  monitorHealthSchema,
+} from "./monitor_health.ts";
+import {
+  type MonitorPositionSchema,
+  monitorPositionSchema,
+} from "./monitor_position.ts";
+import { type MonitorTypeSchema, monitorTypeSchema } from "./monitor_type.ts";
 
-export const monitorDataVendorSchema = z.object({
-  /** The name of the data vendor */
-  name: z.string(),
+interface MonitorDataSchema extends
+  z.ZodObject<{
+    /** County the monitor is located in */
+    county: z.ZodString;
 
-  /** The url of the data vendor's website */
-  url: z.optional(z.string()),
-});
+    /** The original source of the monitor data */
+    data_source: MonitorDataVendorSchema;
 
-export const monitorHealthSchema = z.object({
-  /** The timestamp of the health check */
-  hour: z.string(),
+    /** The providers which we get monitor data from */
+    //data_providers: z.array(monitorDataVendorSchema),
+    data_providers: z.ZodArray<MonitorDataVendorSchema>;
 
-  /** The number representation of the monitor's health */
-  score: z.number(),
+    /** The brand/model of air monitor */
+    device: z.ZodString;
 
-  /** The relative percent difference between channels */
-  rpd_pairwise: z.nullable(z.number()),
+    /** Indicates whether or not the monitor has dual sensors */
+    dual_channel: z.ZodOptional<z.ZodBoolean>;
 
-  /** The correlation between channels */
-  correlation: z.nullable(z.number()),
+    /** The current health of the monitor */
+    health: z.ZodOptional<MonitorHealthSchema>;
 
-  /** States whether or not the sensor is returning valid data */
-  channel_a_sanity: z.boolean(),
+    /** The ID of the monitor */
+    id: z.ZodString;
 
-  /** States whether or not the sensor is returning valid data */
-  channel_b_sanity: z.boolean(),
+    /** Indicates whether the monitor is currently reporting data */
+    is_active: z.ZodBoolean;
 
-  /** The letter representation of the monitor's health */
-  grade: z.string(),
-});
+    /** Indicates whether the monitor is owned by SJVAir */
+    is_sjvair: z.ZodBoolean;
 
-export const monitorPositionSchema = z.object({
-  /** The point coordinates of a monitor */
-  coordinates: z.array(z.number()).length(2),
+    /** The length of time a monitor can be offline before being considered inactive */
+    last_active_limit: z.ZodNumber;
 
-  /** The type of GeoJSON object returned */
-  type: z.string(),
-});
+    /** Indicates whether monitor is inside or outside */
+    location: z.ZodString;
 
-//** The group a monitor belongs to */
-export const monitorTypeSchema = z.enum(
-  ["airgradient", "airnow", "aqview", "bam1022", "purpleair"] as const,
-);
+    /** The ID of the location of an AirGradient monitor */
+    location_id: z.ZodOptional<z.ZodNumber>;
 
-export const monitorDataSchema = z.object({
-  /** County the monitor is located in */
+    /** The name of the monitor */
+    name: z.ZodString;
+
+    /** The geolocation of the monitor */
+    position: z.ZodNullable<MonitorPositionSchema>;
+
+    /**
+     * The specific type of a monitor.
+     * This corresponds to the class name of the model used on the server
+     */
+    type: MonitorTypeSchema;
+
+    /**
+     * The PurpleAir ID of the monitor
+     * @remarks This field is only present if the device type is "PurpleAir"
+     */
+    purple_id: z.ZodOptional<z.ZodNumber>;
+  }> {}
+
+export const monitorDataSchema: MonitorDataSchema = z.object({
   county: z.string(),
-
-  /** The original source of the monitor data */
   data_source: monitorDataVendorSchema,
-
-  /** The providers which we get monitor data from */
   data_providers: z.array(monitorDataVendorSchema),
-
-  /** The brand/model of air monitor */
   device: z.string(),
-
-  /** Indicates whether or not the monitor has dual sensors */
   dual_channel: z.optional(z.boolean()),
-
-  /** The current health of the monitor */
   health: z.optional(monitorHealthSchema),
-
-  /** The ID of the monitor */
   id: z.string(),
-
-  /** Indicates whether the monitor is currently reporting data */
   is_active: z.boolean(),
-
-  /** Indicates whether the monitor is owned by SJVAir */
   is_sjvair: z.boolean(),
-
-  /** The length of time a monitor can be offline before being considered inactive */
   last_active_limit: z.number(),
-
-  /** Indicates whether monitor is inside or outside */
   location: z.string(),
-
-  /** The ID of the location of an AirGradient monitor */
   location_id: z.optional(z.number()),
-
-  /** The name of the monitor */
   name: z.string(),
-
-  /** The geolocation of the monitor */
   position: z.nullable(monitorPositionSchema),
-
-  /**
-   * The specific type of a monitor.
-   * This corresponds to the class name of the model used on the server
-   */
   type: monitorTypeSchema,
-
-  /**
-   * The PurpleAir ID of the monitor
-   * @remarks This field is only present if the device type is "PurpleAir"
-   */
   purple_id: z.optional(z.number()),
 });
 
-export const monitorLatestSchema = monitorDataSchema.extend({
-  /** The latest specified entry for a given monitor */
-  latest: someMonitorEntrySchema,
-});
+export interface MonitorLatestSchema extends
+  z.ZodObject<
+    MonitorDataSchema["shape"] & {
+      /** The latest specified entry for a given monitor */
+      latest: SomeMonitorEntrySchema;
+    }
+  > {}
 
-export const monitorClosestSchema = monitorLatestSchema.extend({
-  /** The distance the monitor is from the provided Point */
-  distance: z.number(),
-});
+export const monitorLatestSchema: MonitorLatestSchema = monitorDataSchema
+  .extend({ latest: someMonitorEntrySchema });
+
+export interface MonitorClosestSchema extends
+  z.ZodObject<
+    MonitorLatestSchema["shape"] & {
+      /** The distance the monitor is from the provided Point */
+      distance: z.ZodNumber;
+    }
+  > {}
+
+export const monitorClosestSchema: MonitorClosestSchema = monitorLatestSchema
+  .extend({
+    /** The distance the monitor is from the provided Point */
+    distance: z.number(),
+  });
+
+interface DetailsEntrySchema extends
+  z.ZodObject<
+    Omit<MonitorEntrySchema["shape"], "entry_type">
+  > {}
 
 /** A utility schema for defining the monitorDetailsSchema */
-const detailsEntrySchema = monitorEntrySchema.omit({ entry_type: true });
-
-export const monitorDetailsSchema = monitorDataSchema.extend({
-  latest: {
-    /** The latest entry for the pm10 field */
-    pm10: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the pm25 field */
-    pm25: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the pm100 field */
-    pm100: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the humidity field */
-    humidity: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the o3 (ozone) field */
-    o3: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the no2 (nitrogen dioxide) field */
-    no2: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the pressure field */
-    pressure: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the temperature field */
-    temperature: z.optional(detailsEntrySchema),
-
-    /** The latest entry for the particulates field */
-    particulates: z.optional(
-      monitorParticulatesEntrySchema.omit({ entry_type: true }),
-    ),
-  },
+const detailsEntrySchema: DetailsEntrySchema = monitorEntrySchema.omit({
+  entry_type: true,
 });
 
-export const collocationSchema = z.object({
+//export interface MonitorDetailsSchema extends
+//  z.ZodObject<
+//    MonitorDataSchema["shape"] & {
+//      latest: {
+//        /** The latest entry for the pm10 field */
+//        pm10: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the pm25 field */
+//        pm25: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the pm100 field */
+//        pm100: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the humidity field */
+//        humidity: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the o3 (ozone) field */
+//        o3: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the no2 (nitrogen dioxide) field */
+//        no2: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the pressure field */
+//        pressure: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the temperature field */
+//        temperature: z.ZodOptional<DetailsEntrySchema>;
+//
+//        /** The latest entry for the particulates field */
+//        particulates: z.ZodOptional<
+//          Omit<MonitorParticulatesEntrySchema["shape"], "entry_type">
+//        >;
+//      };
+//    }
+//  > {}
+
+interface BaseParticulatesEntrySchema extends
+  z.ZodObject<
+    Omit<MonitorParticulatesEntrySchema["shape"], "entry_type">
+  > {}
+
+export interface MonitorDetailsSchema extends
+  z.ZodObject<
+    MonitorDataSchema["shape"] & {
+      /** The latest specified entry for a given monitor */
+      latest: z.ZodObject<{
+        /** The latest entry for the pm10 field */
+        pm10: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the pm25 field */
+        pm25: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the pm100 field */
+        pm100: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the humidity field */
+        humidity: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the o3 (ozone) field */
+        o3: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the no2 (nitrogen dioxide) field */
+        no2: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the pressure field */
+        pressure: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the temperature field */
+        temperature: z.ZodOptional<DetailsEntrySchema>;
+
+        /** The latest entry for the particulates field */
+        particulates: z.ZodOptional<BaseParticulatesEntrySchema>;
+      }>;
+    }
+  > {}
+export const monitorDetailsSchema: MonitorDetailsSchema = monitorDataSchema
+  .extend({
+    latest: z.object({
+      pm10: z.optional(detailsEntrySchema),
+      pm25: z.optional(detailsEntrySchema),
+      pm100: z.optional(detailsEntrySchema),
+      humidity: z.optional(detailsEntrySchema),
+      o3: z.optional(detailsEntrySchema),
+      no2: z.optional(detailsEntrySchema),
+      pressure: z.optional(detailsEntrySchema),
+      temperature: z.optional(detailsEntrySchema),
+      particulates: z.optional(
+        monitorParticulatesEntrySchema.omit({ entry_type: true }),
+      ),
+    }),
+  });
+
+interface CollocationSchema extends
+  z.ZodObject<{
+    /** The ID of the collocation entry */
+    id: z.ZodString;
+
+    /** The ID of the reference monitor */
+    reference_id: z.ZodString;
+
+    /** The ID of the collocated monitor */
+    colocated_id: z.ZodString;
+
+    /** The name of the reference monitor */
+    name: z.ZodString;
+
+    /** The position of the reference monitor */
+    position: MonitorPositionSchema;
+  }> {}
+
+export const collocationSchema: CollocationSchema = z.object({
   /** The ID of the collocation entry */
   id: z.string(),
 
