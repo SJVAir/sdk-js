@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "2.0.0-alpha.18",
+  "version": "2.0.0-alpha.19",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
@@ -43,7 +43,14 @@
     "./fetch_monitors_latest/fetchers": "./lib/monitors/fetch_monitors_latest/fetchers.ts",
     "./fetch_monitors_latest/request_builders": "./lib/monitors/fetch_monitors_latest/request_builders.ts",
     "./fetch_monitors_latest/requests": "./lib/monitors/fetch_monitors_latest/requests.ts",
-    "./fetch_monitors_latest/types": "./lib/monitors/fetch_monitors_latest/types.ts"
+    "./fetch_monitors_latest/types": "./lib/monitors/fetch_monitors_latest/types.ts",
+    "./fetch_smoke": "./lib/hms_smoke/fetch_smoke/mod.ts",
+    "./fetch_smoke/fetchers": "./lib/hms_smoke/fetch_smoke/fetchers.ts",
+    "./fetch_smoke/request_builders": "./lib/hms_smoke/fetch_smoke/request_builders.ts",
+    "./fetch_smoke/requests": "./lib/hms_smoke/fetch_smoke/requests.ts",
+    "./fetch_smoke/response_handlers": "./lib/hms_smoke/fetch_smoke/response_handlers.ts",
+    "./fetch_smoke/types": "./lib/hms_smoke/fetch_smoke/types.ts",
+    "./fetch_smoke/validation": "./lib/hms_smoke/fetch_smoke/validation.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
@@ -52,7 +59,7 @@
     "ajv": "npm:ajv@^8.17.1",
     "zod": "npm:zod@^4.0.17",
     "$apiDateFormat": "./lib/api_date_format/mod.ts",
-    "$hmsSmoke": "./lib/hms_smoke/",
+    "$hmsSmoke/": "./lib/hms_smoke/",
     "$http": "./lib/http/mod.ts",
     "$monitors/": "./lib/monitors/"
   }
