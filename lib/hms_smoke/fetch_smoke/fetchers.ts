@@ -1,7 +1,7 @@
 import { apiRequest, type PaginatedResponse } from "$http";
 import { getHMSSmokeUrl } from "./request_builders.ts";
 import type { HMSSmokeGeoJSON } from "../types.ts";
-import type { FetchHMSSmokeResponse, HMSSmokeRequestConfig } from "./types.ts";
+import type { FetchHMSSmokeResponse, HMSSmokeRequestConfig } from "../types.ts";
 
 /**
  * Fetches current HMS Smoke shapefile.

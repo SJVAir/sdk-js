@@ -1,5 +1,5 @@
 import { getApiUrl } from "$http";
-import type { HMSSmokeRequestConfig } from "./types.ts";
+import type { HMSSmokeRequestConfig } from "../types.ts";
 
 /**
  * Constructs the URL for getting the "hms-smoke" api endpoint.

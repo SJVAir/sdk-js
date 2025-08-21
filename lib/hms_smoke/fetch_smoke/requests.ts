@@ -1,7 +1,7 @@
 import { consolidatePaginatedRequest } from "$http";
 import { fetchHMSSmoke } from "./fetchers.ts";
 import type { HMSSmokeGeoJSON } from "../types.ts";
-import type { HMSSmokeRequestConfig } from "./types.ts";
+import type { HMSSmokeRequestConfig } from "../types.ts";
 
 async function getHMSSmokePage(config?: HMSSmokeRequestConfig) {
   try {
