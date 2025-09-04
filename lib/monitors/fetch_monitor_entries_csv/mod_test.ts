@@ -1,4 +1,4 @@
-import { assertEquals, fail } from "@std/assert";
+import { assertEquals, assertExists, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { monitorId } from "../test_constants.ts";
 import {
@@ -21,12 +21,12 @@ Deno.test({
   name: "Module: Fetch Monitor Entries CSV",
   permissions: { net: true },
   async fn(t) {
-    const success = await t.step(
+    await t.step(
       "Build fetch monitor entries request",
       async (t2) => {
-        const canBuildUrl = await t2.step(
+        await t2.step(
           "Get URL",
-          () => {
+          async (t3) => {
             const url = getMonitorEntriesCSVUrl(requestConfig);
 
             assertEquals(url.origin, origin);
@@ -36,48 +36,47 @@ Deno.test({
             );
             assertEquals(url.searchParams.has("timestamp__gte"), true);
             assertEquals(url.searchParams.has("timestamp__lte"), true);
-          },
-        );
-
-        await t2.step({
-          name: "Fetch single monitor entries page",
-          ignore: !canBuildUrl,
-          async fn(t3) {
-            const response = await fetch(requestConfig)
-              .catch((err) => {
-                console.error(err);
-                fail("failed to fetch single monitor entries page");
-              });
-
-            assertEquals(response.status, 200);
 
             await t3.step(
-              "Validate monitor entries",
-              () => validateMonitorEntries(response.body.data),
+              "Fetch entries CSV",
+              async () => {
+                const response = await fetch(url);
+
+                if (response.status !== 200) {
+                  fail("Monitor Entries CSV request failed");
+                }
+                const contentType = response.headers.get("content-type");
+                const contentDispostion = response.headers.get(
+                  "content-disposition",
+                );
+
+                assertExists(contentType, "No Content-Type header");
+                assertExists(
+                  contentDispostion,
+                  "No Content-Disposition header",
+                );
+
+                assertEquals(contentType, "text/csv");
+                assertEquals(
+                  contentDispostion.includes(
+                    `${requestConfig.monitorId}_export.csv`,
+                  ),
+                  true,
+                );
+
+                try {
+                  await response.text();
+                } catch (error) {
+                  console.log(
+                    "Monitor Entries endpoint response is not text:",
+                    error,
+                  );
+                }
+              },
             );
           },
-        });
+        );
       },
     );
-
-    await t.step({
-      name: "Prebuilt request and handler",
-      ignore: !success,
-      async fn(t2) {
-        await t2.step(
-          "Get monitor entries",
-          async (t3) => {
-            const entries = await getMonitorEntries(requestConfig);
-
-            assertEquals(Array.isArray(entries), true);
-
-            await t3.step(
-              "Validate monitor entries",
-              () => validateMonitorEntries(entries),
-            );
-          },
-        );
-      },
-    });
   },
 });
