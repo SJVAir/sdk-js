@@ -8,6 +8,11 @@
   "exports": {
     ".": "./mod.ts",
     "./api_date_format": "./lib/api_date_format/mod.ts",
+    "./account": "./lib/account/mod.ts",
+    "./account/login": "./lib/account/login/mod.ts",
+    "./account/login/request_builders": "./lib/account/login/request_builders.ts",
+    "./account/login/requests": "./lib/account/login/requests.ts",
+    "./account/login/types": "./lib/account/login/types.ts",
     "./monitors": "./lib/monitors/mod.ts",
     "./fetch_closest_monitor": "./lib/monitors/fetch_closest_monitor/mod.ts",
     "./fetch_closest_monitor/fetchers": "./lib/monitors/fetch_closest_monitor/fetchers.ts",
