@@ -6,7 +6,7 @@ User account management
 
 - [ ] `/api/2.0/account/`
 - [ ] `/api/2.0/account/alerts/`
-- [ ] `/api/2.0/account/login/`
+- [x] `/api/2.0/account/login/`
 - [ ] `/api/2.0/account/password-reset/`
 - [ ] `/api/2.0/account/password-reset/<uidb64>/<token>/`
 - [ ] `/api/2.0/account/password/`
