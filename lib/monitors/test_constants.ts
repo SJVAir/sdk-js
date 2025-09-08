@@ -1,6 +1,8 @@
-export const monitorId = "4bn5EeCFQKy7f0Oegxealg";
+import { assertTestVariable } from "../testing.ts";
 
 export const coordinates = {
-  latitude: "36.76272050981146",
-  longitude: "-119.7987626619462",
+  latitude: assertTestVariable("LATITUDE"),
+  longitude: assertTestVariable("LONGITUDE"),
 };
+
+export const monitorId = assertTestVariable("MONITOR_ID");
