@@ -1,0 +1,65 @@
+# Current API URLs
+
+## Accounts
+
+User account management
+
+- [ ] `/api/2.0/account/`
+- [ ] `/api/2.0/account/alerts/`
+- [ ] `/api/2.0/account/login/`
+- [ ] `/api/2.0/account/password-reset/`
+- [ ] `/api/2.0/account/password-reset/<uidb64>/<token>/`
+- [ ] `/api/2.0/account/password/`
+- [ ] `/api/2.0/account/phone/`
+- [ ] `/api/2.0/account/phone/verify/`
+- [ ] `/api/2.0/account/register/`
+
+## Alerts
+
+Air quality alerts
+
+- [ ] `/api/2.0/alerts/subscriptions/`
+
+## Collocations
+
+Collocation site info
+
+- [x] `/api/2.0/calibrations/`
+
+## HMS Smoke
+
+HMS Smoke GeoJSON
+
+- [x] `/api/2.0/hms-smoke/`
+- [ ] `/api/2.0/hms-smoke/<smoke_id>/`
+- [x] `/api/2.0/hms-smoke/ongoing/`
+
+## Monitors and Entries
+
+Air monitors, current and historical data, monitor subscriptions, and entry archives
+
+- [x] `/api/2.0/monitors/`
+- [x] `/api/2.0/monitors/<entry_type>/closest/`
+- [x] `/api/2.0/monitors/<entry_type>/current/`
+- [x] `/api/2.0/monitors/<monitor_id>/`
+- [ ] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
+- [ ] `/api/2.0/monitors/<monitor_id>/alerts/unsubscribe/`
+- [ ] `/api/2.0/monitors/<monitor_id>/archive/`
+- [ ] `/api/2.0/monitors/<monitor_id>/archive/<int:year>/<int:month>/`
+- [ ] `/api/2.0/monitors/<monitor_id>/entries/`
+- [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/`
+- [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/csv/`
+- [ ] `/api/2.0/monitors/<monitor_id>/entries/export/`
+- [ ] `/api/2.0/monitors/meta/`
+
+## Tasks
+
+Task status
+
+- [ ] `/api/2.0/task/<task_id>/`
+
+## Time
+
+Current time as a Unix time stamp
+
+- [ ] `/api/2.0/time/`
