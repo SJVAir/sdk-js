@@ -12,3 +12,14 @@ export function getSimpleValidationTest<T extends ZodType>(
     },
   );
 }
+
+export function assertTestVariable(variable: string) {
+  const envVar = Deno.env.get(`TEST_${variable}`);
+
+  if (envVar === undefined) {
+    console.error(`Environment variable "TEST_${variable}" is not defined`);
+    Deno.exit(1);
+  }
+
+  return envVar;
+}
