@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { origin, setOrigin } from "$http";
 import { getSimpleValidationTest } from "../../testing.ts";
-import { userLoginSchema } from "./schema.ts";
+import { userDetailsSchema } from "../schema.ts";
 import { getLoginUrl, login } from "./mod.ts";
 import { loginCredentials } from "../test_constants.ts";
 
@@ -9,7 +9,7 @@ if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-const validateUserLogin = getSimpleValidationTest(userLoginSchema);
+const validateUserLogin = getSimpleValidationTest(userDetailsSchema);
 
 Deno.test({
   name: "Module: Account Login",

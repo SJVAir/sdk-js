@@ -1,6 +1,6 @@
 import { apiRequest, type APIRequestResponse } from "$http";
 import { getLoginUrl } from "./request_builders.ts";
-import type { UserLogin } from "./types.ts";
+import type { UserDetails } from "../types.ts";
 
 /**
  * Log in with the given user credentials.
@@ -10,10 +10,10 @@ import type { UserLogin } from "./types.ts";
 export async function login(
   identifier: string,
   password: string,
-): Promise<APIRequestResponse<{ data: UserLogin }>> {
+): Promise<APIRequestResponse<{ data: UserDetails }>> {
   const requestUrl = getLoginUrl();
 
-  return await apiRequest<{ data: UserLogin }>(requestUrl, {
+  return await apiRequest<{ data: UserDetails }>(requestUrl, {
     method: "POST",
     headers: {
       "Accept": "application/json",
