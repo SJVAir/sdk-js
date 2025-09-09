@@ -2,6 +2,17 @@ import { fail } from "@std/assert";
 import type { ZodType } from "zod";
 import { getSimpleValidation } from "./schema.ts";
 
+function assertTestVariable(variable: string) {
+  const envVar = Deno.env.get(`TEST_${variable}`);
+
+  if (envVar === undefined) {
+    console.error(`Environment variable "TEST_${variable}" is not defined`);
+    Deno.exit(1);
+  }
+
+  return envVar;
+}
+
 export function getSimpleValidationTest<T extends ZodType>(
   schema: T,
 ) {
@@ -13,13 +24,14 @@ export function getSimpleValidationTest<T extends ZodType>(
   );
 }
 
-export function assertTestVariable(variable: string) {
-  const envVar = Deno.env.get(`TEST_${variable}`);
+export const coordinates = {
+  latitude: assertTestVariable("LATITUDE"),
+  longitude: assertTestVariable("LONGITUDE"),
+};
 
-  if (envVar === undefined) {
-    console.error(`Environment variable "TEST_${variable}" is not defined`);
-    Deno.exit(1);
-  }
+export const loginCredentials = {
+  identifier: assertTestVariable("LOGIN_ID"),
+  password: assertTestVariable("LOGIN_PASS"),
+};
 
-  return envVar;
-}
+export const monitorId = assertTestVariable("MONITOR_ID");
