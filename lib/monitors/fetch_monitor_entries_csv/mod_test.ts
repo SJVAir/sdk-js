@@ -1,6 +1,6 @@
 import { assertEquals, assertExists, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { monitorId } from "../test_constants.ts";
+import { monitorId } from "$testing";
 import {
   getMonitorEntriesCSVUrl,
   type MonitorEntryCSVRequestConfig,

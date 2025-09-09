@@ -1,7 +1,7 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
+import { getSimpleValidationTest } from "$testing";
 import { collocationSchema } from "../schemas/monitor_data.ts";
-import { getSimpleValidationTest } from "../../testing.ts";
 import {
   fetchCollocations,
   fetchCollocationsHandler,

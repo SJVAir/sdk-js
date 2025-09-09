@@ -1,8 +1,8 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
+import { getSimpleValidationTest } from "$testing";
 import { fetchHMSSmoke, getHMSSmoke, getHMSSmokeUrl } from "./mod.ts";
 import { hmsSmokeSchema } from "../schema.ts";
-import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");

@@ -1,5 +1,6 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
+import { getSimpleValidationTest } from "$testing";
 import { monitorLatestSchema } from "../schemas/monitor_data.ts";
 import {
   fetchMonitorsLatest,
@@ -7,7 +8,6 @@ import {
   getMonitorsLatestUrl,
 } from "./mod.ts";
 import type { MonitorEntryType } from "../types.ts";
-import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");

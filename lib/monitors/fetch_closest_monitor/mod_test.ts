@@ -1,6 +1,6 @@
 import { assertEquals, fail } from "@std/assert";
 import { origin, setOrigin } from "$http";
-import { coordinates } from "../test_constants.ts";
+import { coordinates, getSimpleValidationTest } from "$testing";
 import type { MonitorClosest } from "../types.ts";
 import {
   fetchClosestMonitor,
@@ -10,7 +10,6 @@ import {
   validateClosestMonitors,
 } from "./mod.ts";
 import { monitorClosestSchema } from "../schemas/monitor_data.ts";
-import { getSimpleValidationTest } from "../../testing.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -21,10 +20,6 @@ const { longitude, latitude } = coordinates;
 function assertClosestMonitor(monitor: MonitorClosest) {
   assertEquals(Array.isArray(monitor), false);
   assertEquals(monitor.location, "outside");
-  //assertEquals(
-  //  monitor.name,
-  //  "CCA Root Access Hackerspace #2",
-  //);
 }
 
 const validateClosestMonitorSchema = getSimpleValidationTest(
