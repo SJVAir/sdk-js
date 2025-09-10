@@ -33,5 +33,3 @@ export const loginCredentials = {
   identifier: assertTestVariable("LOGIN_ID"),
   password: assertTestVariable("LOGIN_PASS"),
 };
-
-export const monitorId = assertTestVariable("MONITOR_ID");
