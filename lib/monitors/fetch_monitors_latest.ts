@@ -18,16 +18,7 @@ export async function getMonitorsLatest<
 >(
   field: T,
 ): Promise<Array<MonitorLatestType<T>>> {
-  return await apiCall<
-    MonitorsLatestResponse<T>,
-    Array<MonitorLatestType<T>>
-  >(
+  return await apiCall<Array<MonitorLatestType<T>>>(
     `monitors/${field}/current`,
-    (status, body) => {
-      if (status !== 200) {
-        console.error("Unexpected status code:", status);
-      }
-      return body.data;
-    },
   );
 }

@@ -16,13 +16,5 @@ export type MonitorDetailsResponse = { data: MonitorDetails };
 export async function getMonitorDetails(
   monitorId: string,
 ): Promise<MonitorDetails> {
-  return await apiCall<MonitorDetailsResponse, MonitorDetails>(
-    `monitors/${monitorId}`,
-    (status, body) => {
-      if (status !== 200) {
-        console.error("Unexpected status code:", status);
-      }
-      return body.data;
-    },
-  );
+  return await apiCall<MonitorDetails>(`monitors/${monitorId}`);
 }

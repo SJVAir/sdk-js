@@ -1,4 +1,4 @@
-import { apiCall } from "$http";
+import { apiCall, APIError } from "$http";
 import type { MonitorClosestType, MonitorEntryType } from "./types.ts";
 
 /**
@@ -63,10 +63,7 @@ export async function getClosestMonitors<T extends MonitorEntryType>(
   latitude: number | string,
   longitude: number | string,
 ): Promise<ClosestMonitorsResponse<T>> {
-  return await apiCall<
-    { data: ClosestMonitorsResponse<T> },
-    ClosestMonitorsResponse<T>
-  >(
+  return await apiCall<ClosestMonitorsResponse<T>>(
     {
       url: `monitors/${entryType}/closest`,
       searchParams: {
@@ -74,17 +71,11 @@ export async function getClosestMonitors<T extends MonitorEntryType>(
         longitude: longitude.toString(),
       },
     },
-    (status, body) => {
-      const { data: monitors } = body;
-
-      if (status !== 200) {
-        console.error("Unexpected status code:", status);
-      }
+    (response) => {
+      const { data: monitors } = response.body;
 
       if (!Array.isArray(monitors) || monitors.length <= 0) {
-        throw new Error("Failed to closest monitors", {
-          cause: { status, body },
-        });
+        throw new APIError("Failed to closest monitors", response);
       }
 
       return monitors;
