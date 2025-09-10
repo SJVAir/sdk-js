@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { apiDateFormat } from "./api-date-format.ts";
+import { apiDateFormat } from "./api_date_format.ts";
 
 Deno.test(
   "Module: API Date Format",
