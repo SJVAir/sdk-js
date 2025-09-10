@@ -1,7 +1,6 @@
 import { setOrigin } from "$http";
 import { coordinates, getSimpleValidationTest } from "$testing";
 import {
-  collocationSchema,
   monitorClosestSchema,
   monitorDataSchema,
   monitorDetailsSchema,
@@ -16,7 +15,6 @@ import {
 import { getMonitorsLatest } from "./fetch_monitors_latest.ts";
 import { getMonitorDetails } from "./fetch_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";
-import { getCollocations } from "./fetch_collocations.ts";
 import { getMonitorEntries } from "./fetch_monitor_entries.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
@@ -30,9 +28,6 @@ const validateMonitorLatest = getSimpleValidationTest(monitorLatestSchema);
 const validateMonitorDetails = getSimpleValidationTest(monitorDetailsSchema);
 const validateClosestMonitor = getSimpleValidationTest(monitorClosestSchema);
 const validateMonitorEntries = getSimpleValidationTest(someMonitorEntrySchema);
-
-// TODO: move collocations to collocations module
-const validateCollocation = getSimpleValidationTest(collocationSchema);
 
 Deno.test({
   name: "Module: Monitors Endpoints",
@@ -106,10 +101,5 @@ Deno.test({
         ),
     );
 
-    // TODO: move collocations to collocations module
-    await t.step(
-      "GET  calibrations/",
-      async () => validateCollocation(await getCollocations()),
-    );
   },
 });
