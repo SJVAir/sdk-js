@@ -6,6 +6,7 @@ import {
   monitorDataSchema,
   monitorDetailsSchema,
   monitorLatestSchema,
+  someMonitorEntrySchema,
 } from "./schemas/mod.ts";
 import { getMonitors } from "./fetch_monitors.ts";
 import {
@@ -16,6 +17,7 @@ import { getMonitorsLatest } from "./fetch_monitors_latest.ts";
 import { getMonitorDetails } from "./fetch_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";
 import { getCollocations } from "./fetch_collocations.ts";
+import { getMonitorEntries } from "./fetch_monitor_entries.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -27,6 +29,8 @@ const validateMonitorData = getSimpleValidationTest(monitorDataSchema);
 const validateMonitorLatest = getSimpleValidationTest(monitorLatestSchema);
 const validateMonitorDetails = getSimpleValidationTest(monitorDetailsSchema);
 const validateClosestMonitor = getSimpleValidationTest(monitorClosestSchema);
+const validateMonitorEntries = getSimpleValidationTest(someMonitorEntrySchema);
+
 // TODO: move collocations to collocations module
 const validateCollocation = getSimpleValidationTest(collocationSchema);
 
@@ -57,6 +61,18 @@ Deno.test({
           monitorId = monitors[0]?.id ?? monitorId;
         },
       );
+
+      await t.step({
+        name: `GET  monitors/{MONITOR_ID}/entries/${pollutant}/`,
+        ignore: monitorId! === undefined,
+        fn: async () =>
+          validateMonitorEntries(
+            await getMonitorEntries({
+              entryType: pollutant,
+              monitorId,
+            }),
+          ),
+      });
     }
 
     await t.step({

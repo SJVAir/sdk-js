@@ -20,8 +20,6 @@ const requestConfig: MonitorEntryRequestConfig = {
   field: pollutant,
 };
 
-const validateMonitorEntries = getSimpleValidationTest(someMonitorEntrySchema);
-
 Deno.test({
   name: "Module: Fetch Monitor Entries",
   permissions: { net: true },
