@@ -67,10 +67,8 @@
     "geojson": "npm:@types/geojson@^7946.0.16",
     "ajv": "npm:ajv@^8.17.1",
     "zod": "npm:zod@^4.0.17",
-    "$apiDateFormat": "./lib/api_date_format/mod.ts",
-    "$hmsSmoke/": "./lib/hms_smoke/",
+    "$datetime": "./lib/datetime/mod.ts",
     "$http": "./lib/http/mod.ts",
-    "$monitors/": "./lib/monitors/",
     "$testing": "./lib/testing.ts"
   }
 }
