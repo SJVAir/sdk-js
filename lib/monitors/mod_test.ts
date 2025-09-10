@@ -1,6 +1,7 @@
 import { setOrigin } from "$http";
 import { coordinates, getSimpleValidationTest } from "$testing";
 import {
+  collocationSchema,
   monitorClosestSchema,
   monitorDataSchema,
   monitorDetailsSchema,
@@ -25,6 +26,7 @@ const validateMonitorData = getSimpleValidationTest(monitorDataSchema);
 const validateMonitorLatest = getSimpleValidationTest(monitorLatestSchema);
 const validateMonitorDetails = getSimpleValidationTest(monitorDetailsSchema);
 const validateClosestMonitor = getSimpleValidationTest(monitorClosestSchema);
+const validateCollocation = getSimpleValidationTest(collocationSchema);
 
 Deno.test({
   name: "Module: Monitors Endpoints",
