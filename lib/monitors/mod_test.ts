@@ -15,6 +15,7 @@ import {
 import { getMonitorsLatest } from "./fetch_monitors_latest.ts";
 import { getMonitorDetails } from "./fetch_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";
+import { getCollocations } from "./fetch_collocations.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -26,6 +27,7 @@ const validateMonitorData = getSimpleValidationTest(monitorDataSchema);
 const validateMonitorLatest = getSimpleValidationTest(monitorLatestSchema);
 const validateMonitorDetails = getSimpleValidationTest(monitorDetailsSchema);
 const validateClosestMonitor = getSimpleValidationTest(monitorClosestSchema);
+// TODO: move collocations to collocations module
 const validateCollocation = getSimpleValidationTest(collocationSchema);
 
 Deno.test({
@@ -86,6 +88,12 @@ Deno.test({
             coordinates.longitude,
           ),
         ),
+    );
+
+    // TODO: move collocations to collocations module
+    await t.step(
+      "GET  calibrations/",
+      async () => validateCollocation(await getCollocations()),
     );
   },
 });
