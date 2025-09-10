@@ -1,6 +1,6 @@
 import { paginatedApiCall } from "$http";
 import type { MonitorEntries, MonitorEntryType } from "./types.ts";
-import { apiDateFormat } from "$apiDateFormat";
+import { apiDateFormat } from "$datetime";
 
 /**
  * The configuration options for the monitor entries endpoint
