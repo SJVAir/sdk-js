@@ -1,5 +1,10 @@
-import { apiRequest, type APIRequestResponse, getApiUrl } from "$http";
+import { apiCall } from "$http";
 import type { UserDetails } from "./types.ts";
+
+/**
+ * The data structure returned from the "/account/login/" endpoint
+ */
+export type LoginResponse = { data: UserDetails };
 
 /**
  * Log in with the given user credentials.
@@ -9,16 +14,24 @@ import type { UserDetails } from "./types.ts";
 export async function login(
   identifier: string,
   password: string,
-): Promise<APIRequestResponse<{ data: UserDetails }>> {
-  return await apiRequest<{ data: UserDetails }>(
-    getApiUrl("account/login"),
+): Promise<UserDetails> {
+  return await apiCall<LoginResponse, UserDetails>(
     {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
+      url: "account/login",
+      init: {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ identifier, password }),
       },
-      body: JSON.stringify({ identifier, password }),
+    },
+    (status, body) => {
+      if (status !== 200) {
+        console.error("Unexpected status code:", status);
+      }
+      return body.data;
     },
   );
 }
