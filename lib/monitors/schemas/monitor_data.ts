@@ -15,11 +15,8 @@ import {
   type MonitorHealthSchema,
   monitorHealthSchema,
 } from "./monitor_health.ts";
-import {
-  type MonitorPositionSchema,
-  monitorPositionSchema,
-} from "./monitor_position.ts";
 import { type MonitorTypeSchema, monitorTypeSchema } from "./monitor_type.ts";
+import { type GeoJSONPointSchema, geoJSONPointSchema } from "../../schema.ts";
 
 interface MonitorDataSchema extends
   z.ZodObject<{
@@ -64,7 +61,7 @@ interface MonitorDataSchema extends
     name: z.ZodString;
 
     /** The geolocation of the monitor */
-    position: z.ZodNullable<MonitorPositionSchema>;
+    position: z.ZodNullable<GeoJSONPointSchema>;
 
     /**
      * The specific type of a monitor.
@@ -93,7 +90,7 @@ export const monitorDataSchema: MonitorDataSchema = z.object({
   location: z.string(),
   location_id: z.optional(z.number()),
   name: z.string(),
-  position: z.nullable(monitorPositionSchema),
+  position: z.nullable(geoJSONPointSchema),
   type: monitorTypeSchema,
   purple_id: z.optional(z.number()),
 });
@@ -224,38 +221,3 @@ export const monitorDetailsSchema: MonitorDetailsSchema = monitorDataSchema
       ),
     }),
   });
-
-interface CollocationSchema extends
-  z.ZodObject<{
-    /** The ID of the collocation entry */
-    id: z.ZodString;
-
-    /** The ID of the reference monitor */
-    reference_id: z.ZodString;
-
-    /** The ID of the collocated monitor */
-    colocated_id: z.ZodString;
-
-    /** The name of the reference monitor */
-    name: z.ZodString;
-
-    /** The position of the reference monitor */
-    position: MonitorPositionSchema;
-  }> {}
-
-export const collocationSchema: CollocationSchema = z.object({
-  /** The ID of the collocation entry */
-  id: z.string(),
-
-  /** The ID of the reference monitor */
-  reference_id: z.string(),
-
-  /** The ID of the collocated monitor */
-  colocated_id: z.string(),
-
-  /** The name of the reference monitor */
-  name: z.string(),
-
-  /** The position of the reference monitor */
-  position: monitorPositionSchema,
-});
