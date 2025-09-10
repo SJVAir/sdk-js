@@ -14,6 +14,9 @@ export class APIError<T> extends Error {
   }
 }
 
+/**
+ * A generic error handler for fetch requests
+ */
 export function genericAPIErrorHandler(fault: unknown): void {
   let error: Error;
 
