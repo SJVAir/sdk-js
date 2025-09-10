@@ -22,15 +22,12 @@ Deno.test({
       "POST account/login/",
       async () => {
         const { identifier, password } = loginCredentials;
-        const { status, body: { data } } = await login(
+        loginUser = await login(
           identifier,
           password,
         );
 
-        assertEquals(status, 200);
-        validateUserDetails(data);
-
-        loginUser = data;
+        validateUserDetails(loginUser);
       },
     );
 
@@ -38,12 +35,14 @@ Deno.test({
       name: "GET  account/",
       ignore: !canLogin,
       async fn() {
-        const { status: detailsStatus, body: { data: userDetails } } =
-          await getUserDetails(loginUser.api_token);
+        const details = await getUserDetails(loginUser.api_token);
 
-        assertEquals(detailsStatus, 200);
-        validateUserDetails(userDetails);
-        assertEquals(loginUser, userDetails);
+        validateUserDetails(details);
+        assertEquals(
+          loginUser,
+          details,
+          "Login user object differs from details user object",
+        );
       },
     });
   },
