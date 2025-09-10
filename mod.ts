@@ -1,4 +1,3 @@
-export * from "$monitors/mod.ts";
-export * from "$hmsSmoke/mod.ts";
-export * from "$http";
-export * from "$apiDateFormat";
+export * from "./lib/monitors/mod.ts";
+export * from "./lib/hms_smoke/mod.ts";
+export { apiDateFormat } from "./lib/datetime/api-date-format.ts";
