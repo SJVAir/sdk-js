@@ -23,5 +23,14 @@ Deno.test({
         validateHMSSmokeData(smoke);
       },
     );
+
+    await t.step(
+      "GET  hms-smoke/ongoing/",
+      async () => {
+        const smoke = await getHMSSmokeOngoing();
+        assertEquals(Array.isArray(smoke), true);
+        validateHMSSmokeData(smoke);
+      },
+    );
   },
 });
