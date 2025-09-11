@@ -1,4 +1,4 @@
-import { apiCall, APIError } from "$http";
+import { APIError, jsonCall } from "$http";
 import type { MonitorData } from "./types.ts";
 
 /**
@@ -7,15 +7,14 @@ import type { MonitorData } from "./types.ts";
  * @returns An array containing all monitors.
  */
 export async function getMonitors(): Promise<Array<MonitorData>> {
-  return await apiCall<Array<MonitorData>>(
+  return await jsonCall<Array<MonitorData>>(
     "monitors",
     (response) => {
-      const { data: monitors } = response.body;
-
-      if (!Array.isArray(monitors) || monitors.length <= 0) {
+      if (
+        !Array.isArray(response.body.data) || response.body.data.length <= 0
+      ) {
         throw new APIError("Failed to fetch all monitors", response);
       }
-      return monitors;
     },
   );
 }

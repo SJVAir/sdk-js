@@ -1,4 +1,4 @@
-import { apiCall } from "$http";
+import { jsonCall } from "$http";
 import type { UserDetails } from "./types.ts";
 
 /**
@@ -9,7 +9,7 @@ import type { UserDetails } from "./types.ts";
 export async function getUserDetails(
   token: string,
 ): Promise<UserDetails> {
-  return await apiCall<UserDetails>({
+  return await jsonCall<UserDetails>({
     url: "account",
     init: {
       headers: {

@@ -1,12 +1,5 @@
-import { apiCall, APIError } from "$http";
+import { APIError, jsonCall } from "$http";
 import type { MonitorClosestType, MonitorEntryType } from "./types.ts";
-
-/**
- * The data structure returned from the "/monitors/<entry_type>/closest/" endpoint
- */
-export type ClosestMonitorsResponse<T extends MonitorEntryType> = Array<
-  MonitorClosestType<T>
->;
 
 /**
  * Checks if a given monitor with a pm25 entry passes the prerequisites to be presented as the closest monitor
@@ -42,7 +35,7 @@ export function isValidClosestMonitor<T extends MonitorEntryType>(
       return pm25Validation(monitor as MonitorClosestType<"pm25">);
 
     default:
-      console.log(
+      console.error(
         `Closest monitor validation is not configured for entry types of ${monitor.latest.entry_type}`,
       );
       return false;
@@ -62,8 +55,8 @@ export async function getClosestMonitors<T extends MonitorEntryType>(
   entryType: T,
   latitude: number | string,
   longitude: number | string,
-): Promise<ClosestMonitorsResponse<T>> {
-  return await apiCall<ClosestMonitorsResponse<T>>(
+): Promise<Array<MonitorClosestType<T>>> {
+  return await jsonCall<Array<MonitorClosestType<T>>>(
     {
       url: `monitors/${entryType}/closest`,
       searchParams: {
@@ -72,13 +65,11 @@ export async function getClosestMonitors<T extends MonitorEntryType>(
       },
     },
     (response) => {
-      const { data: monitors } = response.body;
-
-      if (!Array.isArray(monitors) || monitors.length <= 0) {
+      if (
+        !Array.isArray(response.body.data) || response.body.data.length <= 0
+      ) {
         throw new APIError("Failed to closest monitors", response);
       }
-
-      return monitors;
     },
   );
 }

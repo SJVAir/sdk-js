@@ -1,4 +1,4 @@
-import { apiCall } from "$http";
+import { jsonCall } from "$http";
 import type { MonitorEntryType, MonitorLatestType } from "./types.ts";
 
 /**
@@ -18,7 +18,7 @@ export async function getMonitorsLatest<
 >(
   field: T,
 ): Promise<Array<MonitorLatestType<T>>> {
-  return await apiCall<Array<MonitorLatestType<T>>>(
+  return await jsonCall<Array<MonitorLatestType<T>>>(
     `monitors/${field}/current`,
   );
 }

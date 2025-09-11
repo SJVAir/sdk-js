@@ -1,4 +1,4 @@
-import { apiCall } from "$http";
+import { jsonCall } from "$http";
 import type { MonitorDetails } from "./types.ts";
 
 /**
@@ -16,5 +16,5 @@ export type MonitorDetailsResponse = { data: MonitorDetails };
 export async function getMonitorDetails(
   monitorId: string,
 ): Promise<MonitorDetails> {
-  return await apiCall<MonitorDetails>(`monitors/${monitorId}`);
+  return await jsonCall<MonitorDetails>(`monitors/${monitorId}`);
 }
