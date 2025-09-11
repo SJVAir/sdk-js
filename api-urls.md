@@ -6,7 +6,7 @@ User account management
 
 - [ ] `/api/2.0/account/`
   - [x] `GET`
-  - [ ] `DELETE`
+  - [x] `DELETE`
   - [ ] `PATCH`
 - [ ] `/api/2.0/account/alerts/`
 - [x] `/api/2.0/account/login/`
@@ -15,7 +15,7 @@ User account management
 - [ ] `/api/2.0/account/password/`
 - [ ] `/api/2.0/account/phone/`
 - [ ] `/api/2.0/account/phone/verify/`
-- [ ] `/api/2.0/account/register/`
+- [x] `/api/2.0/account/register/`
 
 ## Alerts
 
