@@ -7,7 +7,9 @@
   },
   "exports": {
     ".": "./mod.ts",
-    "./api_date_format": "./lib/api_date_format/mod.ts",
+    "./datetime": "./lib/datetime/mod.ts",
+    "./datetime/api_date_format": "./lib/datetime/api_date_format.ts",
+    "./datetime/get_valid_date_range": "./lib/datetime/get_valid_date_range.ts",
     "./account": "./lib/account/mod.ts",
     "./account/login": "./lib/account/login.ts",
     "./account/details": "./lib/account/details.ts",
