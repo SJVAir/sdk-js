@@ -5,6 +5,9 @@
 User account management
 
 - [ ] `/api/2.0/account/`
+  - [x] `GET`
+  - [ ] `DELETE`
+  - [ ] `PATCH`
 - [ ] `/api/2.0/account/alerts/`
 - [x] `/api/2.0/account/login/`
 - [ ] `/api/2.0/account/password-reset/`
