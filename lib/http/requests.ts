@@ -1,4 +1,4 @@
-import { APIError, genericAPIErrorHandler } from "./error.ts";
+import { genericAPIErrorHandler } from "./error.ts";
 import { getApiUrl } from "./origin.ts";
 
 /*
@@ -38,14 +38,44 @@ function getRequestConfig(
     : endpoint;
 }
 
+async function parseBody<T>(response: Response): Promise<T> {
+  if (response.status === 204) {
+    return response.body as T;
+  }
+
+  if (!response.headers.has("Content-Type")) {
+    throw new Error(
+      "Unable to handle server response, no Content-Type header was found",
+    );
+  }
+
+  const contentType = response.headers.get("Content-Type");
+  try {
+    switch (contentType) {
+      case "application/json":
+        return await response.json() as T;
+
+      case "text/csv":
+        return await response.text() as T;
+
+      default:
+        throw new Error(
+          `Not configured for parsing "${contentType}" content type`,
+        );
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 /**
- * Makes an HTTP request and assumes JSON response
+ * Makes an HTTP request
  *
  * @param endpoint The target URL or APIRequestConfig
  *
  * @returns The result of the request
  */
-export async function jsonRequest<T>(
+export async function httpRequest<T>(
   endpoint: string | APIRequestConfig,
 ): Promise<APIRequestResponse<T>> {
   const { url: baseUrl, searchParams, init } = getRequestConfig(endpoint);
@@ -54,17 +84,9 @@ export async function jsonRequest<T>(
 
   return await fetch(url, init)
     .then(async (response) => {
-      if (!response.ok) {
-        throw new APIError(`Request to "${url.href}" failed`, response);
-      }
-      const body: T = await response.json()
-        .catch((_) => {
-          throw new Error(`Request to endpoint "${url.href}" failed`, {
-            cause: response,
-          });
-        });
+      const body: T = await parseBody(response);
 
-      return {
+      const result = {
         headers: response.headers,
         body,
         ok: response.ok,
@@ -73,39 +95,66 @@ export async function jsonRequest<T>(
         statusText: response.statusText,
         url: response.url,
       } satisfies APIRequestResponse<T>;
+
+      if (!result.ok) {
+        throw new Error(`Request to "${url.href}" failed`, {
+          cause: {
+            url,
+            init,
+            result,
+          },
+        });
+      }
+
+      return result;
     }).catch(genericAPIErrorHandler) as APIRequestResponse<T>;
 }
 
-type APICallHandler<T> = (response: APIRequestResponse<{ data: T }>) => T;
-type AsyncAPICallHandler<T> = (
-  response: APIRequestResponse<{ data: T }>,
-) => Promise<T>;
+type APICallValidator<T> = (response: APIRequestResponse<T>) => void;
+type AsyncAPICallValidator<T> = (
+  response: APIRequestResponse<T>,
+) => Promise<void>;
 
 /**
  * A helper for making generic api calls to SJVAir.
  *
  * @param url The URL of the endpoint.
- * @param handler The handler for the reqeust response.
+ * @param validator The handler for the reqeust response.
  *
  * @returns The return value from the handler.
  */
 export async function apiCall<T>(
   endpoint: string | APIRequestConfig,
-  handler?: APICallHandler<T> | AsyncAPICallHandler<T>,
+  validator?: APICallValidator<T> | AsyncAPICallValidator<T>,
 ): Promise<Awaited<T>> {
-  return await jsonRequest<{ data: T }>(endpoint).then(async (response) => {
-    if (handler) {
-      const result = handler(response);
+  return await httpRequest<T>(endpoint).then(async (response) => {
+    if (validator) {
+      const result = validator(response);
 
       if (result instanceof Promise) {
         return await result;
       }
-
-      return result;
     }
 
-    return response.body.data;
+    return response.body;
   }).catch(genericAPIErrorHandler) as Awaited<T>;
+}
+
+/**
+ * A helper for making generic api calls to SJVAir.
+ *
+ * @param url The URL of the endpoint.
+ * @param validator The handler for the reqeust response.
+ *
+ * @returns The return value from the handler.
+ */
+export async function jsonCall<T>(
+  endpoint: string | APIRequestConfig,
+  validator?:
+    | APICallValidator<{ data: T }>
+    | AsyncAPICallValidator<{ data: T }>,
+): Promise<T> {
+  return (await apiCall<{ data: T }>(endpoint, validator)).data;
 }
 
 /*
@@ -149,7 +198,7 @@ export interface PaginatedResponse<T> {
 export async function paginatedApiCall<T>(
   endpoint: string | PaginatedAPIRequestConfig,
 ): Promise<Array<T>> {
-  return await jsonRequest<PaginatedResponse<T>>(endpoint)
+  return await httpRequest<PaginatedResponse<T>>(endpoint)
     .then(async (response) => {
       const { data, has_next_page, page, pages } = response.body;
       const totalEntries: Array<T> = [];
@@ -164,7 +213,7 @@ export async function paginatedApiCall<T>(
             Array.from(
               { length: pages - page },
               (_, idx) =>
-                jsonRequest<PaginatedResponse<T>>(
+                httpRequest<PaginatedResponse<T>>(
                   {
                     ...requestConfig,
                     searchParams: {
