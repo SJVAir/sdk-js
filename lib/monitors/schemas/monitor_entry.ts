@@ -5,10 +5,6 @@ import {
 } from "./monitor_entry_meta.ts";
 
 /** A utility type for defining other entry schemas */
-//interface BaseMonitorEntryMetaSchema extends Omit<
-//  MonitorEntryMetaSchema["shape"],
-//  "entry_type"
-//> {};
 interface BaseMonitorEntryMetaSchema extends
   z.ZodObject<
     Omit<MonitorEntryMetaSchema["shape"], "entry_type">
