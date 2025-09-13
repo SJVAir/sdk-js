@@ -1,5 +1,5 @@
 import { jsonCall } from "$http";
-import type { UserDetailsWithLang } from "./types.ts";
+import type { UserDetails } from "./types.ts";
 
 export interface CreateUserForm {
   full_name: string;
@@ -15,8 +15,8 @@ export interface CreateUserForm {
  */
 export async function createUser(
   form: CreateUserForm,
-): Promise<UserDetailsWithLang> {
-  return await jsonCall<UserDetailsWithLang>({
+): Promise<UserDetails> {
+  return await jsonCall<UserDetails>({
     url: "account/register",
     init: {
       method: "POST",

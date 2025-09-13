@@ -5,7 +5,7 @@ import { userDetailsSchema, userDetailsWithLangSchema } from "./schema.ts";
 import { createUser } from "./create.ts";
 import { login } from "./login.ts";
 import { getUserDetails } from "./details.ts";
-import type { UserDetails, UserDetailsWithLang } from "./types.ts";
+import type { UserDetails } from "./types.ts";
 import type { CreateUserForm } from "./create.ts";
 import { deleteUser } from "./delete.ts";
 
@@ -33,7 +33,7 @@ Deno.test({
   name: "Module: Account Endpoints",
   permissions: { net: true },
   async fn(t) {
-    let createdUser: UserDetailsWithLang;
+    let createdUser: UserDetails;
     let loginUser: UserDetails;
 
     const canCreate = await t.step(

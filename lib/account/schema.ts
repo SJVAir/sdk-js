@@ -12,6 +12,8 @@ export interface UserDetailsSchema extends
     phone: z.ZodString;
     /** Indicates whether or not he user's phone number has been verified */
     phone_verified: z.ZodBoolean;
+    /** The preferred language of the user */
+    language: z.ZodEnum;
     /** The user's api token */
     api_token: z.ZodString;
   }> {}
@@ -22,18 +24,6 @@ export const userDetailsSchema: UserDetailsSchema = z.object({
   email: z.string(),
   phone: z.string(),
   phone_verified: z.boolean(),
+  language: z.enum(["en", "es", "hmn", "tl"]),
   api_token: z.string(),
 });
-
-export interface UserDetailsWithLangSchema extends
-  z.ZodObject<
-    UserDetailsSchema["shape"] & {
-      /** The selected language of the user */
-      language: z.ZodEnum;
-    }
-  > {}
-
-export const userDetailsWithLangSchema: UserDetailsWithLangSchema =
-  userDetailsSchema.extend({
-    language: z.enum(["en", "es", "hmn", "tl"]),
-  });
