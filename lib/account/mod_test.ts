@@ -1,22 +1,20 @@
 import { assertEquals } from "@std/assert";
 import { setOrigin } from "$http";
 import { getSimpleValidationTest } from "$testing";
-import { userDetailsSchema, userDetailsWithLangSchema } from "./schema.ts";
+import { userDetailsSchema } from "./schema.ts";
 import { createUser } from "./create.ts";
 import { login } from "./login.ts";
 import { getUserDetails } from "./details.ts";
 import type { UserDetails } from "./types.ts";
 import type { CreateUserForm } from "./create.ts";
 import { deleteUser } from "./delete.ts";
+import { updateUser } from "./update.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
 const validateUserDetails = getSimpleValidationTest(userDetailsSchema);
-const validateUserDetailsWithLang = getSimpleValidationTest(
-  userDetailsWithLangSchema,
-);
 
 const getRandomPhone = () =>
   Array.from({ length: 4 }, () => Math.floor(Math.random() * (8 - 1 + 1)) + 1)
@@ -40,7 +38,7 @@ Deno.test({
       "POST account/register",
       async () => {
         createdUser = await createUser(TEST_USER_FORM);
-        validateUserDetailsWithLang(createdUser);
+        validateUserDetails(createdUser);
       },
     );
 
@@ -69,6 +67,21 @@ Deno.test({
           details,
           "Login user object differs from details user object",
         );
+      },
+    });
+
+    await t.step({
+      name: "PATCH  account/",
+      ignore: !canLogin,
+      async fn() {
+        const newEmail = "thisbethenewemail@example.com";
+        const updatedUser = await updateUser({
+          api_token: loginUser.api_token,
+          email: newEmail,
+        });
+
+        validateUserDetails(updatedUser);
+        assertEquals(newEmail, updatedUser.email);
       },
     });
 
