@@ -27,3 +27,17 @@ export const userDetailsSchema: UserDetailsSchema = z.object({
   language: z.enum(["en", "es", "hmn", "tl"]),
   api_token: z.string(),
 });
+
+export interface PasswordResetCredentialsSchema extends
+  z.ZodObject<{
+    /** The ID of the user */
+    uid64: z.ZodString;
+    /** The full name of the user */
+    token: z.ZodString;
+  }> {}
+
+export const passwordResetCredentialsSchema: PasswordResetCredentialsSchema = z
+  .object({
+    uid64: z.string(),
+    token: z.string(),
+  });
