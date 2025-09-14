@@ -13,8 +13,8 @@ User account management
 - [ ] `/api/2.0/account/password-reset/`
 - [ ] `/api/2.0/account/password-reset/<uidb64>/<token>/`
 - [ ] `/api/2.0/account/password/`
-- [ ] `/api/2.0/account/phone/`
-- [ ] `/api/2.0/account/phone/verify/`
+- [x] `/api/2.0/account/phone/`
+- [x] `/api/2.0/account/phone/verify/` <- Automated testing needs to be figured out
 - [x] `/api/2.0/account/register/`
 
 ## Alerts

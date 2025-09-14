@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, fail } from "@std/assert";
+import { MailSlurp } from "mailslurp-client";
 import { setOrigin } from "$http";
 import { getSimpleValidationTest } from "$testing";
 import { userDetailsSchema } from "./schema.ts";
@@ -9,6 +10,7 @@ import type { UserDetails } from "./types.ts";
 import type { CreateUserForm } from "./create.ts";
 import { deleteUser } from "./delete.ts";
 import { updateUser } from "./update.ts";
+import { sendPhoneVerification, verifyPhone } from "./phone.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -16,6 +18,15 @@ if (!Deno.env.has("TEST_REMOTE")) {
 
 const validateUserDetails = getSimpleValidationTest(userDetailsSchema);
 
+async function getEmail() {
+  const mailslurp = new MailSlurp({
+    apiKey: "7f420de8a51a5ed71c04b6445b2da4b39b4879d0a6ee423fd65a2eab48a37d46",
+  });
+  const inbox = await mailslurp.inboxController.createInboxWithDefaults();
+  const emailPagination = await mailslurp.emailController.getEmailsPaginated({
+    inboxId: [inbox.id],
+  });
+}
 const getRandomPhone = () =>
   Array.from({ length: 4 }, () => Math.floor(Math.random() * (8 - 1 + 1)) + 1)
     .join("");
@@ -41,6 +52,25 @@ Deno.test({
         validateUserDetails(createdUser);
       },
     );
+
+    await t.step({
+      name: "POST account/phone/",
+      ignore: !canCreate,
+      fn: async () => {
+        await sendPhoneVerification(createdUser.api_token);
+      },
+    });
+
+    await t.step({
+      name: "POST account/phone/verify/",
+      ignore: !canCreate,
+      fn: async () => {
+        const code = "";
+        await verifyPhone(code, createdUser.api_token);
+
+        fail("Phone verification testing needs to be figured out still");
+      },
+    });
 
     const canLogin = await t.step({
       name: "POST account/login/",
