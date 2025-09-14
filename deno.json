@@ -31,6 +31,7 @@
     "@tstk/types": "jsr:@tstk/types@^1.0.3",
     "geojson": "npm:@types/geojson@^7946.0.16",
     "ajv": "npm:ajv@^8.17.1",
+    "mailslurp-client": "npm:mailslurp-client@^16.0.0",
     "zod": "npm:zod@^4.0.17",
     "$datetime": "./lib/datetime/mod.ts",
     "$http": "./lib/http/mod.ts",
