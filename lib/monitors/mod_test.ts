@@ -1,5 +1,5 @@
 import { origin, setOrigin } from "$http";
-import { coordinates, getSimpleValidationTest } from "$testing";
+import { COORDINATES, getSimpleValidationTest } from "$testing";
 import {
   monitorClosestSchema,
   monitorDataSchema,
@@ -61,8 +61,8 @@ Deno.test({
         validateClosestMonitor(
           await getClosestMonitors(
             "pm25",
-            coordinates.latitude,
-            coordinates.longitude,
+            COORDINATES.latitude,
+            COORDINATES.longitude,
           ),
         ),
     );
@@ -73,8 +73,8 @@ Deno.test({
         validateClosestMonitor(
           await getClosestMonitor(
             "pm25",
-            coordinates.latitude,
-            coordinates.longitude,
+            COORDINATES.latitude,
+            COORDINATES.longitude,
           ),
         ),
     );

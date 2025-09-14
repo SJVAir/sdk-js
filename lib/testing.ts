@@ -26,7 +26,7 @@ export function getSimpleValidationTest<T extends ZodType>(
 
 export const MAILSLURP_TOKEN = Deno.env.get("MAILSLURP_API_KEY");
 
-export const coordinates = {
+export const COORDINATES = {
   latitude: assertTestVariable("LATITUDE"),
   longitude: assertTestVariable("LONGITUDE"),
 };
