@@ -1,4 +1,4 @@
-import { jsonCall } from "$http";
+import { apiCall, jsonCall } from "$http";
 import type { PasswordResetCredentials } from "./types.ts";
 
 /**
@@ -45,10 +45,10 @@ export interface PasswordResetConfig {
  */
 export async function resetPassword(
   config: PasswordResetConfig,
-): Promise<unknown> {
+): Promise<void> {
   //TODO: get return type
   const { token, uidb64, ...form } = config;
-  return await jsonCall<unknown>({
+  return await apiCall<void>({
     url: `account/password-reset/${uidb64}/${token}`,
     init: {
       method: "POST",
