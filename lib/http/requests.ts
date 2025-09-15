@@ -61,6 +61,7 @@ async function parseBody<T>(response: Response): Promise<T> {
       default:
         throw new Error(
           `Not configured for parsing "${contentType}" content type`,
+          { cause: response },
         );
     }
   } catch (error) {
