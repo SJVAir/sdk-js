@@ -9,7 +9,8 @@ export interface CreateUserForm {
 }
 
 /**
- * Register a new user.
+ * Register a new user. This will also send a sms message to
+ * the user with a code for phone verification.
  *
  * @returns The raw GET "/account/register" endpoint response
  */
