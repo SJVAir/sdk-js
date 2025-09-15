@@ -4,7 +4,7 @@
 
 User account management
 
-- [ ] `/api/2.0/account/`
+- [x] `/api/2.0/account/`
   - [x] `GET`
   - [x] `DELETE`
   - [x] `PATCH`
@@ -12,7 +12,7 @@ User account management
 - [x] `/api/2.0/account/login/`
 - [x] `/api/2.0/account/password-reset/` <- Automated testing needs to be figured out
 - [x] `/api/2.0/account/password-reset/<uidb64>/<token>/` <- Automated testing needs to be figured out
-- [] `/api/2.0/account/password/`
+- [x] `/api/2.0/account/password/`
 - [x] `/api/2.0/account/phone/`
 - [x] `/api/2.0/account/phone/verify/` <- Automated testing needs to be figured out
 - [x] `/api/2.0/account/register/`
