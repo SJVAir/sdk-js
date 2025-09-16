@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
@@ -29,6 +29,10 @@
     "./hms_smoke/get_smoke": "./lib/hms_smoke/get_smoke.ts",
     "./hms_smoke/get_smoke_ongoing": "./lib/hms_smoke/get_smoke_ongoing.ts",
     "./hms_smoke/types": "./lib/hms_smoke/types.ts",
+    "./http": "./lib/http/mod.ts",
+    "./http/error": "./lib/http/error.ts",
+    "./http/origin": "./lib/http/origin.ts",
+    "./http/requests": "./lib/http/requests.ts",
     "./monitors": "./lib/monitors/mod.ts",
     "./monitors/get_closest_monitor": "./lib/monitors/get_closest_monitor.ts",
     "./monitors/get_monitor_details": "./lib/monitors/get_monitor_details.ts",
