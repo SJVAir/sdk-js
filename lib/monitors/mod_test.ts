@@ -11,7 +11,7 @@ import { getMonitors } from "./fetch_monitors.ts";
 import {
   getClosestMonitor,
   getClosestMonitors,
-} from "./fetch_closest_monitor.ts";
+} from "./get_closest_monitor.ts";
 import { getMonitorsLatest } from "./fetch_monitors_latest.ts";
 import { getMonitorDetails } from "./fetch_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";

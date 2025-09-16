@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+IFS='/' read -ra ADDR <<<"$1"
+module="${ADDR[0]}"
+old_name="${ADDR[1]}"
+new_name="$2"
+echo "module: $module"
+echo "old name: $old_name"
+echo "new name: $new_name"
