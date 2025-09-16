@@ -4,6 +4,18 @@ import type {
   MonitorUnsubscribeResponse,
 } from "./types.ts";
 
+function getSubscriptionHeaders(apiToken: string): HeadersInit {
+  const headers: HeadersInit = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+  };
+
+  if (!("USER" in globalThis)) {
+    headers["Authorization"] = `Token ${apiToken}`;
+  }
+  return headers;
+}
+
 /**
  * Get all subscriptions of a user.
  *
@@ -15,11 +27,7 @@ export async function getSubscriptions(
   return await paginatedApiCall<MonitorSubscription>({
     url: "alerts/subscriptions",
     init: {
-      headers: {
-        "Accept": "application/json",
-        "Authorization": `Token ${apiToken}`,
-        "Content-Type": "application/json",
-      },
+      headers: getSubscriptionHeaders(apiToken),
     },
   });
 }
@@ -38,15 +46,12 @@ export async function subscribe(
   config: MonitorSubscriptionConfig,
 ): Promise<MonitorSubscription> {
   const { monitorId, apiToken, level } = config;
+
   return await jsonCall<MonitorSubscription>({
     url: `monitors/${monitorId}/alerts/subscribe`,
     init: {
       method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Authorization": `Token ${apiToken}`,
-        "Content-Type": "application/json",
-      },
+      headers: getSubscriptionHeaders(apiToken),
       body: JSON.stringify({ level }),
     },
   });
@@ -65,11 +70,7 @@ export async function unsubscribe(
     url: `monitors/${monitorId}/alerts/unsubscribe`,
     init: {
       method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Authorization": `Token ${apiToken}`,
-        "Content-Type": "application/json",
-      },
+      headers: getSubscriptionHeaders(apiToken),
       body: JSON.stringify({ level }),
     },
   });
