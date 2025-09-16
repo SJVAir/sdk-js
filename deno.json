@@ -26,7 +26,7 @@
     "./monitors": "./lib/monitors/mod.ts",
     "./monitors/fetch_monitors": "./lib/monitors/fetch_monitors.ts",
     "./monitors/get_closest_monitor": "./lib/monitors/get_closest_monitor.ts",
-    "./monitors/fetch_monitor_details": "./lib/monitors/fetch_monitor_details.ts",
+    "./monitors/get_monitor_details": "./lib/monitors/get_monitor_details.ts",
     "./monitors/fetch_monitor_entries": "./lib/monitors/fetch_monitor_entries.ts",
     "./monitors/fetch_monitor_entries_csv": "./lib/monitors/fetch_monitor_entries_csv.ts",
     "./monitors/fetch_monitors_latest": "./lib/monitors/fetch_monitors_latest.ts",

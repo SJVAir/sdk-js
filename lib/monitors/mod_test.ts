@@ -13,7 +13,7 @@ import {
   getClosestMonitors,
 } from "./get_closest_monitor.ts";
 import { getMonitorsLatest } from "./fetch_monitors_latest.ts";
-import { getMonitorDetails } from "./fetch_monitor_details.ts";
+import { getMonitorDetails } from "./get_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";
 import { getMonitorEntries } from "./fetch_monitor_entries.ts";
 import { assertEquals, assertExists, fail } from "@std/assert";
