@@ -1,3 +1,4 @@
+export { getAirAlerts } from "./air-alerts.ts";
 export { changePassword } from "./change-password.ts";
 export { createUser, type CreateUserForm } from "./create.ts";
 export { deleteUser } from "./delete.ts";
@@ -9,5 +10,11 @@ export {
   resetPassword,
 } from "./password-reset.ts";
 export { sendPhoneVerification, verifyPhone } from "./phone.ts";
+export {
+  getSubscriptions,
+  type MonitorSubscriptionConfig,
+  subscribe,
+  unsubscribe,
+} from "./subscriptions.ts";
 export * from "./types.ts";
 export { updateUser, type UpdateUserForm } from "./update.ts";

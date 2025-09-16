@@ -1,4 +1,31 @@
 import * as z from "zod";
+import {
+  type MonitorEntryTypeSchema,
+  monitorEntryTypeSchema,
+} from "../monitors/schemas/monitor_entry_type.ts";
+
+interface AirAlertSchema extends
+  z.ZodObject<{
+    created: z.ZodString;
+    modified: z.ZodString;
+    id: z.ZodString;
+    monitor: z.ZodString;
+    entry_type: MonitorEntryTypeSchema;
+    start_time: z.ZodString;
+    end_time: z.ZodNullable<z.ZodString>;
+    latest: z.ZodNumber;
+  }> {}
+
+export const airAlertSchema: AirAlertSchema = z.object({
+  created: z.string(),
+  modified: z.string(),
+  id: z.string(),
+  monitor: z.string(),
+  entry_type: monitorEntryTypeSchema,
+  start_time: z.string(),
+  end_time: z.string().nullable(),
+  latest: z.number(),
+});
 
 interface MonitorSubscriptionSchema extends
   z.ZodObject<{

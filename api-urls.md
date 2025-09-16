@@ -8,7 +8,7 @@ User account management
   - [x] `GET`
   - [x] `DELETE`
   - [x] `PATCH`
-- [ ] `/api/2.0/account/alerts/`
+- [x] `/api/2.0/account/alerts/`
 - [x] `/api/2.0/account/login/`
 - [x] `/api/2.0/account/password-reset/` <- Automated testing needs to be figured out
 - [x] `/api/2.0/account/password-reset/<uidb64>/<token>/` <- Automated testing needs to be figured out
@@ -21,7 +21,7 @@ User account management
 
 Air quality alerts
 
-- [ ] `/api/2.0/alerts/subscriptions/`
+- [x] `/api/2.0/alerts/subscriptions/`
 
 ## Collocations
 
@@ -45,8 +45,8 @@ Air monitors, current and historical data, monitor subscriptions, and entry arch
 - [x] `/api/2.0/monitors/<entry_type>/closest/`
 - [x] `/api/2.0/monitors/<entry_type>/current/`
 - [x] `/api/2.0/monitors/<monitor_id>/`
-- [ ] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
-- [ ] `/api/2.0/monitors/<monitor_id>/alerts/unsubscribe/`
+- [x] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
+- [x] `/api/2.0/monitors/<monitor_id>/alerts/unsubscribe/`
 - [ ] `/api/2.0/monitors/<monitor_id>/archive/`
 - [ ] `/api/2.0/monitors/<monitor_id>/archive/<int:year>/<int:month>/`
 - [ ] `/api/2.0/monitors/<monitor_id>/entries/`

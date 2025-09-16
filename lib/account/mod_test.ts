@@ -6,11 +6,13 @@ import {
   getSimpleValidationTest,
 } from "$testing";
 import {
+  airAlertSchema,
   monitorSubscriptionSchema,
   monitorUnsubscribeResponseSchema,
   passwordResetCredentialsSchema,
   userDetailsSchema,
 } from "./schema.ts";
+import { getAirAlerts } from "./air-alerts.ts";
 import { createUser, type CreateUserForm } from "./create.ts";
 import { login } from "./login.ts";
 import { getUserDetails } from "./details.ts";
@@ -29,6 +31,8 @@ import type {
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
+
+const validateAirAlerts = getSimpleValidationTest(airAlertSchema);
 
 const validateMonitorSubscription = getSimpleValidationTest(
   monitorSubscriptionSchema,
@@ -146,6 +150,16 @@ Deno.test({
             );
 
             validateUserDetails(loginUser);
+          },
+        });
+
+        await t2.step({
+          name: "GET   account/alerts/",
+          ignore: !canLogin,
+          async fn() {
+            const alerts = await getAirAlerts(loginUser.api_token);
+
+            validateAirAlerts(alerts);
           },
         });
 
