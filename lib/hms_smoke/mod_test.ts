@@ -1,8 +1,8 @@
 import { assertEquals } from "@std/assert";
 import { setOrigin } from "$http";
 import { getSimpleValidationTest } from "$testing";
-import { getHMSSmokeOngoing } from "./fetch_smoke_ongoing.ts";
-import { getHMSSmoke } from "./fetch_smoke.ts";
+import { getHMSSmokeOngoing } from "./get_smoke_ongoing.ts";
+import { getHMSSmoke } from "./get_smoke.ts";
 import { hmsSmokeSchema } from "./schema.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {

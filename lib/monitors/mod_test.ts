@@ -7,17 +7,17 @@ import {
   monitorLatestSchema,
   someMonitorEntrySchema,
 } from "./schemas/mod.ts";
-import { getMonitors } from "./fetch_monitors.ts";
+import { getMonitors } from "./get_monitors.ts";
 import {
   getClosestMonitor,
   getClosestMonitors,
 } from "./get_closest_monitor.ts";
-import { getMonitorsLatest } from "./fetch_monitors_latest.ts";
+import { getMonitorsLatest } from "./get_monitors_latest.ts";
 import { getMonitorDetails } from "./get_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";
-import { getMonitorEntries } from "./fetch_monitor_entries.ts";
+import { getMonitorEntries } from "./get_monitor_entries.ts";
 import { assertEquals, assertExists, fail } from "@std/assert";
-import { getMonitorEntriesCSVUrl } from "./fetch_monitor_entries_csv.ts";
+import { getMonitorEntriesCSVUrl } from "./get_monitor_entries_csv.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
