@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-IFS='/' read -ra ADDR <<<"$1"
-module="${ADDR[0]}"
-old_name="${ADDR[1]}"
-new_name="$2"
-ag -l "$old_name" | xargs sed -i "s/$old_name/$new_name/g" &&
-  mv "./lib/$module/$old_name" "./lib/$module/$new_name" &&
-  git add . &&
-  git commit -m "Replaced $old_name with $new_name"
+for file in $(find . -name "fetch_*"); do
+  new_path="${file//fetch_/get_}"
+  mv "$file" "$new_path"
+
+done
