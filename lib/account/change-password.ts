@@ -1,10 +1,14 @@
 import { jsonCall } from "$http";
 import type { UserDetails } from "./types.ts";
 
-interface ChangePasswordConfig {
+export interface ChangePasswordConfig {
+  /** The current password */
   old_password: string;
+  /** The desired new password */
   new_password1: string;
+  /** The desired new password */
   new_password2: string;
+  /** The user's API token */
   api_token: string;
 }
 /**

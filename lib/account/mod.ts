@@ -1,5 +1,8 @@
 export { getAirAlerts } from "./air-alerts.ts";
-export { changePassword } from "./change-password.ts";
+export {
+  changePassword,
+  type ChangePasswordConfig,
+} from "./change-password.ts";
 export { createUser, type CreateUserForm } from "./create.ts";
 export { deleteUser } from "./delete.ts";
 export { getUserDetails } from "./details.ts";
