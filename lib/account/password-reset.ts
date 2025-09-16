@@ -2,9 +2,9 @@ import { apiCall, jsonCall } from "$http";
 import type { PasswordResetCredentials } from "./types.ts";
 
 /**
- * Register a new user.
+ * Request a password reset.
  *
- * @returns The raw GET "/account/register" endpoint response
+ * @returns The credentials needed creating the password reset URL
  */
 export async function passwordResetRequest(
   phone: string,
@@ -39,9 +39,7 @@ export interface PasswordResetConfig {
 }
 
 /**
- * Register a new user.
- *
- * @returns The raw GET "/account/register" endpoint response
+ * Sumbit password reset.
  */
 export async function resetPassword(
   config: PasswordResetConfig,
