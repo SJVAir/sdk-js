@@ -2,7 +2,7 @@ import { jsonCall } from "$http";
 import type { UserDetails } from "./types.ts";
 
 export type UpdateUserForm =
-  & Partial<Omit<UserDetails, "api_token">>
+  & Partial<Omit<UserDetails, "api_token" | "phone_verified">>
   & Pick<UserDetails, "api_token">;
 
 /**
