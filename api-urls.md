@@ -53,7 +53,7 @@ Air monitors, current and historical data, monitor subscriptions, and entry arch
 - [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/`
 - [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/csv/`
 - [ ] `/api/2.0/monitors/<monitor_id>/entries/export/`
-- [ ] `/api/2.0/monitors/meta/`
+- [x] `/api/2.0/monitors/meta/`
 
 ## Tasks
 

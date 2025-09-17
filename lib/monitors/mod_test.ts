@@ -1,5 +1,9 @@
 import { origin, setOrigin } from "$http";
-import { COORDINATES, getSimpleValidationTest } from "$testing";
+import {
+  COORDINATES,
+  EXISTING_MONITOR_ID,
+  getSimpleValidationTest,
+} from "$testing";
 import {
   monitorClosestSchema,
   monitorDataSchema,
@@ -18,6 +22,8 @@ import type { MonitorEntryType } from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
 import { assertEquals, assertExists, fail } from "@std/assert";
 import { getMonitorEntriesCSVUrl } from "./get_monitor_entries_csv.ts";
+import { getMonitorsMeta } from "./meta.ts";
+import { sjvairMonitorsMetaSchema } from "./schemas/monitor_meta.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -30,30 +36,27 @@ const validateMonitorLatest = getSimpleValidationTest(monitorLatestSchema);
 const validateMonitorDetails = getSimpleValidationTest(monitorDetailsSchema);
 const validateClosestMonitor = getSimpleValidationTest(monitorClosestSchema);
 const validateMonitorEntries = getSimpleValidationTest(someMonitorEntrySchema);
+const validateMonitorsMeta = getSimpleValidationTest(sjvairMonitorsMetaSchema);
 
 Deno.test({
   name: "Module: Monitors Endpoints",
   permissions: { net: true },
   async fn(t) {
-    let monitorId: string;
+    await t.step(
+      "GET   monitors/meta",
+      async () => validateMonitorsMeta(await getMonitorsMeta()),
+    );
 
     await t.step(
       "GET  monitors/",
-      async () => {
-        const monitors = await getMonitors();
-
-        validateMonitorData(monitors);
-
-        monitorId = monitors[0].id;
-      },
+      async () => validateMonitorData(await getMonitors()),
     );
 
-    await t.step({
-      name: "GET  monitors/{MONITOR_ID}/",
-      ignore: monitorId! === undefined,
-      fn: async () =>
-        validateMonitorDetails(await getMonitorDetails(monitorId)),
-    });
+    await t.step(
+      "GET  monitors/{MONITOR_ID}/",
+      async () =>
+        validateMonitorDetails(await getMonitorDetails(EXISTING_MONITOR_ID)),
+    );
 
     await t.step(
       "GET  monitors/{ENTRY_TYPE}/closest/",
@@ -82,42 +85,35 @@ Deno.test({
     for (const pollutant of primaryPollutants) {
       await t.step(
         `GET  monitors/${pollutant}/current/`,
-        async () => {
-          const monitors = await getMonitorsLatest(pollutant);
-          validateMonitorLatest(monitors);
-
-          monitorId = monitors[0]?.id ?? monitorId;
-        },
+        async () => validateMonitorLatest(await getMonitorsLatest(pollutant)),
       );
 
-      await t.step({
-        name: `GET  monitors/{MONITOR_ID}/entries/${pollutant}/`,
-        ignore: monitorId! === undefined,
-        fn: async () =>
+      await t.step(
+        `GET  monitors/{MONITOR_ID}/entries/${pollutant}/`,
+        async () =>
           validateMonitorEntries(
             await getMonitorEntries({
               entryType: pollutant,
-              monitorId,
+              monitorId: EXISTING_MONITOR_ID,
             }),
           ),
-      });
+      );
 
-      await t.step({
-        name: "Generate CSV Download",
-        ignore: monitorId! === undefined,
-        fn: async (t2) => {
+      await t.step(
+        "Generate CSV Download",
+        async (t2) => {
           await t2.step(
             `Get  /api/2.0/monitors/{MONITOR_ID}/entries/${pollutant}/csv/`,
             async (t3) => {
               const url = getMonitorEntriesCSVUrl({
                 entryType: pollutant,
-                monitorId,
+                monitorId: EXISTING_MONITOR_ID,
               });
 
               assertEquals(url.origin, origin);
               assertEquals(
                 url.pathname,
-                `/api/2.0/monitors/${monitorId}/entries/${pollutant}/csv/`,
+                `/api/2.0/monitors/${EXISTING_MONITOR_ID}/entries/${pollutant}/csv/`,
               );
               assertEquals(url.searchParams.has("timestamp__gte"), true);
               assertEquals(url.searchParams.has("timestamp__lte"), true);
@@ -144,7 +140,7 @@ Deno.test({
                   assertEquals(contentType, "text/csv");
                   assertEquals(
                     contentDispostion.includes(
-                      `${monitorId}_export.csv`,
+                      `${EXISTING_MONITOR_ID}_export.csv`,
                     ),
                     true,
                   );
@@ -163,7 +159,7 @@ Deno.test({
             },
           );
         },
-      });
+      );
     }
   },
 });

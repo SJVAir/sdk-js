@@ -16,6 +16,13 @@ import type { monitorDataVendorSchema } from "./schemas/monitor_data_vendor.ts";
 import type { monitorHealthSchema } from "./schemas/monitor_health.ts";
 import type { monitorEntryTypeSchema } from "./schemas/monitor_entry_type.ts";
 import type { monitorEntryMetaSchema } from "./schemas/monitor_entry_meta.ts";
+import type {
+  sjvairEntryLevelMetaSchema,
+  sjvairEntryMetaSchema,
+  sjvairMonitorDeviceMetaSchema,
+  sjvairMonitorEntryMetaSchema,
+  sjvairMonitorsMetaSchema,
+} from "./schemas/monitor_meta.ts";
 
 /** A Monitor object returned from the SJVAir API */
 export type MonitorData = zinfer<typeof monitorDataSchema>;
@@ -117,7 +124,27 @@ export interface MonitorClosestType<T extends keyof MonitorEntries>
   extends Omit<MonitorClosest, "latest"> {
   latest: MonitorEntries[T];
 }
-/**
- * The data structure for details on a monitor object
- */
+/** The data structure for details on a monitor object */
 export type MonitorDetails = zinfer<typeof monitorDetailsSchema>;
+
+/** The metadata about the included entry types for a given monitor type  */
+export type SJVAirMonitorEntryMeta = zinfer<
+  typeof sjvairMonitorEntryMetaSchema
+>;
+
+/** The metadata about a given monitor type */
+export type SJVAirMonitorDeviceMeta = zinfer<
+  typeof sjvairMonitorDeviceMetaSchema
+>;
+
+/**
+ * The metadata about the breakpoints used to determine the severity of a
+ * specific entry type of a given monitor type
+ */
+export type SJVAirEntryLevel = zinfer<typeof sjvairEntryLevelMetaSchema>;
+
+/** The metadata about the types of monitor entries */
+export type SJVAirEntryMeta = zinfer<typeof sjvairEntryMetaSchema>;
+
+/** The metadata returned from monitors/meta */
+export type SJVAirMonitorsMeta = zinfer<typeof sjvairMonitorsMetaSchema>;
