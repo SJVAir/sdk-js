@@ -85,7 +85,7 @@ interface UserDetailsSchema extends
     /** Indicates whether or not he user's phone number has been verified */
     phone_verified: z.ZodBoolean;
     /** The preferred language of the user */
-    language: z.ZodEnum;
+    language: z.ZodEnum<{ en: "en"; es: "es"; hmn: "hmn"; tl: "tl" }>;
     /** The user's api token */
     api_token: z.ZodString;
   }> {}
