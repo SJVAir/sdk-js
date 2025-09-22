@@ -35,7 +35,7 @@ export async function getSubscriptions(
 export interface MonitorSubscriptionConfig {
   monitorId: string;
   apiToken: string;
-  level: MonitorSubscription["level"];
+  level: string;
 }
 /**
  * Get all subscriptions of a user.
