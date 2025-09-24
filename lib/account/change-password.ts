@@ -1,3 +1,32 @@
+/**
+ * A collection of utililties for interacting with the SJVAir /account/password/ API
+ *
+ * @example Usage
+ * ```ts
+ * import { changePassword } from "@sjvair/sdk/account/change-password";
+ *
+ * const user = await changePassword({
+ *  old_password: "OldPassword123",
+ *  new_password1: "NewPassword456",
+ *  new_password2: "NewPassword456",
+ *  api_token: "<API_TOKEN>",
+ * });
+ *
+ * console.log(user);
+ * // Prints:
+ * //  {
+ * //    id: "6NKDOOsxadsfjqwpoef",
+ * //    full_name: "John Chapman",
+ * //    email: "chapmanj@example.com",
+ * //    phone: "+15552221234",
+ * //    phone_verified: true,
+ * //    language: "en",
+ * //    api_token: "lkjhasdflkjhasdfk"
+ * //  }
+ * ```
+ *
+ * @module
+ */
 import { jsonCall } from "$http";
 import type { UserDetails } from "./types.ts";
 

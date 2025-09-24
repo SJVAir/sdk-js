@@ -1,3 +1,24 @@
+/**
+ * A collection of utililties for interacting with the SJVAir /account/ API
+ *
+ * @example Usage
+ * ```ts
+ * import { getSubscriptions, login } from "@sjvair/sdk/account";
+ *
+ * const user = await login("YourUsername", "YourPassword");
+ * const subscriptions = await getSubscriptions(user.api_token);
+ *
+ * console.log(subscriptions);
+ * // Prints:
+ * //  [
+ * //    { monitor: "qesuIWgTQgqtfGJ0rvBBlw", level: "unhealthy" },
+ * //    { monitor: "xgXCRh68SdG5FOdbUXvR6Q", level: "unhealthy_sensitive" }
+ * //  ]
+ * ```
+ *
+ * @module
+ */
+
 export { getAirAlerts } from "./air-alerts.ts";
 export {
   changePassword,
