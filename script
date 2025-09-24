@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+for file in $(find . -name "fetch_*"); do
+  new_path="${file//fetch_/get_}"
+  mv "$file" "$new_path"
+
+done
