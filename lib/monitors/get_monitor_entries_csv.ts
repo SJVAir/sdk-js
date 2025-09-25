@@ -1,3 +1,36 @@
+/**
+ * A utility function for generating the entries csv download url.
+ *
+ * @example Usage
+ * ```ts
+ * import { getMonitorEntriesCSVUrl } from "@sjvair/sdk/monitors/get_monitor_entries_csv";
+ *
+ * const url = await getMonitorEntriesCSVUrl({
+ *   monitorId: "xgXCRh68SdG5FOdbUXvR6Q",
+ *   entryType: "pm25",
+ *   timestampGte: new Date(),
+ *   timestampLte: new Date(),
+ * });
+ *
+ * console.log(url);
+ * // Prints (example output):
+ * //  URL {
+ * //    href: "https://www.sjvair.com/api/2.0/monitors/xgXCRh68SdG5FOdbUXvR6Q/entries/pm25/csv/?timestamp__gte=2025-09-25+00%3A00%3A00&timestamp__lte=2025-09-25+23%3A59%3A59",
+ * //    origin: "https://www.sjvair.com",
+ * //    protocol: "https:",
+ * //    username: "",
+ * //    password: "",
+ * //    host: "www.sjvair.com",
+ * //    hostname: "www.sjvair.com",
+ * //    port: "",
+ * //    pathname: "/api/2.0/monitors/xgXCRh68SdG5FOdbUXvR6Q/entries/pm25/csv/",
+ * //    hash: "",
+ * //    search: "?timestamp__gte=2025-09-25+00%3A00%3A00&timestamp__lte=2025-09-25+23%3A59%3A59"
+ * //  }
+ * ```
+ *
+ * @module
+ */
 import { getApiUrl } from "$http";
 import type { MonitorEntryType } from "./types.ts";
 import { apiDateFormat, getValidDateRange } from "$datetime";

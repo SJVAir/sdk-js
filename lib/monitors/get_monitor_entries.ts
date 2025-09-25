@@ -1,3 +1,33 @@
+/**
+ * A utility function for getting the entries of a monitor.
+ *
+ * @example Usage
+ * ```ts
+ * import { getMonitorEntries } from "@sjvair/sdk/monitors/get_monitor_entries";
+ *
+ * const entries = await getMonitorEntries({
+ *   monitorId: "xgXCRh68SdG5FOdbUXvR6Q",
+ *   entryType: "pm25",
+ *   timestampGte: new Date("2023-09-01T00:00:00Z"),
+ *   timestampLte: new Date("2023-09-03T00:00:00Z"),
+ * });
+ *
+ * console.log(entries);
+ * // Prints:
+ * // [
+ * //    {
+ * //       "timestamp": "2025-09-11T11:17:02-07:00",
+ * //       "stage": "cleaned",
+ * //       "processor": "PM25_LCS_Cleaning",
+ * //       "entry_type": "pm25",
+ * //       "value": "6.70"
+ * //   },
+ * //   ... (more entries)
+ * // ]
+ * ```
+ *
+ * @module
+ */
 import { paginatedApiCall } from "$http";
 import type { MonitorEntries, MonitorEntryType } from "./types.ts";
 import { apiDateFormat, getValidDateRange } from "$datetime";
