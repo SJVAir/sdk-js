@@ -69,6 +69,9 @@ export function getValidDateRange(
   } else if (!gteDefined && lteDefined) {
     timestampLte = getValidDate(timestampLte!);
     timestampGte = deriveTimestampGte(timestampLte);
+  } else {
+    timestampGte = getValidDate(timestampGte!);
+    timestampLte = getValidDate(timestampLte!);
   }
 
   return { gte: timestampGte, lte: timestampLte } as DateRange;
