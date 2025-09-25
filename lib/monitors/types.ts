@@ -1,5 +1,6 @@
 /**
  * Types for the Monitor and Monitor Entry data structures.
+ * @module
  */
 import type { infer as zinfer } from "zod";
 import type {
