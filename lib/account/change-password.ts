@@ -1,5 +1,5 @@
 /**
- * A collection of utililties for interacting with the SJVAir /account/password/ API
+ * A collection of utililties for interacting with the SJVAir /account/password/ endpoint.
  *
  * @example Usage
  * ```ts
@@ -30,6 +30,9 @@
 import { jsonCall } from "$http";
 import type { UserDetails } from "./types.ts";
 
+/**
+ * The form data required to change a user's password.
+ */
 export interface ChangePasswordConfig {
   /** The current password */
   old_password: string;

@@ -1,5 +1,5 @@
 /**
- * A collection of utililties for interacting with the SJVAir /account/register/ API
+ * A collection of utililties for interacting with the SJVAir /account/register/ endpoint.
  *
  * @example Usage
  * ```ts
@@ -17,11 +17,11 @@
  * //  {
  * //    id: "6NKDOOsxRyOUFE4rXMr1nQ",
  * //    full_name: "John Chapman",
- * //    email: "chapmanj@hotmail.com",
- * //    phone: "+15592835428",
+ * //    email: "chapmanj@example.com",
+ * //    phone: "+15552221234",
  * //    phone_verified: false,
  * //    language: "en",
- * //    api_token: "b50601e303e8eb597fe859202d2210ad96a97231"
+ * //    api_token: "b50601e303e8eb597f"
  * //  }
  * ```
  *
@@ -30,6 +30,9 @@
 import { jsonCall } from "$http";
 import type { UserDetails } from "./types.ts";
 
+/**
+ * The form data required to create a new user.
+ */
 export interface CreateUserForm {
   full_name: string;
   phone: string;

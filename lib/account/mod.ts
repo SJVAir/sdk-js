@@ -1,5 +1,5 @@
 /**
- * A collection of utililties for interacting with the SJVAir /account/ API
+ * A collection of utililties for interacting with the SJVAir /account/ endpoint.
  *
  * @example Usage
  * ```ts
