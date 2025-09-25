@@ -22,6 +22,43 @@ function getValidDate(timestamp: Date | string | number): Date {
 }
 
 /**
+ * Adjusts two dates to span the full day if they are within five minutes of each other.
+ *
+ * @param timestampGte The first date.
+ * @param timestampLte The second date.
+ *
+ * @returns A tuple containing the adjusted dates.
+ */
+function ensureValidRange(
+  timestampGte: Date | string | number,
+  timestampLte: Date | string | number,
+): DateRange {
+  timestampGte = getValidDate(timestampGte);
+  timestampLte = getValidDate(timestampLte);
+
+  const diff = Math.abs(timestampGte.getTime() - timestampLte.getTime());
+  const fiveMinutes = 5 * 60 * 1000;
+
+  if (diff <= fiveMinutes) {
+    if (timestampGte < timestampLte) {
+      timestampGte.setHours(0, 0, 0, 0);
+      timestampLte.setHours(23, 59, 59, 999);
+    } else {
+      timestampLte.setHours(0, 0, 0, 0);
+      timestampGte.setHours(23, 59, 59, 999);
+    }
+  }
+
+  //return { gte: timestampGte, lte: timestampLte };
+  return [timestampGte, timestampLte].sort((a, b) => a.getTime() - b.getTime())
+    .reduce((acc, curr, idx) => {
+      if (idx === 0) acc.gte = curr;
+      else acc.lte = curr;
+      return acc;
+    }, {} as DateRange);
+}
+
+/**
  * Derives the GTE timestamp from the provided LTE timestamp.
  *
  * @param timestampLte A valid Date object.
@@ -70,9 +107,8 @@ export function getValidDateRange(
     timestampLte = getValidDate(timestampLte!);
     timestampGte = deriveTimestampGte(timestampLte);
   } else {
-    timestampGte = getValidDate(timestampGte!);
-    timestampLte = getValidDate(timestampLte!);
+    return ensureValidRange(timestampGte!, timestampLte!);
   }
 
-  return { gte: timestampGte, lte: timestampLte } as DateRange;
+  return { gte: timestampGte, lte: timestampLte };
 }
