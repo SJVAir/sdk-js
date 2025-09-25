@@ -1,3 +1,21 @@
+/**
+ * A collection of utililties for creating HTTP errors from the SJVAir API.
+ *
+ * @example Usage
+ * ```ts
+ * import { APIError } from "@sjvair/sdk/http";
+ *
+ * const error = new APIError("Request failed", response);
+ * console.log(error);
+ * // Prints:
+ * // Error: Test error
+ * //     at file:///home/alex/tmp/deno/main.ts:50:13
+ * //     at eventLoopTick (ext:core/01_core.js:179:7)
+ * // Caused by <RESPONSE OBJECT> (excluded for brevity)
+ * ```
+ *
+ * @module
+ */
 import type { APIRequestResponse } from "./requests.ts";
 
 /**

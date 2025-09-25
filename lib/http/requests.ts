@@ -1,3 +1,33 @@
+/**
+ * A collection of utililties for creating HTTP requests to the SJVAir API.
+ *
+ * @example Usage
+ * ```ts
+ * import { jsonCall } from "@sjvair/sdk/http";
+ *
+ * const details = await jsonCall<MonitorLatest>("monitor/xgXCRh68SdG5FOdbUXvR6Q");
+ * console.log(detals);
+ * // Prints:
+ * //  {
+ * //    "id": "xgXCRh68SdG5FOdbUXvR6Q",
+ * //    "name": "ucm-1ed",
+ * //    "type": "purpleair",
+ * //    "device": "PA-II",
+ * //    "is_active": true,
+ * //    "is_sjvair": true,
+ * //    "position": {
+ * //        "type": "Point",
+ * //        "coordinates": [
+ * //            -119.8551,
+ * //            36.81932
+ * //        ]
+ * //    },
+ * //    ... (excerpted for brevity)
+ * //  }
+ * ```
+ *
+ * @module
+ */
 import { genericAPIErrorHandler } from "./error.ts";
 import { getApiUrl } from "./origin.ts";
 
