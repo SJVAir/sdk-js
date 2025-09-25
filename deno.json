@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
