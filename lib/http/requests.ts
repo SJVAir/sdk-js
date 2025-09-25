@@ -1,3 +1,33 @@
+/**
+ * A collection of utililties for creating HTTP requests to the SJVAir API.
+ *
+ * @example Usage
+ * ```ts
+ * import { jsonCall } from "@sjvair/sdk/http";
+ *
+ * const details = await jsonCall<MonitorLatest>("monitor/xgXCRh68SdG5FOdbUXvR6Q");
+ * console.log(detals);
+ * // Prints:
+ * //  {
+ * //    "id": "xgXCRh68SdG5FOdbUXvR6Q",
+ * //    "name": "ucm-1ed",
+ * //    "type": "purpleair",
+ * //    "device": "PA-II",
+ * //    "is_active": true,
+ * //    "is_sjvair": true,
+ * //    "position": {
+ * //        "type": "Point",
+ * //        "coordinates": [
+ * //            -119.8551,
+ * //            36.81932
+ * //        ]
+ * //    },
+ * //    ... (excerpted for brevity)
+ * //  }
+ * ```
+ *
+ * @module
+ */
 import { genericAPIErrorHandler } from "./error.ts";
 import { getApiUrl } from "./origin.ts";
 
@@ -111,8 +141,8 @@ export async function httpRequest<T>(
     }).catch(genericAPIErrorHandler) as APIRequestResponse<T>;
 }
 
-type APICallValidator<T> = (response: APIRequestResponse<T>) => void;
-type AsyncAPICallValidator<T> = (
+type APICallHandler<T> = (response: APIRequestResponse<T>) => void;
+type AsyncAPICallHandler<T> = (
   response: APIRequestResponse<T>,
 ) => Promise<void>;
 
@@ -120,17 +150,17 @@ type AsyncAPICallValidator<T> = (
  * A helper for making generic api calls to SJVAir.
  *
  * @param url The URL of the endpoint.
- * @param validator The handler for the reqeust response.
+ * @param handler The handler for the reqeust response.
  *
  * @returns The return value from the handler.
  */
 export async function apiCall<T>(
   endpoint: string | APIRequestConfig,
-  validator?: APICallValidator<T> | AsyncAPICallValidator<T>,
+  handler?: APICallHandler<T> | AsyncAPICallHandler<T>,
 ): Promise<Awaited<T>> {
   return await httpRequest<T>(endpoint).then(async (response) => {
-    if (validator) {
-      const result = validator(response);
+    if (handler) {
+      const result = handler(response);
 
       if (result instanceof Promise) {
         return await result;
@@ -152,8 +182,8 @@ export async function apiCall<T>(
 export async function jsonCall<T>(
   endpoint: string | APIRequestConfig,
   validator?:
-    | APICallValidator<{ data: T }>
-    | AsyncAPICallValidator<{ data: T }>,
+    | APICallHandler<{ data: T }>
+    | AsyncAPICallHandler<{ data: T }>,
 ): Promise<T> {
   return (await apiCall<{ data: T }>(endpoint, validator)).data;
 }

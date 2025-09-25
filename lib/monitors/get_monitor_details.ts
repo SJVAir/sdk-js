@@ -1,3 +1,33 @@
+/**
+ * A utility function for getting the details of a monitor.
+ *
+ * @example Usage
+ * ```ts
+ * import { getMonitorDetails } from "@sjvair/sdk/monitors/get_monitor_details";
+ *
+ * const details = await getMonitorDetails("pm25", "37.7749", "-122.4194");
+ * console.log(detals);
+ * // Prints:
+ * //  {
+ * //    "id": "xgXCRh68SdG5FOdbUXvR6Q",
+ * //    "name": "ucm-1ed",
+ * //    "type": "purpleair",
+ * //    "device": "PA-II",
+ * //    "is_active": true,
+ * //    "is_sjvair": true,
+ * //    "position": {
+ * //        "type": "Point",
+ * //        "coordinates": [
+ * //            -119.8551,
+ * //            36.81932
+ * //        ]
+ * //    },
+ * //    ... (excerpted for brevity)
+ * //  }
+ * ```
+ *
+ * @module
+ */
 import { jsonCall } from "$http";
 import type { MonitorDetails } from "./types.ts";
 

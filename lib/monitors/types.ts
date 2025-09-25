@@ -1,3 +1,6 @@
+/**
+ * Types for the Monitor and Monitor Entry data structures.
+ */
 import type { infer as zinfer } from "zod";
 import type {
   monitorClosestSchema,

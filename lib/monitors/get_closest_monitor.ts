@@ -1,3 +1,71 @@
+/**
+ * A collection of utililties for interacting with the SJVAir /monitors/closest endpoint.
+ *
+ * @example Usage
+ * ```ts
+ * import { getClosestMonitor, getClosestMonitors } from "@sjvair/sdk/monitors/get_closest_monitor";
+ *
+ * const closestMonitors = await getClosestMonitors("pm25", "37.7749", "-122.4194");
+ * console.log(closestMonitors);
+ * // Prints:
+ * // (example output)
+ * //  [
+ * //    {
+ * //       "id": "s7lfa-o-R--FTQHb22lmuQ",
+ * //       "name": "UCM-aea0",
+ * //       "type": "purpleair",
+ * //       "device": "PA-II",
+ * //       "is_active": true,
+ * //       "is_sjvair": true,
+ * //       "distance": 12.34,
+ * //       "position": {
+ * //          "type": "Point",
+ * //          "coordinates": [
+ * //             -121.367,
+ * //             37.98531
+ * //          ]
+ * //       },
+ * //       ... (excerpted for brevity)
+ * //     },
+ * //     {
+ * //        "id": "KnHBj1JvQYiSiwQk62zFuA",
+ * //        "name": "ucm-af3e",
+ * //        "type": "purpleair",
+ * //        "device": "PA-II",
+ * //        "is_active": true,
+ * //        "is_sjvair": true,
+ * //        "distance": 21.34,
+ * //        "position": {
+ * //            "type": "Point",
+ * //            "coordinates": [
+ * //                -120.4623,
+ * //                37.33503
+ * //            ]
+ * //        },
+ * //        ... (excerpted for brevity)
+ * //     },
+ * //     {
+ * //        "id": "Kdwobe23xz0234hdjW3b6Q",
+ * //        "name": "ucm-1ed",
+ * //        "type": "purpleair",
+ * //        "device": "PA-II",
+ * //        "is_active": true,
+ * //        "is_sjvair": true,
+ * //        "distance": 21.34,
+ * //        "position": {
+ * //            "type": "Point",
+ * //            "coordinates": [
+ * //                -120.4623,
+ * //                37.33503
+ * //            ]
+ * //        },
+ * //        ... (excerpted for brevity)
+ * //     },
+ * //   ]
+ * ```
+ *
+ * @module
+ */
 import { APIError, jsonCall } from "$http";
 import type { MonitorClosestType, MonitorEntryType } from "./types.ts";
 

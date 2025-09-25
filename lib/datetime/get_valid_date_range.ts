@@ -1,4 +1,31 @@
 /**
+ * A utility for generating valid date ranges.
+ *
+ * @example Usage
+ * ```ts
+ * import { getValidDateRange } from "@sjvair/sdk/datetime";
+ *
+ * const dateRange = getValidDateRange("2023-01-01", "2023-12-31");
+ * console.log(dateRange);
+ * // Prints: { gte: 2023-01-01T00:00:00.000Z, lte: 2023-12-31T00:00:00.000Z }
+ *
+ * const otherDateRange = getValidDateRange(new Date(), new Date());
+ * console.log(otherDateRange);
+ * // Prints: { gte: 2025-09-25T07:00:00.000Z, lte: 2025-09-26T06:59:59.999Z } (example output)
+ *
+ * const yetAnother = getValidDateRange("03-17-1994");
+ * console.log(yetAnother);
+ * // Prints: { gte: 1994-03-17T08:00:00.000Z, lte: 1994-03-21T07:59:59.999Z }
+ *
+ * const lastThreeDays = getValidDateRange();
+ * console.log(lastThreeDays);
+ * // Prints: { gte: 2025-09-22T07:00:00.000Z, lte: 2025-09-25T06:59:59.999Z } (example output)
+ * ```
+ *
+ * @module
+ */
+
+/**
  * Ensures a timestamp is prior to the current moment and represented by a Date object.
  *
  * @param timestamp The timestamp to validate.
@@ -19,6 +46,43 @@ function getValidDate(timestamp: Date | string | number): Date {
   }
 
   return timestamp;
+}
+
+/**
+ * Adjusts two dates to span the full day if they are within five minutes of each other.
+ *
+ * @param timestampGte The first date.
+ * @param timestampLte The second date.
+ *
+ * @returns A tuple containing the adjusted dates.
+ */
+function ensureValidRange(
+  timestampGte: Date | string | number,
+  timestampLte: Date | string | number,
+): DateRange {
+  timestampGte = getValidDate(timestampGte);
+  timestampLte = getValidDate(timestampLte);
+
+  const diff = Math.abs(timestampGte.getTime() - timestampLte.getTime());
+  const fiveMinutes = 5 * 60 * 1000;
+
+  if (diff <= fiveMinutes) {
+    if (timestampGte < timestampLte) {
+      timestampGte.setHours(0, 0, 0, 0);
+      timestampLte.setHours(23, 59, 59, 999);
+    } else {
+      timestampLte.setHours(0, 0, 0, 0);
+      timestampGte.setHours(23, 59, 59, 999);
+    }
+  }
+
+  //return { gte: timestampGte, lte: timestampLte };
+  return [timestampGte, timestampLte].sort((a, b) => a.getTime() - b.getTime())
+    .reduce((acc, curr, idx) => {
+      if (idx === 0) acc.gte = curr;
+      else acc.lte = curr;
+      return acc;
+    }, {} as DateRange);
 }
 
 /**
@@ -69,7 +133,9 @@ export function getValidDateRange(
   } else if (!gteDefined && lteDefined) {
     timestampLte = getValidDate(timestampLte!);
     timestampGte = deriveTimestampGte(timestampLte);
+  } else {
+    return ensureValidRange(timestampGte!, timestampLte!);
   }
 
-  return { gte: timestampGte, lte: timestampLte } as DateRange;
+  return { gte: timestampGte, lte: timestampLte };
 }

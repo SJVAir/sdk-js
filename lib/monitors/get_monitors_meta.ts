@@ -1,3 +1,77 @@
+/**
+ * A utility function for fetching the metadata for the /monitors/ API endpoints.
+ *
+ * @example Usage
+ * ```ts
+ * import { getMonitorsMeta } from "@sjvair/sdk/monitors/get_monitors_meta";
+ *
+ * const meta = await getMonitorsMeta();
+ * console.log(meta);
+ * // Prints:
+ * //  {
+ * //    "default_pollutant": "pm25",
+ * //    "monitors": {
+ * //      "airgradient": {
+ * //        "label": "AirGradient",
+ * //        "type": "airgradient",
+ * //        "expected_interval": "1 min",
+ * //        "entries": {
+ * //          "humidity": {
+ * //            "sensors": [
+ * //              "1",
+ * //              "2",
+ * //            ],
+ * //            "allowed_stages": [
+ * //              "raw",
+ * //              "calibrated",
+ * //            ],
+ * //            "default_stage": "raw",
+ * //            "default_calibration": "AirGradientHumidity",
+ * //            "processors": {
+ * //              "raw": [
+ * //                "AirGradientHumidity",
+ * //              ],
+ * //            },
+ * //          },
+ * //          ... (other entry types omitted for brevity)
+ * //        },
+ * //      },
+ * //      ... (other monitor types omitted for brevity)
+ * //    },
+ * //    "entries": {
+ * //      "pm25": {
+ * //        "label": "PM2.5",
+ * //        "type": "pm25",
+ * //        "units": "µg/m³",
+ * //        "epa_aqs_code": 88101,
+ * //        "levels": {
+ * //          "GOOD": {
+ * //            "name": "good",
+ * //            "label": "Good",
+ * //            "color": "#00e400",
+ * //            "range": [
+ * //              0.0,
+ * //              9.0,
+ * //            ],
+ * //            "guidance": null,
+ * //          },
+ * //          ... (other levels omitted for brevity)
+ * //        },
+ * //        "fields": [
+ * //          "timestamp",
+ * //          "sensor",
+ * //          "stage",
+ * //          "processor",
+ * //          "value",
+ * //        ],
+ * //      },
+ * //      ... (other entry types omitted for brevity)
+ * //    }
+ * //  }
+ * ```
+ *
+ * @module
+ */
 import { jsonCall } from "$http";
 import type {
   MonitorEntryType,

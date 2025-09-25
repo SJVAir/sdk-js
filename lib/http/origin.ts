@@ -1,4 +1,22 @@
 /**
+ * A collection of utililties for creating HTTP requests to the SJVAir API.
+ *
+ * @example Usage
+ * ```ts
+ * import { getApiUrl, setOrigin } from "@sjvair/sdk/http";
+ *
+ * setOrigin("http://localhost:8000");
+ *
+ * cosnt url = getApiUrl("monitors/pm25/closest", { latitude: "36.767815", longitude: "-119.7261333" });
+ * console.log(url);
+ * // Prints:
+ * // "http://localhost:8000/api/2.0/monitors/pm25/closest/?latitude=36.767815&longitude=-119.7261333"
+ * ```
+ *
+ * @module
+ */
+
+/**
  * The default origin to use when making requests to the SJVAir API
  */
 export let origin = "https://www.sjvair.com";

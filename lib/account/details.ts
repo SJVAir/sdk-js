@@ -1,3 +1,27 @@
+/**
+ * A utility function for getting a full user profile.
+ *
+ * @example Usage
+ * ```ts
+ * import { getUserDetails } from "@sjvair/sdk/account/details";
+ *
+ * const user = await getUserDetails(<API_TOKEN>);
+ *
+ * console.log(user);
+ * // Prints:
+ * //  {
+ * //    id: "6NKDOOsxRyOUFE4rXMr1nQ",
+ * //    full_name: "John Chapman",
+ * //    email: "chapmanj@example.com",
+ * //    phone: "+15552221234",
+ * //    phone_verified: false,
+ * //    language: "en",
+ * //    api_token: "b50601e303e8eb597f"
+ * //  }
+ * ```
+ *
+ * @module
+ */
 import { jsonCall } from "$http";
 import type { UserDetails } from "./types.ts";
 
