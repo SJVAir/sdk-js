@@ -1,4 +1,19 @@
 /**
+ * A utility for formatting dates for the SJVAir API.
+ *
+ * @example Usage
+ * ```ts
+ * import { apiDateFormat } from "@sjvair/sdk/datetime";
+ *
+ * const formattedDate = apiDateFormat(new Date());
+ * console.log(formattedDate);
+ * // Prints: "2025-09-25 10:44:38" (example output)
+ * ```
+ *
+ * @module
+ */
+
+/**
  * Converts a Date object or string to the format used by the SJVAir API
  *
  * @param date A Date object or string;
