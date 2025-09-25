@@ -1,3 +1,30 @@
+/**
+ * A utility function for fetching ongoing HMS Smoke events from the SJVAir API.
+ *
+ * @example Usage
+ * ```ts
+ * import { getHMSSmokeOngoing } from "@sjvair/sdk/hms_smoke/get_smoke_ongoing";
+ *
+ * const ongoingSmoke = await getHMSSmokeOngoing();
+ * console.log(ongoingSmoke);
+ * // Prints:
+ * //  [
+ * //    {
+ * //      id: "MZWcmY0fTI2h_YlwS9PfWQ",
+ * //      satellite: "GOES-WEST",
+ * //      density: "heavy",
+ * //      end: "2025-09-07T14:30:00Z",
+ * //      start: "2025-09-07T12:00:00Z",
+ * //      date: "2025-09-07",
+ * //      geometry: { type: "MultiPolygon", coordinates: [ [ [Array] ] ] },
+ * //      is_final: true
+ * //    },
+ * //    ...
+ * //  ]
+ * ```
+ *
+ * @module
+ */
 import { paginatedApiCall } from "$http";
 import type { HMSSmokeGeoJSON } from "./types.ts";
 
