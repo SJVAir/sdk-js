@@ -11,7 +11,7 @@
  * } from "@sjvair/sdk";
  *
  * const [meta, monitors] = await Promise.all([getMonitorsMeta(), getMonitors()]);
- * const user = await login("5592835428", "Fasten1821Crumb");
+ * const user = await login(<PHONE_NUMBER>, <PASSWORD>);
  * const subscriptions = await getSubscriptions(user.api_token);
  *
  * const subscribedMonitors = subscriptions.map((sub) => ({
