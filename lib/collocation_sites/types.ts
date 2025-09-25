@@ -1,3 +1,7 @@
+/**
+ * Types for collocation site relationships
+ * @module
+ */
 import type { infer as zinfer } from "zod";
 import type { collocationSchema } from "./schema.ts";
 

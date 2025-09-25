@@ -1,3 +1,7 @@
+/**
+ * Types for the HMS smoke endpoint
+ * @module
+ */
 import type { infer as zinfer } from "zod";
 import type { APIRequestResponse, PaginatedResponse } from "$http";
 import type { hmsSmokeSchema } from "./schema.ts";
