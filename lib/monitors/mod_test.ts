@@ -22,8 +22,12 @@ import type { MonitorEntryType } from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
 import { assertEquals, assertExists, fail } from "@std/assert";
 import { getMonitorEntriesCSVUrl } from "./get_monitor_entries_csv.ts";
-import { getMonitorsMeta } from "./meta.ts";
-import { sjvairMonitorsMetaSchema } from "./schemas/monitor_meta.ts";
+import { getMonitorsMeta } from "./get_monitors_meta.ts";
+import { sjvairMonitorsMetaSchema } from "./schemas/monitors_meta.ts";
+import {
+  getAllMonitorArchives,
+  getMonitorArchivePage,
+} from "./get_monitor_archives.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");

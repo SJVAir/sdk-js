@@ -1,3 +1,4 @@
+export * from "./monitor_entries_archive.ts";
 export * from "./monitor_data.ts";
 export * from "./monitor_data_vendor.ts";
 export * from "./monitor_entry.ts";

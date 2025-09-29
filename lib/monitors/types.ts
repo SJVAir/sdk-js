@@ -8,6 +8,7 @@ import type {
   monitorDataSchema,
   monitorDataVendorSchema,
   monitorDetailsSchema,
+  monitorEntriesArchiveSchema,
   monitorEntryMetaSchema,
   monitorEntrySchema,
   monitorEntryTypeSchema,
@@ -23,6 +24,8 @@ import type {
   sjvairMonitorEntryMetaSchema,
   sjvairMonitorsMetaSchema,
 } from "./schemas/mod.ts";
+
+export type MonitorEntriesArchive = zinfer<typeof monitorEntriesArchiveSchema>;
 
 /** A Monitor object returned from the SJVAir API */
 export type MonitorData = zinfer<typeof monitorDataSchema>;

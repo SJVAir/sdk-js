@@ -34,7 +34,7 @@ Collocation site info
 HMS Smoke GeoJSON
 
 - [x] `/api/2.0/hms-smoke/`
-- [ ] `/api/2.0/hms-smoke/<smoke_id>/`
+- [x] `/api/2.0/hms-smoke/<smoke_id>/`
 - [x] `/api/2.0/hms-smoke/ongoing/`
 
 ## Monitors and Entries
@@ -47,9 +47,9 @@ Air monitors, current and historical data, monitor subscriptions, and entry arch
 - [x] `/api/2.0/monitors/<monitor_id>/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/unsubscribe/`
-- [ ] `/api/2.0/monitors/<monitor_id>/archive/`
-- [ ] `/api/2.0/monitors/<monitor_id>/archive/<int:year>/<int:month>/`
-- [ ] `/api/2.0/monitors/<monitor_id>/entries/`
+- [x] `/api/2.0/monitors/<monitor_id>/archive/`
+- [x] `/api/2.0/monitors/<monitor_id>/archive/<int:year>/<int:month>/`
+- [ ] `/api/2.0/monitors/<monitor_id>/entries/` <-- Excluded from SDK
 - [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/`
 - [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/csv/`
 - [ ] `/api/2.0/monitors/<monitor_id>/entries/export/`
