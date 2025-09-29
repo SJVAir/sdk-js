@@ -2,6 +2,7 @@ import { assertEquals } from "@std/assert";
 import { setOrigin } from "$http";
 import { getSimpleValidationTest } from "$testing";
 import { getHMSSmokeOngoing } from "./get_smoke_ongoing.ts";
+import { getHMSSmokeById } from "./get_smoke_by_id.ts";
 import { getHMSSmoke } from "./get_smoke.ts";
 import { hmsSmokeSchema } from "./schema.ts";
 
@@ -17,10 +18,18 @@ Deno.test({
   async fn(t) {
     await t.step(
       "GET  hms-smoke/",
-      async () => {
+      async (t2) => {
         const smoke = await getHMSSmoke();
         assertEquals(Array.isArray(smoke), true);
         validateHMSSmokeData(smoke);
+
+        const smokeEventTarget = smoke[0];
+
+        await t2.step(`GET hms-smoke/${smokeEventTarget.id}`, async () => {
+          const smokeEvent = await getHMSSmokeById(smokeEventTarget.id);
+
+          validateHMSSmokeData(smokeEvent);
+        });
       },
     );
 

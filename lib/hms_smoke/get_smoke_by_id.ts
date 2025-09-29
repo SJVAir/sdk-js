@@ -1,11 +1,11 @@
 /**
- * A utility function for fetching HMS Smoke events from the SJVAir API.
+ * A utility function for fetching HMS Smoke events by their ID from the SJVAir API.
  *
  * @example Usage
  * ```ts
- * import { getHMSSmoke } from "@sjvair/sdk/hms_smoke/get_smoke";
+ * import { getHMSSmokeById } from "@sjvair/sdk/hms_smoke/get_smoke_by_id";
  *
- * const smoke = await getHMSSmoke();
+ * const smoke = await getHMSSmokeById("MZWcmY0fTI2h_YlwS9PfWQ");
  * console.log(smoke);
  * // Prints:
  * //  [
@@ -25,14 +25,15 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { jsonCall } from "$http";
 import type { HMSSmokeGeoJSON } from "./types.ts";
 
 /**
- * Fetch all pages of HMS Smoke geojson, using native fetch api
+ * Fetch a HMS Smoke event by it's ID
  *
- * @returns An array of geojson objects
+ * @param id - The ID of the HMS Smoke event
+ * @returns A HMSSmokeGeoJSON object
  */
-export async function getHMSSmoke(): Promise<Array<HMSSmokeGeoJSON>> {
-  return await paginatedApiCall<HMSSmokeGeoJSON>({ url: "hms-smoke" });
+export async function getHMSSmokeById(id: string): Promise<HMSSmokeGeoJSON> {
+  return await jsonCall<HMSSmokeGeoJSON>({ url: `hms-smoke/${id}` });
 }
