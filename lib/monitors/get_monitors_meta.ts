@@ -205,9 +205,14 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
    * @returns The metadata for the specified monitor entry type.
    */
   entryType(entryType: MonitorEntryType): EntriesMeta {
+    if (!(entryType in this.meta.entries)) {
+      throw new Error(`Invalid entry type: ${entryType}`);
+    }
+
     const entryMeta = this.asIter.entries.find((entryMeta) =>
       entryMeta.type === entryType
     )!;
+
     return new EntriesMeta(entryMeta);
   }
 
