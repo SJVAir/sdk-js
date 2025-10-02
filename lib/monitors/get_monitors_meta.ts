@@ -90,7 +90,7 @@ class EntriesMeta implements SJVAirEntryMeta {
     /**
      * An array of entry level metadata.
      */
-    levels: Array<SJVAirEntryLevel>;
+    levels: Array<SJVAirEntryLevel> | null;
   };
 
   /**
@@ -98,7 +98,7 @@ class EntriesMeta implements SJVAirEntryMeta {
    */
   constructor(private meta: SJVAirEntryMeta) {
     this.asIter = {
-      levels: Object.values(this.meta.levels ?? {}),
+      levels: (this.meta.levels) ? Object.values(this.meta.levels) : null,
     };
   }
 
