@@ -3,7 +3,7 @@
  *
  * @example Usage
  * ```ts
- * import { getHMSSmokeById } from "@sjvair/sdk/hms_smoke/get_smoke_by_id";
+ * import { getHMSSmokeById } from "@sjvair/sdk/hms/smoke/get_smoke_by_id";
  *
  * const smoke = await getHMSSmokeById("MZWcmY0fTI2h_YlwS9PfWQ");
  * console.log(smoke);
@@ -35,5 +35,5 @@ import type { HMSSmokeGeoJSON } from "./types.ts";
  * @returns A HMSSmokeGeoJSON object
  */
 export async function getHMSSmokeById(id: string): Promise<HMSSmokeGeoJSON> {
-  return await jsonCall<HMSSmokeGeoJSON>({ url: `hms-smoke/${id}` });
+  return await jsonCall<HMSSmokeGeoJSON>({ url: `hms/smoke/${id}` });
 }
