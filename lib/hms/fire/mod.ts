@@ -1,12 +1,12 @@
 /**
- * A collection of utililties for interacting with the SJVAir /hms-smoke/ endpoints.
+ * A collection of utililties for interacting with the SJVAir /hms/fire/ endpoints.
  *
  * @example Usage
  * ```ts
- * import { getHMSSmoke, getHMSSmokeOngoing } from "@sjvair/sdk/hms_smoke";
+ * import { getHMSFire } from "@sjvair/sdk/hms/fire";
  *
- * const ongoingSmoke = await getHMSSmokeOngoing();
- * console.log(ongoingSmoke);
+ * const ongoingFire = await getHMSFire();
+ * console.log(ongoingFire);
  * // Prints:
  * //  [
  * //    {
@@ -25,6 +25,6 @@
  *
  * @module
  */
-export * from "./get_smoke.ts";
-export * from "./get_smoke_ongoing.ts";
+export * from "./get_fire.ts";
+export * from "./get_fire_by_id.ts";
 export * from "./types.ts";

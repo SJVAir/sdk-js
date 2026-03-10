@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
@@ -25,10 +25,13 @@
     "./datetime": "./lib/datetime/mod.ts",
     "./datetime/api_date_format": "./lib/datetime/api_date_format.ts",
     "./datetime/get_valid_date_range": "./lib/datetime/get_valid_date_range.ts",
-    "./hms_smoke": "./lib/hms_smoke/mod.ts",
-    "./hms_smoke/get_smoke": "./lib/hms_smoke/get_smoke.ts",
-    "./hms_smoke/get_smoke_ongoing": "./lib/hms_smoke/get_smoke_ongoing.ts",
-    "./hms_smoke/types": "./lib/hms_smoke/types.ts",
+    "./hms": "./lib/hms/mod.ts",
+    "./hms/fire": "./lib/hms/fire/mod.ts",
+    "./hms/fire/get_fire": "./lib/hms/fire/get_fire.ts",
+    "./hms/fire/types": "./lib/hms/fire/types.ts",
+    "./hms/smoke": "./lib/hms/smoke/mod.ts",
+    "./hms/smoke/get_smoke": "./lib/hms/smoke/get_smoke.ts",
+    "./hms/smoke/types": "./lib/hms/smoke/types.ts",
     "./http": "./lib/http/mod.ts",
     "./http/error": "./lib/http/error.ts",
     "./http/origin": "./lib/http/origin.ts",
@@ -44,11 +47,11 @@
     "./monitors/types": "./lib/monitors/types.ts"
   },
   "imports": {
-    "@std/assert": "jsr:@std/assert@1",
-    "@tstk/types": "jsr:@tstk/types@^1.0.3",
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "@tstk/types": "jsr:@tstk/types@^1.1.0",
     "geojson": "npm:@types/geojson@^7946.0.16",
-    "ajv": "npm:ajv@^8.17.1",
-    "zod": "npm:zod@^4.0.17",
+    "ajv": "npm:ajv@^8.18.0",
+    "zod": "npm:zod@^4.3.6",
     "$datetime": "./lib/datetime/mod.ts",
     "$http": "./lib/http/mod.ts",
     "$testing": "./lib/testing.ts"

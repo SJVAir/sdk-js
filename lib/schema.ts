@@ -13,6 +13,18 @@ export const geoJSONPointSchema: GeoJSONPointSchema = z.object({
   type: z.literal("Point"),
 });
 
+export interface MultiPolygonSchema extends z.ZodObject<{
+  type: z.ZodLiteral<"MultiPolygon">;
+  coordinates: z.ZodArray<
+    z.ZodArray<z.ZodArray<z.ZodTuple<[z.ZodNumber, z.ZodNumber]>>>
+  >;
+}> {}
+
+export const multiPolygonSchema: MultiPolygonSchema = z.object({
+  type: z.literal("MultiPolygon"),
+  coordinates: z.array(z.array(z.array(z.tuple([z.number(), z.number()])))),
+});
+
 export function getSimpleValidation<T extends z.ZodType>(
   schema: T,
   errorHandler: (error: z.ZodError, item: z.infer<T>) => void,

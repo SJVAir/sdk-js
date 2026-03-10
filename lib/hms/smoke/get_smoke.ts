@@ -1,12 +1,12 @@
 /**
- * A utility function for fetching HMS Smoke events from the SJVAir API.
+ * A utility function for fetching ongoing HMS Smoke events from the SJVAir API.
  *
  * @example Usage
  * ```ts
- * import { getHMSSmoke } from "@sjvair/sdk/hms_smoke/get_smoke";
+ * import { getHMSSmoke } from "@sjvair/sdk/hms/smoke/get_smoke";
  *
- * const smoke = await getHMSSmoke();
- * console.log(smoke);
+ * const ongoingSmoke = await getHMSSmoke();
+ * console.log(ongoingSmoke);
  * // Prints:
  * //  [
  * //    {
@@ -29,10 +29,10 @@ import { paginatedApiCall } from "$http";
 import type { HMSSmokeGeoJSON } from "./types.ts";
 
 /**
- * Fetch all pages of HMS Smoke geojson, using native fetch api
+ * Fetch all pages of ongoing HMS Smoke geojson, using native fetch api
  *
  * @returns An array of geojson objects
  */
 export async function getHMSSmoke(): Promise<Array<HMSSmokeGeoJSON>> {
-  return await paginatedApiCall<HMSSmokeGeoJSON>({ url: "hms-smoke" });
+  return await paginatedApiCall<HMSSmokeGeoJSON>({ url: "hms/smoke" });
 }
