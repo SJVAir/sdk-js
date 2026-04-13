@@ -7,7 +7,7 @@ export interface HMSFireSchema extends z.ZodObject<{
   /** The ecosystem value */
   ecosystem: z.ZodNumber;
   /** The FRP value */
-  frp: z.ZodNumber;
+  frp: z.ZodNullable<z.ZodNumber>;
   /** The method value */
   method: z.ZodString;
   /** The satellite from which the fire data was obtained */
@@ -23,7 +23,7 @@ export interface HMSFireSchema extends z.ZodObject<{
 export const hmsFireSchema: HMSFireSchema = z.object({
   id: z.string(),
   ecosystem: z.number(),
-  frp: z.number(),
+  frp: z.number().nullable(),
   method: z.string(),
   satellite: z.string(),
   date: z.string(),
