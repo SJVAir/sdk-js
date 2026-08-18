@@ -50,13 +50,13 @@ import type {
  * @param apiToken - The API token used for authentication.
  * @returns An object containing the necessary HTTP headers.
  */
-function getSubscriptionHeaders(apiToken: string): HeadersInit {
+function getSubscriptionHeaders(apiToken?: string): HeadersInit {
   const headers: HeadersInit = {
-    "Accept": "application/json",
+    Accept: "application/json",
     "Content-Type": "application/json",
   };
 
-  if (!("USER" in globalThis)) {
+  if (typeof apiToken === "string" && apiToken.length > 0) {
     headers["Authorization"] = `Token ${apiToken}`;
   }
   return headers;
@@ -68,7 +68,7 @@ function getSubscriptionHeaders(apiToken: string): HeadersInit {
  * @returns An array of MonitorSubscription objects
  */
 export async function getSubscriptions(
-  apiToken: string,
+  apiToken?: string,
 ): Promise<Array<MonitorSubscription>> {
   return await paginatedApiCall<MonitorSubscription>({
     url: "alerts/subscriptions",
