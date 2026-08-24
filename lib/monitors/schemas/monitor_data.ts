@@ -12,6 +12,10 @@ import {
   someMonitorEntrySchema,
 } from "./monitor_entry.ts";
 import {
+  type MonitorGradeSchema,
+  monitorGradeSchema,
+} from "./monitor_grade.ts";
+import {
   type MonitorHealthSchema,
   monitorHealthSchema,
 } from "./monitor_health.ts";
@@ -32,6 +36,9 @@ interface MonitorDataSchema extends
 
     /** The brand/model of air monitor */
     device: z.ZodString;
+
+    /** The regulatory grade of the monitor's measurements */
+    grade: MonitorGradeSchema;
 
     /** Indicates whether or not the monitor has dual sensors */
     dual_channel: z.ZodOptional<z.ZodBoolean>;
@@ -74,6 +81,13 @@ interface MonitorDataSchema extends
      * @remarks This field is only present if the device type is "PurpleAir"
      */
     purple_id: z.ZodOptional<z.ZodNumber>;
+
+    /**
+     * The vendor-specific sensor ID of the monitor
+     * @remarks Present for AirGradient and PurpleAir monitors (numeric) and
+     * VOZbox monitors (string)
+     */
+    sensor_id: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>;
   }> {}
 
 export const monitorDataSchema: MonitorDataSchema = z.object({
@@ -81,6 +95,7 @@ export const monitorDataSchema: MonitorDataSchema = z.object({
   data_source: monitorDataVendorSchema,
   data_providers: z.array(monitorDataVendorSchema),
   device: z.string(),
+  grade: monitorGradeSchema,
   dual_channel: z.optional(z.boolean()),
   health: z.optional(monitorHealthSchema),
   id: z.string(),
@@ -93,6 +108,7 @@ export const monitorDataSchema: MonitorDataSchema = z.object({
   position: z.nullable(geoJSONPointSchema),
   type: monitorTypeSchema,
   purple_id: z.optional(z.number()),
+  sensor_id: z.optional(z.union([z.string(), z.number()])),
 });
 
 export interface MonitorLatestSchema extends

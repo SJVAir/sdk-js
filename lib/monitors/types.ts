@@ -12,6 +12,7 @@ import type {
   monitorEntryMetaSchema,
   monitorEntrySchema,
   monitorEntryTypeSchema,
+  monitorGradeSchema,
   monitorHealthSchema,
   monitorLatestSchema,
   monitorParticulatesEntrySchema,
@@ -43,6 +44,11 @@ export type MonitorHealth = zinfer<typeof monitorHealthSchema>;
 
 /** The Type of Entry for a given monitor */
 export type MonitorEntryType = zinfer<typeof monitorEntryTypeSchema>;
+
+/**
+ * The regulatory grade of a monitor's measurements
+ */
+export type MonitorGrade = zinfer<typeof monitorGradeSchema>;
 
 /**
  * The metadata found on all monitor entries
