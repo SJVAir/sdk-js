@@ -6,9 +6,17 @@ export type MonitorTypeSchema = z.ZodEnum<{
   aqview: "aqview";
   bam1022: "bam1022";
   purpleair: "purpleair";
+  vozbox: "vozbox";
 }>;
 
 //** The group a monitor belongs to */
 export const monitorTypeSchema: MonitorTypeSchema = z.enum(
-  ["airgradient", "airnow", "aqview", "bam1022", "purpleair"] as const,
+  [
+    "airgradient",
+    "airnow",
+    "aqview",
+    "bam1022",
+    "purpleair",
+    "vozbox",
+  ] as const,
 );

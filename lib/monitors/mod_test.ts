@@ -46,26 +46,53 @@ Deno.test({
   name: "Module: Monitors Endpoints",
   permissions: { net: true },
   async fn(t) {
-    await t.step("GET   monitors/meta", async () =>
-      validateMonitorsMeta(await getMonitorsMeta()),
+    await t.step(
+      "GET   monitors/meta",
+      async () => validateMonitorsMeta(await getMonitorsMeta()),
     );
 
-    await t.step("GET  monitors/", async () =>
-      validateMonitorData(await getMonitors()),
+    await t.step(
+      "GET   monitors/meta (vozbox single-sensor entries)",
+      async () => {
+        const meta = await getMonitorsMeta();
+        const vozbox = meta.monitors.vozbox;
+
+        assertExists(vozbox, "No vozbox entry found in monitors/meta response");
+        assertEquals(vozbox.entries.o3.sensors, ["1"]);
+        assertEquals(vozbox.entries.pm25.sensors, ["a", "b"]);
+      },
     );
 
-    await t.step("GET  monitors/{MONITOR_ID}/", async () =>
-      validateMonitorDetails(await getMonitorDetails(EXISTING_MONITOR_ID)),
+    await t.step(
+      "GET  monitors/",
+      async () => validateMonitorData(await getMonitors()),
     );
 
-    await t.step("GET  monitors/{ENTRY_TYPE}/closest/", async () =>
-      validateClosestMonitor(
-        await getClosestMonitors(
-          "pm25",
-          COORDINATES.latitude,
-          COORDINATES.longitude,
+    await t.step("GET  monitors/ (vozbox monitor type)", async () => {
+      const monitors = await getMonitors();
+      const vozbox = monitors.find((monitor) => monitor.type === "vozbox");
+
+      assertExists(vozbox, "No vozbox monitor found in monitors/ response");
+      assertEquals(typeof vozbox.sensor_id, "string");
+      assertEquals(["fem", "frm", "lcs"].includes(vozbox.grade), true);
+    });
+
+    await t.step(
+      "GET  monitors/{MONITOR_ID}/",
+      async () =>
+        validateMonitorDetails(await getMonitorDetails(EXISTING_MONITOR_ID)),
+    );
+
+    await t.step(
+      "GET  monitors/{ENTRY_TYPE}/closest/",
+      async () =>
+        validateClosestMonitor(
+          await getClosestMonitors(
+            "pm25",
+            COORDINATES.latitude,
+            COORDINATES.longitude,
+          ),
         ),
-      ),
     );
 
     await t.step(
@@ -81,8 +108,9 @@ Deno.test({
     );
 
     for (const pollutant of primaryPollutants) {
-      await t.step(`GET  monitors/${pollutant}/current/`, async () =>
-        validateMonitorLatest(await getMonitorsLatest(pollutant)),
+      await t.step(
+        `GET  monitors/${pollutant}/current/`,
+        async () => validateMonitorLatest(await getMonitorsLatest(pollutant)),
       );
 
       await t.step(
@@ -137,11 +165,13 @@ Deno.test({
                 await response.text();
               } catch (error) {
                 fail(
-                  `Monitor Entries endpoint response is not text: ${JSON.stringify(
-                    error,
-                    undefined,
-                    2,
-                  )}`,
+                  `Monitor Entries endpoint response is not text: ${
+                    JSON.stringify(
+                      error,
+                      undefined,
+                      2,
+                    )
+                  }`,
                 );
               }
             });

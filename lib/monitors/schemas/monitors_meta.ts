@@ -3,7 +3,7 @@ import * as z from "zod";
 interface SJVAirMonitorEntryMetaSchema extends
   z.ZodObject<{
     /** The labels for each sensor, if this monitor has more than one. */
-    sensors: z.ZodNullable<z.ZodTuple<[z.ZodString, z.ZodString]>>;
+    sensors: z.ZodNullable<z.ZodArray<z.ZodString>>;
     /** The allowed stages for data of this entry type to  be in */
     allowed_stages: z.ZodArray<z.ZodString>;
     /** The default stage to present for this entry type */
@@ -15,7 +15,7 @@ interface SJVAirMonitorEntryMetaSchema extends
   }> {}
 export const sjvairMonitorEntryMetaSchema: SJVAirMonitorEntryMetaSchema = z
   .object({
-    sensors: z.tuple([z.string(), z.string()]).nullable(),
+    sensors: z.array(z.string()).nullable(),
     allowed_stages: z.array(z.string()),
     default_stage: z.string(),
     default_calibration: z.string(),
