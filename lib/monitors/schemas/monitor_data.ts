@@ -40,6 +40,12 @@ interface MonitorDataSchema extends
     /** The regulatory grade of the monitor's measurements */
     grade: MonitorGradeSchema;
 
+    /**
+     * The device identifier of an AQLite monitor
+     * @remarks This field is only present if the device type is "AQLite"
+     */
+    device_id: z.ZodOptional<z.ZodString>;
+
     /** Indicates whether or not the monitor has dual sensors */
     dual_channel: z.ZodOptional<z.ZodBoolean>;
 
@@ -96,6 +102,7 @@ export const monitorDataSchema: MonitorDataSchema = z.object({
   data_providers: z.array(monitorDataVendorSchema),
   device: z.string(),
   grade: monitorGradeSchema,
+  device_id: z.optional(z.string()),
   dual_channel: z.optional(z.boolean()),
   health: z.optional(monitorHealthSchema),
   id: z.string(),
