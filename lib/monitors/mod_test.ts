@@ -64,6 +64,17 @@ Deno.test({
     );
 
     await t.step(
+      "GET   monitors/meta (aqlite entries)",
+      async () => {
+        const meta = await getMonitorsMeta();
+        const aqlite = meta.monitors.aqlite;
+
+        assertExists(aqlite, "No aqlite entry found in monitors/meta response");
+        assertEquals(aqlite.entries.o3.sensors, null);
+      },
+    );
+
+    await t.step(
       "GET  monitors/",
       async () => validateMonitorData(await getMonitors()),
     );
@@ -75,6 +86,15 @@ Deno.test({
       assertExists(vozbox, "No vozbox monitor found in monitors/ response");
       assertEquals(typeof vozbox.sensor_id, "string");
       assertEquals(["fem", "frm", "lcs"].includes(vozbox.grade), true);
+    });
+
+    await t.step("GET  monitors/ (aqlite monitor type)", async () => {
+      const monitors = await getMonitors();
+      const aqlite = monitors.find((monitor) => monitor.type === "aqlite");
+
+      assertExists(aqlite, "No aqlite monitor found in monitors/ response");
+      assertEquals(typeof aqlite.device_id, "string");
+      assertEquals(["fem", "frm", "lcs"].includes(aqlite.grade), true);
     });
 
     await t.step(
