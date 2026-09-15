@@ -10,11 +10,14 @@ User account management
   - [x] `PATCH`
 - [x] `/api/2.0/account/alerts/`
 - [x] `/api/2.0/account/login/`
-- [x] `/api/2.0/account/password-reset/` <- Automated testing needs to be figured out
-- [x] `/api/2.0/account/password-reset/<uidb64>/<token>/` <- Automated testing needs to be figured out
+- [x] `/api/2.0/account/password-reset/` <- Automated testing needs to be
+      figured out
+- [x] `/api/2.0/account/password-reset/<uidb64>/<token>/` <- Automated testing
+      needs to be figured out
 - [x] `/api/2.0/account/password/`
 - [x] `/api/2.0/account/phone/`
-- [x] `/api/2.0/account/phone/verify/` <- Automated testing needs to be figured out
+- [x] `/api/2.0/account/phone/verify/` <- Automated testing needs to be figured
+      out
 - [x] `/api/2.0/account/register/`
 
 ## Alerts
@@ -39,9 +42,11 @@ HMS Smoke GeoJSON
 
 ## Monitors and Entries
 
-Air monitors, current and historical data, monitor subscriptions, and entry archives
+Air monitors, current and historical data, monitor subscriptions, and entry
+archives
 
 - [x] `/api/2.0/monitors/`
+- [x] `/api/2.0/monitors/<entry_type>/at/`
 - [x] `/api/2.0/monitors/<entry_type>/closest/`
 - [x] `/api/2.0/monitors/<entry_type>/current/`
 - [x] `/api/2.0/monitors/<monitor_id>/`
@@ -52,7 +57,19 @@ Air monitors, current and historical data, monitor subscriptions, and entry arch
 - [ ] `/api/2.0/monitors/<monitor_id>/entries/` <-- Excluded from SDK
 - [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/`
 - [x] `/api/2.0/monitors/<monitor_id>/entries/<entry_type>/csv/`
-- [ ] `/api/2.0/monitors/<monitor_id>/entries/export/`
+- [ ] `/api/2.0/monitors/<monitor_id>/entries/export/` <-- Excluded from SDK
+      (requires login)
+- [x] `/api/2.0/monitors/<monitor_id>/entries/export/csv/`
+- [x] `/api/2.0/monitors/<monitor_id>/entries/export/json/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/hourly/<int:year>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/<int:day>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/<int:year>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/<int:year>/<int:month>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/monthly/<int:year>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/quarterly/<int:year>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/seasonal/<int:year>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/yearly/`
 - [x] `/api/2.0/monitors/meta/`
 
 ## Tasks

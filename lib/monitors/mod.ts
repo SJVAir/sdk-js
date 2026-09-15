@@ -3,9 +3,9 @@
  *
  * @example Usage
  * ```ts
- * import { getMonitorsLatest } from "@sjvair/sdk/monitors";
+ * import { getMonitors } from "@sjvair/sdk/monitors";
  *
- * const details = await getMonitorsLatest("pm25");
+ * const details = await getMonitors("pm25");
  * console.log(detals);
  * // Prints:
  * //  [
@@ -48,10 +48,13 @@
  * @module
  */
 export * from "./get_closest_monitor.ts";
+export * from "./get_monitor_archives.ts";
 export * from "./get_monitor_details.ts";
 export * from "./get_monitor_entries.ts";
 export * from "./get_monitor_entries_csv.ts";
+export * from "./get_monitor_entries_export.ts";
+export * from "./get_monitor_summaries.ts";
 export * from "./get_monitors.ts";
-export * from "./get_monitors_latest.ts";
+export * from "./get_monitors_list.ts";
 export * from "./get_monitors_meta.ts";
 export * from "./types.ts";

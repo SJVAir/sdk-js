@@ -36,7 +36,7 @@ import { getApiUrl } from "./origin.ts";
  */
 export interface APIRequestConfig {
   url: string;
-  searchParams?: Record<string, string>;
+  searchParams?: Record<string, string | Array<string>>;
   init?: RequestInit;
 }
 
@@ -193,7 +193,7 @@ export async function jsonCall<T>(
  */
 export interface PaginatedAPIRequestConfig
   extends Omit<APIRequestConfig, "searchParams"> {
-  searchParams?: Record<string, string> & { page?: string };
+  searchParams?: Record<string, string | Array<string>> & { page?: string };
 }
 
 /**

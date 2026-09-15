@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
@@ -38,11 +38,14 @@
     "./http/requests": "./lib/http/requests.ts",
     "./monitors": "./lib/monitors/mod.ts",
     "./monitors/get_closest_monitor": "./lib/monitors/get_closest_monitor.ts",
+    "./monitors/get_monitor_archives": "./lib/monitors/get_monitor_archives.ts",
     "./monitors/get_monitor_details": "./lib/monitors/get_monitor_details.ts",
     "./monitors/get_monitor_entries": "./lib/monitors/get_monitor_entries.ts",
     "./monitors/get_monitor_entries_csv": "./lib/monitors/get_monitor_entries_csv.ts",
+    "./monitors/get_monitor_entries_export": "./lib/monitors/get_monitor_entries_export.ts",
+    "./monitors/get_monitor_summaries": "./lib/monitors/get_monitor_summaries.ts",
     "./monitors/get_monitors": "./lib/monitors/get_monitors.ts",
-    "./monitors/get_monitors_latest": "./lib/monitors/get_monitors_latest.ts",
+    "./monitors/get_monitors_list": "./lib/monitors/get_monitors_list.ts",
     "./monitors/get_monitors_meta": "./lib/monitors/get_monitors_meta.ts",
     "./monitors/types": "./lib/monitors/types.ts"
   },

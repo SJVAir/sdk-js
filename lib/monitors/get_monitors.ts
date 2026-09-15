@@ -1,12 +1,13 @@
 /**
- * A utility function to retrieve all monitors from the SJVAir API.
+ * A utility function for fetching monitors with a "latest" entry from the SJVAir API,
+ * either as of now or as of a historical point in time.
  *
  * @example Usage
  * ```ts
  * import { getMonitors } from "@sjvair/sdk/monitors/get_monitors";
  *
- * const monitors = await getMonitors();
- * console.log(monitors);
+ * const current = await getMonitors("pm25");
+ * console.log(current);
  * // Prints:
  * //  [
  * //    {
@@ -43,27 +44,77 @@
  * //     }
  * //     ... (more monitors)
  * //   ]
+ *
+ * const historical = await getMonitors("pm25", { timestamp: "2024-01-01T00:00:00Z" });
+ * console.log(historical);
+ * // Prints an array shaped the same as above, reflecting the monitors' data as of the given timestamp
  * ```
  *
  * @module
  */
-import { APIError, jsonCall } from "$http";
-import type { MonitorData } from "./types.ts";
+import { jsonCall } from "$http";
+import type { MonitorEntryType, MonitorLatestType } from "./types.ts";
+import { apiDateFormat } from "$datetime";
 
 /**
- * Fetches all monitors.
- *
- * @returns An array containing all monitors.
+ * A bounding box, formatted as `[west, south, east, north]`
  */
-export async function getMonitors(): Promise<Array<MonitorData>> {
-  return await jsonCall<Array<MonitorData>>(
-    "monitors",
-    (response) => {
-      if (
-        !Array.isArray(response.body.data) || response.body.data.length <= 0
-      ) {
-        throw new APIError("Failed to fetch all monitors", response);
-      }
-    },
-  );
+export type MonitorBoundingBox = [
+  west: number,
+  south: number,
+  east: number,
+  north: number,
+];
+
+/**
+ * The configuration options for fetching monitors as of a historical point in time
+ */
+export interface MonitorsAtOptions {
+  /** The historical point in time to fetch monitor data as of */
+  timestamp: Date | number | string;
+
+  /** Scope results to one or more region ids */
+  region?: string | Array<string>;
+
+  /** Scope results to a bounding box */
+  bbox?: MonitorBoundingBox;
+}
+
+/**
+ * Fetches monitors with a "latest" entry, either as of now or as of a historical point in time.
+ *
+ * @param entryType The type of entry to include in the "latest" field
+ * @param options When provided, fetches monitor data as of a historical `timestamp`, optionally
+ * scoped to a `region` or `bbox`. When omitted, fetches monitor data as of now.
+ *
+ * @returns An array containing all monitors matching the given criteria, with a "latest" entry.
+ */
+export async function getMonitors<T extends MonitorEntryType>(
+  entryType: T,
+  options?: MonitorsAtOptions,
+): Promise<Array<MonitorLatestType<T>>> {
+  if (!options) {
+    return await jsonCall<Array<MonitorLatestType<T>>>(
+      `monitors/${entryType}/current`,
+    );
+  }
+
+  const searchParams: Record<string, string | Array<string>> = {
+    timestamp: apiDateFormat(options.timestamp),
+  };
+
+  if (options.region) {
+    searchParams.region = Array.isArray(options.region)
+      ? options.region
+      : [options.region];
+  }
+
+  if (options.bbox) {
+    searchParams.bbox = options.bbox.join(",");
+  }
+
+  return await jsonCall<Array<MonitorLatestType<T>>>({
+    url: `monitors/${entryType}/at`,
+    searchParams,
+  });
 }

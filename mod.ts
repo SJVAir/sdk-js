@@ -4,13 +4,13 @@
  * @example Usage
  * ```ts
  * import {
- *   getMonitors,
+ *   getMonitorsList,
  *   getMonitorsMeta,
  *   getSubscriptions,
  *   login,
  * } from "@sjvair/sdk";
  *
- * const [meta, monitors] = await Promise.all([getMonitorsMeta(), getMonitors()]);
+ * const [meta, monitors] = await Promise.all([getMonitorsMeta(), getMonitorsList()]);
  * const user = await login(<PHONE_NUMBER>, <PASSWORD>);
  * const subscriptions = await getSubscriptions(user.api_token);
  *

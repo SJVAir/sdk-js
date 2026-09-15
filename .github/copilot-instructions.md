@@ -22,18 +22,20 @@ deno test lib/datetime/mod_test.ts
 
 Copy `.env.template` to `.env` and fill in values. Tests read these env vars:
 
-| Variable | Purpose |
-|---|---|
-| `TEST_PHONE` | Phone number for account tests |
-| `TEST_MONITOR_ID` | Monitor ID for entry tests |
-| `TEST_LATITUDE` | Latitude for closest-monitor tests |
-| `TEST_LONGITUDE` | Longitude for closest-monitor tests |
+| Variable          | Purpose                             |
+| ----------------- | ----------------------------------- |
+| `TEST_PHONE`      | Phone number for account tests      |
+| `TEST_MONITOR_ID` | Monitor ID for entry tests          |
+| `TEST_LATITUDE`   | Latitude for closest-monitor tests  |
+| `TEST_LONGITUDE`  | Longitude for closest-monitor tests |
 
-Tests default to `http://127.0.0.1:8000` as origin; set `TEST_REMOTE=1` to use the live API (`https://www.sjvair.com`).
+Tests default to `http://127.0.0.1:8000` as origin; set `TEST_REMOTE=1` to use
+the live API (`https://www.sjvair.com`).
 
 ## Architecture
 
-The SDK is a thin wrapper over the SJVAir REST API (`/api/2.0/...`). Modules are organized by resource domain under `lib/`:
+The SDK is a thin wrapper over the SJVAir REST API (`/api/2.0/...`). Modules are
+organized by resource domain under `lib/`:
 
 ```
 lib/
@@ -53,9 +55,11 @@ lib/
 - **`httpRequest`**: raw fetch wrapper returning `APIRequestResponse<T>`
 - **`apiCall`**: adds optional response handler callback
 - **`jsonCall`**: unwraps the API's `{ data: T }` envelope automatically
-- **`paginatedApiCall`**: fetches all pages concurrently and returns flattened array
+- **`paginatedApiCall`**: fetches all pages concurrently and returns flattened
+  array
 
 To point requests at a different server (e.g. local dev):
+
 ```ts
 import { setOrigin } from "@sjvair/sdk/http";
 setOrigin("http://127.0.0.1:8000");
@@ -75,7 +79,8 @@ lib/<domain>/
 
 ### Type Convention
 
-All types are derived from Zod schemas using `zinfer` (an alias for `zod`'s `infer`):
+All types are derived from Zod schemas using `zinfer` (an alias for `zod`'s
+`infer`):
 
 ```ts
 import type { infer as zinfer } from "zod";
@@ -88,30 +93,39 @@ Never define types manually when a Zod schema exists — derive them.
 
 Defined in `deno.json` imports:
 
-| Alias | Points to |
-|---|---|
-| `$http` | `./lib/http/mod.ts` |
+| Alias       | Points to               |
+| ----------- | ----------------------- |
+| `$http`     | `./lib/http/mod.ts`     |
 | `$datetime` | `./lib/datetime/mod.ts` |
-| `$testing` | `./lib/testing.ts` |
+| `$testing`  | `./lib/testing.ts`      |
 
 ### Wrapper Classes with `.asIter`
 
-Some API responses return objects keyed by string (e.g. `monitors/meta`). Wrapper classes (e.g. `MonitorsMeta`, `EntriesMeta`) expose an `asIter` property that converts these record values to arrays for easy iteration. Always add `.asIter` when wrapping a record-shaped API response.
+Some API responses return objects keyed by string (e.g. `monitors/meta`).
+Wrapper classes (e.g. `MonitorsMeta`, `EntriesMeta`) expose an `asIter` property
+that converts these record values to arrays for easy iteration. Always add
+`.asIter` when wrapping a record-shaped API response.
 
 ### Zod Validation in Tests
 
-Use `getSimpleValidationTest` from `$testing` to create validators that call `fail()` on schema mismatch:
+Use `getSimpleValidationTest` from `$testing` to create validators that call
+`fail()` on schema mismatch:
 
 ```ts
 import { getSimpleValidationTest } from "$testing";
 const validateMonitorData = getSimpleValidationTest(monitorDataSchema);
-validateMonitorData(await getMonitors()); // validates each item
+validateMonitorData(await getMonitorsList()); // validates each item
 ```
 
 ## Key Conventions
 
 - Test files are named `mod_test.ts` (not `*.test.ts` or `*.spec.ts`)
-- Each module file should include a JSDoc block with `@example Usage` and `@module` tag
-- All search params are typed as `Record<string, string>` — convert numbers/dates to strings before passing
-- The `api-urls.md` file tracks which API endpoints are implemented; update it when adding new endpoints
-- Publishing is triggered by pushing a `v*` git tag, which runs `deno publish` to JSR
+- Each module file should include a JSDoc block with `@example Usage` and
+  `@module` tag
+- All search params are typed as `Record<string, string | string[]>` — convert
+  numbers/dates to strings before passing. An array value is sent as repeated
+  params (e.g. `?region=a&region=b`)
+- The `api-urls.md` file tracks which API endpoints are implemented; update it
+  when adding new endpoints
+- Publishing is triggered by pushing a `v*` git tag, which runs `deno publish`
+  to JSR

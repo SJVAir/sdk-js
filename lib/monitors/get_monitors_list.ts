@@ -1,12 +1,12 @@
 /**
- * A utility function for fetching all monitors with a "latest" entry from the SJVAir API.
+ * A utility function to retrieve all monitors from the SJVAir API.
  *
  * @example Usage
  * ```ts
- * import { getMonitorsLatest } from "@sjvair/sdk/monitors/get_monitors_latest";
+ * import { getMonitorsList } from "@sjvair/sdk/monitors/get_monitors_list";
  *
- * const details = await getMonitorsLatest("pm25");
- * console.log(detals);
+ * const monitors = await getMonitorsList();
+ * console.log(monitors);
  * // Prints:
  * //  [
  * //    {
@@ -47,20 +47,23 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
-import type { MonitorEntryType, MonitorLatestType } from "./types.ts";
+import { APIError, jsonCall } from "$http";
+import type { MonitorData } from "./types.ts";
 
 /**
- * Fetches all monitors with a "latest" entry.
+ * Fetches all monitors.
  *
- * @returns An array containing all monitors with a "latest" entry.
+ * @returns An array containing all monitors.
  */
-export async function getMonitorsLatest<
-  T extends MonitorEntryType,
->(
-  field: T,
-): Promise<Array<MonitorLatestType<T>>> {
-  return await jsonCall<Array<MonitorLatestType<T>>>(
-    `monitors/${field}/current`,
+export async function getMonitorsList(): Promise<Array<MonitorData>> {
+  return await jsonCall<Array<MonitorData>>(
+    "monitors",
+    (response) => {
+      if (
+        !Array.isArray(response.body.data) || response.body.data.length <= 0
+      ) {
+        throw new APIError("Failed to fetch all monitors", response);
+      }
+    },
   );
 }
