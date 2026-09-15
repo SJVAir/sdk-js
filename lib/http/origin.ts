@@ -34,20 +34,25 @@ export function setOrigin(newOrigin: string): void {
  * Constructs an SJVAir specific URL object
  *
  * @param endpoint Specific route to an endpoint (e.g. "/monitors")
- * @param version The desired api version to use
- * @param searchParams Key/Value object containing search parameters
+ * @param searchParams Key/Value object containing search parameters. An array value is
+ * appended as repeated params (e.g. `region: ["a", "b"]` becomes `?region=a&region=b`).
  *
  * @returns A complete request URL for the SJVAir API
  */
 export function getApiUrl(
   endpoint: string,
-  searchParams?: Record<string, string>,
+  searchParams?: Record<string, string | Array<string>>,
 ): URL {
   const url = new URL(`${origin}/api/2.0/${endpoint}/`);
 
   if (searchParams) {
-    Object.entries(searchParams)
-      .forEach((param) => url.searchParams.set(param[0], param[1]));
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item) => url.searchParams.append(key, item));
+      } else {
+        url.searchParams.set(key, value);
+      }
+    });
   }
 
   return url;

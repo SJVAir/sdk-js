@@ -8,26 +8,40 @@ import {
   monitorClosestSchema,
   monitorDataSchema,
   monitorDetailsSchema,
+  monitorEntriesArchiveSchema,
   monitorLatestSchema,
+  monitorSummarySchema,
   someMonitorEntrySchema,
 } from "./schemas/mod.ts";
-import { getMonitors } from "./get_monitors.ts";
+import { getMonitorsList } from "./get_monitors_list.ts";
 import {
   getClosestMonitor,
   getClosestMonitors,
 } from "./get_closest_monitor.ts";
-import { getMonitorsLatest } from "./get_monitors_latest.ts";
+import { getMonitors } from "./get_monitors.ts";
 import { getMonitorDetails } from "./get_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
 import { assertEquals, assertExists, fail } from "@std/assert";
 import { getMonitorEntriesCSVUrl } from "./get_monitor_entries_csv.ts";
+import {
+  getMonitorEntriesExportCSVUrl,
+  getMonitorEntriesExportJSON,
+} from "./get_monitor_entries_export.ts";
 import { getMonitorsMeta } from "./get_monitors_meta.ts";
 import { sjvairMonitorsMetaSchema } from "./schemas/monitors_meta.ts";
-//import {
-//  getAllMonitorArchives,
-//  getMonitorArchivePage,
-//} from "./get_monitor_archives.ts";
+import {
+  listAllMonitorArchives,
+  listMonitorArchivesPage,
+} from "./get_monitor_archives.ts";
+import {
+  getMonitorSummariesDaily,
+  getMonitorSummariesHourly,
+  getMonitorSummariesMonthly,
+  getMonitorSummariesQuarterly,
+  getMonitorSummariesSeasonal,
+  getMonitorSummariesYearly,
+} from "./get_monitor_summaries.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -41,6 +55,10 @@ const validateMonitorDetails = getSimpleValidationTest(monitorDetailsSchema);
 const validateClosestMonitor = getSimpleValidationTest(monitorClosestSchema);
 const validateMonitorEntries = getSimpleValidationTest(someMonitorEntrySchema);
 const validateMonitorsMeta = getSimpleValidationTest(sjvairMonitorsMetaSchema);
+const validateMonitorArchive = getSimpleValidationTest(
+  monitorEntriesArchiveSchema,
+);
+const validateMonitorSummary = getSimpleValidationTest(monitorSummarySchema);
 
 Deno.test({
   name: "Module: Monitors Endpoints",
@@ -76,11 +94,11 @@ Deno.test({
 
     await t.step(
       "GET  monitors/",
-      async () => validateMonitorData(await getMonitors()),
+      async () => validateMonitorData(await getMonitorsList()),
     );
 
     await t.step("GET  monitors/ (vozbox monitor type)", async () => {
-      const monitors = await getMonitors();
+      const monitors = await getMonitorsList();
       const vozbox = monitors.find((monitor) => monitor.type === "vozbox");
 
       assertExists(vozbox, "No vozbox monitor found in monitors/ response");
@@ -89,7 +107,7 @@ Deno.test({
     });
 
     await t.step("GET  monitors/ (aqlite monitor type)", async () => {
-      const monitors = await getMonitors();
+      const monitors = await getMonitorsList();
       const aqlite = monitors.find((monitor) => monitor.type === "aqlite");
 
       assertExists(aqlite, "No aqlite monitor found in monitors/ response");
@@ -127,10 +145,29 @@ Deno.test({
         ),
     );
 
+    await t.step(
+      "GET  monitors/{MONITOR_ID}/archive/",
+      async () => {
+        const page = await listMonitorArchivesPage(EXISTING_MONITOR_ID);
+        validateMonitorArchive(page.data);
+
+        const archives = await listAllMonitorArchives(EXISTING_MONITOR_ID);
+        validateMonitorArchive(archives);
+      },
+    );
+
     for (const pollutant of primaryPollutants) {
       await t.step(
         `GET  monitors/${pollutant}/current/`,
-        async () => validateMonitorLatest(await getMonitorsLatest(pollutant)),
+        async () => validateMonitorLatest(await getMonitors(pollutant)),
+      );
+
+      await t.step(
+        `GET  monitors/${pollutant}/at/`,
+        async () =>
+          validateMonitorLatest(
+            await getMonitors(pollutant, { timestamp: new Date() }),
+          ),
       );
 
       await t.step(
@@ -198,6 +235,110 @@ Deno.test({
           },
         );
       });
+
+      await t.step(
+        `GET  monitors/{MONITOR_ID}/entries/export/json/`,
+        async () => {
+          const startDate = "2024-01-01";
+          const endDate = "2024-01-02";
+
+          const records = await getMonitorEntriesExportJSON({
+            monitorId: EXISTING_MONITOR_ID,
+            startDate,
+            endDate,
+          });
+
+          assertEquals(Array.isArray(records), true);
+        },
+      );
+
+      await t.step(
+        `Get  monitors/{MONITOR_ID}/entries/export/csv/`,
+        async () => {
+          const url = getMonitorEntriesExportCSVUrl({
+            monitorId: EXISTING_MONITOR_ID,
+            startDate: "2024-01-01",
+            endDate: "2024-01-02",
+          });
+
+          assertEquals(url.origin, origin);
+          assertEquals(
+            url.pathname,
+            `/api/2.0/monitors/${EXISTING_MONITOR_ID}/entries/export/csv/`,
+          );
+
+          const response = await fetch(url);
+
+          if (response.status !== 200) {
+            fail("Monitor Entries export CSV request failed");
+          }
+          assertEquals(response.headers.get("content-type"), "text/csv");
+        },
+      );
+
+      // Summaries may legitimately come back empty: hourly/daily are filled in by a
+      // periodic task over time, and monthly/quarterly/seasonal/yearly only exist
+      // after that task's once-daily rollup (or a manual `rebuild_summaries` run) has
+      // happened for this monitor. These steps only assert response shape, not content.
+      await t.step(
+        `GET  monitors/{MONITOR_ID}/summaries/${pollutant}/*`,
+        async (t2) => {
+          const year = new Date().getFullYear();
+
+          await t2.step("hourly", async () =>
+            validateMonitorSummary(
+              await getMonitorSummariesHourly({
+                monitorId: EXISTING_MONITOR_ID,
+                entryType: pollutant,
+                year,
+              }),
+            ));
+
+          await t2.step("daily", async () =>
+            validateMonitorSummary(
+              await getMonitorSummariesDaily({
+                monitorId: EXISTING_MONITOR_ID,
+                entryType: pollutant,
+                year,
+              }),
+            ));
+
+          await t2.step("monthly", async () =>
+            validateMonitorSummary(
+              await getMonitorSummariesMonthly({
+                monitorId: EXISTING_MONITOR_ID,
+                entryType: pollutant,
+                year,
+              }),
+            ));
+
+          await t2.step("quarterly", async () =>
+            validateMonitorSummary(
+              await getMonitorSummariesQuarterly({
+                monitorId: EXISTING_MONITOR_ID,
+                entryType: pollutant,
+                year,
+              }),
+            ));
+
+          await t2.step("seasonal", async () =>
+            validateMonitorSummary(
+              await getMonitorSummariesSeasonal({
+                monitorId: EXISTING_MONITOR_ID,
+                entryType: pollutant,
+                year,
+              }),
+            ));
+
+          await t2.step("yearly", async () =>
+            validateMonitorSummary(
+              await getMonitorSummariesYearly({
+                monitorId: EXISTING_MONITOR_ID,
+                entryType: pollutant,
+              }),
+            ));
+        },
+      );
     }
   },
 });

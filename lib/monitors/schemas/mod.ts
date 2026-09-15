@@ -6,5 +6,6 @@ export * from "./monitor_entry_meta.ts";
 export * from "./monitor_entry_type.ts";
 export * from "./monitor_grade.ts";
 export * from "./monitor_health.ts";
+export * from "./monitor_summary.ts";
 export * from "./monitor_type.ts";
 export * from "./monitors_meta.ts";

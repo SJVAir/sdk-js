@@ -17,6 +17,7 @@ import type {
   monitorLatestSchema,
   monitorParticulatesEntrySchema,
   monitorPressureEntrySchema,
+  monitorSummarySchema,
   monitorTemperatureEntrySchema,
   monitorTypeSchema,
   sjvairEntryLevelMetaSchema,
@@ -157,3 +158,6 @@ export type SJVAirEntryMeta = zinfer<typeof sjvairEntryMetaSchema>;
 
 /** The metadata returned from monitors/meta */
 export type SJVAirMonitorsMeta = zinfer<typeof sjvairMonitorsMetaSchema>;
+
+/** A single aggregated summary of a monitor's entries over a period of time */
+export type MonitorSummary = zinfer<typeof monitorSummarySchema>;

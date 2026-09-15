@@ -13,12 +13,13 @@ export const geoJSONPointSchema: GeoJSONPointSchema = z.object({
   type: z.literal("Point"),
 });
 
-export interface MultiPolygonSchema extends z.ZodObject<{
-  type: z.ZodLiteral<"MultiPolygon">;
-  coordinates: z.ZodArray<
-    z.ZodArray<z.ZodArray<z.ZodTuple<[z.ZodNumber, z.ZodNumber]>>>
-  >;
-}> {}
+export interface MultiPolygonSchema extends
+  z.ZodObject<{
+    type: z.ZodLiteral<"MultiPolygon">;
+    coordinates: z.ZodArray<
+      z.ZodArray<z.ZodArray<z.ZodTuple<[z.ZodNumber, z.ZodNumber]>>>
+    >;
+  }> {}
 
 export const multiPolygonSchema: MultiPolygonSchema = z.object({
   type: z.literal("MultiPolygon"),

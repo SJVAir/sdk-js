@@ -3,7 +3,7 @@
  *
  * @example Usage
  * ```ts
- * import { listAllMonitorArchives } from "@sjvair/sdk/monitors/get_monitors_archives";
+ * import { listAllMonitorArchives } from "@sjvair/sdk/monitors/get_monitor_archives";
  *
  * const archives = await listAllMonitorArchives("K40cQV3lRaWapiaYltjDbg");
  * console.log(archives);
@@ -27,7 +27,7 @@
  */
 import {
   apiCall,
-  jsonCall,
+  httpRequest,
   paginatedApiCall,
   type PaginatedResponse,
 } from "$http";
@@ -43,10 +43,15 @@ import type { MonitorEntriesArchive } from "./types.ts";
 export async function listMonitorArchivesPage(
   monitorId: string,
   page: number = 1,
-) {
-  return await jsonCall<PaginatedResponse<MonitorEntriesArchive>>(
-    `monitors/${monitorId}/archives?page=${page}`,
+): Promise<PaginatedResponse<MonitorEntriesArchive>> {
+  const response = await httpRequest<PaginatedResponse<MonitorEntriesArchive>>(
+    {
+      url: `monitors/${monitorId}/archive`,
+      searchParams: { page: page.toString() },
+    },
   );
+
+  return response.body;
 }
 
 /**
