@@ -112,3 +112,10 @@ setOrigin("http://127.0.0.1:8000");
 
 Pushing a `v*` git tag triggers the GitHub Actions workflow which runs
 `deno publish` to JSR. Update `"version"` in `deno.json` before tagging.
+
+**Standing restriction:** NEVER push a `v*` tag, run `deno publish`, or otherwise
+trigger this workflow without the user's explicit permission for that specific
+publish — every single time. Approval for one publish does not carry forward to the
+next, even later in the same session or as the natural next step of a task already in
+progress (e.g. bumping the version and then "finishing" by publishing it). Always stop
+and ask first, and wait for an explicit yes.
