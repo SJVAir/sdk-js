@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
@@ -47,7 +47,13 @@
     "./monitors/get_monitors": "./lib/monitors/get_monitors.ts",
     "./monitors/get_monitors_list": "./lib/monitors/get_monitors_list.ts",
     "./monitors/get_monitors_meta": "./lib/monitors/get_monitors_meta.ts",
-    "./monitors/types": "./lib/monitors/types.ts"
+    "./monitors/types": "./lib/monitors/types.ts",
+    "./regions": "./lib/regions/mod.ts",
+    "./regions/get_region_details": "./lib/regions/get_region_details.ts",
+    "./regions/get_region_places": "./lib/regions/get_region_places.ts",
+    "./regions/get_region_summaries": "./lib/regions/get_region_summaries.ts",
+    "./regions/get_regions_list": "./lib/regions/get_regions_list.ts",
+    "./regions/types": "./lib/regions/types.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.19",
