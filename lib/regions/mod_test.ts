@@ -1,6 +1,6 @@
 import { setOrigin } from "$http";
 import { getSimpleValidationTest } from "$testing";
-import { assertEquals, assertExists } from "@std/assert";
+import { assertEquals, assertExists, assertRejects } from "@std/assert";
 import { regionSchema, regionSummarySchema } from "./schemas/mod.ts";
 import { getRegionsList } from "./get_regions_list.ts";
 import { getRegionDetails } from "./get_region_details.ts";
@@ -42,6 +42,18 @@ Deno.test({
         assertEquals(
           counties.every((region) => region.type === "county"),
           true,
+        );
+      },
+    );
+
+    await t.step(
+      "GET  regions/ (no filters, rejected client-side)",
+      async () => {
+        await assertRejects(
+          // deno-lint-ignore no-explicit-any
+          () => getRegionsList({} as any),
+          Error,
+          "at least one",
         );
       },
     );

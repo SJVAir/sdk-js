@@ -30,40 +30,44 @@ import { jsonCall } from "$http";
 import type { RegionData, RegionType } from "./types.ts";
 
 /**
- * The filters available when listing regions
+ * The filters available when listing regions. At least one of `name`, `slug`,
+ * or `type` is required — the API has no pagination on this endpoint, and an
+ * unfiltered request can return tens of thousands of regions (some with large
+ * boundary geometries), producing a response hundreds of megabytes in size.
  */
-export interface RegionsListFilters {
-  /** Restrict results to regions whose name contains this value */
-  name?: string;
-
-  /** Restrict results to the region with this exact slug */
-  slug?: string;
-
-  /** Restrict results to regions of this type */
-  type?: RegionType;
-}
+export type RegionsListFilters =
+  | { name: string; slug?: string; type?: RegionType }
+  | { name?: string; slug: string; type?: RegionType }
+  | { name?: string; slug?: string; type: RegionType };
 
 /**
  * Fetches all regions matching the given filters.
  *
- * @param filters An object containing the optional name, slug, and type filters
+ * @param filters An object containing the name, slug, and/or type filters. At
+ * least one must be provided.
  *
  * @returns An array containing all matching regions.
  */
 export async function getRegionsList(
-  filters?: RegionsListFilters,
+  filters: RegionsListFilters,
 ): Promise<Array<RegionData>> {
+  if (!filters.name && !filters.slug && !filters.type) {
+    throw new Error(
+      "getRegionsList requires at least one of the name, slug, or type filters",
+    );
+  }
+
   const searchParams: Record<string, string> = {};
 
-  if (filters?.name) {
+  if (filters.name) {
     searchParams.name = filters.name;
   }
 
-  if (filters?.slug) {
+  if (filters.slug) {
     searchParams.slug = filters.slug;
   }
 
-  if (filters?.type) {
+  if (filters.type) {
     searchParams.type = filters.type;
   }
 
