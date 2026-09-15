@@ -25,20 +25,20 @@ Deno.test({
   name: "Module: Regions Endpoints",
   permissions: { net: true },
   async fn(t) {
-    const regions = await getRegionsList();
-    validateRegion(regions);
-    assertExists(regions[0], "No regions found in regions/ response");
+    // Regions of type "land_use" alone number in the tens of thousands, so an
+    // unfiltered regions/ call returns a multi-hundred-MB response. Always
+    // scope test setup with a filter to keep the suite fast.
+    const counties = await getRegionsList({ type: "county" });
+    validateRegion(counties);
 
-    const county = regions.find((region) => region.type === "county");
+    const county = counties[0];
     assertExists(county, "No county region found in regions/ response");
 
     const summaryYear = new Date().getFullYear();
 
     await t.step(
       "GET  regions/ (type filter)",
-      async () => {
-        const counties = await getRegionsList({ type: "county" });
-        validateRegion(counties);
+      () => {
         assertEquals(
           counties.every((region) => region.type === "county"),
           true,
