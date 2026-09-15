@@ -72,6 +72,24 @@ archives
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/yearly/`
 - [x] `/api/2.0/monitors/meta/`
 
+## Regions
+
+Region and place lookups, boundaries, and region-level entry summaries
+
+- [x] `/api/2.0/regions/`
+- [x] `/api/2.0/regions/places/search/`
+- [x] `/api/2.0/regions/places/lookup/`
+- [x] `/api/2.0/regions/<region_id>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/<int:day>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/<int:year>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/<int:year>/<int:month>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/monthly/<int:year>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/quarterly/<int:year>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/seasonal/<int:year>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/yearly/`
+
 ## Tasks
 
 Task status
