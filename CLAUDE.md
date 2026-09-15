@@ -78,16 +78,31 @@ setOrigin("http://127.0.0.1:8000");
 
 - **Types are derived from Zod schemas** using `zinfer`
   (`import type { infer as zinfer } from "zod"`). Never define types manually
-  when a Zod schema exists.
+  when a Zod schema exists:
+
+  ```ts
+  import type { infer as zinfer } from "zod";
+  export type MonitorData = zinfer<typeof monitorDataSchema>;
+  ```
+
 - **All search params** are typed as `Record<string, string | string[]>` —
   convert numbers/dates to strings before passing. An array value is sent as
   repeated params (e.g. `?region=a&region=b`).
 - **Test files** are named `mod_test.ts` (not `*.test.ts` or `*.spec.ts`).
 - **Validation in tests**: use `getSimpleValidationTest` from `$testing` to
-  validate schema conformance and call `fail()` on mismatch.
+  create validators that call `fail()` on schema mismatch:
+
+  ```ts
+  import { getSimpleValidationTest } from "$testing";
+  const validateMonitorData = getSimpleValidationTest(monitorDataSchema);
+  validateMonitorData(await getMonitorsList()); // validates each item
+  ```
+
 - **Wrapper classes with `.asIter`**: when an API response is a record keyed by
   string (e.g. `monitors/meta`), expose an `asIter` property that converts
-  record values to arrays for easy iteration.
+  record values to arrays for easy iteration. Wrapper classes like
+  `MonitorsMeta`/`EntriesMeta` follow this pattern — always add `.asIter` when
+  wrapping a record-shaped API response.
 - **Each module file** should include a JSDoc block with `@example Usage` and
   `@module` tag.
 - **`api-urls.md`** tracks which API endpoints are implemented — update it when
