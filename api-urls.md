@@ -72,6 +72,25 @@ archives
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/yearly/`
 - [x] `/api/2.0/monitors/meta/`
 
+## Pesticides
+
+Pesticide chemicals, commodities, products, use records, application notices,
+and region-level use summaries
+
+- [x] `/api/2.0/pesticides/chemicals/`
+- [x] `/api/2.0/pesticides/chemicals/<chemical_id>/`
+- [x] `/api/2.0/pesticides/commodities/`
+- [x] `/api/2.0/pesticides/commodities/<commodity_id>/`
+- [x] `/api/2.0/pesticides/notice/`
+- [x] `/api/2.0/pesticides/notice/<notice_id>/`
+- [x] `/api/2.0/pesticides/products/`
+- [x] `/api/2.0/pesticides/products/<product_id>/`
+- [x] `/api/2.0/pesticides/region/<region_id>/notice/`
+- [x] `/api/2.0/pesticides/region/<region_id>/summary/`
+- [x] `/api/2.0/pesticides/region/<region_id>/use/`
+- [x] `/api/2.0/pesticides/use/`
+- [x] `/api/2.0/pesticides/use/<use_id>/`
+
 ## Regions
 
 Region and place lookups, boundaries, and region-level entry summaries

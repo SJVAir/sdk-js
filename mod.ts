@@ -102,4 +102,5 @@ export * from "$datetime";
 export * from "./lib/hms/smoke/mod.ts";
 export * from "./lib/hms/fire/mod.ts";
 export * from "./lib/monitors/mod.ts";
+export * from "./lib/pesticides/mod.ts";
 export * from "./lib/regions/mod.ts";
