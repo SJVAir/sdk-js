@@ -11,10 +11,19 @@ export interface BoundarySchema extends
 
     /** The boundary's geometry, as GeoJSON */
     geometry: MultiPolygonSchema;
+
+    /**
+     * The bounding box of the boundary's geometry, as
+     * `[minLongitude, minLatitude, maxLongitude, maxLatitude]`
+     */
+    bbox: z.ZodTuple<
+      [z.ZodNumber, z.ZodNumber, z.ZodNumber, z.ZodNumber]
+    >;
   }> {}
 
 export const boundarySchema: BoundarySchema = z.object({
   id: z.string(),
   version: z.string(),
   geometry: multiPolygonSchema,
+  bbox: z.tuple([z.number(), z.number(), z.number(), z.number()]),
 });

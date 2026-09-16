@@ -17,7 +17,8 @@
  * //      "boundary": {
  * //        "id": "PBl0aV",
  * //        "version": "2020",
- * //        "geometry": { "type": "MultiPolygon", "coordinates": [ ... ] }
+ * //        "geometry": { "type": "MultiPolygon", "coordinates": [ ... ] },
+ * //        "bbox": [-120.919, 35.907, -118.361, 37.586]
  * //      }
  * //    },
  * //    ... (more regions)
