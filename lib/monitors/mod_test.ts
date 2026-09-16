@@ -77,7 +77,7 @@ Deno.test({
 
         assertExists(vozbox, "No vozbox entry found in monitors/meta response");
         assertEquals(vozbox.entries.o3.sensors, ["1"]);
-        assertEquals(vozbox.entries.pm25.sensors, ["a", "b"]);
+        assertEquals(vozbox.entries.pm25.sensors, ["plantower", "sensirion"]);
       },
     );
 
