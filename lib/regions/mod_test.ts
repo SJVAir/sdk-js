@@ -78,6 +78,37 @@ Deno.test({
     );
 
     await t.step(
+      "GET  regions/ (within filter)",
+      async () => {
+        const [unfiltered, withinCounty] = await Promise.all([
+          getRegionsList({ type: "tract" }),
+          getRegionsList({ type: "tract", within: county.id }),
+        ]);
+        validateRegion(withinCounty);
+        assertEquals(
+          withinCounty.every((region) => region.type === "tract"),
+          true,
+        );
+        assertEquals(withinCounty.length < unfiltered.length, true);
+      },
+    );
+
+    await t.step(
+      "GET  regions/ (within filter, array)",
+      async () => {
+        const matches = await getRegionsList({
+          type: "tract",
+          within: [county.id],
+        });
+        validateRegion(matches);
+        assertEquals(
+          matches.every((region) => region.type === "tract"),
+          true,
+        );
+      },
+    );
+
+    await t.step(
       "GET  regions/{REGION_ID}/",
       async () => validateRegion(await getRegionDetails(county.id)),
     );
