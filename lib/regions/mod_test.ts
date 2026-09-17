@@ -5,6 +5,7 @@ import {
   regionSchema,
   regionsMetaSchema,
   regionSummarySchema,
+  regionWithSummariesSchema,
 } from "./schemas/mod.ts";
 import { getRegionsList } from "./get_regions_list.ts";
 import { getRegionDetails } from "./get_region_details.ts";
@@ -17,6 +18,7 @@ import {
   getRegionSummariesSeasonal,
   getRegionSummariesYearly,
 } from "./get_region_summaries.ts";
+import { getRegionSummariesBulkDaily } from "./get_region_summaries_bulk.ts";
 import { getRegionsMeta } from "./get_regions_meta.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
@@ -26,6 +28,9 @@ if (!Deno.env.has("TEST_REMOTE")) {
 const validateRegion = getSimpleValidationTest(regionSchema);
 const validateRegionSummary = getSimpleValidationTest(regionSummarySchema);
 const validateRegionsMeta = getSimpleValidationTest(regionsMetaSchema);
+const validateRegionWithSummaries = getSimpleValidationTest(
+  regionWithSummariesSchema,
+);
 
 Deno.test({
   name: "Module: Regions Endpoints",
@@ -217,6 +222,28 @@ Deno.test({
             entryType: "pm25",
           }),
         ),
+    );
+
+    // Bulk summaries are paginated by row, not by region - a wide-open
+    // date range scoped to a single region is enough to exercise the
+    // endpoint's shape; the split/merge behavior itself is covered
+    // separately with fixture data in get_region_summaries_bulk_test.ts.
+    await t.step(
+      "GET  regions/{entry_type}/summaries/daily (bulk)",
+      async () => {
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(start.getDate() - 7);
+
+        validateRegionWithSummaries(
+          await getRegionSummariesBulkDaily({
+            entryType: "pm25",
+            start,
+            end: today,
+            region: county.id,
+          }),
+        );
+      },
     );
 
     await t.step(

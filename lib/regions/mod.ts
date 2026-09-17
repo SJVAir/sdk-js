@@ -30,6 +30,7 @@
 export * from "./get_region_details.ts";
 export * from "./get_region_places.ts";
 export * from "./get_region_summaries.ts";
+export * from "./get_region_summaries_bulk.ts";
 export * from "./get_regions_list.ts";
 export * from "./get_regions_meta.ts";
 export * from "./types.ts";

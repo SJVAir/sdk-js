@@ -11,6 +11,7 @@ import type {
   regionSummarySchema,
   regionTypeMetaSchema,
   regionTypeSchema,
+  regionWithSummariesSchema,
 } from "./schemas/mod.ts";
 
 /** The type of geography a region represents */
@@ -27,6 +28,9 @@ export type RegionData = zinfer<typeof regionSchema>;
 
 /** A single aggregated summary of a region's entries over a period of time */
 export type RegionSummary = zinfer<typeof regionSummarySchema>;
+
+/** A Region object with its matching bulk summary rows attached */
+export type RegionWithSummaries = zinfer<typeof regionWithSummariesSchema>;
 
 /** The metadata about a given region type */
 export type RegionTypeMeta = zinfer<typeof regionTypeMetaSchema>;
