@@ -20,6 +20,7 @@ import type {
   monitorSummarySchema,
   monitorTemperatureEntrySchema,
   monitorTypeSchema,
+  monitorWithSummariesSchema,
   sjvairEntryLevelMetaSchema,
   sjvairEntryMetaSchema,
   sjvairMonitorDeviceMetaSchema,
@@ -161,3 +162,6 @@ export type SJVAirMonitorsMeta = zinfer<typeof sjvairMonitorsMetaSchema>;
 
 /** A single aggregated summary of a monitor's entries over a period of time */
 export type MonitorSummary = zinfer<typeof monitorSummarySchema>;
+
+/** A monitor with its matching summary rows nested under `summaries` */
+export type MonitorWithSummaries = zinfer<typeof monitorWithSummariesSchema>;
