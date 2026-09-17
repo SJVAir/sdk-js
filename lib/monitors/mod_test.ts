@@ -42,6 +42,12 @@ import {
   getMonitorSummariesSeasonal,
   getMonitorSummariesYearly,
 } from "./get_monitor_summaries.ts";
+import {
+  getMonitorSummariesBulkDaily,
+  mergeMonitorSummaryBulkPages,
+} from "./get_monitor_summaries_bulk.ts";
+import { monitorWithSummariesSchema } from "./schemas/mod.ts";
+import type { MonitorWithSummaries } from "./types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -59,6 +65,9 @@ const validateMonitorArchive = getSimpleValidationTest(
   monitorEntriesArchiveSchema,
 );
 const validateMonitorSummary = getSimpleValidationTest(monitorSummarySchema);
+const validateMonitorWithSummaries = getSimpleValidationTest(
+  monitorWithSummariesSchema,
+);
 
 Deno.test({
   name: "Module: Monitors Endpoints",
@@ -340,5 +349,95 @@ Deno.test({
         },
       );
     }
+
+    // Bulk summaries are paginated by row, not by monitor - a wide-open
+    // date range/no region filter is enough to exercise the endpoint's
+    // shape; the split/merge behavior itself is covered separately below
+    // with fixture data, since the live server's page size (168 rows)
+    // isn't practical to force through this integration test.
+    await t.step(
+      "GET  monitors/{entry_type}/summaries/daily",
+      async () => {
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(start.getDate() - 7);
+
+        validateMonitorWithSummaries(
+          await getMonitorSummariesBulkDaily({
+            entryType: "pm25",
+            start,
+            end: today,
+          }),
+        );
+
+        // An explicit processor is an exact match across all monitors,
+        // rather than each monitor's default published series.
+        validateMonitorWithSummaries(
+          await getMonitorSummariesBulkDaily({
+            entryType: "pm25",
+            start,
+            end: today,
+            processor: "",
+          }),
+        );
+      },
+    );
+  },
+});
+
+Deno.test({
+  name: "mergeMonitorSummaryBulkPages",
+  permissions: { net: false },
+  fn() {
+    const summary = (timestamp: string) => ({
+      timestamp,
+      entry_type: "pm25",
+      resolution: "day",
+      processor: "",
+      count: 288,
+      expected_count: 288,
+      minimum: 2.1,
+      maximum: 9.4,
+      mean: 5.6,
+      stddev: 1.2,
+      p25: 4.5,
+      p75: 6.7,
+      is_complete: true,
+    });
+
+    const monitor = (
+      id: string,
+      summaries: ReturnType<typeof summary>[],
+    ): MonitorWithSummaries => ({
+      id,
+      summaries,
+    } as unknown as MonitorWithSummaries);
+
+    // Simulates a monitor ("split-monitor") whose rows didn't fit on a single
+    // page: it appears at the end of page 1 with a partial `summaries` array,
+    // and again at the start of page 2 with the rest.
+    const page1 = [
+      monitor("whole-monitor", [summary("2024-01-01"), summary("2024-01-02")]),
+      monitor("split-monitor", [summary("2024-01-01")]),
+    ];
+    const page2 = [
+      monitor("split-monitor", [summary("2024-01-02"), summary("2024-01-03")]),
+      monitor("another-monitor", [summary("2024-01-01")]),
+    ];
+
+    const merged = mergeMonitorSummaryBulkPages([page1, page2]);
+
+    assertEquals(merged.map((m) => m.id), [
+      "whole-monitor",
+      "split-monitor",
+      "another-monitor",
+    ]);
+
+    const splitMonitor = merged.find((m) => m.id === "split-monitor");
+    assertExists(splitMonitor);
+    assertEquals(
+      splitMonitor.summaries.map((s) => s.timestamp),
+      ["2024-01-01", "2024-01-02", "2024-01-03"],
+    );
   },
 });

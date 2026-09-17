@@ -54,6 +54,7 @@ export * from "./get_monitor_entries.ts";
 export * from "./get_monitor_entries_csv.ts";
 export * from "./get_monitor_entries_export.ts";
 export * from "./get_monitor_summaries.ts";
+export * from "./get_monitor_summaries_bulk.ts";
 export * from "./get_monitors.ts";
 export * from "./get_monitors_list.ts";
 export * from "./get_monitors_meta.ts";

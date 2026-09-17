@@ -49,6 +49,12 @@ archives
 - [x] `/api/2.0/monitors/<entry_type>/at/`
 - [x] `/api/2.0/monitors/<entry_type>/closest/`
 - [x] `/api/2.0/monitors/<entry_type>/current/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/hourly/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/monthly/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/quarterly/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/seasonal/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/yearly/`
 - [x] `/api/2.0/monitors/<monitor_id>/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/unsubscribe/`
