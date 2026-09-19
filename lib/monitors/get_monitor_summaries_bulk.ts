@@ -41,12 +41,7 @@
  *
  * @module
  */
-import {
-  type APIRequestConfig,
-  genericAPIErrorHandler,
-  httpRequest,
-  type PaginatedResponse,
-} from "$http";
+import { fetchAllBulkPages, mergeBulkPages } from "$http";
 import type { MonitorEntryType, MonitorWithSummaries } from "./types.ts";
 
 /**
@@ -148,66 +143,7 @@ function getBulkSummarySearchParams(
 export function mergeMonitorSummaryBulkPages(
   pages: Array<Array<MonitorWithSummaries>>,
 ): Array<MonitorWithSummaries> {
-  const merged: Array<MonitorWithSummaries> = [];
-
-  for (const page of pages) {
-    for (const monitor of page) {
-      const last = merged[merged.length - 1];
-
-      if (last && last.id === monitor.id) {
-        last.summaries = last.summaries.concat(monitor.summaries);
-      } else {
-        merged.push({ ...monitor, summaries: [...monitor.summaries] });
-      }
-    }
-  }
-
-  return merged;
-}
-
-/**
- * Fetches every page of a bulk monitor summary endpoint, preserving the
- * boundaries between pages so they can be merged afterward.
- *
- * @param requestConfig The base request config (URL and search params) for the endpoint
- *
- * @returns An ordered array of pages, each an array of monitors
- */
-async function fetchAllBulkSummaryPages(
-  requestConfig: APIRequestConfig,
-): Promise<Array<Array<MonitorWithSummaries>>> {
-  return await httpRequest<PaginatedResponse<MonitorWithSummaries>>(
-    requestConfig,
-  ).then(async (response) => {
-    const { data, has_next_page, page, pages } = response.body;
-    const allPages: Array<Array<MonitorWithSummaries>> = [];
-
-    if (data.length) {
-      allPages.push(data);
-
-      if (has_next_page) {
-        const rest = await Promise.all(
-          Array.from(
-            { length: pages - page },
-            (_, idx) =>
-              httpRequest<PaginatedResponse<MonitorWithSummaries>>({
-                ...requestConfig,
-                searchParams: {
-                  ...requestConfig.searchParams,
-                  page: `${idx + 1 + page}`,
-                },
-              }).then((response) => response.body.data)
-                .catch(genericAPIErrorHandler) as Promise<
-                  Array<MonitorWithSummaries>
-                >,
-          ),
-        );
-        allPages.push(...rest);
-      }
-    }
-
-    return allPages;
-  }).catch(genericAPIErrorHandler) as Array<Array<MonitorWithSummaries>>;
+  return mergeBulkPages(pages);
 }
 
 /**
@@ -221,7 +157,7 @@ export async function getMonitorSummariesBulkHourly(
   config: MonitorSummaryBulkRequestConfig,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
-    await fetchAllBulkSummaryPages({
+    await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/hourly`,
       searchParams: getBulkSummarySearchParams(config),
     }),
@@ -239,7 +175,7 @@ export async function getMonitorSummariesBulkDaily(
   config: MonitorSummaryBulkRequestConfig,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
-    await fetchAllBulkSummaryPages({
+    await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/daily`,
       searchParams: getBulkSummarySearchParams(config),
     }),
@@ -257,7 +193,7 @@ export async function getMonitorSummariesBulkMonthly(
   config: MonitorSummaryBulkRequestConfig,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
-    await fetchAllBulkSummaryPages({
+    await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/monthly`,
       searchParams: getBulkSummarySearchParams(config),
     }),
@@ -275,7 +211,7 @@ export async function getMonitorSummariesBulkQuarterly(
   config: MonitorSummaryBulkRequestConfig,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
-    await fetchAllBulkSummaryPages({
+    await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/quarterly`,
       searchParams: getBulkSummarySearchParams(config),
     }),
@@ -293,7 +229,7 @@ export async function getMonitorSummariesBulkSeasonal(
   config: MonitorSummaryBulkRequestConfig,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
-    await fetchAllBulkSummaryPages({
+    await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/seasonal`,
       searchParams: getBulkSummarySearchParams(config),
     }),
@@ -311,7 +247,7 @@ export async function getMonitorSummariesBulkYearly(
   config: MonitorSummaryBulkRequestConfig,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
-    await fetchAllBulkSummaryPages({
+    await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/yearly`,
       searchParams: getBulkSummarySearchParams(config),
     }),

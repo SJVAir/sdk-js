@@ -1,7 +1,12 @@
 import { setOrigin } from "$http";
 import { getSimpleValidationTest } from "$testing";
 import { assertEquals, assertExists, assertRejects } from "@std/assert";
-import { regionSchema, regionSummarySchema } from "./schemas/mod.ts";
+import {
+  regionSchema,
+  regionsMetaSchema,
+  regionSummarySchema,
+  regionWithSummariesSchema,
+} from "./schemas/mod.ts";
 import { getRegionsList } from "./get_regions_list.ts";
 import { getRegionDetails } from "./get_region_details.ts";
 import { lookupRegionPlace, searchRegionPlaces } from "./get_region_places.ts";
@@ -13,6 +18,8 @@ import {
   getRegionSummariesSeasonal,
   getRegionSummariesYearly,
 } from "./get_region_summaries.ts";
+import { getRegionSummariesBulkDaily } from "./get_region_summaries_bulk.ts";
+import { getRegionsMeta } from "./get_regions_meta.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -20,6 +27,10 @@ if (!Deno.env.has("TEST_REMOTE")) {
 
 const validateRegion = getSimpleValidationTest(regionSchema);
 const validateRegionSummary = getSimpleValidationTest(regionSummarySchema);
+const validateRegionsMeta = getSimpleValidationTest(regionsMetaSchema);
+const validateRegionWithSummaries = getSimpleValidationTest(
+  regionWithSummariesSchema,
+);
 
 Deno.test({
   name: "Module: Regions Endpoints",
@@ -68,6 +79,37 @@ Deno.test({
         validateRegion(matches);
         assertEquals(matches.length, 1);
         assertEquals(matches[0].id, county.id);
+      },
+    );
+
+    await t.step(
+      "GET  regions/ (within filter)",
+      async () => {
+        const [unfiltered, withinCounty] = await Promise.all([
+          getRegionsList({ type: "tract" }),
+          getRegionsList({ type: "tract", within: county.id }),
+        ]);
+        validateRegion(withinCounty);
+        assertEquals(
+          withinCounty.every((region) => region.type === "tract"),
+          true,
+        );
+        assertEquals(withinCounty.length < unfiltered.length, true);
+      },
+    );
+
+    await t.step(
+      "GET  regions/ (within filter, array)",
+      async () => {
+        const matches = await getRegionsList({
+          type: "tract",
+          within: [county.id],
+        });
+        validateRegion(matches);
+        assertEquals(
+          matches.every((region) => region.type === "tract"),
+          true,
+        );
       },
     );
 
@@ -180,6 +222,47 @@ Deno.test({
             entryType: "pm25",
           }),
         ),
+    );
+
+    // Bulk summaries are paginated by row, not by region - a wide-open
+    // date range scoped to a single region is enough to exercise the
+    // endpoint's shape; the split/merge behavior itself is covered
+    // separately with fixture data in get_region_summaries_bulk_test.ts.
+    await t.step(
+      "GET  regions/{entry_type}/summaries/daily (bulk)",
+      async () => {
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(start.getDate() - 7);
+
+        validateRegionWithSummaries(
+          await getRegionSummariesBulkDaily({
+            entryType: "pm25",
+            start,
+            end: today,
+            region: county.id,
+          }),
+        );
+      },
+    );
+
+    await t.step(
+      "GET  regions/meta",
+      async () => validateRegionsMeta(await getRegionsMeta()),
+    );
+
+    await t.step(
+      "GET  regions/meta (county type lookup)",
+      async () => {
+        const meta = await getRegionsMeta();
+        const countyMeta = meta.type("county");
+
+        assertExists(
+          countyMeta,
+          "No county entry found in regions/meta response",
+        );
+        assertEquals(countyMeta.category, "administrative");
+      },
     );
   },
 });

@@ -220,6 +220,87 @@ export interface PaginatedResponse<T> {
 }
 
 /**
+ * Merges consecutive pages of bulk summary results, concatenating the
+ * `summaries` of any item whose rows were split across a page boundary.
+ *
+ * Rows are paginated by summary row (not by the summarized item), and ordered
+ * by item id then timestamp - so an item with more rows than fit on one page
+ * appears once at the end of a page (with a partial `summaries` array) and
+ * again at the start of the next page (with the rest). This detects that
+ * split - when the last item `id` on a page matches the first item `id` on
+ * the next page - and merges them into a single entry with the combined
+ * array.
+ *
+ * @param pages An ordered array of item pages, as returned by each page of a bulk summary endpoint
+ *
+ * @returns A flattened array of items, each with a complete `summaries` array
+ */
+export function mergeBulkPages<
+  T extends { id: string; summaries: Array<unknown> },
+>(
+  pages: Array<Array<T>>,
+): Array<T> {
+  const merged: Array<T> = [];
+
+  for (const page of pages) {
+    for (const item of page) {
+      const last = merged[merged.length - 1];
+
+      if (last && last.id === item.id) {
+        last.summaries = last.summaries.concat(item.summaries);
+      } else {
+        merged.push({ ...item, summaries: [...item.summaries] });
+      }
+    }
+  }
+
+  return merged;
+}
+
+/**
+ * Fetches every page of a bulk summary endpoint, preserving the boundaries
+ * between pages so they can be merged afterward.
+ *
+ * @param requestConfig The base request config (URL and search params) for the endpoint
+ *
+ * @returns An ordered array of pages, each an array of items
+ */
+export async function fetchAllBulkPages<T>(
+  requestConfig: APIRequestConfig,
+): Promise<Array<Array<T>>> {
+  return await httpRequest<PaginatedResponse<T>>(
+    requestConfig,
+  ).then(async (response) => {
+    const { data, has_next_page, page, pages } = response.body;
+    const allPages: Array<Array<T>> = [];
+
+    if (data.length) {
+      allPages.push(data);
+
+      if (has_next_page) {
+        const rest = await Promise.all(
+          Array.from(
+            { length: pages - page },
+            (_, idx) =>
+              httpRequest<PaginatedResponse<T>>({
+                ...requestConfig,
+                searchParams: {
+                  ...requestConfig.searchParams,
+                  page: `${idx + 1 + page}`,
+                },
+              }).then((response) => response.body.data)
+                .catch(genericAPIErrorHandler) as Promise<Array<T>>,
+          ),
+        );
+        allPages.push(...rest);
+      }
+    }
+
+    return allPages;
+  }).catch(genericAPIErrorHandler) as Array<Array<T>>;
+}
+
+/**
  * Fetch all pages of a paginated endpoint, with the provided request callback.
  *
  * @param config An object containing the desired page number, and any other options for the provided request callback.

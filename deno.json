@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
@@ -68,7 +68,9 @@
     "./regions/get_region_details": "./lib/regions/get_region_details.ts",
     "./regions/get_region_places": "./lib/regions/get_region_places.ts",
     "./regions/get_region_summaries": "./lib/regions/get_region_summaries.ts",
+    "./regions/get_region_summaries_bulk": "./lib/regions/get_region_summaries_bulk.ts",
     "./regions/get_regions_list": "./lib/regions/get_regions_list.ts",
+    "./regions/get_regions_meta": "./lib/regions/get_regions_meta.ts",
     "./regions/types": "./lib/regions/types.ts"
   },
   "imports": {

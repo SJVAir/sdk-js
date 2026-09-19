@@ -35,11 +35,30 @@ import type { RegionData, RegionType } from "./types.ts";
  * or `type` is required — the API has no pagination on this endpoint, and an
  * unfiltered request can return tens of thousands of regions (some with large
  * boundary geometries), producing a response hundreds of megabytes in size.
+ *
+ * `within` is an additional filter on top of whichever of `name`/`slug`/`type`
+ * satisfies the requirement above — it restricts results to regions whose
+ * boundary falls within one or more other regions, by region sqid.
  */
 export type RegionsListFilters =
-  | { name: string; slug?: string; type?: RegionType }
-  | { name?: string; slug: string; type?: RegionType }
-  | { name?: string; slug?: string; type: RegionType };
+  | {
+    name: string;
+    slug?: string;
+    type?: RegionType;
+    within?: string | Array<string>;
+  }
+  | {
+    name?: string;
+    slug: string;
+    type?: RegionType;
+    within?: string | Array<string>;
+  }
+  | {
+    name?: string;
+    slug?: string;
+    type: RegionType;
+    within?: string | Array<string>;
+  };
 
 /**
  * Fetches all regions matching the given filters.
@@ -58,7 +77,7 @@ export async function getRegionsList(
     );
   }
 
-  const searchParams: Record<string, string> = {};
+  const searchParams: Record<string, string | Array<string>> = {};
 
   if (filters.name) {
     searchParams.name = filters.name;
@@ -70,6 +89,10 @@ export async function getRegionsList(
 
   if (filters.type) {
     searchParams.type = filters.type;
+  }
+
+  if (filters.within !== undefined) {
+    searchParams.within = filters.within;
   }
 
   return await jsonCall<Array<RegionData>>({
