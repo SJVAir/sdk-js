@@ -3,7 +3,7 @@
  *
  * @example Usage
  * ```ts
- * import { getAirAlerts } from "@sjvair/sdk/account/alerts";
+ * import { getAirAlerts } from "@sjvair/sdk/account/air-alerts";
  *
  * const alerts = await getAirAlerts(<API_TOKEN>);
  *
@@ -11,26 +11,29 @@
  * // Prints:
  * //  [
  * //    {
+ * //      sqid: "u589e",
  * //      created: "2025-08-24T04:20:54.678Z",
  * //      modified: "2025-08-24T04:20:54.693Z",
- * //      id: "bHbmLtLkRRKYfjekdifjfj",
  * //      monitor: "qesuIWgTQgqtfGJ0rvBBlw",
  * //      entry_type: "pm25",
  * //      start_time: "2025-08-24T04:20:54.678Z",
  * //      end_time: null,
- * //      latest: 228
+ * //      level: "unhealthy"
  * //    },
  * //    {
+ * //      sqid: "k2Rw7",
  * //      created: "2025-08-23T08:20:42.901Z",
  * //      modified: "2025-08-23T08:20:42.945Z",
- * //      id: "tMKf6BpCTByS0dkdkdkdkdkdk",
  * //      monitor: "xgXCRh68SdG5FOdbUXvR6Q",
- * //      entry_type: "pm25",
+ * //      entry_type: "o3",
  * //      start_time: "2025-08-23T08:20:42.901Z",
  * //      end_time: null,
- * //      latest: 129
+ * //      level: "unhealthy_sensitive"
  * //    }
  * //  ]
+ * //
+ * // `level` is a key into the levels for the alert's `entry_type` from
+ * // `monitors/meta/` (null before the alert's first update).
  * ```
  *
  * @module
@@ -41,7 +44,7 @@ import type { AirAlert } from "./types.ts";
 /**
  * Get all active alerts for a user's monitor subscriptions.
  *
- * @returns An arry of alerts
+ * @returns An array of alerts
  */
 export async function getAirAlerts(
   apiToken: string,
