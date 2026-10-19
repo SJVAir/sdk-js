@@ -6,25 +6,40 @@ import {
 
 interface AirAlertSchema extends
   z.ZodObject<{
+    /** The alert's public id. Use this to identify an alert. */
+    sqid: z.ZodString;
     created: z.ZodString;
     modified: z.ZodString;
-    id: z.ZodString;
+    /** @deprecated The server no longer returns `id`; use `sqid` instead. */
+    id: z.ZodOptional<z.ZodString>;
     monitor: z.ZodString;
     entry_type: MonitorEntryTypeSchema;
     start_time: z.ZodString;
     end_time: z.ZodNullable<z.ZodString>;
-    latest: z.ZodNumber;
+    /**
+     * The alert's current level key (e.g. "unhealthy"), or `null` before its
+     * first update. Look it up in the levels for this alert's `entry_type` from
+     * `monitors/meta/`; each entry type has its own level keys.
+     */
+    level: z.ZodNullable<z.ZodString>;
+    /**
+     * @deprecated The server no longer returns `latest`. It was the id of the
+     * latest alert update, never a reading; use `level` instead.
+     */
+    latest: z.ZodOptional<z.ZodNumber>;
   }> {}
 
 export const airAlertSchema: AirAlertSchema = z.object({
+  sqid: z.string(),
   created: z.string(),
   modified: z.string(),
-  id: z.string(),
+  id: z.string().optional(),
   monitor: z.string(),
   entry_type: monitorEntryTypeSchema,
   start_time: z.string(),
   end_time: z.string().nullable(),
-  latest: z.number(),
+  level: z.string().nullable(),
+  latest: z.number().optional(),
 });
 
 interface MonitorSubscriptionSchema extends
