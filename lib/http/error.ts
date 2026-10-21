@@ -40,10 +40,10 @@ export function genericAPIErrorHandler(fault: unknown): void {
 
   if (fault instanceof Error || fault instanceof APIError) {
     error = fault;
-    // deno-lint-ignore no-explicit-any
-    if ("cause" in error && "result" in (error.cause as any)) {
+    const cause = (error as { cause?: unknown }).cause;
+    if (typeof cause === "object" && cause !== null && "result" in cause) {
       // deno-lint-ignore no-explicit-any
-      (error.cause as any)["details"] = (error.cause as any).result.body.errors;
+      (cause as any)["details"] = (cause as any).result.body.errors;
     }
   } else {
     error = new Error("Unexpected error in request", { cause: fault });

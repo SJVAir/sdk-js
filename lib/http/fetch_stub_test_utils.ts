@@ -12,7 +12,7 @@ export function jsonResponse(body: unknown): Response {
 }
 
 /**
- * Stubs `fetch`, recording every call. Rejects with an `AbortError` when the
+ * Stubs `fetch`, recording every call. Rejects with the signal's reason when the
  * request's signal is aborted, before or after the responder runs.
  */
 export function stubFetch(
@@ -35,9 +35,9 @@ export function stubFetch(
     const call = calls.length;
     calls.push({ url, init });
 
-    if (init.signal?.aborted) throw new DOMException("Aborted", "AbortError");
+    if (init.signal?.aborted) throw init.signal.reason;
     const response = await respond(url, init, call);
-    if (init.signal?.aborted) throw new DOMException("Aborted", "AbortError");
+    if (init.signal?.aborted) throw init.signal.reason;
     return response;
   };
 

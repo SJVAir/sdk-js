@@ -75,6 +75,16 @@ Deno.test("csrf: not sent to another origin", async () => {
   }, { origin: "https://api.example.com" });
 });
 
+Deno.test("csrf: not sent when only the port differs", async () => {
+  await withStub(async ({ calls }) => {
+    await apiCall({ url: "time", init: { method: "POST" } });
+    assertEquals(header(calls[0], "x-csrftoken"), null);
+  }, {
+    env: { cookie: COOKIE, origin: "http://localhost:5173" },
+    origin: "http://localhost:8000",
+  });
+});
+
 Deno.test("csrf: cookie missing sends no header", async () => {
   await withStub(async ({ calls }) => {
     await apiCall({ url: "time", init: { method: "POST" } });

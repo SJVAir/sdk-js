@@ -156,6 +156,46 @@ Deno.test("signal: abort rejects with the original AbortError", async () => {
   });
 });
 
+Deno.test("signal: abort with a string reason rejects with that reason", async () => {
+  await withStub(async () => {
+    const ctrl = new AbortController();
+    ctrl.abort("superseded");
+    const error = await assertRejects(() =>
+      apiCall({ url: "time", options: { signal: ctrl.signal } })
+    );
+    assert(error === "superseded");
+  });
+});
+
+Deno.test("signal: abort with an Error reason rejects with that same object", async () => {
+  await withStub(async () => {
+    const reason = new Error("superseded");
+    const ctrl = new AbortController();
+    ctrl.abort(reason);
+    const error = await assertRejects(() =>
+      apiCall({ url: "time", options: { signal: ctrl.signal } })
+    );
+    assert(error === reason);
+  });
+});
+
+Deno.test("signal: paginatedApiCall rejects with the signal's reason", async () => {
+  const reason = { why: "superseded" };
+  const ctrl = new AbortController();
+  await withStub(async () => {
+    const error = await assertRejects(() =>
+      paginatedApiCall({
+        url: "monitors",
+        options: { signal: ctrl.signal },
+      })
+    );
+    assert(error === reason);
+  }, (_url, _init, call) => {
+    if (call === 1) ctrl.abort(reason);
+    return pageResponder(call);
+  });
+});
+
 Deno.test("signal: abort mid-pagination rejects", async () => {
   const ctrl = new AbortController();
   await withStub(async () => {
@@ -191,4 +231,27 @@ Deno.test("error cause: Authorization and CSRF header are redacted", async () =>
       status: 500,
       headers: { "Content-Type": "application/json" },
     }));
+});
+
+Deno.test("error cause: request body is redacted", async () => {
+  await withStub(async () => {
+    const error = await assertRejects(() =>
+      apiCall({
+        url: "time",
+        init: { method: "POST", body: JSON.stringify({ password: "hunter2" }) },
+      })
+    );
+    // deno-lint-ignore no-explicit-any
+    assertEquals((error as any).cause.init.body, "[redacted]");
+  }, () =>
+    new Response(JSON.stringify({ errors: [] }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    }));
+});
+
+Deno.test("internal helpers are not exported from the public module", async () => {
+  const mod = await import("./mod.ts");
+  assertEquals("buildRequestInit" in mod, false);
+  assertEquals("redactInit" in mod, false);
 });
