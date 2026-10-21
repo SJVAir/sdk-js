@@ -17,7 +17,6 @@
  * //      "boundary": {
  * //        "id": "PBl0aV",
  * //        "version": "2020",
- * //        "geometry": { "type": "MultiPolygon", "coordinates": [ ... ] },
  * //        "bbox": [-120.919, 35.907, -118.361, 37.586]
  * //      }
  * //    },
@@ -28,7 +27,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import type { RegionData, RegionType } from "./types.ts";
+import type { RegionListItem, RegionType } from "./types.ts";
 
 /**
  * The filters available when listing regions. At least one of `name`, `slug`,
@@ -67,12 +66,13 @@ export type RegionsListFilters =
  * least one must be provided.
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
- * @returns An array containing all matching regions.
+ * @returns An array containing all matching regions. Each boundary has a
+ * `bbox` but no `geometry`; use `getRegionDetails` for a region's geometry.
  */
 export async function getRegionsList(
   filters: RegionsListFilters,
   options?: RequestOptions,
-): Promise<Array<RegionData>> {
+): Promise<Array<RegionListItem>> {
   if (!filters.name && !filters.slug && !filters.type) {
     throw new Error(
       "getRegionsList requires at least one of the name, slug, or type filters",
@@ -97,7 +97,7 @@ export async function getRegionsList(
     searchParams.within = filters.within;
   }
 
-  return await jsonCall<Array<RegionData>>({
+  return await jsonCall<Array<RegionListItem>>({
     url: "regions",
     searchParams,
     options,

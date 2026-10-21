@@ -11,9 +11,11 @@ export type RegionTypeSchema = z.ZodEnum<{
   state_assembly: "state_assembly";
   state_senate: "state_senate";
   school_district: "school_district";
+  air_district: "air_district";
   urban_area: "urban_area";
   land_use: "land_use";
   protected: "protected";
+  ab617: "ab617";
   place: "place";
   mtrs: "mtrs";
   custom: "custom";
@@ -30,9 +32,11 @@ export const regionTypeSchema: RegionTypeSchema = z.enum(
     "state_assembly",
     "state_senate",
     "school_district",
+    "air_district",
     "urban_area",
     "land_use",
     "protected",
+    "ab617",
     "place",
     "mtrs",
     "custom",
