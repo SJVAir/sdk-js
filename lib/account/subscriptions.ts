@@ -81,9 +81,13 @@ export interface MonitorSubscriptionConfig {
 }
 
 /**
- * Get all subscriptions of a user.
+ * Subscribe to air alerts for a monitor at a given level.
  *
- * @returns An array of MonitorSubscription objects
+ * @param config The monitor, level, and optional API token. Without a token,
+ * the call relies on the session cookie.
+ * @param options Request options.
+ *
+ * @returns The created MonitorSubscription
  */
 export async function subscribe(
   config: MonitorSubscriptionConfig,
@@ -106,9 +110,13 @@ export async function subscribe(
 }
 
 /**
- * Get all subscriptions of a user.
+ * Unsubscribe from air alerts for a monitor at a given level.
  *
- * @returns An array of MonitorSubscription objects
+ * @param config The monitor, level, and optional API token. Without a token,
+ * the call relies on the session cookie.
+ * @param options Request options.
+ *
+ * @returns The server's unsubscribe response
  */
 export async function unsubscribe(
   config: MonitorSubscriptionConfig,

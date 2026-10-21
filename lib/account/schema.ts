@@ -17,9 +17,9 @@ interface AirAlertSchema extends
     start_time: z.ZodString;
     end_time: z.ZodNullable<z.ZodString>;
     /**
-     * The alert's current level key (e.g. "unhealthy"), or `null` before its
-     * first update. Look it up in the levels for this alert's `entry_type` from
-     * `monitors/meta/`; each entry type has its own level keys.
+     * The alert's current level, matching the `name` of one of the level
+     * records for its `entry_type` in `monitors/meta/` (records there are keyed
+     * in uppercase), or `null` before its first update.
      */
     level: z.ZodNullable<z.ZodString>;
     /**
