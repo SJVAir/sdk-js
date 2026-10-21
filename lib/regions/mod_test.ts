@@ -2,6 +2,7 @@ import { setOrigin } from "$http";
 import { getSimpleValidationTest } from "$testing";
 import { assertEquals, assertExists, assertRejects } from "@std/assert";
 import {
+  regionListItemSchema,
   regionSchema,
   regionsMetaSchema,
   regionSummarySchema,
@@ -26,6 +27,7 @@ if (!Deno.env.has("TEST_REMOTE")) {
 }
 
 const validateRegion = getSimpleValidationTest(regionSchema);
+const validateRegionListItem = getSimpleValidationTest(regionListItemSchema);
 const validateRegionSummary = getSimpleValidationTest(regionSummarySchema);
 const validateRegionsMeta = getSimpleValidationTest(regionsMetaSchema);
 const validateRegionWithSummaries = getSimpleValidationTest(
@@ -40,7 +42,7 @@ Deno.test({
     // unfiltered regions/ call returns a multi-hundred-MB response. Always
     // scope test setup with a filter to keep the suite fast.
     const counties = await getRegionsList({ type: "county" });
-    validateRegion(counties);
+    validateRegionListItem(counties);
 
     const county = counties[0];
     assertExists(county, "No county region found in regions/ response");
@@ -76,7 +78,7 @@ Deno.test({
           slug: county.slug,
           type: "county",
         });
-        validateRegion(matches);
+        validateRegionListItem(matches);
         assertEquals(matches.length, 1);
         assertEquals(matches[0].id, county.id);
       },
@@ -89,7 +91,7 @@ Deno.test({
           getRegionsList({ type: "tract" }),
           getRegionsList({ type: "tract", within: county.id }),
         ]);
-        validateRegion(withinCounty);
+        validateRegionListItem(withinCounty);
         assertEquals(
           withinCounty.every((region) => region.type === "tract"),
           true,
@@ -105,7 +107,7 @@ Deno.test({
           type: "tract",
           within: [county.id],
         });
-        validateRegion(matches);
+        validateRegionListItem(matches);
         assertEquals(
           matches.every((region) => region.type === "tract"),
           true,

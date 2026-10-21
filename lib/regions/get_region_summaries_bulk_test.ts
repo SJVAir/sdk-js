@@ -12,7 +12,6 @@ Deno.test({
         name: "Whole",
         slug: "whole",
         type: "county",
-        boundary: null,
         summaries: [{
           timestamp: "2026-01-01T00:00:00-08:00",
           entry_type: "pm25",
@@ -33,7 +32,6 @@ Deno.test({
         name: "Split",
         slug: "split",
         type: "county",
-        boundary: null,
         summaries: [{
           timestamp: "2026-01-01T00:00:00-08:00",
           entry_type: "pm25",
@@ -56,7 +54,6 @@ Deno.test({
         name: "Split",
         slug: "split",
         type: "county",
-        boundary: null,
         summaries: [{
           timestamp: "2026-01-02T00:00:00-08:00",
           entry_type: "pm25",
@@ -77,7 +74,6 @@ Deno.test({
         name: "Another",
         slug: "another",
         type: "county",
-        boundary: null,
         summaries: [],
       },
     ];
