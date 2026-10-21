@@ -14,6 +14,8 @@
  * @module
  */
 
+import { getPageOrigin, readCookie } from "./environment.ts";
+
 /**
  * Options a caller may pass to any SDK request function.
  */
@@ -51,6 +53,7 @@ export interface RequestDefaults {
 }
 
 const DEFAULT_CSRF_HEADER = "X-CSRFToken";
+const CSRF_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
 let defaults: RequestDefaults = {};
 
@@ -89,20 +92,30 @@ function applyHeaders(target: Headers, source: HeadersInit | undefined): void {
  * built-in CSRF header, global defaults, the function's own init, the
  * caller's `options.init`. `options.signal` wins over every `init.signal`.
  *
- * @param _url The request URL
+ * @param url The request URL
  * @param functionInit The init the SDK function itself supplies
  * @param options The caller's request options
  *
  * @returns The merged init
  */
 export function buildRequestInit(
-  _url: URL,
+  url: URL,
   functionInit: RequestInit | undefined,
   options: RequestOptions | undefined,
 ): RequestInit {
   const headers = new Headers();
 
-  // Task 2: add the CSRF header here.
+  const method = (options?.init?.method ?? functionInit?.method ?? "GET")
+    .toUpperCase();
+  if (defaults.csrf !== false && CSRF_METHODS.has(method)) {
+    const pageOrigin = getPageOrigin();
+    if (pageOrigin && url.origin === pageOrigin) {
+      const token = readCookie(defaults.csrf?.cookieName ?? "csrftoken");
+      if (token) {
+        headers.set(defaults.csrf?.headerName ?? DEFAULT_CSRF_HEADER, token);
+      }
+    }
+  }
 
   const defaultHeaders = typeof defaults.headers === "function"
     ? defaults.headers()
