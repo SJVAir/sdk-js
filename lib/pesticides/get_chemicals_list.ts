@@ -24,7 +24,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { ChemicalData, IARCGroup } from "./types.ts";
 import { toSearchParams } from "./search_params.ts";
 
@@ -50,14 +50,17 @@ export interface ChemicalsListFilters {
  * Fetches all pesticide chemicals matching the given filters.
  *
  * @param filters An object containing the desired filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all matching chemicals.
  */
 export async function getChemicalsList(
   filters: ChemicalsListFilters = {},
+  options?: RequestOptions,
 ): Promise<Array<ChemicalData>> {
   return await paginatedApiCall<ChemicalData>({
     url: "pesticides/chemicals",
     searchParams: toSearchParams(filters),
+    options,
   });
 }

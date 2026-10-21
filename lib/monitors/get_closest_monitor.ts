@@ -66,7 +66,7 @@
  *
  * @module
  */
-import { APIError, jsonCall } from "$http";
+import { APIError, jsonCall, type RequestOptions } from "$http";
 import type { MonitorClosestType, MonitorEntryType } from "./types.ts";
 
 /**
@@ -116,6 +116,7 @@ export function isValidClosestMonitor<T extends MonitorEntryType>(
  * @param entryType The type of entry to include in the "latest" field
  * @param latitude The latitudinal coordinate of the desired location
  * @param longitude The longitudinal coordinate of the desired location
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An Array containing the 3 closest monitors to a given set of coordinates.
  */
@@ -123,6 +124,7 @@ export async function getClosestMonitors<T extends MonitorEntryType>(
   entryType: T,
   latitude: number | string,
   longitude: number | string,
+  options?: RequestOptions,
 ): Promise<Array<MonitorClosestType<T>>> {
   return await jsonCall<Array<MonitorClosestType<T>>>(
     {
@@ -131,6 +133,7 @@ export async function getClosestMonitors<T extends MonitorEntryType>(
         latitude: latitude.toString(),
         longitude: longitude.toString(),
       },
+      options,
     },
     (response) => {
       if (
@@ -148,6 +151,7 @@ export async function getClosestMonitors<T extends MonitorEntryType>(
  * @param entryType The type of entry to include in the "latest" field
  * @param latitude The latitudinal coordinate of the desired location
  * @param longitude The longitudinal coordinate of the desired location
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns The closest monitor that passes basic validation.
  */
@@ -155,8 +159,14 @@ export async function getClosestMonitor<T extends MonitorEntryType>(
   entryType: T,
   latitude: number | string,
   longitude: number | string,
+  options?: RequestOptions,
 ): Promise<MonitorClosestType<T>> {
-  const monitors = await getClosestMonitors(entryType, latitude, longitude);
+  const monitors = await getClosestMonitors(
+    entryType,
+    latitude,
+    longitude,
+    options,
+  );
   const validatedMonitors: Array<MonitorClosestType<T>> = monitors.filter(
     isValidClosestMonitor,
   );

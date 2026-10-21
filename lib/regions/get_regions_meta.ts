@@ -22,7 +22,7 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { RegionsMetaData, RegionType, RegionTypeMeta } from "./types.ts";
 
 export class RegionsMeta implements RegionsMetaData {
@@ -68,8 +68,14 @@ export class RegionsMeta implements RegionsMetaData {
 /**
  * Fetches the metadata for regions and region types.
  *
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
  * @returns The metadata for regions and region types.
  */
-export async function getRegionsMeta(): Promise<RegionsMeta> {
-  return new RegionsMeta(await jsonCall<RegionsMetaData>("regions/meta"));
+export async function getRegionsMeta(
+  options?: RequestOptions,
+): Promise<RegionsMeta> {
+  return new RegionsMeta(
+    await jsonCall<RegionsMetaData>({ url: "regions/meta", options }),
+  );
 }

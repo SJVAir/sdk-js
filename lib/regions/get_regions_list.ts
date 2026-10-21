@@ -27,7 +27,7 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { RegionData, RegionType } from "./types.ts";
 
 /**
@@ -65,11 +65,13 @@ export type RegionsListFilters =
  *
  * @param filters An object containing the name, slug, and/or type filters. At
  * least one must be provided.
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all matching regions.
  */
 export async function getRegionsList(
   filters: RegionsListFilters,
+  options?: RequestOptions,
 ): Promise<Array<RegionData>> {
   if (!filters.name && !filters.slug && !filters.type) {
     throw new Error(
@@ -98,5 +100,6 @@ export async function getRegionsList(
   return await jsonCall<Array<RegionData>>({
     url: "regions",
     searchParams,
+    options,
   });
 }

@@ -33,7 +33,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { MonitorEntryType } from "../monitors/types.ts";
 import type { RegionSummary } from "./types.ts";
 
@@ -106,11 +106,13 @@ function getSummarySearchParams(
  * Fetches all pages of hourly summaries for a given region.
  *
  * @param config An object containing the region ID, entry type, and optional year/month/day
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of region summaries
  */
 export async function getRegionSummariesHourly(
   config: RegionSummaryHourlyRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionSummary>> {
   const segments = [config.year, config.month, config.day].filter(
     (segment) => segment !== undefined,
@@ -121,6 +123,7 @@ export async function getRegionSummariesHourly(
       segments.join("/")
     }`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -128,11 +131,13 @@ export async function getRegionSummariesHourly(
  * Fetches all pages of daily summaries for a given region.
  *
  * @param config An object containing the region ID, entry type, and optional year/month
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of region summaries
  */
 export async function getRegionSummariesDaily(
   config: RegionSummaryDailyRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionSummary>> {
   const segments = [config.year, config.month].filter(
     (segment) => segment !== undefined,
@@ -143,6 +148,7 @@ export async function getRegionSummariesDaily(
       segments.join("/")
     }`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -150,16 +156,19 @@ export async function getRegionSummariesDaily(
  * Fetches all pages of monthly summaries for a given region.
  *
  * @param config An object containing the region ID, entry type, and year
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of region summaries
  */
 export async function getRegionSummariesMonthly(
   config: RegionSummaryYearRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionSummary>> {
   return await paginatedApiCall<RegionSummary>({
     url:
       `regions/${config.regionId}/summaries/${config.entryType}/monthly/${config.year}`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -167,16 +176,19 @@ export async function getRegionSummariesMonthly(
  * Fetches all pages of quarterly summaries for a given region.
  *
  * @param config An object containing the region ID, entry type, and year
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of region summaries
  */
 export async function getRegionSummariesQuarterly(
   config: RegionSummaryYearRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionSummary>> {
   return await paginatedApiCall<RegionSummary>({
     url:
       `regions/${config.regionId}/summaries/${config.entryType}/quarterly/${config.year}`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -184,16 +196,19 @@ export async function getRegionSummariesQuarterly(
  * Fetches all pages of seasonal summaries for a given region.
  *
  * @param config An object containing the region ID, entry type, and year
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of region summaries
  */
 export async function getRegionSummariesSeasonal(
   config: RegionSummaryYearRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionSummary>> {
   return await paginatedApiCall<RegionSummary>({
     url:
       `regions/${config.regionId}/summaries/${config.entryType}/seasonal/${config.year}`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -201,14 +216,17 @@ export async function getRegionSummariesSeasonal(
  * Fetches all pages of yearly summaries for a given region.
  *
  * @param config An object containing the region ID and entry type
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of region summaries
  */
 export async function getRegionSummariesYearly(
   config: RegionSummaryRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionSummary>> {
   return await paginatedApiCall<RegionSummary>({
     url: `regions/${config.regionId}/summaries/${config.entryType}/yearly`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }

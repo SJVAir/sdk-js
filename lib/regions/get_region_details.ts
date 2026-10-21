@@ -24,16 +24,20 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { RegionData } from "./types.ts";
 
 /**
  * Fetch details about a region.
  *
  * @param regionId The ID of the requested region
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns A RegionData object containing region details
  */
-export async function getRegionDetails(regionId: string): Promise<RegionData> {
-  return await jsonCall<RegionData>(`regions/${regionId}`);
+export async function getRegionDetails(
+  regionId: string,
+  options?: RequestOptions,
+): Promise<RegionData> {
+  return await jsonCall<RegionData>({ url: `regions/${regionId}`, options });
 }

@@ -25,15 +25,19 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { HMSSmokeGeoJSON } from "./types.ts";
 
 /**
  * Fetch a HMS Smoke event by it's ID
  *
  * @param id - The ID of the HMS Smoke event
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  * @returns A HMSSmokeGeoJSON object
  */
-export async function getHMSSmokeById(id: string): Promise<HMSSmokeGeoJSON> {
-  return await jsonCall<HMSSmokeGeoJSON>({ url: `hms/smoke/${id}` });
+export async function getHMSSmokeById(
+  id: string,
+  options?: RequestOptions,
+): Promise<HMSSmokeGeoJSON> {
+  return await jsonCall<HMSSmokeGeoJSON>({ url: `hms/smoke/${id}`, options });
 }

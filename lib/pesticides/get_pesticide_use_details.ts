@@ -18,18 +18,23 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { PesticideUseData } from "./types.ts";
 
 /**
  * Fetch details about a pesticide use record.
  *
  * @param useId The ID of the requested pesticide use record
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns A PesticideUseData object containing pesticide use details
  */
 export async function getPesticideUseDetails(
   useId: string,
+  options?: RequestOptions,
 ): Promise<PesticideUseData> {
-  return await jsonCall<PesticideUseData>(`pesticides/use/${useId}`);
+  return await jsonCall<PesticideUseData>({
+    url: `pesticides/use/${useId}`,
+    options,
+  });
 }

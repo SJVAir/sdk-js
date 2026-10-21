@@ -25,14 +25,21 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { CollocationSite } from "./types.ts";
 
 /**
  * Fetches all collocation sites.
  *
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
  * @returns An array containing all collocation sites.
  */
-export async function getCollocationSites(): Promise<Array<CollocationSite>> {
-  return await paginatedApiCall<CollocationSite>("calibrations");
+export async function getCollocationSites(
+  options?: RequestOptions,
+): Promise<Array<CollocationSite>> {
+  return await paginatedApiCall<CollocationSite>({
+    url: "calibrations",
+    options,
+  });
 }

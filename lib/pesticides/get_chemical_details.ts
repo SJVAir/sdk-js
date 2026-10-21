@@ -23,20 +23,22 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { ChemicalDetailData } from "./types.ts";
 
 /**
  * Fetch details about a pesticide chemical.
  *
  * @param chemicalId The ID of the requested chemical
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns A ChemicalDetailData object containing chemical details
  */
 export async function getChemicalDetails(
   chemicalId: string,
+  options?: RequestOptions,
 ): Promise<ChemicalDetailData> {
   return await jsonCall<ChemicalDetailData>(
-    `pesticides/chemicals/${chemicalId}`,
+    { url: `pesticides/chemicals/${chemicalId}`, options },
   );
 }

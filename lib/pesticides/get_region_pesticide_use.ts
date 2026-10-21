@@ -21,7 +21,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { PesticideUseData } from "./types.ts";
 import type { PesticideUseListFilters } from "./get_pesticide_use_list.ts";
 import { toSearchParams } from "./search_params.ts";
@@ -39,15 +39,18 @@ export type RegionPesticideUseFilters = Omit<
  *
  * @param regionId The ID of the region to fetch use records for
  * @param filters An object containing the desired filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all matching pesticide use records.
  */
 export async function getRegionPesticideUse(
   regionId: string,
   filters: RegionPesticideUseFilters = {},
+  options?: RequestOptions,
 ): Promise<Array<PesticideUseData>> {
   return await paginatedApiCall<PesticideUseData>({
     url: `pesticides/region/${regionId}/use`,
     searchParams: toSearchParams(filters),
+    options,
   });
 }

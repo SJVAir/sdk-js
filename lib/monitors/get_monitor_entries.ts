@@ -28,7 +28,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { MonitorEntries, MonitorEntryType } from "./types.ts";
 import { apiDateFormat, getValidDateRange } from "$datetime";
 
@@ -109,6 +109,7 @@ class MonitorEntryRequestOptions {
  * Fetch all pages of entries for a given monitor, using native fetch api
  *
  * @param config An object containing the monitor ID and search parameters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor entries
  */
@@ -116,10 +117,12 @@ export async function getMonitorEntries<
   T extends MonitorEntryRequestConfig,
 >(
   config: T,
+  options?: RequestOptions,
 ): Promise<Array<MonitorEntries[T["entryType"]]>> {
   const searchParams = new MonitorEntryRequestOptions(config);
   return await paginatedApiCall<MonitorEntries[T["entryType"]]>({
     url: `monitors/${config.monitorId}/entries/${config.entryType}`,
     searchParams,
+    options,
   });
 }

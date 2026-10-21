@@ -30,6 +30,7 @@ import {
   httpRequest,
   paginatedApiCall,
   type PaginatedResponse,
+  type RequestOptions,
 } from "$http";
 import type { MonitorEntriesArchive } from "./types.ts";
 
@@ -38,16 +39,19 @@ import type { MonitorEntriesArchive } from "./types.ts";
  *
  * @param monitorId - The ID of the monitor to fetch archives for.
  * @param page - The page number to fetch (default is 1).
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  * @returns A single page of monitor entry archives.
  */
 export async function listMonitorArchivesPage(
   monitorId: string,
   page: number = 1,
+  options?: RequestOptions,
 ): Promise<PaginatedResponse<MonitorEntriesArchive>> {
   const response = await httpRequest<PaginatedResponse<MonitorEntriesArchive>>(
     {
       url: `monitors/${monitorId}/archive`,
       searchParams: { page: page.toString() },
+      options,
     },
   );
 
@@ -58,13 +62,15 @@ export async function listMonitorArchivesPage(
  * Fetches all monitor entry archives for a given monitor.
  *
  * @param monitorId - The ID of the monitor to fetch archives for.
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  * @returns An array of all monitor entry archives.
  */
 export async function listAllMonitorArchives(
   monitorId: string,
+  options?: RequestOptions,
 ): Promise<Array<MonitorEntriesArchive>> {
   return await paginatedApiCall<MonitorEntriesArchive>(
-    `monitors/${monitorId}/archive`,
+    { url: `monitors/${monitorId}/archive`, options },
   );
 }
 
@@ -72,12 +78,17 @@ export async function listAllMonitorArchives(
  * Fetches the contents of a monitor entry archive.
  *
  * @param archive - The archive to fetch.
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  * @returns The contents of the archive as a string.
  */
 export async function getMonitorArchive(
   archive: MonitorEntriesArchive,
+  options?: RequestOptions,
 ): Promise<string> {
   return await apiCall<string>(
-    archive.url.substring(9, archive.url.length - 1),
+    {
+      url: archive.url.substring(9, archive.url.length - 1),
+      options,
+    },
   );
 }

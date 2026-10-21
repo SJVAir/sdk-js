@@ -28,7 +28,7 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { MonitorDetails } from "./types.ts";
 
 /**
@@ -40,11 +40,16 @@ export type MonitorDetailsResponse = { data: MonitorDetails };
  * Fetch details about a monitor
  *
  * @param monitorId The ID of the requested monitor
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns A MonitorData object containing monitor details
  */
 export async function getMonitorDetails(
   monitorId: string,
+  options?: RequestOptions,
 ): Promise<MonitorDetails> {
-  return await jsonCall<MonitorDetails>(`monitors/${monitorId}`);
+  return await jsonCall<MonitorDetails>({
+    url: `monitors/${monitorId}`,
+    options,
+  });
 }
