@@ -30,6 +30,11 @@
  */
 import { genericAPIErrorHandler } from "./error.ts";
 import { getApiUrl } from "./origin.ts";
+import {
+  buildRequestInit,
+  redactInit,
+  type RequestOptions,
+} from "./defaults.ts";
 
 /*
  * The configuration object for an API call
@@ -38,6 +43,9 @@ export interface APIRequestConfig {
   url: string;
   searchParams?: Record<string, string | Array<string>>;
   init?: RequestInit;
+
+  /** The caller's request options (signal and extra init) */
+  options?: RequestOptions;
 }
 
 /**
@@ -64,7 +72,7 @@ function getRequestConfig(
   endpoint: string | APIRequestConfig,
 ): APIRequestConfig {
   return (typeof endpoint === "string")
-    ? { url: endpoint, init: {} }
+    ? { url: endpoint, init: {}, options: undefined }
     : endpoint;
 }
 
@@ -109,9 +117,11 @@ async function parseBody<T>(response: Response): Promise<T> {
 export async function httpRequest<T>(
   endpoint: string | APIRequestConfig,
 ): Promise<APIRequestResponse<T>> {
-  const { url: baseUrl, searchParams, init } = getRequestConfig(endpoint);
+  const { url: baseUrl, searchParams, init: functionInit, options } =
+    getRequestConfig(endpoint);
 
   const url = getApiUrl(baseUrl, searchParams);
+  const init = buildRequestInit(url, functionInit, options);
 
   return await fetch(url, init)
     .then(async (response) => {
@@ -131,7 +141,7 @@ export async function httpRequest<T>(
         throw new Error(`Request to "${url.href}" failed`, {
           cause: {
             url,
-            init,
+            init: redactInit(init),
             result,
           },
         });

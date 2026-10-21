@@ -14,6 +14,7 @@
  *
  * @module
  */
+export * from "./defaults.ts";
 export * from "./origin.ts";
 export * from "./requests.ts";
 export * from "./error.ts";
