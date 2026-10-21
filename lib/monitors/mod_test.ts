@@ -115,13 +115,36 @@ Deno.test({
       assertEquals(["fem", "frm", "lcs"].includes(vozbox.grade), true);
     });
 
-    await t.step("GET  monitors/ (aqlite monitor type)", async () => {
-      const monitors = await getMonitorsList();
-      const aqlite = monitors.find((monitor) => monitor.type === "aqlite");
+    // Some steps need data a local copy of the server may not have. They're
+    // skipped (shown as "ignored") with a note, instead of failing.
+    const hasAqlite = (await getMonitorsList()).some((monitor) =>
+      monitor.type === "aqlite"
+    );
+    if (!hasAqlite) {
+      console.warn(
+        "Skipping the aqlite monitor step: the server has no aqlite monitors.",
+      );
+    }
 
-      assertExists(aqlite, "No aqlite monitor found in monitors/ response");
-      assertEquals(typeof aqlite.device_id, "string");
-      assertEquals(["fem", "frm", "lcs"].includes(aqlite.grade), true);
+    const hasCurrentPm25 = (await getMonitors("pm25")).length > 0;
+    if (!hasCurrentPm25) {
+      console.warn(
+        "Skipping the closest-monitor steps: no monitor has a current pm25 " +
+          "reading (common with a local server whose data isn't recent).",
+      );
+    }
+
+    await t.step({
+      name: "GET  monitors/ (aqlite monitor type)",
+      ignore: !hasAqlite,
+      fn: async () => {
+        const monitors = await getMonitorsList();
+        const aqlite = monitors.find((monitor) => monitor.type === "aqlite");
+
+        assertExists(aqlite, "No aqlite monitor found in monitors/ response");
+        assertEquals(typeof aqlite.device_id, "string");
+        assertEquals(["fem", "frm", "lcs"].includes(aqlite.grade), true);
+      },
     });
 
     await t.step(
@@ -130,9 +153,10 @@ Deno.test({
         validateMonitorDetails(await getMonitorDetails(EXISTING_MONITOR_ID)),
     );
 
-    await t.step(
-      "GET  monitors/{ENTRY_TYPE}/closest/",
-      async () =>
+    await t.step({
+      name: "GET  monitors/{ENTRY_TYPE}/closest/",
+      ignore: !hasCurrentPm25,
+      fn: async () =>
         validateClosestMonitor(
           await getClosestMonitors(
             "pm25",
@@ -140,11 +164,12 @@ Deno.test({
             COORDINATES.longitude,
           ),
         ),
-    );
+    });
 
-    await t.step(
-      "GET  monitors/{ENTRY_TYPE}/closest/ (single monitor validation)",
-      async () =>
+    await t.step({
+      name: "GET  monitors/{ENTRY_TYPE}/closest/ (single monitor validation)",
+      ignore: !hasCurrentPm25,
+      fn: async () =>
         validateClosestMonitor(
           await getClosestMonitor(
             "pm25",
@@ -152,7 +177,7 @@ Deno.test({
             COORDINATES.longitude,
           ),
         ),
-    );
+    });
 
     await t.step(
       "GET  monitors/{MONITOR_ID}/archive/",

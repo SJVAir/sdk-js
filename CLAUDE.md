@@ -36,6 +36,11 @@ Copy `.env.template` to `.env` and fill in:
 Tests default to `http://127.0.0.1:8000`; set `TEST_REMOTE=1` to use
 `https://www.sjvair.com`.
 
+`TEST_MONITOR_ID` must be a monitor that exists on the server you test against
+(local and production IDs differ). Steps that need data a local copy may lack
+(an aqlite monitor, current pm25 readings for the closest-monitor lookup) are
+skipped with a note instead of failing.
+
 ## Architecture
 
 The SDK is a thin wrapper over the SJVAir REST API (`/api/2.0/...`). Each domain
