@@ -80,7 +80,7 @@ Every function that fetches takes a trailing `options?: RequestOptions`
 import { getMonitors } from "@sjvair/sdk/monitors";
 
 const controller = new AbortController();
-const monitors = getMonitors({}, { signal: controller.signal });
+const monitors = getMonitors("pm25", undefined, { signal: controller.signal });
 controller.abort(); // `monitors` rejects with an AbortError
 ```
 
