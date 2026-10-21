@@ -36,45 +36,34 @@
  * @module
  */
 import { apiCall, jsonCall, paginatedApiCall } from "$http";
+import type { RequestOptions } from "$http";
+import { authHeaders } from "./auth_headers.ts";
 import type {
   MonitorSubscription,
   MonitorUnsubscribeResponse,
 } from "./types.ts";
 
 /**
- * Generates the HTTP headers required for subscription management requests.
- *
- * If the global variable "USER" is not present, it adds an Authorization header
- * using the provided API token. Always sets "Accept" and "Content-Type" to "application/json".
- *
- * @param apiToken - The API token used for authentication.
- * @returns An object containing the necessary HTTP headers.
- */
-function getSubscriptionHeaders(apiToken?: string): HeadersInit {
-  const headers: HeadersInit = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-
-  if (typeof apiToken === "string" && apiToken.length > 0) {
-    headers["Authorization"] = `Token ${apiToken}`;
-  }
-  return headers;
-}
-
-/**
  * Get all subscriptions of a user.
  *
+ * @param apiToken Optional. Without it, the call relies on the session
+ *   cookie; a missing sign-in surfaces as the server's 401/403.
+ * @param options Request options.
  * @returns An array of MonitorSubscription objects
  */
 export async function getSubscriptions(
   apiToken?: string,
+  options?: RequestOptions,
 ): Promise<Array<MonitorSubscription>> {
   return await paginatedApiCall<MonitorSubscription>({
     url: "alerts/subscriptions",
     init: {
-      headers: getSubscriptionHeaders(apiToken),
+      headers: authHeaders(apiToken, {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }),
     },
+    options,
   });
 }
 
@@ -83,17 +72,26 @@ export async function getSubscriptions(
  */
 export interface MonitorSubscriptionConfig {
   monitorId: string;
-  apiToken: string;
+  /**
+   * Optional. Without it, the call relies on the session cookie; a missing
+   * sign-in surfaces as the server's 401/403.
+   */
+  apiToken?: string;
   level: string;
 }
 
 /**
- * Get all subscriptions of a user.
+ * Subscribe to air alerts for a monitor at a given level.
  *
- * @returns An array of MonitorSubscription objects
+ * @param config The monitor, level, and optional API token. Without a token,
+ * the call relies on the session cookie.
+ * @param options Request options.
+ *
+ * @returns The created MonitorSubscription
  */
 export async function subscribe(
   config: MonitorSubscriptionConfig,
+  options?: RequestOptions,
 ): Promise<MonitorSubscription> {
   const { monitorId, apiToken, level } = config;
 
@@ -101,27 +99,40 @@ export async function subscribe(
     url: `monitors/${monitorId}/alerts/subscribe`,
     init: {
       method: "POST",
-      headers: getSubscriptionHeaders(apiToken),
+      headers: authHeaders(apiToken, {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }),
       body: JSON.stringify({ level }),
     },
+    options,
   });
 }
 
 /**
- * Get all subscriptions of a user.
+ * Unsubscribe from air alerts for a monitor at a given level.
  *
- * @returns An array of MonitorSubscription objects
+ * @param config The monitor, level, and optional API token. Without a token,
+ * the call relies on the session cookie.
+ * @param options Request options.
+ *
+ * @returns The server's unsubscribe response
  */
 export async function unsubscribe(
   config: MonitorSubscriptionConfig,
+  options?: RequestOptions,
 ): Promise<MonitorUnsubscribeResponse> {
   const { monitorId, apiToken, level } = config;
   return await apiCall<MonitorUnsubscribeResponse>({
     url: `monitors/${monitorId}/alerts/unsubscribe`,
     init: {
       method: "POST",
-      headers: getSubscriptionHeaders(apiToken),
+      headers: authHeaders(apiToken, {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }),
       body: JSON.stringify({ level }),
     },
+    options,
   });
 }

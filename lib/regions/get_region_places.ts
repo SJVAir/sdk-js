@@ -19,7 +19,7 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { RegionData, RegionType } from "./types.ts";
 
 function getPlaceSearchParams(
@@ -40,16 +40,19 @@ function getPlaceSearchParams(
  *
  * @param q The name to search for
  * @param type When provided, scopes the search to a specific region type
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of matching regions
  */
 export async function searchRegionPlaces(
   q: string,
   type?: RegionType,
+  options?: RequestOptions,
 ): Promise<Array<RegionData>> {
   return await jsonCall<Array<RegionData>>({
     url: "regions/places/search",
     searchParams: getPlaceSearchParams(q, type),
+    options,
   });
 }
 
@@ -60,15 +63,18 @@ export async function searchRegionPlaces(
  *
  * @param q The name to resolve
  * @param type When provided, scopes the lookup to a specific region type
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns The best-match region, or null if no match was found
  */
 export async function lookupRegionPlace(
   q: string,
   type?: RegionType,
+  options?: RequestOptions,
 ): Promise<RegionData | null> {
   return await jsonCall<RegionData | null>({
     url: "regions/places/lookup",
     searchParams: getPlaceSearchParams(q, type),
+    options,
   });
 }

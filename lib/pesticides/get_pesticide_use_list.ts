@@ -30,7 +30,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { AerialGround, PesticideUseData } from "./types.ts";
 import { toSearchParams } from "./search_params.ts";
 
@@ -93,14 +93,17 @@ export interface PesticideUseListFilters {
  * Fetches all pesticide use records matching the given filters.
  *
  * @param filters An object containing the desired filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all matching pesticide use records.
  */
 export async function getPesticideUseList(
   filters: PesticideUseListFilters = {},
+  options?: RequestOptions,
 ): Promise<Array<PesticideUseData>> {
   return await paginatedApiCall<PesticideUseData>({
     url: "pesticides/use",
     searchParams: toSearchParams(filters),
+    options,
   });
 }

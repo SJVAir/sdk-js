@@ -28,7 +28,7 @@
  *
  * @module
  */
-import { apiCall } from "$http";
+import { apiCall, type RequestOptions } from "$http";
 import type {
   AerialGround,
   IARCGroup,
@@ -68,15 +68,18 @@ export interface RegionPesticideSummaryFilters {
  *
  * @param regionId The ID of the region to summarize
  * @param filters An object containing the desired filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns A PesticideSummaryResponseData object
  */
 export async function getRegionPesticideSummary(
   regionId: string,
   filters: RegionPesticideSummaryFilters = {},
+  options?: RequestOptions,
 ): Promise<PesticideSummaryResponseData> {
   return await apiCall<PesticideSummaryResponseData>({
     url: `pesticides/region/${regionId}/summary`,
     searchParams: toSearchParams(filters),
+    options,
   });
 }

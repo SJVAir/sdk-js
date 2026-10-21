@@ -39,7 +39,7 @@
  *
  * @module
  */
-import { getApiUrl, jsonCall } from "$http";
+import { getApiUrl, jsonCall, type RequestOptions } from "$http";
 
 /**
  * The scope of entries to export.
@@ -123,14 +123,17 @@ export function getMonitorEntriesExportCSVUrl(
  * Fetches a monitor's exported entries as JSON, for a given date range.
  *
  * @param config An object containing the monitor ID, date range, and export scope
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of exported monitor entry records
  */
 export async function getMonitorEntriesExportJSON(
   config: MonitorEntryExportRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorEntryExportRecord>> {
   return await jsonCall<Array<MonitorEntryExportRecord>>({
     url: `monitors/${config.monitorId}/entries/export/json`,
     searchParams: getExportSearchParams(config),
+    options,
   });
 }

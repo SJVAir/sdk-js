@@ -41,7 +41,7 @@
  *
  * @module
  */
-import { fetchAllBulkPages, mergeBulkPages } from "$http";
+import { fetchAllBulkPages, mergeBulkPages, type RequestOptions } from "$http";
 import type { MonitorEntryType, MonitorWithSummaries } from "./types.ts";
 
 /**
@@ -150,16 +150,19 @@ export function mergeMonitorSummaryBulkPages(
  * Fetches all pages of bulk hourly monitor summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitors, each with their matching summaries
  */
 export async function getMonitorSummariesBulkHourly(
   config: MonitorSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
     await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/hourly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -168,16 +171,19 @@ export async function getMonitorSummariesBulkHourly(
  * Fetches all pages of bulk daily monitor summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitors, each with their matching summaries
  */
 export async function getMonitorSummariesBulkDaily(
   config: MonitorSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
     await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/daily`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -186,16 +192,19 @@ export async function getMonitorSummariesBulkDaily(
  * Fetches all pages of bulk monthly monitor summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitors, each with their matching summaries
  */
 export async function getMonitorSummariesBulkMonthly(
   config: MonitorSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
     await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/monthly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -204,16 +213,19 @@ export async function getMonitorSummariesBulkMonthly(
  * Fetches all pages of bulk quarterly monitor summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitors, each with their matching summaries
  */
 export async function getMonitorSummariesBulkQuarterly(
   config: MonitorSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
     await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/quarterly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -222,16 +234,19 @@ export async function getMonitorSummariesBulkQuarterly(
  * Fetches all pages of bulk seasonal monitor summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitors, each with their matching summaries
  */
 export async function getMonitorSummariesBulkSeasonal(
   config: MonitorSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
     await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/seasonal`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -240,16 +255,19 @@ export async function getMonitorSummariesBulkSeasonal(
  * Fetches all pages of bulk yearly monitor summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitors, each with their matching summaries
  */
 export async function getMonitorSummariesBulkYearly(
   config: MonitorSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorWithSummaries>> {
   return mergeMonitorSummaryBulkPages(
     await fetchAllBulkPages<MonitorWithSummaries>({
       url: `monitors/${config.entryType}/summaries/yearly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }

@@ -25,14 +25,18 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { HMSSmokeGeoJSON } from "./types.ts";
 
 /**
  * Fetch all pages of ongoing HMS Smoke geojson, using native fetch api
  *
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
  * @returns An array of geojson objects
  */
-export async function getHMSSmoke(): Promise<Array<HMSSmokeGeoJSON>> {
-  return await paginatedApiCall<HMSSmokeGeoJSON>({ url: "hms/smoke" });
+export async function getHMSSmoke(
+  options?: RequestOptions,
+): Promise<Array<HMSSmokeGeoJSON>> {
+  return await paginatedApiCall<HMSSmokeGeoJSON>({ url: "hms/smoke", options });
 }

@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
@@ -33,6 +33,7 @@
     "./hms/smoke/get_smoke": "./lib/hms/smoke/get_smoke.ts",
     "./hms/smoke/types": "./lib/hms/smoke/types.ts",
     "./http": "./lib/http/mod.ts",
+    "./http/defaults": "./lib/http/defaults.ts",
     "./http/error": "./lib/http/error.ts",
     "./http/origin": "./lib/http/origin.ts",
     "./http/requests": "./lib/http/requests.ts",

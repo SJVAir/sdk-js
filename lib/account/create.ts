@@ -28,6 +28,7 @@
  * @module
  */
 import { jsonCall } from "$http";
+import type { RequestOptions } from "$http";
 import type { UserDetails } from "./types.ts";
 
 /**
@@ -44,10 +45,13 @@ export interface CreateUserForm {
  * Register a new user. This will also send a sms message to
  * the user with a code for phone verification.
  *
+ * @param form The new user's details.
+ * @param options Request options.
  * @returns The raw GET "/account/register" endpoint response
  */
 export async function createUser(
   form: CreateUserForm,
+  options?: RequestOptions,
 ): Promise<UserDetails> {
   return await jsonCall<UserDetails>({
     url: "account/register",
@@ -59,5 +63,6 @@ export async function createUser(
       },
       body: JSON.stringify(form),
     },
+    options,
   });
 }

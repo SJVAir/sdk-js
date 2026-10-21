@@ -39,7 +39,7 @@
  *
  * @module
  */
-import { fetchAllBulkPages, mergeBulkPages } from "$http";
+import { fetchAllBulkPages, mergeBulkPages, type RequestOptions } from "$http";
 import type { RegionWithSummaries } from "./types.ts";
 
 /**
@@ -121,16 +121,19 @@ export function mergeRegionSummaryBulkPages(
  * Fetches all pages of bulk hourly region summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and region filter
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
  */
 export async function getRegionSummariesBulkHourly(
   config: RegionSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionWithSummaries>> {
   return mergeRegionSummaryBulkPages(
     await fetchAllBulkPages<RegionWithSummaries>({
       url: `regions/${config.entryType}/summaries/hourly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -139,16 +142,19 @@ export async function getRegionSummariesBulkHourly(
  * Fetches all pages of bulk daily region summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and region filter
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
  */
 export async function getRegionSummariesBulkDaily(
   config: RegionSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionWithSummaries>> {
   return mergeRegionSummaryBulkPages(
     await fetchAllBulkPages<RegionWithSummaries>({
       url: `regions/${config.entryType}/summaries/daily`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -157,16 +163,19 @@ export async function getRegionSummariesBulkDaily(
  * Fetches all pages of bulk monthly region summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and region filter
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
  */
 export async function getRegionSummariesBulkMonthly(
   config: RegionSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionWithSummaries>> {
   return mergeRegionSummaryBulkPages(
     await fetchAllBulkPages<RegionWithSummaries>({
       url: `regions/${config.entryType}/summaries/monthly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -175,16 +184,19 @@ export async function getRegionSummariesBulkMonthly(
  * Fetches all pages of bulk quarterly region summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and region filter
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
  */
 export async function getRegionSummariesBulkQuarterly(
   config: RegionSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionWithSummaries>> {
   return mergeRegionSummaryBulkPages(
     await fetchAllBulkPages<RegionWithSummaries>({
       url: `regions/${config.entryType}/summaries/quarterly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -193,16 +205,19 @@ export async function getRegionSummariesBulkQuarterly(
  * Fetches all pages of bulk seasonal region summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and region filter
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
  */
 export async function getRegionSummariesBulkSeasonal(
   config: RegionSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionWithSummaries>> {
   return mergeRegionSummaryBulkPages(
     await fetchAllBulkPages<RegionWithSummaries>({
       url: `regions/${config.entryType}/summaries/seasonal`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }
@@ -211,16 +226,19 @@ export async function getRegionSummariesBulkSeasonal(
  * Fetches all pages of bulk yearly region summaries, merged into a complete list.
  *
  * @param config An object containing the entry type, date range, and region filter
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
  */
 export async function getRegionSummariesBulkYearly(
   config: RegionSummaryBulkRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<RegionWithSummaries>> {
   return mergeRegionSummaryBulkPages(
     await fetchAllBulkPages<RegionWithSummaries>({
       url: `regions/${config.entryType}/summaries/yearly`,
       searchParams: getBulkSummarySearchParams(config),
+      options,
     }),
   );
 }

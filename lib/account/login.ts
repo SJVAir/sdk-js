@@ -23,16 +23,21 @@
  * @module
  */
 import { jsonCall } from "$http";
+import type { RequestOptions } from "$http";
 import type { UserDetails } from "./types.ts";
 
 /**
  * Log in with the given user credentials.
  *
+ * @param identifier The user's phone number or email.
+ * @param password The user's password.
+ * @param options Request options.
  * @returns The raw "/account/login" endpoint response
  */
 export async function login(
   identifier: string,
   password: string,
+  options?: RequestOptions,
 ): Promise<UserDetails> {
   return await jsonCall<UserDetails>({
     url: "account/login",
@@ -44,5 +49,6 @@ export async function login(
       },
       body: JSON.stringify({ identifier, password }),
     },
+    options,
   });
 }

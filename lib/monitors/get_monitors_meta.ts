@@ -72,7 +72,7 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type {
   MonitorEntryType,
   MonitorType,
@@ -232,8 +232,14 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
 /**
  * Fetches the metadata for monitors and monitor entries.
  *
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
  * @returns The metadata for monitors and monitor entries.
  */
-export async function getMonitorsMeta(): Promise<MonitorsMeta> {
-  return new MonitorsMeta(await jsonCall<SJVAirMonitorsMeta>("monitors/meta"));
+export async function getMonitorsMeta(
+  options?: RequestOptions,
+): Promise<MonitorsMeta> {
+  return new MonitorsMeta(
+    await jsonCall<SJVAirMonitorsMeta>({ url: "monitors/meta", options }),
+  );
 }

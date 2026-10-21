@@ -19,20 +19,22 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { CommodityDetailData } from "./types.ts";
 
 /**
  * Fetch details about a pesticide commodity.
  *
  * @param commodityId The ID of the requested commodity
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns A CommodityDetailData object containing commodity details
  */
 export async function getCommodityDetails(
   commodityId: string,
+  options?: RequestOptions,
 ): Promise<CommodityDetailData> {
   return await jsonCall<CommodityDetailData>(
-    `pesticides/commodities/${commodityId}`,
+    { url: `pesticides/commodities/${commodityId}`, options },
   );
 }

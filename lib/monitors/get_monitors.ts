@@ -52,7 +52,7 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { MonitorEntryType, MonitorLatestType } from "./types.ts";
 import { apiDateFormat } from "$datetime";
 
@@ -86,16 +86,18 @@ export interface MonitorsAtOptions {
  * @param entryType The type of entry to include in the "latest" field
  * @param options When provided, fetches monitor data as of a historical `timestamp`, optionally
  * scoped to a `region` or `bbox`. When omitted, fetches monitor data as of now.
+ * @param requestOptions Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all monitors matching the given criteria, with a "latest" entry.
  */
 export async function getMonitors<T extends MonitorEntryType>(
   entryType: T,
   options?: MonitorsAtOptions,
+  requestOptions?: RequestOptions,
 ): Promise<Array<MonitorLatestType<T>>> {
   if (!options) {
     return await jsonCall<Array<MonitorLatestType<T>>>(
-      `monitors/${entryType}/current`,
+      { url: `monitors/${entryType}/current`, options: requestOptions },
     );
   }
 
@@ -116,5 +118,6 @@ export async function getMonitors<T extends MonitorEntryType>(
   return await jsonCall<Array<MonitorLatestType<T>>>({
     url: `monitors/${entryType}/at`,
     searchParams,
+    options: requestOptions,
   });
 }

@@ -25,14 +25,18 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { HMSFireGeoJSON } from "./types.ts";
 
 /**
  * Fetch all pages of ongoing HMS Fire geojson, using native fetch api
  *
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
  * @returns An array of geojson objects
  */
-export async function getHMSFire(): Promise<Array<HMSFireGeoJSON>> {
-  return await paginatedApiCall<HMSFireGeoJSON>({ url: "hms/fire" });
+export async function getHMSFire(
+  options?: RequestOptions,
+): Promise<Array<HMSFireGeoJSON>> {
+  return await paginatedApiCall<HMSFireGeoJSON>({ url: "hms/fire", options });
 }

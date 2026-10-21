@@ -28,6 +28,8 @@
  * @module
  */
 import { jsonCall } from "$http";
+import type { RequestOptions } from "$http";
+import { authHeaders } from "./auth_headers.ts";
 import type { UserDetails } from "./types.ts";
 
 /**
@@ -40,28 +42,34 @@ export interface ChangePasswordConfig {
   new_password1: string;
   /** The desired new password */
   new_password2: string;
-  /** The user's API token */
-  api_token: string;
+  /**
+   * The user's API token. Optional. Without it, the call relies on the session
+   * cookie; a missing sign-in surfaces as the server's 401/403.
+   */
+  api_token?: string;
 }
 /**
  * Submit a password change.
  *
+ * @param config The password form and optional API token.
+ * @param options Request options.
  * @returns The user details object
  */
 export async function changePassword(
   config: ChangePasswordConfig,
+  options?: RequestOptions,
 ): Promise<UserDetails> {
   const { api_token, ...form } = config;
   return await jsonCall<UserDetails>({
     url: "account/password",
     init: {
       method: "PUT",
-      headers: {
+      headers: authHeaders(api_token, {
         "Accept": "application/json",
-        "Authorization": `Token ${api_token}`,
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify(form),
     },
+    options,
   });
 }

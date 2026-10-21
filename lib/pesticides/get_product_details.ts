@@ -22,20 +22,22 @@
  *
  * @module
  */
-import { jsonCall } from "$http";
+import { jsonCall, type RequestOptions } from "$http";
 import type { ProductDetailData } from "./types.ts";
 
 /**
  * Fetch details about a pesticide product.
  *
  * @param productId The ID of the requested product
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns A ProductDetailData object containing product details
  */
 export async function getProductDetails(
   productId: string,
+  options?: RequestOptions,
 ): Promise<ProductDetailData> {
   return await jsonCall<ProductDetailData>(
-    `pesticides/products/${productId}`,
+    { url: `pesticides/products/${productId}`, options },
   );
 }

@@ -23,7 +23,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { ProductData } from "./types.ts";
 import { toSearchParams } from "./search_params.ts";
 
@@ -46,14 +46,17 @@ export interface ProductsListFilters {
  * Fetches all pesticide products matching the given filters.
  *
  * @param filters An object containing the desired filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all matching products.
  */
 export async function getProductsList(
   filters: ProductsListFilters = {},
+  options?: RequestOptions,
 ): Promise<Array<ProductData>> {
   return await paginatedApiCall<ProductData>({
     url: "pesticides/products",
     searchParams: toSearchParams(filters),
+    options,
   });
 }

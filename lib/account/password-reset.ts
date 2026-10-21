@@ -33,15 +33,19 @@
  * @module
  */
 import { apiCall, jsonCall } from "$http";
+import type { RequestOptions } from "$http";
 import type { PasswordResetCredentials } from "./types.ts";
 
 /**
  * Request a password reset.
  *
+ * @param phone The user's phone number.
+ * @param options Request options.
  * @returns The credentials needed creating the password reset URL
  */
 export async function passwordResetRequest(
   phone: string,
+  options?: RequestOptions,
 ): Promise<PasswordResetCredentials> {
   return await jsonCall<PasswordResetCredentials>({
     url: "account/password-reset",
@@ -53,6 +57,7 @@ export async function passwordResetRequest(
       },
       body: JSON.stringify({ phone }),
     },
+    options,
   });
 }
 
@@ -74,9 +79,13 @@ export interface PasswordResetConfig {
 
 /**
  * Sumbit password reset.
+ *
+ * @param config The reset credentials and new password.
+ * @param options Request options.
  */
 export async function resetPassword(
   config: PasswordResetConfig,
+  options?: RequestOptions,
 ): Promise<void> {
   //TODO: get return type
   const { token, uidb64, ...form } = config;
@@ -90,5 +99,6 @@ export async function resetPassword(
       },
       body: JSON.stringify(form),
     },
+    options,
   });
 }

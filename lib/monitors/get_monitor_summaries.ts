@@ -34,7 +34,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { MonitorEntryType, MonitorSummary } from "./types.ts";
 
 /**
@@ -115,11 +115,13 @@ function getSummarySearchParams(
  * Fetches all pages of hourly summaries for a given monitor.
  *
  * @param config An object containing the monitor ID, entry type, and optional year/month/day
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor summaries
  */
 export async function getMonitorSummariesHourly(
   config: MonitorSummaryHourlyRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorSummary>> {
   const segments = [config.year, config.month, config.day].filter(
     (segment) => segment !== undefined,
@@ -130,6 +132,7 @@ export async function getMonitorSummariesHourly(
       segments.join("/")
     }`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -137,11 +140,13 @@ export async function getMonitorSummariesHourly(
  * Fetches all pages of daily summaries for a given monitor.
  *
  * @param config An object containing the monitor ID, entry type, and optional year/month
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor summaries
  */
 export async function getMonitorSummariesDaily(
   config: MonitorSummaryDailyRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorSummary>> {
   const segments = [config.year, config.month].filter(
     (segment) => segment !== undefined,
@@ -152,6 +157,7 @@ export async function getMonitorSummariesDaily(
       segments.join("/")
     }`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -159,16 +165,19 @@ export async function getMonitorSummariesDaily(
  * Fetches all pages of monthly summaries for a given monitor.
  *
  * @param config An object containing the monitor ID, entry type, and year
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor summaries
  */
 export async function getMonitorSummariesMonthly(
   config: MonitorSummaryYearRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorSummary>> {
   return await paginatedApiCall<MonitorSummary>({
     url:
       `monitors/${config.monitorId}/summaries/${config.entryType}/monthly/${config.year}`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -176,16 +185,19 @@ export async function getMonitorSummariesMonthly(
  * Fetches all pages of quarterly summaries for a given monitor.
  *
  * @param config An object containing the monitor ID, entry type, and year
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor summaries
  */
 export async function getMonitorSummariesQuarterly(
   config: MonitorSummaryYearRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorSummary>> {
   return await paginatedApiCall<MonitorSummary>({
     url:
       `monitors/${config.monitorId}/summaries/${config.entryType}/quarterly/${config.year}`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -193,16 +205,19 @@ export async function getMonitorSummariesQuarterly(
  * Fetches all pages of seasonal summaries for a given monitor.
  *
  * @param config An object containing the monitor ID, entry type, and year
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor summaries
  */
 export async function getMonitorSummariesSeasonal(
   config: MonitorSummaryYearRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorSummary>> {
   return await paginatedApiCall<MonitorSummary>({
     url:
       `monitors/${config.monitorId}/summaries/${config.entryType}/seasonal/${config.year}`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }
 
@@ -210,14 +225,17 @@ export async function getMonitorSummariesSeasonal(
  * Fetches all pages of yearly summaries for a given monitor.
  *
  * @param config An object containing the monitor ID and entry type
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor summaries
  */
 export async function getMonitorSummariesYearly(
   config: MonitorSummaryRequestConfig,
+  options?: RequestOptions,
 ): Promise<Array<MonitorSummary>> {
   return await paginatedApiCall<MonitorSummary>({
     url: `monitors/${config.monitorId}/summaries/${config.entryType}/yearly`,
     searchParams: getSummarySearchParams(config),
+    options,
   });
 }

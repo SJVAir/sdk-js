@@ -30,6 +30,8 @@
  */
 import { genericAPIErrorHandler } from "./error.ts";
 import { getApiUrl } from "./origin.ts";
+import type { RequestOptions } from "./defaults.ts";
+import { buildRequestInit, redactInit } from "./request_init.ts";
 
 /*
  * The configuration object for an API call
@@ -38,6 +40,9 @@ export interface APIRequestConfig {
   url: string;
   searchParams?: Record<string, string | Array<string>>;
   init?: RequestInit;
+
+  /** The caller's request options (signal and extra init) */
+  options?: RequestOptions;
 }
 
 /**
@@ -64,8 +69,25 @@ function getRequestConfig(
   endpoint: string | APIRequestConfig,
 ): APIRequestConfig {
   return (typeof endpoint === "string")
-    ? { url: endpoint, init: {} }
+    ? { url: endpoint, init: {}, options: undefined }
     : endpoint;
+}
+
+/**
+ * Builds the error handler for a request. An aborted request rejects with the
+ * signal's own reason, unchanged; everything else goes through
+ * `genericAPIErrorHandler`.
+ */
+function errorHandlerFor(
+  endpoint: string | APIRequestConfig,
+): (fault: unknown) => never {
+  const { init, options } = getRequestConfig(endpoint);
+  const signal = options?.signal ?? options?.init?.signal ?? init?.signal;
+
+  return (fault) => {
+    if (signal?.aborted) throw signal.reason;
+    return genericAPIErrorHandler(fault) as never;
+  };
 }
 
 async function parseBody<T>(response: Response): Promise<T> {
@@ -109,9 +131,11 @@ async function parseBody<T>(response: Response): Promise<T> {
 export async function httpRequest<T>(
   endpoint: string | APIRequestConfig,
 ): Promise<APIRequestResponse<T>> {
-  const { url: baseUrl, searchParams, init } = getRequestConfig(endpoint);
+  const { url: baseUrl, searchParams, init: functionInit, options } =
+    getRequestConfig(endpoint);
 
   const url = getApiUrl(baseUrl, searchParams);
+  const init = buildRequestInit(url, functionInit, options);
 
   return await fetch(url, init)
     .then(async (response) => {
@@ -131,14 +155,14 @@ export async function httpRequest<T>(
         throw new Error(`Request to "${url.href}" failed`, {
           cause: {
             url,
-            init,
+            init: redactInit(init),
             result,
           },
         });
       }
 
       return result;
-    }).catch(genericAPIErrorHandler) as APIRequestResponse<T>;
+    }).catch(errorHandlerFor(endpoint)) as APIRequestResponse<T>;
 }
 
 type APICallHandler<T> = (response: APIRequestResponse<T>) => void;
@@ -168,7 +192,7 @@ export async function apiCall<T>(
     }
 
     return response.body;
-  }).catch(genericAPIErrorHandler) as Awaited<T>;
+  }).catch(errorHandlerFor(endpoint)) as Awaited<T>;
 }
 
 /**
@@ -289,7 +313,7 @@ export async function fetchAllBulkPages<T>(
                   page: `${idx + 1 + page}`,
                 },
               }).then((response) => response.body.data)
-                .catch(genericAPIErrorHandler) as Promise<Array<T>>,
+                .catch(errorHandlerFor(requestConfig)) as Promise<Array<T>>,
           ),
         );
         allPages.push(...rest);
@@ -297,7 +321,7 @@ export async function fetchAllBulkPages<T>(
     }
 
     return allPages;
-  }).catch(genericAPIErrorHandler) as Array<Array<T>>;
+  }).catch(errorHandlerFor(requestConfig)) as Array<Array<T>>;
 }
 
 /**
@@ -334,7 +358,7 @@ export async function paginatedApiCall<T>(
                     },
                   },
                 ).then((response) => response.body.data)
-                  .catch(genericAPIErrorHandler) as Promise<Array<T>>,
+                  .catch(errorHandlerFor(endpoint)) as Promise<Array<T>>,
             ),
           );
           totalEntries.push(...items.flat());
@@ -342,5 +366,5 @@ export async function paginatedApiCall<T>(
       }
 
       return totalEntries;
-    }).catch(genericAPIErrorHandler) as Array<T>;
+    }).catch(errorHandlerFor(endpoint)) as Array<T>;
 }

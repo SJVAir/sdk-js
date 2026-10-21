@@ -47,17 +47,21 @@
  *
  * @module
  */
-import { APIError, jsonCall } from "$http";
+import { APIError, jsonCall, type RequestOptions } from "$http";
 import type { MonitorData } from "./types.ts";
 
 /**
  * Fetches all monitors.
  *
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
  * @returns An array containing all monitors.
  */
-export async function getMonitorsList(): Promise<Array<MonitorData>> {
+export async function getMonitorsList(
+  options?: RequestOptions,
+): Promise<Array<MonitorData>> {
   return await jsonCall<Array<MonitorData>>(
-    "monitors",
+    { url: "monitors", options },
     (response) => {
       if (
         !Array.isArray(response.body.data) || response.body.data.length <= 0

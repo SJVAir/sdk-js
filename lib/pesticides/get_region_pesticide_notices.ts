@@ -21,7 +21,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { PesticideNoticeData } from "./types.ts";
 import type { PesticideNoticeListFilters } from "./get_pesticide_notice_list.ts";
 import { toSearchParams } from "./search_params.ts";
@@ -39,15 +39,18 @@ export type RegionPesticideNoticeFilters = Omit<
  *
  * @param regionId The ID of the region to fetch notices for
  * @param filters An object containing the desired filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all matching pesticide application notices.
  */
 export async function getRegionPesticideNotices(
   regionId: string,
   filters: RegionPesticideNoticeFilters = {},
+  options?: RequestOptions,
 ): Promise<Array<PesticideNoticeData>> {
   return await paginatedApiCall<PesticideNoticeData>({
     url: `pesticides/region/${regionId}/notice`,
     searchParams: toSearchParams(filters),
+    options,
   });
 }

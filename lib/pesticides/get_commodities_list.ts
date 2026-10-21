@@ -16,7 +16,7 @@
  *
  * @module
  */
-import { paginatedApiCall } from "$http";
+import { paginatedApiCall, type RequestOptions } from "$http";
 import type { CommodityData } from "./types.ts";
 import { toSearchParams } from "./search_params.ts";
 
@@ -36,14 +36,17 @@ export interface CommoditiesListFilters {
  * Fetches all pesticide commodities matching the given filters.
  *
  * @param filters An object containing the desired filters
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array containing all matching commodities.
  */
 export async function getCommoditiesList(
   filters: CommoditiesListFilters = {},
+  options?: RequestOptions,
 ): Promise<Array<CommodityData>> {
   return await paginatedApiCall<CommodityData>({
     url: "pesticides/commodities",
     searchParams: toSearchParams(filters),
+    options,
   });
 }
