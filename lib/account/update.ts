@@ -25,20 +25,27 @@
  * @module
  */
 import { jsonCall } from "$http";
+import type { RequestOptions } from "$http";
+import { authHeaders } from "./auth_headers.ts";
 import type { UserDetails } from "./types.ts";
 
 /** The form used to update a user */
 export type UpdateUserForm =
   & Partial<Omit<UserDetails, "api_token" | "phone_verified">>
-  & Pick<UserDetails, "api_token">;
+  & Partial<Pick<UserDetails, "api_token">>;
 
 /**
  * Update a user.
  *
+ * @param form The fields to update, plus an optional `api_token`. Without the
+ *   token, the call relies on the session cookie; a missing sign-in surfaces
+ *   as the server's 401/403.
+ * @param options Request options.
  * @returns The modigied user object
  */
 export async function updateUser(
   form: UpdateUserForm,
+  options?: RequestOptions,
 ): Promise<UserDetails> {
   const { api_token, ...userForm } = form;
 
@@ -46,12 +53,12 @@ export async function updateUser(
     url: "account",
     init: {
       method: "PATCH",
-      headers: {
-        "Authorization": `Token ${api_token}`,
+      headers: authHeaders(api_token, {
         "Accept": "application/json",
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify(userForm),
     },
+    options,
   });
 }

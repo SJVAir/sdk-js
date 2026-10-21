@@ -39,24 +39,30 @@
  * @module
  */
 import { paginatedApiCall } from "$http";
+import type { RequestOptions } from "$http";
+import { authHeaders } from "./auth_headers.ts";
 import type { AirAlert } from "./types.ts";
 
 /**
  * Get all active alerts for a user's monitor subscriptions.
  *
+ * @param apiToken Optional. Without it, the call relies on the session
+ *   cookie; a missing sign-in surfaces as the server's 401/403.
+ * @param options Request options.
  * @returns An array of alerts
  */
 export async function getAirAlerts(
-  apiToken: string,
+  apiToken?: string,
+  options?: RequestOptions,
 ): Promise<Array<AirAlert>> {
   return await paginatedApiCall<AirAlert>({
     url: "account/alerts",
     init: {
-      headers: {
-        "Authorization": `Token ${apiToken}`,
+      headers: authHeaders(apiToken, {
         "Accept": "application/json",
         "Content-Type": "application/json",
-      },
+      }),
     },
+    options,
   });
 }
