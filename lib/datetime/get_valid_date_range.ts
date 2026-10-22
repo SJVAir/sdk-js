@@ -1,5 +1,6 @@
 /**
- * A utility for generating valid date ranges.
+ * A utility for generating valid date ranges. Days are snapped in Pacific time
+ * (`America/Los_Angeles`), whatever the device's zone.
  *
  * @example Usage
  * ```ts
@@ -19,70 +20,66 @@
  *
  * const lastThreeDays = getValidDateRange();
  * console.log(lastThreeDays);
- * // Prints: { gte: 2025-09-22T07:00:00.000Z, lte: 2025-09-25T06:59:59.999Z } (example output)
+ * // Prints: { gte: 2025-09-21T07:00:00.000Z, lte: 2025-09-25T06:59:59.999Z } (example output)
  * ```
  *
  * @module
  */
 
+import {
+  addPacificDays,
+  endOfPacificDay,
+  startOfPacificDay,
+} from "./pacific.ts";
+
 /**
- * Ensures a timestamp is prior to the current moment and represented by a Date object.
+ * Ensures a timestamp is represented by a valid Date object. Bounds later than
+ * now are allowed (e.g. the end of today).
  *
  * @param timestamp The timestamp to validate.
  *
- * @returns A valid Date object.
+ * @returns A new, valid Date object.
  */
 function getValidDate(timestamp: Date | string | number): Date {
-  if (!(timestamp instanceof Date)) {
-    timestamp = new Date(timestamp);
-  }
+  const date = new Date(
+    timestamp instanceof Date ? timestamp.getTime() : timestamp,
+  );
 
-  if (isNaN(timestamp as unknown as number)) {
+  if (isNaN(date.getTime())) {
     throw new Error(
       `Provided timestamp "${timestamp}" cannot be used to construct a valid Date`,
     );
-  } else if (timestamp > new Date()) {
-    throw new Error(`Provided timestamp "${timestamp}" is greater than now`);
   }
 
-  return timestamp;
+  return date;
 }
 
 /**
- * Adjusts two dates to span the full day if they are within five minutes of each other.
+ * Orders two dates, widening them to span whole Pacific days if they are
+ * within five minutes of each other.
  *
  * @param timestampGte The first date.
  * @param timestampLte The second date.
  *
- * @returns A tuple containing the adjusted dates.
+ * @returns The ordered, adjusted range.
  */
 function ensureValidRange(
   timestampGte: Date | string | number,
   timestampLte: Date | string | number,
 ): DateRange {
-  timestampGte = getValidDate(timestampGte);
-  timestampLte = getValidDate(timestampLte);
+  const [earlier, later] = [
+    getValidDate(timestampGte),
+    getValidDate(timestampLte),
+  ]
+    .sort((a, b) => a.getTime() - b.getTime());
 
-  const diff = Math.abs(timestampGte.getTime() - timestampLte.getTime());
   const fiveMinutes = 5 * 60 * 1000;
 
-  if (diff <= fiveMinutes) {
-    if (timestampGte < timestampLte) {
-      timestampGte.setHours(0, 0, 0, 0);
-      timestampLte.setHours(23, 59, 59, 999);
-    } else {
-      timestampLte.setHours(0, 0, 0, 0);
-      timestampGte.setHours(23, 59, 59, 999);
-    }
+  if (later.getTime() - earlier.getTime() <= fiveMinutes) {
+    return { gte: startOfPacificDay(earlier), lte: endOfPacificDay(later) };
   }
 
-  //return { gte: timestampGte, lte: timestampLte };
-  return [timestampGte, timestampLte].sort((a, b) => a.getTime() - b.getTime())
-    .reduce((acc, curr, idx) => {
-      if (idx === 0) acc.gte = curr;
-      else acc.lte = curr;
-      return acc;
-    }, {} as DateRange);
+  return { gte: earlier, lte: later };
 }
 
 /**
@@ -90,14 +87,10 @@ function ensureValidRange(
  *
  * @param timestampLte A valid Date object.
  *
- * @returns A Date object set 3 days prior to the given timestampLte.
+ * @returns The start of the Pacific day 3 days prior to the given timestampLte.
  */
-function deriveTimestampGte(timestampLte: Date) {
-  const timestampGte = new Date(timestampLte);
-  timestampGte.setDate(timestampLte.getDate() - 3);
-  timestampGte.setHours(0, 0, 0, 0);
-
-  return timestampGte;
+function deriveTimestampGte(timestampLte: Date): Date {
+  return startOfPacificDay(addPacificDays(timestampLte, -3));
 }
 
 /**
@@ -105,7 +98,16 @@ function deriveTimestampGte(timestampLte: Date) {
  */
 type DateRange = { gte: Date; lte: Date };
 /**
- * Get a valid date range from the provided timestamps, if any.
+ * Get a valid date range from the provided timestamps, if any. Days are
+ * Pacific (`America/Los_Angeles`) calendar days, whatever the device's zone.
+ *
+ * - Neither bound: the start of the Pacific day 3 days ago to the end of today.
+ * - Only `timestampGte`: from it to the end of the Pacific day 3 days later.
+ * - Only `timestampLte`: from the start of the Pacific day 3 days earlier to it.
+ * - Both: ordered; if within five minutes of each other, widened to whole
+ *   Pacific days.
+ *
+ * Bounds later than now are allowed. Date arguments are never mutated.
  *
  * @param timestampGte The beginning timestamp of the date range
  * @param timestampLte The ending timestamp of the date range
@@ -116,26 +118,18 @@ export function getValidDateRange(
   timestampGte?: Date | string | number,
   timestampLte?: Date | string | number,
 ): DateRange {
-  const gteDefined = timestampGte !== undefined;
-  const lteDefined = timestampLte !== undefined;
-
-  if (!gteDefined && !lteDefined) {
-    timestampLte = new Date();
-    timestampLte.setHours(23, 59, 59, 999);
-
-    timestampGte = deriveTimestampGte(timestampLte);
-  } else if (gteDefined && !lteDefined) {
-    timestampGte = getValidDate(timestampGte!);
-
-    timestampLte = new Date(timestampGte);
-    timestampLte.setDate(timestampGte.getDate() + 3);
-    timestampLte.setHours(23, 59, 59, 999);
-  } else if (!gteDefined && lteDefined) {
-    timestampLte = getValidDate(timestampLte!);
-    timestampGte = deriveTimestampGte(timestampLte);
-  } else {
-    return ensureValidRange(timestampGte!, timestampLte!);
+  if (timestampGte !== undefined && timestampLte !== undefined) {
+    return ensureValidRange(timestampGte, timestampLte);
   }
 
-  return { gte: timestampGte, lte: timestampLte };
+  if (timestampGte !== undefined) {
+    const gte = getValidDate(timestampGte);
+    return { gte, lte: endOfPacificDay(addPacificDays(gte, 3)) };
+  }
+
+  const lte = timestampLte !== undefined
+    ? getValidDate(timestampLte)
+    : endOfPacificDay(new Date());
+
+  return { gte: deriveTimestampGte(lte), lte };
 }

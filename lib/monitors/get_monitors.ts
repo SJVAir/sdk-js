@@ -54,7 +54,7 @@
  */
 import { jsonCall, type RequestOptions } from "$http";
 import type { MonitorEntryType, MonitorLatestType } from "./types.ts";
-import { apiDateFormat } from "$datetime";
+import { toApiTimestamp } from "$datetime";
 
 /**
  * A bounding box, formatted as `[west, south, east, north]`
@@ -102,7 +102,7 @@ export async function getMonitors<T extends MonitorEntryType>(
   }
 
   const searchParams: Record<string, string | Array<string>> = {
-    timestamp: apiDateFormat(options.timestamp),
+    timestamp: toApiTimestamp(options.timestamp),
   };
 
   if (options.region) {

@@ -30,7 +30,7 @@
  */
 import { paginatedApiCall, type RequestOptions } from "$http";
 import type { MonitorEntries, MonitorEntryType } from "./types.ts";
-import { apiDateFormat, getValidDateRange } from "$datetime";
+import { getValidDateRange, toApiTimestamp } from "$datetime";
 
 /**
  * The configuration options for the monitor entries endpoint
@@ -47,6 +47,19 @@ export interface MonitorEntryRequestConfig {
 
   /** The sensor of which entries will be fetched */
   sensor?: string;
+
+  /**
+   * Only fetch entries made by this processor (e.g. a calibration's processor
+   * name). Sent only when given.
+   */
+  processor?: string;
+
+  /**
+   * Only fetch entries at this stage (e.g. "raw", "cleaned", "calibrated").
+   * Sent only when given; without it the server returns the monitor type's
+   * default stage.
+   */
+  stage?: string;
 
   /**
    * The start time of the requested monitor sensor entry
@@ -77,15 +90,18 @@ class MonitorEntryRequestOptions {
 
   /**
    * The start time of the requested monitor sensor entry
-   * Format: YYYY-MM-DD HH:MM:SS
+   * Format: UTC ISO 8601, e.g. 2026-10-22T07:00:00.000Z
    */
   timestamp__gte: string;
 
   /**
    * The end time of the requested monitor sensor entry
-   * Format: YYYY-MM-DD HH:MM:SS
+   * Format: UTC ISO 8601, e.g. 2026-10-23T06:59:59.999Z
    */
   timestamp__lte: string;
+
+  // `processor` and `stage` are set only when given (through the index
+  // signature), so they are left out of the query string otherwise.
 
   /**
    * Constructs a new MonitorEntryRequestOptions object
@@ -100,8 +116,11 @@ class MonitorEntryRequestOptions {
 
     this.page = options.page?.toString() ?? "1";
     this.sensor = options.sensor ?? "";
-    this.timestamp__gte = apiDateFormat(timestamps.gte);
-    this.timestamp__lte = apiDateFormat(timestamps.lte);
+    this.timestamp__gte = toApiTimestamp(timestamps.gte);
+    this.timestamp__lte = toApiTimestamp(timestamps.lte);
+
+    if (options.processor) this.processor = options.processor;
+    if (options.stage) this.stage = options.stage;
   }
 }
 

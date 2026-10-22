@@ -25,6 +25,8 @@
     "./datetime": "./lib/datetime/mod.ts",
     "./datetime/api_date_format": "./lib/datetime/api_date_format.ts",
     "./datetime/get_valid_date_range": "./lib/datetime/get_valid_date_range.ts",
+    "./datetime/pacific": "./lib/datetime/pacific.ts",
+    "./datetime/to_api_timestamp": "./lib/datetime/to_api_timestamp.ts",
     "./hms": "./lib/hms/mod.ts",
     "./hms/fire": "./lib/hms/fire/mod.ts",
     "./hms/fire/get_fire": "./lib/hms/fire/get_fire.ts",

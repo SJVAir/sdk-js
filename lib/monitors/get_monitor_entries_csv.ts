@@ -15,7 +15,7 @@
  * console.log(url);
  * // Prints (example output):
  * //  URL {
- * //    href: "https://www.sjvair.com/api/2.0/monitors/xgXCRh68SdG5FOdbUXvR6Q/entries/pm25/csv/?timestamp__gte=2025-09-25+00%3A00%3A00&timestamp__lte=2025-09-25+23%3A59%3A59",
+ * //    href: "https://www.sjvair.com/api/2.0/monitors/xgXCRh68SdG5FOdbUXvR6Q/entries/pm25/csv/?timestamp__gte=2025-09-25T07%3A00%3A00.000Z&timestamp__lte=2025-09-26T06%3A59%3A59.999Z",
  * //    origin: "https://www.sjvair.com",
  * //    protocol: "https:",
  * //    username: "",
@@ -25,7 +25,7 @@
  * //    port: "",
  * //    pathname: "/api/2.0/monitors/xgXCRh68SdG5FOdbUXvR6Q/entries/pm25/csv/",
  * //    hash: "",
- * //    search: "?timestamp__gte=2025-09-25+00%3A00%3A00&timestamp__lte=2025-09-25+23%3A59%3A59"
+ * //    search: "?timestamp__gte=2025-09-25T07%3A00%3A00.000Z&timestamp__lte=2025-09-26T06%3A59%3A59.999Z"
  * //  }
  * ```
  *
@@ -33,7 +33,7 @@
  */
 import { getApiUrl } from "$http";
 import type { MonitorEntryType } from "./types.ts";
-import { apiDateFormat, getValidDateRange } from "$datetime";
+import { getValidDateRange, toApiTimestamp } from "$datetime";
 
 /**
  * The configuration options for the monitor entries endpoint
@@ -75,8 +75,8 @@ export function getMonitorEntriesCSVUrl(
     config.timestampLte,
   );
   const params = {
-    timestamp__gte: apiDateFormat(timestamps.gte),
-    timestamp__lte: apiDateFormat(timestamps.lte),
+    timestamp__gte: toApiTimestamp(timestamps.gte),
+    timestamp__lte: toApiTimestamp(timestamps.lte),
   };
   return getApiUrl(
     `monitors/${config.monitorId}/entries/${config.entryType}/csv`,
