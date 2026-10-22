@@ -1,0 +1,9 @@
+{
+  "data": {
+    "dataset": "air-quality",
+    "entry_type": "pm25",
+    "monitor": "jLI5fer7S0uyR7eMYNSPpg",
+    "first": "2026-01-01",
+    "last": "2026-01-01"
+  }
+}

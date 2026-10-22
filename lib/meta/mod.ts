@@ -12,5 +12,6 @@
  *
  * @module
  */
+export * from "./get_coverage.ts";
 export * from "./get_dataset_catalog.ts";
 export * from "./types.ts";

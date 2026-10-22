@@ -1,0 +1,12 @@
+{
+  "data": {
+    "dataset": "air-quality",
+    "entry_type": "pm25",
+    "region": {
+      "type": "county",
+      "external_id": "06019"
+    },
+    "first": "2026-03-01",
+    "last": "2026-03-04"
+  }
+}

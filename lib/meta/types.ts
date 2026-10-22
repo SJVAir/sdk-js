@@ -3,7 +3,9 @@
  * @module
  */
 import type { infer as zinfer } from "zod";
+import type { RegionType } from "../regions/types.ts";
 import type {
+  coverageSchema,
   datasetCatalogEntrySchema,
   datasetCatalogSchema,
   datasetEntryTypeSchema,
@@ -45,3 +47,25 @@ export type DatasetCatalogEntry = zinfer<typeof datasetCatalogEntrySchema>;
 
 /** The catalog returned from meta/datasets */
 export type DatasetCatalog = zinfer<typeof datasetCatalogSchema>;
+
+/**
+ * What to ask meta/coverage about. Without `monitor` or `region` it answers
+ * for the whole dataset. `monitor` and `region` are mutually exclusive, both
+ * need an `entry_type`, and land-use regions have no codes to look up.
+ */
+export type CoverageQuery = {
+  /** The dataset id, such as `air-quality` */
+  dataset: string;
+  /** Narrows the answer to one entry type of the dataset */
+  entry_type?: string;
+  /** A monitor id (air-quality and weather only) */
+  monitor?: string;
+  /** A region, by its type and official code (air-quality only) */
+  region?: { type: RegionType; external_id: string };
+};
+
+/**
+ * The first and last Pacific calendar dates (`YYYY-MM-DD` strings, not
+ * `Date`s) of a dataset's data; both are null when there is none.
+ */
+export type Coverage = zinfer<typeof coverageSchema>;

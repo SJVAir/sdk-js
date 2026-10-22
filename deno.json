@@ -40,6 +40,7 @@
     "./http/origin": "./lib/http/origin.ts",
     "./http/requests": "./lib/http/requests.ts",
     "./meta": "./lib/meta/mod.ts",
+    "./meta/get_coverage": "./lib/meta/get_coverage.ts",
     "./meta/get_dataset_catalog": "./lib/meta/get_dataset_catalog.ts",
     "./meta/types": "./lib/meta/types.ts",
     "./monitors": "./lib/monitors/mod.ts",

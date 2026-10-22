@@ -83,7 +83,7 @@ archives
 The catalog of datasets the API serves
 
 - [x] `/api/2.0/meta/datasets/`
-- [ ] `/api/2.0/meta/coverage/` <-- Not yet in the SDK
+- [x] `/api/2.0/meta/coverage/`
 
 ## Pesticides
 
