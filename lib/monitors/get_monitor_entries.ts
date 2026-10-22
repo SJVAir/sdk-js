@@ -74,6 +74,27 @@ export interface MonitorEntryRequestConfig {
    * @defaultValue The current date
    */
   timestampLte?: Date | number | string;
+
+  /**
+   * Send the timestamps exactly as given. By default two bounds within five
+   * minutes of each other are widened to whole Pacific days; with `exact` they
+   * are sent unchanged, for short windows such as the current hour. Missing
+   * bounds still default as usual.
+   *
+   * @example
+   * ```ts
+   * await getMonitorEntries({
+   *   monitorId: "xgXCRh68SdG5FOdbUXvR6Q",
+   *   entryType: "pm25",
+   *   timestampGte: "2026-10-22T18:00:00Z",
+   *   timestampLte: "2026-10-22T18:02:00Z",
+   *   exact: true,
+   * });
+   * ```
+   *
+   * @defaultValue false
+   */
+  exact?: boolean;
 }
 
 /**
@@ -112,6 +133,7 @@ class MonitorEntryRequestOptions {
     const timestamps = getValidDateRange(
       options.timestampGte,
       options.timestampLte,
+      { exact: options.exact },
     );
 
     this.page = options.page?.toString() ?? "1";
@@ -128,6 +150,7 @@ class MonitorEntryRequestOptions {
  * Fetch all pages of entries for a given monitor, using native fetch api
  *
  * @param config An object containing the monitor ID and search parameters
+ * (including the optional `processor`, `stage` and `exact`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor entries

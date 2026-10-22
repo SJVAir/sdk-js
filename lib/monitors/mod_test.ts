@@ -1,3 +1,4 @@
+import { toApiTimestamp } from "$datetime";
 import { origin, setOrigin } from "$http";
 import {
   COORDINATES,
@@ -542,6 +543,98 @@ Deno.test("Module: Monitors request params (stubbed fetch)", async (t) => {
     assertEquals(params.get("timestamp__gte"), "2026-10-22T07:00:00.000Z");
     assertMatch(params.get("timestamp__lte")!, zoned);
   });
+
+  await t.step(
+    "getMonitorEntries exact sends the exact instants, no widening",
+    async () => {
+      const gte = new Date("2026-10-22T18:00:30.250Z");
+      const lte = new Date("2026-10-22T18:02:10.500Z");
+      const stub = stubFetch(emptyPage);
+      try {
+        await getMonitorEntries({
+          monitorId: "m",
+          entryType: "pm25",
+          timestampGte: gte,
+          timestampLte: lte,
+          exact: true,
+        });
+      } finally {
+        stub.restore();
+      }
+
+      const params = stub.calls[0].url.searchParams;
+      assertEquals(params.get("timestamp__gte"), toApiTimestamp(gte));
+      assertEquals(params.get("timestamp__lte"), toApiTimestamp(lte));
+      assertEquals(params.get("timestamp__gte"), "2026-10-22T18:00:30.250Z");
+      assertEquals(params.get("timestamp__lte"), "2026-10-22T18:02:10.500Z");
+      assertEquals(params.has("exact"), false);
+    },
+  );
+
+  await t.step(
+    "getMonitorEntries without exact still widens close bounds",
+    async () => {
+      const stub = stubFetch(emptyPage);
+      try {
+        await getMonitorEntries({
+          monitorId: "m",
+          entryType: "pm25",
+          timestampGte: new Date("2026-10-22T18:00:00Z"),
+          timestampLte: new Date("2026-10-22T18:02:00Z"),
+        });
+      } finally {
+        stub.restore();
+      }
+
+      const params = stub.calls[0].url.searchParams;
+      assertEquals(params.get("timestamp__gte"), "2026-10-22T07:00:00.000Z");
+      assertEquals(params.get("timestamp__lte"), "2026-10-23T06:59:59.999Z");
+    },
+  );
+
+  await t.step("getMonitorEntriesCSVUrl exact keeps the exact instants", () => {
+    const url = getMonitorEntriesCSVUrl({
+      monitorId: "m",
+      entryType: "pm25",
+      timestampGte: new Date("2026-10-22T18:00:30.250Z"),
+      timestampLte: new Date("2026-10-22T18:02:10.500Z"),
+      exact: true,
+    });
+    assertEquals(
+      url.searchParams.get("timestamp__gte"),
+      "2026-10-22T18:00:30.250Z",
+    );
+    assertEquals(
+      url.searchParams.get("timestamp__lte"),
+      "2026-10-22T18:02:10.500Z",
+    );
+  });
+
+  await t.step(
+    "getMonitorEntriesCSVUrl sends processor and stage when given",
+    () => {
+      const url = getMonitorEntriesCSVUrl({
+        monitorId: "m",
+        entryType: "pm25",
+        processor: "PM25_UnitedStates",
+        stage: "calibrated",
+      });
+      assertEquals(url.searchParams.get("processor"), "PM25_UnitedStates");
+      assertEquals(url.searchParams.get("stage"), "calibrated");
+    },
+  );
+
+  await t.step(
+    "getMonitorEntriesCSVUrl omits processor and stage otherwise",
+    () => {
+      const url = getMonitorEntriesCSVUrl({
+        monitorId: "m",
+        entryType: "pm25",
+      });
+      assertEquals(url.searchParams.has("processor"), false);
+      assertEquals(url.searchParams.has("stage"), false);
+    },
+  );
 
   await t.step("getMonitors at/ sends a Z timestamp", async () => {
     const stub = stubFetch(() => jsonResponse({ data: [] }));

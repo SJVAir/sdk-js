@@ -58,12 +58,46 @@ export interface MonitorEntryCSVRequestConfig {
    * @defaultValue The current date
    */
   timestampLte?: Date | number | string;
+
+  /**
+   * Only export entries made by this processor (e.g. a calibration's
+   * processor name). Sent only when given.
+   */
+  processor?: string;
+
+  /**
+   * Only export entries at this stage (e.g. "raw", "cleaned", "calibrated").
+   * Sent only when given.
+   */
+  stage?: string;
+
+  /**
+   * Send the timestamps exactly as given. By default two bounds within five
+   * minutes of each other are widened to whole Pacific days; with `exact` they
+   * are sent unchanged, for short windows such as the current hour. Missing
+   * bounds still default as usual.
+   *
+   * @example
+   * ```ts
+   * getMonitorEntriesCSVUrl({
+   *   monitorId: "xgXCRh68SdG5FOdbUXvR6Q",
+   *   entryType: "pm25",
+   *   timestampGte: "2026-10-22T18:00:00Z",
+   *   timestampLte: "2026-10-22T18:02:00Z",
+   *   exact: true,
+   * });
+   * ```
+   *
+   * @defaultValue false
+   */
+  exact?: boolean;
 }
 
 /**
  * Constructs the URL for getting the "monitors/${monitorID}/entries" api endpoint.
  *
  * @param config An object containing the monitor ID and search parameters
+ * (including the optional `processor`, `stage` and `exact`)
  *
  * @returns An instance of URL configured for the "monitors/${monitorID}/entries" api endpoint.
  */
@@ -73,11 +107,14 @@ export function getMonitorEntriesCSVUrl(
   const timestamps = getValidDateRange(
     config.timestampGte,
     config.timestampLte,
+    { exact: config.exact },
   );
-  const params = {
+  const params: Record<string, string> = {
     timestamp__gte: toApiTimestamp(timestamps.gte),
     timestamp__lte: toApiTimestamp(timestamps.lte),
   };
+  if (config.processor) params.processor = config.processor;
+  if (config.stage) params.stage = config.stage;
   return getApiUrl(
     `monitors/${config.monitorId}/entries/${config.entryType}/csv`,
     params,

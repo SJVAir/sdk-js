@@ -180,3 +180,81 @@ Deno.test("getValidDateRange snaps days in Pacific time", async (t) => {
     assertThrows(() => getValidDateRange("nope"), Error, "cannot be used");
   });
 });
+
+Deno.test("getValidDateRange exact option", async (t) => {
+  await t.step("two bounds 2 minutes apart come back unchanged", () => {
+    const start = new Date("2026-10-23T05:00:00Z");
+    const end = new Date("2026-10-23T05:02:00Z");
+    const range = getValidDateRange(start, end, { exact: true });
+    assertEquals(range.gte.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(range.lte.toISOString(), "2026-10-23T05:02:00.000Z");
+    // Arguments are never mutated.
+    assertEquals(start.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(end.toISOString(), "2026-10-23T05:02:00.000Z");
+  });
+
+  await t.step("identical bounds are returned as a zero-width range", () => {
+    const range = getValidDateRange(
+      "2026-10-23T05:00:00Z",
+      "2026-10-23T05:00:00Z",
+      { exact: true },
+    );
+    assertEquals(range.gte.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(range.lte.toISOString(), "2026-10-23T05:00:00.000Z");
+  });
+
+  await t.step("reversed bounds are still sorted", () => {
+    const range = getValidDateRange(
+      "2026-10-23T05:02:00Z",
+      "2026-10-23T05:00:00Z",
+      { exact: true },
+    );
+    assertEquals(range.gte.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(range.lte.toISOString(), "2026-10-23T05:02:00.000Z");
+  });
+
+  await t.step("an unparseable bound is still rejected", () => {
+    assertThrows(
+      () => getValidDateRange("nope", "2026-10-23T05:00:00Z", { exact: true }),
+      Error,
+      "cannot be used",
+    );
+  });
+
+  await t.step("without exact, close bounds still widen to the day", () => {
+    for (const options of [undefined, {}, { exact: false }]) {
+      const range = getValidDateRange(
+        "2026-10-23T05:00:00Z",
+        "2026-10-23T05:02:00Z",
+        options,
+      );
+      assertEquals(range.gte.toISOString(), "2026-10-22T07:00:00.000Z");
+      assertEquals(range.lte.toISOString(), "2026-10-23T06:59:59.999Z");
+    }
+  });
+
+  await t.step("start only behaves as the default", () => {
+    const range = getValidDateRange(
+      new Date("2026-10-30T19:00:00Z"),
+      undefined,
+      {
+        exact: true,
+      },
+    );
+    assertEquals(range.gte.toISOString(), "2026-10-30T19:00:00.000Z");
+    assertEquals(range.lte.toISOString(), "2026-11-03T07:59:59.999Z");
+  });
+
+  await t.step("end only behaves as the default", () => {
+    const range = getValidDateRange(undefined, "2026-11-02T20:00:00Z", {
+      exact: true,
+    });
+    assertEquals(range.gte.toISOString(), "2026-10-30T07:00:00.000Z");
+    assertEquals(range.lte.toISOString(), "2026-11-02T20:00:00.000Z");
+  });
+
+  await t.step("neither bound behaves as the default", () => {
+    const range = getValidDateRange(undefined, undefined, { exact: true });
+    assertEquals(range.lte.getTime(), endOfPacificDay(new Date()).getTime());
+  });
+});

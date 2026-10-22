@@ -3,7 +3,8 @@
  * (`America/Los_Angeles`), whatever the device's zone.
  *
  * Day snapping applies to the defaults and to two bounds within five minutes
- * of each other; any other bounds pass through as given. A string without a
+ * of each other; any other bounds pass through as given. Pass `{ exact: true }`
+ * to stop two given bounds from being widened. A string without a
  * zone is parsed in the device's zone, so pass a Date or an ISO string with an
  * offset to be unambiguous.
  *
@@ -22,6 +23,15 @@
  * const yetAnother = getValidDateRange("03-17-1994");
  * console.log(yetAnother);
  * // Prints: { gte: 1994-03-17T08:00:00.000Z, lte: 1994-03-21T07:59:59.999Z }
+ *
+ * // Opt out of the five-minute widening to get a short, exact window.
+ * const exactRange = getValidDateRange(
+ *   "2025-09-25T18:00:00Z",
+ *   "2025-09-25T18:02:00Z",
+ *   { exact: true },
+ * );
+ * console.log(exactRange);
+ * // Prints: { gte: 2025-09-25T18:00:00.000Z, lte: 2025-09-25T18:02:00.000Z }
  *
  * const lastThreeDays = getValidDateRange();
  * console.log(lastThreeDays);
@@ -61,16 +71,18 @@ function getValidDate(timestamp: Date | string | number): Date {
 
 /**
  * Orders two dates, widening them to span whole Pacific days if they are
- * within five minutes of each other.
+ * within five minutes of each other, unless `exact` is set.
  *
  * @param timestampGte The first date.
  * @param timestampLte The second date.
+ * @param exact When true, return the ordered dates without widening.
  *
  * @returns The ordered, adjusted range.
  */
 function ensureValidRange(
   timestampGte: Date | string | number,
   timestampLte: Date | string | number,
+  exact: boolean,
 ): DateRange {
   const [earlier, later] = [
     getValidDate(timestampGte),
@@ -80,7 +92,7 @@ function ensureValidRange(
 
   const fiveMinutes = 5 * 60 * 1000;
 
-  if (later.getTime() - earlier.getTime() <= fiveMinutes) {
+  if (!exact && later.getTime() - earlier.getTime() <= fiveMinutes) {
     return { gte: startOfPacificDay(earlier), lte: endOfPacificDay(later) };
   }
 
@@ -102,6 +114,21 @@ function deriveTimestampGte(timestampLte: Date): Date {
  * The data structure returned by getValidDateRange.
  */
 type DateRange = { gte: Date; lte: Date };
+
+/**
+ * Options for getValidDateRange.
+ */
+export interface ValidDateRangeOptions {
+  /**
+   * When true, two given bounds are validated and ordered but never widened:
+   * bounds within five minutes of each other are returned as given. Missing
+   * bounds still default as usual (snapped to Pacific days).
+   *
+   * @defaultValue false
+   */
+  exact?: boolean;
+}
+
 /**
  * Get a valid date range from the provided timestamps, if any. Days are
  * Pacific (`America/Los_Angeles`) calendar days, whatever the device's zone.
@@ -110,21 +137,38 @@ type DateRange = { gte: Date; lte: Date };
  * - Only `timestampGte`: from it to the end of the Pacific day 3 days later.
  * - Only `timestampLte`: from the start of the Pacific day 3 days earlier to it.
  * - Both: ordered; if within five minutes of each other, widened to whole
- *   Pacific days.
+ *   Pacific days, unless `options.exact` is true, in which case they are
+ *   returned as given.
  *
  * Bounds later than now are allowed. Date arguments are never mutated.
  *
  * @param timestampGte The beginning timestamp of the date range
  * @param timestampLte The ending timestamp of the date range
+ * @param options Optional settings; `exact` turns off the five-minute widening
+ *
+ * @example Exact short window
+ * ```ts
+ * const { gte, lte } = getValidDateRange(
+ *   "2026-10-22T18:00:00Z",
+ *   "2026-10-22T18:02:00Z",
+ *   { exact: true },
+ * );
+ * // gte: 2026-10-22T18:00:00.000Z, lte: 2026-10-22T18:02:00.000Z
+ * ```
  *
  * @returns A DateRange object ready to be consumed by the SJVAir
  */
 export function getValidDateRange(
   timestampGte?: Date | string | number,
   timestampLte?: Date | string | number,
+  options?: ValidDateRangeOptions,
 ): DateRange {
   if (timestampGte !== undefined && timestampLte !== undefined) {
-    return ensureValidRange(timestampGte, timestampLte);
+    return ensureValidRange(
+      timestampGte,
+      timestampLte,
+      options?.exact === true,
+    );
   }
 
   if (timestampGte !== undefined) {
