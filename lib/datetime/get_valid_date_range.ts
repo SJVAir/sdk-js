@@ -2,6 +2,11 @@
  * A utility for generating valid date ranges. Days are snapped in Pacific time
  * (`America/Los_Angeles`), whatever the device's zone.
  *
+ * Day snapping applies to the defaults and to two bounds within five minutes
+ * of each other; any other bounds pass through as given. A string without a
+ * zone is parsed in the device's zone, so pass a Date or an ISO string with an
+ * offset to be unambiguous.
+ *
  * @example Usage
  * ```ts
  * import { getValidDateRange } from "@sjvair/sdk/datetime";

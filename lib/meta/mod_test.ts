@@ -1,5 +1,5 @@
 import { setOrigin } from "$http";
-import { getSimpleValidationTest } from "$testing";
+import { getSimpleValidationTest, isUnavailable } from "$testing";
 import catalogFixture from "./fixtures/dataset_catalog.json" with {
   type: "json",
 };
@@ -104,6 +104,7 @@ let catalog: DatasetCatalog | undefined;
 try {
   catalog = await getDatasetCatalog();
 } catch (error) {
+  if (!isUnavailable(error)) throw error;
   console.warn(
     "Skipping the meta/datasets integration steps: the endpoint is " +
       `unavailable (${(error as Error).message}).`,
@@ -234,7 +235,8 @@ Deno.test({
             getCoverage({
               dataset: "air-quality",
               entry_type: "pm25",
-              region: { type: "land_use", external_id: "x" },
+              // deno-lint-ignore no-explicit-any
+              region: { type: "land_use", external_id: "x" } as any,
             }),
           Error,
           "Land-use",
@@ -246,16 +248,6 @@ Deno.test({
     });
   },
 });
-
-// Skip only when the dev server lacks the endpoint (404) or can't be reached;
-// any other failure is a real one and must surface.
-function isUnavailable(error: unknown): boolean {
-  if (error instanceof TypeError) return true;
-  const cause =
-    (error as { cause?: { status?: number; result?: { status?: number } } })
-      ?.cause;
-  return cause?.status === 404 || cause?.result?.status === 404;
-}
 
 let airQualityCoverage: Coverage | undefined;
 try {

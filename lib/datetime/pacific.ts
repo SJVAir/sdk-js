@@ -161,7 +161,9 @@ export function endOfPacificDay(date: Date): Date {
 
 /**
  * Moves `date` by whole Pacific calendar days, keeping its Pacific wall-clock
- * time (so a step across a DST change is 23 or 25 hours, not 24).
+ * time (so a step across a DST change is 23 or 25 hours, not 24). A wall time
+ * that doesn't exist (inside the spring-forward gap) resolves one hour earlier,
+ * e.g. 02:30 becomes 01:30 PST.
  *
  * @param date Any instant.
  * @param days The number of days to move; negative moves back.

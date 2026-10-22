@@ -86,10 +86,11 @@ Deno.test("getRegionsByCode returns [] for an empty result", async () => {
 });
 
 Deno.test("getRegionsByCode throws before calling when it can't be served", async () => {
-  const stub = stubFetch();
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
   try {
     await assertRejects(
-      () => getRegionsByCode("land_use", ["1"]),
+      // deno-lint-ignore no-explicit-any
+      () => getRegionsByCode("land_use" as any, ["1"]),
       Error,
       "Land-use",
     );
@@ -146,6 +147,41 @@ Deno.test("getLocationsByCode throws before calling past 100 codes", async () =>
     );
     assertEquals(await getLocationsByCode("cde-public", []), []);
     assertEquals(stub.calls.length, 0);
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getRegionsByCode drops rows the server returned unfiltered", async () => {
+  const stub = stubFetch(() =>
+    jsonResponse({
+      data: [
+        { ...regions[0], external_id: "06019" },
+        { ...regions[1], external_id: "06029" },
+        { ...regions[1], external_id: null },
+      ],
+    })
+  );
+  try {
+    const found = await getRegionsByCode("county", [" 06019 "]);
+    assertEquals(found.map((region) => region.external_id), ["06019"]);
+    assertEquals(await getRegionsByCode("county", ["99999"]), []);
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getLocationsByCode drops rows the server returned unfiltered", async () => {
+  const stub = stubFetch(() => jsonResponse(cdssCclFixture));
+  try {
+    const [site] = childCare;
+    assertEquals(site.aliases.length > 0, true);
+    // Matches by alias, and an unrelated code matches nothing.
+    assertEquals(
+      (await getLocationsByCode("cdss-ccl", [site.aliases[0]])).length,
+      1,
+    );
+    assertEquals(await getLocationsByCode("cdss-ccl", ["unrelated"]), []);
   } finally {
     stub.restore();
   }

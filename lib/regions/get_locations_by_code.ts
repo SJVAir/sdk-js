@@ -13,7 +13,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import { LOOKUP_MAX_CODES } from "./get_regions_by_code.ts";
+import { LOOKUP_MAX_CODES } from "./lookup.ts";
 import type { Location, LocationSource } from "./types.ts";
 
 /**
@@ -41,9 +41,17 @@ export async function getLocationsByCode(
   }
   if (codes.length === 0) return [];
 
-  return await jsonCall<Array<Location>>({
+  const wanted = new Set(codes.map((code) => code.trim()));
+  const locations = await jsonCall<Array<Location>>({
     url: "regions/locations",
     searchParams: { source, external_id: codes.join(",") },
     options,
   });
+
+  // Keep only the locations asked for, by `external_id` or any alias, in case
+  // a server ignores the code filter.
+  return locations.filter((location) =>
+    wanted.has(location.external_id) ||
+    location.aliases.some((alias) => wanted.has(alias))
+  );
 }

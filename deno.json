@@ -5,6 +5,9 @@
   "tasks": {
     "dev": "deno run --watch main.ts"
   },
+  "publish": {
+    "exclude": ["**/*_test.ts", "**/*_test_utils.ts", "**/fixtures/"]
+  },
   "exports": {
     ".": "./mod.ts",
     "./account": "./lib/account/mod.ts",

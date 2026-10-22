@@ -61,7 +61,10 @@ export type CoverageQuery = {
   /** A monitor id (air-quality and weather only) */
   monitor?: string;
   /** A region, by its type and official code (air-quality only) */
-  region?: { type: RegionType; external_id: string };
+  region?: {
+    type: Exclude<RegionType, "land_use">;
+    external_id: string;
+  };
 };
 
 /**

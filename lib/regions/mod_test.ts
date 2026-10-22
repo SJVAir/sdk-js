@@ -1,5 +1,5 @@
 import { setOrigin } from "$http";
-import { getSimpleValidationTest } from "$testing";
+import { getSimpleValidationTest, isUnavailable } from "$testing";
 import { assertEquals, assertExists, assertRejects } from "@std/assert";
 import {
   locationSchema,
@@ -283,7 +283,8 @@ Deno.test({
 
         assertEquals(await getRegionsByCode("county", ["no-such-code"]), []);
         await assertRejects(
-          () => getRegionsByCode("land_use", ["1"]),
+          // deno-lint-ignore no-explicit-any
+          () => getRegionsByCode("land_use" as any, ["1"]),
           Error,
           "Land-use",
         );
@@ -318,6 +319,7 @@ let locationsAvailable = true;
 try {
   await getLocationsByCode("cdss-ccl", ["0"]);
 } catch (error) {
+  if (!isUnavailable(error)) throw error;
   locationsAvailable = false;
   console.warn(
     "Skipping the regions/locations/ integration steps: the endpoint is " +

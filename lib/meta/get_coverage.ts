@@ -13,6 +13,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
+import type { RegionType } from "../regions/types.ts";
 import type { Coverage, CoverageQuery } from "./types.ts";
 
 /**
@@ -48,7 +49,7 @@ export async function getCoverage(
   if (monitor !== undefined && region !== undefined) {
     throw new Error("getCoverage takes either a monitor or a region, not both");
   }
-  if (region?.type === "land_use") {
+  if ((region?.type as RegionType | undefined) === "land_use") {
     throw new Error("Land-use regions can't be looked up by code");
   }
 

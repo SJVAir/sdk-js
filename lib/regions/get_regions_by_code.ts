@@ -13,17 +13,18 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
+import { LOOKUP_MAX_CODES } from "./lookup.ts";
 import type { RegionListItem, RegionType } from "./types.ts";
-
-/** The most codes the API resolves in one request */
-export const LOOKUP_MAX_CODES = 100;
 
 /**
  * Fetches the regions of one type that have the given official codes (e.g.
  * county FIPS codes). Retired regions are returned too, flagged by `retired`,
  * so a stored code keeps resolving. Unknown codes are left out of the result.
+ * The result is also filtered to the requested codes, so a server that ignores
+ * the code filter yields `[]` rather than every region of the type.
  *
- * @param type The type of the regions. Land-use regions have no codes yet.
+ * @param type The type of the regions. Land-use regions have no codes yet
+ * and are rejected at runtime.
  * @param codes The codes to look up, at most 100. An empty list returns `[]`
  * without a request.
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -31,11 +32,11 @@ export const LOOKUP_MAX_CODES = 100;
  * @returns The matching regions, in no particular order.
  */
 export async function getRegionsByCode(
-  type: RegionType,
+  type: Exclude<RegionType, "land_use">,
   codes: Array<string>,
   options?: RequestOptions,
 ): Promise<Array<RegionListItem>> {
-  if (type === "land_use") {
+  if ((type as RegionType) === "land_use") {
     throw new Error("Land-use regions can't be looked up by code");
   }
   if (codes.length > LOOKUP_MAX_CODES) {
@@ -45,9 +46,16 @@ export async function getRegionsByCode(
   }
   if (codes.length === 0) return [];
 
-  return await jsonCall<Array<RegionListItem>>({
+  const wanted = new Set(codes.map((code) => code.trim()));
+  const regions = await jsonCall<Array<RegionListItem>>({
     url: "regions",
     searchParams: { type, external_id: codes.join(",") },
     options,
   });
+
+  // A server without the code filter ignores it and returns every region of
+  // the type, so keep only the ones asked for.
+  return regions.filter((region) =>
+    region.external_id !== null && wanted.has(region.external_id)
+  );
 }
