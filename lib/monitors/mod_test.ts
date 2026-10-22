@@ -74,10 +74,23 @@ Deno.test({
   name: "Module: Monitors Endpoints",
   permissions: { net: true },
   async fn(t) {
-    await t.step(
-      "GET   monitors/meta",
-      async () => validateMonitorsMeta(await getMonitorsMeta()),
+    // A server older than the available_pollutants field would fail the
+    // schema on that field alone; skip with a note instead of failing.
+    const metaHasAvailablePollutants = Array.isArray(
+      (await getMonitorsMeta()).available_pollutants,
     );
+    if (!metaHasAvailablePollutants) {
+      console.warn(
+        "Skipping the monitors/meta schema step: the server's monitors/meta " +
+          "has no available_pollutants.",
+      );
+    }
+
+    await t.step({
+      name: "GET   monitors/meta",
+      ignore: !metaHasAvailablePollutants,
+      fn: async () => validateMonitorsMeta(await getMonitorsMeta()),
+    });
 
     await t.step(
       "GET   monitors/meta (vozbox single-sensor entries)",

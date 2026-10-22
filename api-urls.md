@@ -78,6 +78,12 @@ archives
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/yearly/`
 - [x] `/api/2.0/monitors/meta/`
 
+## Meta
+
+The catalog of datasets the API serves
+
+- [x] `/api/2.0/meta/datasets/`
+
 ## Pesticides
 
 Pesticide chemicals, commodities, products, use records, application notices,
