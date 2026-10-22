@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": "j7twa",
+      "source": "cdss-ccl",
+      "external_id": "153400001",
+      "aliases": [
+        "153400002"
+      ],
+      "type": "child_care",
+      "name": "Little Ones",
+      "address": "",
+      "city_name": "",
+      "zip": "",
+      "point": {
+        "lat": 35.5,
+        "lng": -119.1
+      },
+      "regions": {
+        "county": null,
+        "city": null,
+        "zipcode": null,
+        "school_district": null
+      },
+      "retired": null
+    }
+  ]
+}

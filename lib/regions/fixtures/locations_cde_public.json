@@ -1,0 +1,57 @@
+{
+  "data": [
+    {
+      "id": "efkjt",
+      "source": "cde-public",
+      "external_id": "15634380000002",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Old School",
+      "address": "",
+      "city_name": "",
+      "zip": "",
+      "point": {
+        "lat": 35.4,
+        "lng": -119.0
+      },
+      "regions": {
+        "county": null,
+        "city": null,
+        "zipcode": null,
+        "school_district": null
+      },
+      "retired": {
+        "since": "2026-10-02",
+        "replaced_by": {
+          "source": "cde-public",
+          "external_id": "15634380000001"
+        }
+      }
+    },
+    {
+      "id": "thfr8",
+      "source": "cde-public",
+      "external_id": "15634380000001",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Test Elementary",
+      "address": "1 Main St",
+      "city_name": "Bakersfield",
+      "zip": "93301",
+      "point": {
+        "lat": 35.4,
+        "lng": -119.0
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06019"
+        },
+        "city": null,
+        "zipcode": null,
+        "school_district": null
+      },
+      "retired": null
+    }
+  ]
+}

@@ -75,6 +75,8 @@
     "./regions/get_region_places": "./lib/regions/get_region_places.ts",
     "./regions/get_region_summaries": "./lib/regions/get_region_summaries.ts",
     "./regions/get_region_summaries_bulk": "./lib/regions/get_region_summaries_bulk.ts",
+    "./regions/get_locations_by_code": "./lib/regions/get_locations_by_code.ts",
+    "./regions/get_regions_by_code": "./lib/regions/get_regions_by_code.ts",
     "./regions/get_regions_list": "./lib/regions/get_regions_list.ts",
     "./regions/get_regions_meta": "./lib/regions/get_regions_meta.ts",
     "./regions/types": "./lib/regions/types.ts"
