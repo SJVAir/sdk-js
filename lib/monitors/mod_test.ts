@@ -76,6 +76,7 @@ Deno.test({
   async fn(t) {
     // A server older than the available_pollutants field would fail the
     // schema on that field alone; skip with a note instead of failing.
+    // TODO: remove this skip once available_pollutants is on develop
     const metaHasAvailablePollutants = Array.isArray(
       (await getMonitorsMeta()).available_pollutants,
     );

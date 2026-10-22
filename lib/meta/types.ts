@@ -7,7 +7,6 @@ import type {
   datasetCatalogEntrySchema,
   datasetCatalogSchema,
   datasetEntryTypeSchema,
-  geographySchema,
   resolutionSchema,
   retiredSchema,
 } from "./schemas/mod.ts";
@@ -16,10 +15,27 @@ import type {
 export type Resolution = zinfer<typeof resolutionSchema>;
 
 /** A kind of place a dataset's data is attached to */
-export type Geography = zinfer<typeof geographySchema>;
+export type Geography =
+  | "monitor"
+  | "region"
+  | "point"
+  | "polygon"
+  | "zone"
+  | "zip"
+  | "tract"
+  // deno-lint-ignore ban-types
+  | (string & {});
 
 /** The marker on a dataset or entry type that is no longer current */
 export type Retired = zinfer<typeof retiredSchema>;
+
+/** The broad class an entry type belongs to */
+export type DatasetEntryKind =
+  | "pollutant"
+  | "meteorological"
+  | "other"
+  // deno-lint-ignore ban-types
+  | (string & {});
 
 /** One entry type of a dataset */
 export type DatasetEntryType = zinfer<typeof datasetEntryTypeSchema>;

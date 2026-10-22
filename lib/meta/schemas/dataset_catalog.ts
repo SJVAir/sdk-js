@@ -1,6 +1,9 @@
 import * as z from "zod";
 
-/** The summary resolutions a dataset entry type can be read at */
+/**
+ * The summary resolutions a dataset entry type can be read at. Deliberately
+ * closed: a new resolution needs client logic.
+ */
 export type ResolutionSchema = z.ZodEnum<{
   raw: "raw";
   hour: "hour";
@@ -22,55 +25,58 @@ export const resolutionSchema: ResolutionSchema = z.enum(
   ] as const,
 );
 
-/** The kinds of place a dataset's data can be attached to */
-export type GeographySchema = z.ZodEnum<{
-  monitor: "monitor";
-  region: "region";
-  point: "point";
-  polygon: "polygon";
-  zone: "zone";
-  zip: "zip";
-  tract: "tract";
-}>;
-export const geographySchema: GeographySchema = z.enum(
-  [
-    "monitor",
-    "region",
-    "point",
-    "polygon",
-    "zone",
-    "zip",
-    "tract",
-  ] as const,
-);
+const GEOGRAPHIES = [
+  "monitor",
+  "region",
+  "point",
+  "polygon",
+  "zone",
+  "zip",
+  "tract",
+] as const;
+const ENTRY_KINDS = ["pollutant", "meteorological", "other"] as const;
 
-/** The broad class an entry type belongs to */
-export type DatasetEntryKindSchema = z.ZodEnum<{
-  pollutant: "pollutant";
-  meteorological: "meteorological";
-  other: "other";
-}>;
-export const datasetEntryKindSchema: DatasetEntryKindSchema = z.enum(
+/**
+ * The kinds of place a dataset's data can be attached to. Known values are
+ * hints; the catalog may grow, so any string validates.
+ */
+export type GeographySchema = z.ZodUnion<
   [
-    "pollutant",
-    "meteorological",
-    "other",
-  ] as const,
-);
+    z.ZodEnum<{ [K in typeof GEOGRAPHIES[number]]: K }>,
+    z.ZodString,
+  ]
+>;
+export const geographySchema: GeographySchema = z.union([
+  z.enum(GEOGRAPHIES),
+  z.string(),
+]);
+
+/**
+ * The broad class an entry type belongs to. Known values are hints; any
+ * string validates.
+ */
+export type DatasetEntryKindSchema = z.ZodUnion<
+  [
+    z.ZodEnum<{ [K in typeof ENTRY_KINDS[number]]: K }>,
+    z.ZodString,
+  ]
+>;
+export const datasetEntryKindSchema: DatasetEntryKindSchema = z.union([
+  z.enum(ENTRY_KINDS),
+  z.string(),
+]);
 
 interface RetiredSchema extends
   z.ZodObject<{
     /** When the id was retired, as an ISO 8601 timestamp */
     since: z.ZodString;
-    /** The permanent code of whatever replaced it, if anything */
-    replaced_by: z.ZodOptional<
-      z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodString>>
-    >;
+    /** The id of the dataset or entry type that replaced it, if any */
+    replaced_by: z.ZodOptional<z.ZodNullable<z.ZodString>>;
   }> {}
 /** The marker on a dataset or entry type that is no longer current */
 export const retiredSchema: RetiredSchema = z.object({
   since: z.string(),
-  replaced_by: z.record(z.string(), z.string()).nullable().optional(),
+  replaced_by: z.string().nullable().optional(),
 });
 
 interface DatasetEntryTypeSchema extends

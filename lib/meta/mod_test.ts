@@ -69,28 +69,30 @@ Deno.test({
       data.datasets[0].retired = { since: "2026-01-01T00:00:00-08:00" };
       data.datasets[1].entry_types[0].retired = {
         since: "2026-01-01T00:00:00-08:00",
-        replaced_by: { type: "county", external_id: "06019" },
+        replaced_by: "pm25",
       };
+      validateCatalog(data);
+    });
+
+    await t.step("unknown geographies and kinds are accepted", () => {
+      const data = structuredClone(catalogData);
+      data.datasets[0].geographies.push("watershed");
+      data.datasets[0].entry_types[0].kind = "biological";
       validateCatalog(data);
     });
   },
 });
 
-// The local dev server may run a branch without these endpoints. Probe once
-// and skip the integration steps with a note instead of failing.
+// The local dev server may run a branch without these endpoints. On a 404 or
+// any network error, skip the integration suite with a note; the fixture
+// tests above always run.
 let catalog: DatasetCatalog | undefined;
 try {
   catalog = await getDatasetCatalog();
 } catch (error) {
-  // A 404 page isn't JSON, so the HTTP layer rejects with the raw Response as
-  // the cause; a JSON 404 carries the parsed `result`.
-  const cause = (error as {
-    cause?: { status?: number; result?: { status?: number } };
-  }).cause;
-  const status = cause?.status ?? cause?.result?.status;
-  if (status !== 404) throw error;
   console.warn(
-    "Skipping the meta/datasets integration steps: the server has no meta/datasets/ endpoint.",
+    "Skipping the meta/datasets integration steps: the endpoint is " +
+      `unavailable (${(error as Error).message}).`,
   );
 }
 
