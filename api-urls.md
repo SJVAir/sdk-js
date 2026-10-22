@@ -78,6 +78,13 @@ archives
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/yearly/`
 - [x] `/api/2.0/monitors/meta/`
 
+## Meta
+
+The catalog of datasets the API serves
+
+- [x] `/api/2.0/meta/datasets/`
+- [x] `/api/2.0/meta/coverage/`
+
 ## Pesticides
 
 Pesticide chemicals, commodities, products, use records, application notices,
@@ -102,6 +109,8 @@ and region-level use summaries
 Region and place lookups, boundaries, and region-level entry summaries
 
 - [x] `/api/2.0/regions/`
+- [x] `/api/2.0/regions/?type=<type>&external_id=<code>,<code>`
+- [x] `/api/2.0/regions/locations/?source=<source>&external_id=<code>,<code>`
 - [x] `/api/2.0/regions/places/search/`
 - [x] `/api/2.0/regions/places/lookup/`
 - [x] `/api/2.0/regions/<region_id>/`

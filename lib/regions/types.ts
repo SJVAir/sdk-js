@@ -6,6 +6,8 @@ import type { infer as zinfer } from "zod";
 import type {
   boundaryListSchema,
   boundarySchema,
+  locationSchema,
+  locationSourceSchema,
   regionCategorySchema,
   regionListItemSchema,
   regionSchema,
@@ -14,6 +16,8 @@ import type {
   regionTypeMetaSchema,
   regionTypeSchema,
   regionWithSummariesSchema,
+  retiredLocationSchema,
+  retiredRegionSchema,
 } from "./schemas/mod.ts";
 
 /** The type of geography a region represents */
@@ -42,7 +46,8 @@ export type RegionSummary = zinfer<typeof regionSummarySchema>;
 
 /**
  * A Region object with its matching bulk summary rows attached. It has no
- * `boundary`; get that from the regions list or the region's details.
+ * `external_id`, `retired` or `boundary`; get those from the regions list or
+ * the region's details.
  */
 export type RegionWithSummaries = zinfer<typeof regionWithSummariesSchema>;
 
@@ -51,3 +56,15 @@ export type RegionTypeMeta = zinfer<typeof regionTypeMetaSchema>;
 
 /** The metadata returned from regions/meta */
 export type RegionsMetaData = zinfer<typeof regionsMetaSchema>;
+
+/** The marker a retired region carries; its code still resolves */
+export type RegionRetired = zinfer<typeof retiredRegionSchema>;
+
+/** Where a location's code comes from */
+export type LocationSource = zinfer<typeof locationSourceSchema>;
+
+/** A school or child care location, looked up by its official code */
+export type Location = zinfer<typeof locationSchema>;
+
+/** The marker a retired location carries; its code still resolves */
+export type LocationRetired = zinfer<typeof retiredLocationSchema>;

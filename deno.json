@@ -1,9 +1,12 @@
 {
   "name": "@sjvair/sdk",
-  "version": "4.7.0",
+  "version": "4.8.0-beta.1",
   "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
+  },
+  "publish": {
+    "exclude": ["**/*_test.ts", "**/*_test_utils.ts", "**/fixtures/"]
   },
   "exports": {
     ".": "./mod.ts",
@@ -25,6 +28,8 @@
     "./datetime": "./lib/datetime/mod.ts",
     "./datetime/api_date_format": "./lib/datetime/api_date_format.ts",
     "./datetime/get_valid_date_range": "./lib/datetime/get_valid_date_range.ts",
+    "./datetime/pacific": "./lib/datetime/pacific.ts",
+    "./datetime/to_api_timestamp": "./lib/datetime/to_api_timestamp.ts",
     "./hms": "./lib/hms/mod.ts",
     "./hms/fire": "./lib/hms/fire/mod.ts",
     "./hms/fire/get_fire": "./lib/hms/fire/get_fire.ts",
@@ -37,6 +42,10 @@
     "./http/error": "./lib/http/error.ts",
     "./http/origin": "./lib/http/origin.ts",
     "./http/requests": "./lib/http/requests.ts",
+    "./meta": "./lib/meta/mod.ts",
+    "./meta/get_coverage": "./lib/meta/get_coverage.ts",
+    "./meta/get_dataset_catalog": "./lib/meta/get_dataset_catalog.ts",
+    "./meta/types": "./lib/meta/types.ts",
     "./monitors": "./lib/monitors/mod.ts",
     "./monitors/get_closest_monitor": "./lib/monitors/get_closest_monitor.ts",
     "./monitors/get_monitor_archives": "./lib/monitors/get_monitor_archives.ts",
@@ -70,6 +79,8 @@
     "./regions/get_region_places": "./lib/regions/get_region_places.ts",
     "./regions/get_region_summaries": "./lib/regions/get_region_summaries.ts",
     "./regions/get_region_summaries_bulk": "./lib/regions/get_region_summaries_bulk.ts",
+    "./regions/get_locations_by_code": "./lib/regions/get_locations_by_code.ts",
+    "./regions/get_regions_by_code": "./lib/regions/get_regions_by_code.ts",
     "./regions/get_regions_list": "./lib/regions/get_regions_list.ts",
     "./regions/get_regions_meta": "./lib/regions/get_regions_meta.ts",
     "./regions/types": "./lib/regions/types.ts"

@@ -1,13 +1,16 @@
 import { setOrigin } from "$http";
-import { getSimpleValidationTest } from "$testing";
+import { getSimpleValidationTest, isUnavailable } from "$testing";
 import { assertEquals, assertExists, assertRejects } from "@std/assert";
 import {
+  locationSchema,
   regionListItemSchema,
   regionSchema,
   regionsMetaSchema,
   regionSummarySchema,
   regionWithSummariesSchema,
 } from "./schemas/mod.ts";
+import { getLocationsByCode } from "./get_locations_by_code.ts";
+import { getRegionsByCode } from "./get_regions_by_code.ts";
 import { getRegionsList } from "./get_regions_list.ts";
 import { getRegionDetails } from "./get_region_details.ts";
 import { lookupRegionPlace, searchRegionPlaces } from "./get_region_places.ts";
@@ -26,12 +29,23 @@ if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
 
-const validateRegion = getSimpleValidationTest(regionSchema);
-const validateRegionListItem = getSimpleValidationTest(regionListItemSchema);
+// A server older than the external_id/retired fields would fail the region
+// schemas on those fields alone; the validators below pass through (and the
+// lookup-by-code steps skip) with a note instead.
+// TODO: remove once on develop
+let hasCodes = true;
+const skippable = <T>(validate: (data: T) => void) => (data: T) => {
+  if (hasCodes) validate(data);
+};
+
+const validateRegion = skippable(getSimpleValidationTest(regionSchema));
+const validateRegionListItem = skippable(
+  getSimpleValidationTest(regionListItemSchema),
+);
 const validateRegionSummary = getSimpleValidationTest(regionSummarySchema);
 const validateRegionsMeta = getSimpleValidationTest(regionsMetaSchema);
-const validateRegionWithSummaries = getSimpleValidationTest(
-  regionWithSummariesSchema,
+const validateRegionWithSummaries = skippable(
+  getSimpleValidationTest(regionWithSummariesSchema),
 );
 
 Deno.test({
@@ -42,10 +56,18 @@ Deno.test({
     // unfiltered regions/ call returns a multi-hundred-MB response. Always
     // scope test setup with a filter to keep the suite fast.
     const counties = await getRegionsList({ type: "county" });
-    validateRegionListItem(counties);
 
     const county = counties[0];
     assertExists(county, "No county region found in regions/ response");
+
+    hasCodes = "external_id" in county && "retired" in county;
+    if (!hasCodes) {
+      console.warn(
+        "Skipping the region schema and lookup-by-code checks: the server's " +
+          "regions have no external_id/retired fields.",
+      );
+    }
+    validateRegionListItem(counties);
 
     const summaryYear = new Date().getFullYear();
 
@@ -248,6 +270,27 @@ Deno.test({
       },
     );
 
+    await t.step({
+      name: "GET  regions/ (type + external_id lookup)",
+      ignore: !hasCodes,
+      fn: async () => {
+        const code = county.external_id;
+        assertExists(code, "The first county has no external_id");
+
+        const found = await getRegionsByCode("county", [code]);
+        validateRegionListItem(found);
+        assertEquals(found.map((region) => region.id), [county.id]);
+
+        assertEquals(await getRegionsByCode("county", ["no-such-code"]), []);
+        await assertRejects(
+          // deno-lint-ignore no-explicit-any
+          () => getRegionsByCode("land_use" as any, ["1"]),
+          Error,
+          "Land-use",
+        );
+      },
+    });
+
     await t.step(
       "GET  regions/meta",
       async () => validateRegionsMeta(await getRegionsMeta()),
@@ -266,5 +309,49 @@ Deno.test({
         assertEquals(countyMeta.category, "administrative");
       },
     );
+  },
+});
+
+// The local dev server may run a branch without regions/locations/. On a 404
+// or any network error, skip the location lookup with a note; the fixture
+// tests in lookup_by_code_test.ts always run.
+let locationsAvailable = true;
+try {
+  await getLocationsByCode("cdss-ccl", ["0"]);
+} catch (error) {
+  if (!isUnavailable(error)) throw error;
+  locationsAvailable = false;
+  console.warn(
+    "Skipping the regions/locations/ integration steps: the endpoint is " +
+      `unavailable (${(error as Error).message}).`,
+  );
+}
+
+Deno.test({
+  name: "Module: Regions Endpoints (locations by code)",
+  permissions: { net: true },
+  ignore: !locationsAvailable,
+  async fn(t) {
+    await t.step("GET  regions/locations/ (unknown code)", async () => {
+      assertEquals(await getLocationsByCode("cdss-ccl", ["no-such-code"]), []);
+    });
+
+    // Needs a cdss-ccl row in the local database; there is no list endpoint
+    // to find one, so TEST_LOCATION_CCL_ID can name a known code.
+    const knownCode = Deno.env.get("TEST_LOCATION_CCL_ID");
+    await t.step({
+      name: "GET  regions/locations/ (cdss-ccl round trip)",
+      ignore: !knownCode,
+      fn: async () => {
+        const found = await getLocationsByCode("cdss-ccl", [knownCode!]);
+        getSimpleValidationTest(locationSchema)(found);
+        assertEquals(found.length, 1);
+        assertEquals(
+          found[0].external_id === knownCode ||
+            found[0].aliases.includes(knownCode!),
+          true,
+        );
+      },
+    });
   },
 });
