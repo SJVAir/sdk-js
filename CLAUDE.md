@@ -180,6 +180,14 @@ the request `body` replaced by `"[redacted]"`.
 Pushing a `v*` git tag triggers the GitHub Actions workflow which runs
 `deno publish` to JSR. Update `"version"` in `deno.json` before tagging.
 
+**Branches (decided 2026-10-25):** `main` matches the latest published release.
+Work for an upcoming version goes through a `release/<version>` branch (e.g.
+`release/4.8.0`), created from `main`. Feature and fix branches open their PRs
+into that release branch, and pre-releases (`<version>-beta.N`) are tagged from
+it. At the final release, the release branch merges into `main` and `v<version>`
+is tagged there. Only urgent fixes to the current release go straight to `main`
+(as a patch version), and they are then merged into the open release branch.
+
 **Standing restriction:** NEVER push a `v*` tag, run `deno publish`, or
 otherwise trigger this workflow without the user's explicit permission for that
 specific publish — every single time. Approval for one publish does not carry
