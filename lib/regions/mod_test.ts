@@ -329,7 +329,7 @@ try {
 
 Deno.test({
   name: "Module: Regions Endpoints (locations by code)",
-  permissions: { net: true },
+  permissions: { net: true, env: ["TEST_LOCATION_CCL_ID"] },
   ignore: !locationsAvailable,
   async fn(t) {
     await t.step("GET  regions/locations/ (unknown code)", async () => {
