@@ -175,6 +175,10 @@ the request `body` replaced by `"[redacted]"`.
   `@module` tag.
 - **`api-urls.md`** tracks which API endpoints are implemented — update it when
   adding new endpoints.
+- **`DEFERRED.md`** is the register of deferred SDK work, including breaking
+  changes waiting for the next major version. Add an entry (with why and a
+  revisit trigger) whenever something is deferred, and check it when planning a
+  major release.
 
 ## Publishing
 
