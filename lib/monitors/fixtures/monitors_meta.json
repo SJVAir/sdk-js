@@ -1,0 +1,1232 @@
+{
+  "data": {
+    "default_pollutant": "pm25",
+    "available_pollutants": [
+      "o3",
+      "pm25"
+    ],
+    "monitors": {
+      "airgradient": {
+        "label": "AirGradient",
+        "type": "airgradient",
+        "expected_interval": "1 min",
+        "entries": {
+          "humidity": {
+            "sensors": [
+              "1",
+              "2"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw",
+              "calibrated"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "AirGradientHumidity",
+            "processors": {
+              "raw": [
+                "AirGradientHumidity"
+              ]
+            }
+          },
+          "particulates": {
+            "sensors": [
+              "1",
+              "2"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm10": {
+            "sensors": [
+              "1",
+              "2"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm100": {
+            "sensors": [
+              "1",
+              "2"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm25": {
+            "sensors": [
+              "1",
+              "2"
+            ],
+            "published": true,
+            "allowed_stages": [
+              "raw",
+              "corrected",
+              "cleaned",
+              "calibrated"
+            ],
+            "default_stage": "cleaned",
+            "default_calibration": "PM25_EPA_Oct2021",
+            "processors": {
+              "raw": [
+                "PM25_LCS_Correction"
+              ],
+              "corrected": [
+                "PM25_LCS_Cleaning"
+              ],
+              "cleaned": [
+                "PM25_EPA_Oct2021",
+                "PM25_MultivariateLinearRegression",
+                "PM25_UnivariateLinearRegression"
+              ]
+            }
+          },
+          "temperature": {
+            "sensors": [
+              "1",
+              "2"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw",
+              "calibrated"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "AirGradientTemperature",
+            "processors": {
+              "raw": [
+                "AirGradientTemperature"
+              ]
+            }
+          }
+        }
+      },
+      "airnow": {
+        "label": "AirNow",
+        "type": "airnow",
+        "expected_interval": "1 hour",
+        "entries": {
+          "co": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "no2": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "o3": {
+            "sensors": null,
+            "published": true,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm100": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm25": {
+            "sensors": null,
+            "published": true,
+            "allowed_stages": [
+              "raw",
+              "cleaned"
+            ],
+            "default_stage": "cleaned",
+            "default_calibration": "PM25_FEM_Cleaner",
+            "processors": {
+              "raw": [
+                "PM25_FEM_Cleaner"
+              ]
+            }
+          },
+          "so2": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          }
+        }
+      },
+      "aqlite": {
+        "label": "AQLite",
+        "type": "aqlite",
+        "expected_interval": "5 min",
+        "entries": {
+          "co2": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "humidity": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "o3": {
+            "sensors": null,
+            "published": true,
+            "allowed_stages": [
+              "raw",
+              "cleaned",
+              "calibrated"
+            ],
+            "default_stage": "calibrated",
+            "default_calibration": "AQLiteHourlyAggregator",
+            "processors": {
+              "raw": [
+                "AQLiteRawCleaner"
+              ]
+            }
+          },
+          "pressure": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "temperature": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          }
+        }
+      },
+      "aqview": {
+        "label": "AQview",
+        "type": "aqview",
+        "expected_interval": "1 hour",
+        "entries": {
+          "pm25": {
+            "sensors": null,
+            "published": true,
+            "allowed_stages": [
+              "raw",
+              "cleaned"
+            ],
+            "default_stage": "cleaned",
+            "default_calibration": "PM25_FEM_Cleaner",
+            "processors": {
+              "raw": [
+                "PM25_FEM_Cleaner"
+              ]
+            }
+          }
+        }
+      },
+      "bam1022": {
+        "label": "BAM 1022",
+        "type": "bam1022",
+        "expected_interval": "1 hour",
+        "entries": {
+          "humidity": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm25": {
+            "sensors": null,
+            "published": true,
+            "allowed_stages": [
+              "raw",
+              "cleaned"
+            ],
+            "default_stage": "cleaned",
+            "default_calibration": "PM25_FEM_Cleaner",
+            "processors": {
+              "raw": [
+                "PM25_FEM_Cleaner"
+              ]
+            }
+          },
+          "pressure": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "temperature": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          }
+        }
+      },
+      "purpleair": {
+        "label": "PurpleAir",
+        "type": "purpleair",
+        "expected_interval": "2 min",
+        "entries": {
+          "humidity": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw",
+              "calibrated"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "AirGradientHumidity",
+            "processors": {
+              "raw": [
+                "AirGradientHumidity"
+              ]
+            }
+          },
+          "particulates": {
+            "sensors": [
+              "a",
+              "b"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm10": {
+            "sensors": [
+              "a",
+              "b"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm100": {
+            "sensors": [
+              "a",
+              "b"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm25": {
+            "sensors": [
+              "a",
+              "b"
+            ],
+            "published": true,
+            "allowed_stages": [
+              "raw",
+              "corrected",
+              "cleaned",
+              "calibrated"
+            ],
+            "default_stage": "cleaned",
+            "default_calibration": "PM25_EPA_Oct2021",
+            "processors": {
+              "raw": [
+                "PM25_LCS_Correction"
+              ],
+              "corrected": [
+                "PM25_LCS_Cleaning"
+              ],
+              "cleaned": [
+                "PM25_EPA_Oct2021",
+                "PM25_MultivariateLinearRegression",
+                "PM25_UnivariateLinearRegression"
+              ]
+            }
+          },
+          "pressure": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "temperature": {
+            "sensors": null,
+            "published": false,
+            "allowed_stages": [
+              "raw",
+              "calibrated"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "AirGradientTemperature",
+            "processors": {
+              "raw": [
+                "AirGradientTemperature"
+              ]
+            }
+          }
+        }
+      },
+      "vozbox": {
+        "label": "VOZbox",
+        "type": "vozbox",
+        "expected_interval": "10 min",
+        "entries": {
+          "humidity": {
+            "sensors": [
+              "1"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "o3": {
+            "sensors": [
+              "1"
+            ],
+            "published": true,
+            "allowed_stages": [
+              "raw",
+              "calibrated"
+            ],
+            "default_stage": "calibrated",
+            "default_calibration": "VOZBox_QuinnCal",
+            "processors": {
+              "raw": [
+                "O3_VOZBox"
+              ]
+            }
+          },
+          "pm10": {
+            "sensors": [
+              "plantower",
+              "sensirion"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm100": {
+            "sensors": [
+              "plantower",
+              "sensirion"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "pm25": {
+            "sensors": [
+              "plantower",
+              "sensirion"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          },
+          "temperature": {
+            "sensors": [
+              "1"
+            ],
+            "published": false,
+            "allowed_stages": [
+              "raw"
+            ],
+            "default_stage": "raw",
+            "default_calibration": "",
+            "processors": {}
+          }
+        }
+      }
+    },
+    "entries": {
+      "humidity": {
+        "label": "Humidity",
+        "type": "humidity",
+        "units": "%",
+        "epa_aqs_code": 62201,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "pm100": {
+        "label": "PM10.0",
+        "type": "pm100",
+        "units": "µg/m³",
+        "epa_aqs_code": 81102,
+        "levels": {
+          "GOOD": {
+            "name": "good",
+            "label": "Good",
+            "color": "#00e400",
+            "range": [
+              0,
+              54.9
+            ],
+            "guidance": null
+          },
+          "MODERATE": {
+            "name": "moderate",
+            "label": "Moderate",
+            "color": "#ffff00",
+            "range": [
+              55,
+              154.9
+            ],
+            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY_SENSITIVE": {
+            "name": "unhealthy_sensitive",
+            "label": "Unhealthy for Sensitive Groups",
+            "color": "#ff7e00",
+            "range": [
+              155,
+              254.9
+            ],
+            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY": {
+            "name": "unhealthy",
+            "label": "Unhealthy",
+            "color": "#ff0000",
+            "range": [
+              255,
+              354.9
+            ],
+            "guidance": "Everyone should reduce prolonged or heavy exertion."
+          },
+          "VERY_UNHEALTHY": {
+            "name": "very_unhealthy",
+            "label": "Very Unhealthy",
+            "color": "#8f3f97",
+            "range": [
+              355,
+              424.9
+            ],
+            "guidance": "Everyone should avoid prolonged or heavy exertion."
+          },
+          "HAZARDOUS": {
+            "name": "hazardous",
+            "label": "Hazardous",
+            "color": "#7e0023",
+            "range": [
+              425,
+              604.9
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          },
+          "VERY_HAZARDOUS": {
+            "name": "very_hazardous",
+            "label": "Very Hazardous",
+            "color": "#7e0023",
+            "range": [
+              605,
+              99999
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          }
+        },
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "winddirection": {
+        "label": "Wind Direction",
+        "type": "winddirection",
+        "units": "°",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "etr": {
+        "label": "Alfalfa Reference Evapotranspiration",
+        "type": "etr",
+        "units": "in",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "pressure": {
+        "label": "Atmospheric Pressure",
+        "type": "pressure",
+        "units": "mmHg",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "co2": {
+        "label": "Carbon Dioxide",
+        "type": "co2",
+        "units": "ppm",
+        "epa_aqs_code": 42102,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "co": {
+        "label": "Carbon Monoxide",
+        "type": "co",
+        "units": "ppm",
+        "epa_aqs_code": 42101,
+        "levels": {
+          "GOOD": {
+            "name": "good",
+            "label": "Good",
+            "color": "#00e400",
+            "range": [
+              0.0,
+              4.4
+            ],
+            "guidance": null
+          },
+          "MODERATE": {
+            "name": "moderate",
+            "label": "Moderate",
+            "color": "#ffff00",
+            "range": [
+              4.5,
+              9.4
+            ],
+            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY_SENSITIVE": {
+            "name": "unhealthy_sensitive",
+            "label": "Unhealthy for Sensitive Groups",
+            "color": "#ff7e00",
+            "range": [
+              9.5,
+              12.4
+            ],
+            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY": {
+            "name": "unhealthy",
+            "label": "Unhealthy",
+            "color": "#ff0000",
+            "range": [
+              12.5,
+              15.4
+            ],
+            "guidance": "Everyone should reduce prolonged or heavy exertion."
+          },
+          "VERY_UNHEALTHY": {
+            "name": "very_unhealthy",
+            "label": "Very Unhealthy",
+            "color": "#8f3f97",
+            "range": [
+              15.5,
+              30.4
+            ],
+            "guidance": "Everyone should avoid prolonged or heavy exertion."
+          },
+          "HAZARDOUS": {
+            "name": "hazardous",
+            "label": "Hazardous",
+            "color": "#7e0023",
+            "range": [
+              30.5,
+              50.3
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          },
+          "VERY_HAZARDOUS": {
+            "name": "very_hazardous",
+            "label": "Very Hazardous",
+            "color": "#7e0023",
+            "range": [
+              50.4,
+              99999
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          }
+        },
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "so2": {
+        "label": "Sulfur Dioxide",
+        "type": "so2",
+        "units": "ppb",
+        "epa_aqs_code": 42401,
+        "levels": {
+          "GOOD": {
+            "name": "good",
+            "label": "Good",
+            "color": "#00e400",
+            "range": [
+              0,
+              35.9
+            ],
+            "guidance": null
+          },
+          "MODERATE": {
+            "name": "moderate",
+            "label": "Moderate",
+            "color": "#ffff00",
+            "range": [
+              36,
+              75.9
+            ],
+            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY_SENSITIVE": {
+            "name": "unhealthy_sensitive",
+            "label": "Unhealthy for Sensitive Groups",
+            "color": "#ff7e00",
+            "range": [
+              76,
+              185.9
+            ],
+            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY": {
+            "name": "unhealthy",
+            "label": "Unhealthy",
+            "color": "#ff0000",
+            "range": [
+              186,
+              304.9
+            ],
+            "guidance": "Everyone should reduce prolonged or heavy exertion."
+          },
+          "VERY_UNHEALTHY": {
+            "name": "very_unhealthy",
+            "label": "Very Unhealthy",
+            "color": "#8f3f97",
+            "range": [
+              305,
+              99999
+            ],
+            "guidance": "Everyone should avoid prolonged or heavy exertion."
+          }
+        },
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "particulates": {
+        "label": "Particulates",
+        "type": "particulates",
+        "units": null,
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "particles_03um",
+          "particles_05um",
+          "particles_10um",
+          "particles_25um",
+          "particles_50um",
+          "particles_100um"
+        ]
+      },
+      "eto": {
+        "label": "Reference Evapotranspiration",
+        "type": "eto",
+        "units": "in",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "no2": {
+        "label": "Nitrogen Dioxide",
+        "type": "no2",
+        "units": "ppb",
+        "epa_aqs_code": 42602,
+        "levels": {
+          "GOOD": {
+            "name": "good",
+            "label": "Good",
+            "color": "#00e400",
+            "range": [
+              0.0,
+              53.9
+            ],
+            "guidance": null
+          },
+          "MODERATE": {
+            "name": "moderate",
+            "label": "Moderate",
+            "color": "#ffff00",
+            "range": [
+              54.0,
+              100.9
+            ],
+            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY_SENSITIVE": {
+            "name": "unhealthy_sensitive",
+            "label": "Unhealthy for Sensitive Groups",
+            "color": "#ff7e00",
+            "range": [
+              101.0,
+              360.9
+            ],
+            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY": {
+            "name": "unhealthy",
+            "label": "Unhealthy",
+            "color": "#ff0000",
+            "range": [
+              361.0,
+              649.9
+            ],
+            "guidance": "Everyone should reduce prolonged or heavy exertion."
+          },
+          "VERY_UNHEALTHY": {
+            "name": "very_unhealthy",
+            "label": "Very Unhealthy",
+            "color": "#8f3f97",
+            "range": [
+              650.0,
+              1249.9
+            ],
+            "guidance": "Everyone should avoid prolonged or heavy exertion."
+          },
+          "HAZARDOUS": {
+            "name": "hazardous",
+            "label": "Hazardous",
+            "color": "#7e0023",
+            "range": [
+              1250.0,
+              2049.9
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          },
+          "VERY_HAZARDOUS": {
+            "name": "very_hazardous",
+            "label": "Very Hazardous",
+            "color": "#7e0023",
+            "range": [
+              2050.0,
+              99999
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          }
+        },
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "soiltemperature": {
+        "label": "Soil Temperature",
+        "type": "soiltemperature",
+        "units": "°F",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "o3": {
+        "label": "Ozone",
+        "type": "o3",
+        "units": "ppb",
+        "epa_aqs_code": 44201,
+        "levels": {
+          "GOOD": {
+            "name": "good",
+            "label": "Good",
+            "color": "#00e400",
+            "range": [
+              0.0,
+              124.9
+            ],
+            "guidance": null
+          },
+          "UNHEALTHY_SENSITIVE": {
+            "name": "unhealthy_sensitive",
+            "label": "Unhealthy for Sensitive Groups",
+            "color": "#ff7e00",
+            "range": [
+              125,
+              164.9
+            ],
+            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY": {
+            "name": "unhealthy",
+            "label": "Unhealthy",
+            "color": "#ff0000",
+            "range": [
+              165,
+              204.9
+            ],
+            "guidance": "Everyone should reduce prolonged or heavy exertion."
+          },
+          "VERY_UNHEALTHY": {
+            "name": "very_unhealthy",
+            "label": "Very Unhealthy",
+            "color": "#8f3f97",
+            "range": [
+              205,
+              404.9
+            ],
+            "guidance": "Everyone should avoid prolonged or heavy exertion."
+          },
+          "HAZARDOUS": {
+            "name": "hazardous",
+            "label": "Hazardous",
+            "color": "#7e0023",
+            "range": [
+              405,
+              604.9
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          },
+          "VERY_HAZARDOUS": {
+            "name": "very_hazardous",
+            "label": "Very Hazardous",
+            "color": "#7e0023",
+            "range": [
+              605,
+              99999
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          }
+        },
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "solarradiation": {
+        "label": "Solar Radiation",
+        "type": "solarradiation",
+        "units": "W/m²",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "pm10": {
+        "label": "PM1.0",
+        "type": "pm10",
+        "units": "µg/m³",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "pm25": {
+        "label": "PM2.5",
+        "type": "pm25",
+        "units": "µg/m³",
+        "epa_aqs_code": 88101,
+        "levels": {
+          "GOOD": {
+            "name": "good",
+            "label": "Good",
+            "color": "#00e400",
+            "range": [
+              0.0,
+              9.0
+            ],
+            "guidance": null
+          },
+          "MODERATE": {
+            "name": "moderate",
+            "label": "Moderate",
+            "color": "#ffff00",
+            "range": [
+              9.1,
+              35.4
+            ],
+            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY_SENSITIVE": {
+            "name": "unhealthy_sensitive",
+            "label": "Unhealthy for Sensitive Groups",
+            "color": "#ff7e00",
+            "range": [
+              35.5,
+              55.4
+            ],
+            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities."
+          },
+          "UNHEALTHY": {
+            "name": "unhealthy",
+            "label": "Unhealthy",
+            "color": "#ff0000",
+            "range": [
+              55.5,
+              125.4
+            ],
+            "guidance": "Everyone should reduce prolonged or heavy exertion."
+          },
+          "VERY_UNHEALTHY": {
+            "name": "very_unhealthy",
+            "label": "Very Unhealthy",
+            "color": "#8f3f97",
+            "range": [
+              125.5,
+              225.4
+            ],
+            "guidance": "Everyone should avoid prolonged or heavy exertion."
+          },
+          "HAZARDOUS": {
+            "name": "hazardous",
+            "label": "Hazardous",
+            "color": "#7e0023",
+            "range": [
+              225.5,
+              99999
+            ],
+            "guidance": "Everyone should stay indoors and avoid physical outdoor activities."
+          }
+        },
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "vaporpressure": {
+        "label": "Vapor Pressure",
+        "type": "vaporpressure",
+        "units": "kPa",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "windspeed": {
+        "label": "Wind Speed",
+        "type": "windspeed",
+        "units": "mph",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "precipitation": {
+        "label": "Precipitation",
+        "type": "precipitation",
+        "units": "in",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "dewpoint": {
+        "label": "Dew Point",
+        "type": "dewpoint",
+        "units": "°F",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "netradiation": {
+        "label": "Net Radiation",
+        "type": "netradiation",
+        "units": "W/m²",
+        "epa_aqs_code": null,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      },
+      "temperature": {
+        "label": "Temperature",
+        "type": "temperature",
+        "units": "°F",
+        "epa_aqs_code": 62101,
+        "levels": null,
+        "fields": [
+          "timestamp",
+          "sensor",
+          "stage",
+          "processor",
+          "value"
+        ]
+      }
+    }
+  }
+}

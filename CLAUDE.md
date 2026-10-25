@@ -26,12 +26,13 @@ deno test lib/datetime/mod_test.ts
 
 Copy `.env.template` to `.env` and fill in:
 
-| Variable          | Purpose                             |
-| ----------------- | ----------------------------------- |
-| `TEST_PHONE`      | Phone number for account tests      |
-| `TEST_MONITOR_ID` | Monitor ID for entry tests          |
-| `TEST_LATITUDE`   | Latitude for closest-monitor tests  |
-| `TEST_LONGITUDE`  | Longitude for closest-monitor tests |
+| Variable               | Purpose                                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------------------- |
+| `TEST_PHONE`           | Phone number for account tests                                                                  |
+| `TEST_MONITOR_ID`      | Monitor ID for entry tests                                                                      |
+| `TEST_LATITUDE`        | Latitude for closest-monitor tests                                                              |
+| `TEST_LONGITUDE`       | Longitude for closest-monitor tests                                                             |
+| `TEST_LOCATION_CCL_ID` | Optional: a known cdss-ccl location code for the locations round-trip test (skipped when unset) |
 
 Tests default to `http://127.0.0.1:8000`; set `TEST_REMOTE=1` to use
 `https://www.sjvair.com`.
@@ -174,6 +175,10 @@ the request `body` replaced by `"[redacted]"`.
   `@module` tag.
 - **`api-urls.md`** tracks which API endpoints are implemented — update it when
   adding new endpoints.
+- **`DEFERRED.md`** is the register of deferred SDK work, including breaking
+  changes waiting for the next major version. Add an entry (with why and a
+  revisit trigger) whenever something is deferred, and check it when planning a
+  major release.
 
 ## Publishing
 

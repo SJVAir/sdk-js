@@ -90,6 +90,8 @@ interface SJVAirMonitorsMetaSchema extends
   z.ZodObject<{
     /** The default pollutant to display */
     default_pollutant: z.ZodEnum<{ pm25: "pm25"; o3: "o3" }>;
+    /** The entry types published on the map (pollutants with a default calibration) */
+    available_pollutants: z.ZodArray<z.ZodString>;
     /** The types of monitors used by SJVAir */
     monitors: z.ZodRecord<z.ZodString, SJVAirMonitorDeviceMetaSchema>;
     /** The types of entries contained in SJVAir */
@@ -98,6 +100,7 @@ interface SJVAirMonitorsMetaSchema extends
 
 export const sjvairMonitorsMetaSchema: SJVAirMonitorsMetaSchema = z.object({
   default_pollutant: z.enum(["pm25", "o3"]),
+  available_pollutants: z.array(z.string()),
   monitors: z.record(z.string(), sjvairMonitorDeviceMetaSchema),
   entries: z.record(z.string(), sjvairEntryMetaSchema),
 });

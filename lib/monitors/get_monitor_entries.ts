@@ -30,7 +30,7 @@
  */
 import { paginatedApiCall, type RequestOptions } from "$http";
 import type { MonitorEntries, MonitorEntryType } from "./types.ts";
-import { apiDateFormat, getValidDateRange } from "$datetime";
+import { getValidDateRange, toApiTimestamp } from "$datetime";
 
 /**
  * The configuration options for the monitor entries endpoint
@@ -49,6 +49,19 @@ export interface MonitorEntryRequestConfig {
   sensor?: string;
 
   /**
+   * Only fetch entries made by this processor (e.g. a calibration's processor
+   * name). Sent only when given.
+   */
+  processor?: string;
+
+  /**
+   * Only fetch entries at this stage (e.g. "raw", "cleaned", "calibrated").
+   * Sent only when given; without it the server returns the monitor type's
+   * default stage.
+   */
+  stage?: string;
+
+  /**
    * The start time of the requested monitor sensor entry
    *
    * @defaultValue 3 days less than `MonitorEntryRequestResponse["timestampLte]`
@@ -61,6 +74,27 @@ export interface MonitorEntryRequestConfig {
    * @defaultValue The current date
    */
   timestampLte?: Date | number | string;
+
+  /**
+   * Send the timestamps exactly as given. By default two bounds within five
+   * minutes of each other are widened to whole Pacific days; with `exact` they
+   * are sent unchanged, for short windows such as the current hour. Missing
+   * bounds still default as usual.
+   *
+   * @example
+   * ```ts
+   * await getMonitorEntries({
+   *   monitorId: "xgXCRh68SdG5FOdbUXvR6Q",
+   *   entryType: "pm25",
+   *   timestampGte: "2026-10-22T18:00:00Z",
+   *   timestampLte: "2026-10-22T18:02:00Z",
+   *   exact: true,
+   * });
+   * ```
+   *
+   * @defaultValue false
+   */
+  exact?: boolean;
 }
 
 /**
@@ -77,15 +111,18 @@ class MonitorEntryRequestOptions {
 
   /**
    * The start time of the requested monitor sensor entry
-   * Format: YYYY-MM-DD HH:MM:SS
+   * Format: UTC ISO 8601, e.g. 2026-10-22T07:00:00.000Z
    */
   timestamp__gte: string;
 
   /**
    * The end time of the requested monitor sensor entry
-   * Format: YYYY-MM-DD HH:MM:SS
+   * Format: UTC ISO 8601, e.g. 2026-10-23T06:59:59.999Z
    */
   timestamp__lte: string;
+
+  // `processor` and `stage` are set only when given (through the index
+  // signature), so they are left out of the query string otherwise.
 
   /**
    * Constructs a new MonitorEntryRequestOptions object
@@ -96,12 +133,16 @@ class MonitorEntryRequestOptions {
     const timestamps = getValidDateRange(
       options.timestampGte,
       options.timestampLte,
+      { exact: options.exact },
     );
 
     this.page = options.page?.toString() ?? "1";
     this.sensor = options.sensor ?? "";
-    this.timestamp__gte = apiDateFormat(timestamps.gte);
-    this.timestamp__lte = apiDateFormat(timestamps.lte);
+    this.timestamp__gte = toApiTimestamp(timestamps.gte);
+    this.timestamp__lte = toApiTimestamp(timestamps.lte);
+
+    if (options.processor) this.processor = options.processor;
+    if (options.stage) this.stage = options.stage;
   }
 }
 
@@ -109,6 +150,7 @@ class MonitorEntryRequestOptions {
  * Fetch all pages of entries for a given monitor, using native fetch api
  *
  * @param config An object containing the monitor ID and search parameters
+ * (including the optional `processor`, `stage` and `exact`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor entries

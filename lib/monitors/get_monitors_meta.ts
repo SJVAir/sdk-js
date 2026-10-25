@@ -10,6 +10,7 @@
  * // Prints:
  * //  {
  * //    "default_pollutant": "pm25",
+ * //    "available_pollutants": ["o3", "pm25"],
  * //    "monitors": {
  * //      "airgradient": {
  * //        "label": "AirGradient",
@@ -178,6 +179,15 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
    */
   get default_pollutant(): SJVAirMonitorsMeta["default_pollutant"] {
     return this.meta.default_pollutant;
+  }
+
+  /**
+   * Returns the entry types published on the map, such as "pm25" and "o3".
+   *
+   * @returns The ids of the available pollutants.
+   */
+  get available_pollutants(): Array<string> {
+    return this.meta.available_pollutants;
   }
 
   /**

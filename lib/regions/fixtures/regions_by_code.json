@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "id": "r6phe",
+      "name": "Fresno County",
+      "slug": "fresno",
+      "type": "county",
+      "external_id": "06019",
+      "retired": null,
+      "boundary": {
+        "id": "wdpej",
+        "version": "latest",
+        "bbox": [
+          -120.91874387116177,
+          35.906918921644284,
+          -118.36059845591876,
+          37.58584217244814
+        ]
+      }
+    },
+    {
+      "id": "nmup6",
+      "name": "Kern County",
+      "slug": "kern",
+      "type": "county",
+      "external_id": "06029",
+      "retired": {
+        "since": "2026-10-01",
+        "replaced_by": {
+          "type": "county",
+          "external_id": "06019"
+        }
+      },
+      "boundary": {
+        "id": "bp68d",
+        "version": "latest",
+        "bbox": [
+          -120.19415866038507,
+          34.79062089796891,
+          -117.61620722389377,
+          35.798154064157906
+        ]
+      }
+    }
+  ]
+}
