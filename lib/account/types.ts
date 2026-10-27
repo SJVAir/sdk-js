@@ -30,3 +30,9 @@ export type PasswordResetCredentials = zinfer<
 
 /** The details of a user account */
 export type UserDetails = zinfer<typeof userDetailsSchema>;
+
+/**
+ * The details of a user account as returned to a session-cookie request. The
+ * server omits `api_token` from these responses.
+ */
+export type SessionUserDetails = Omit<UserDetails, "api_token">;
