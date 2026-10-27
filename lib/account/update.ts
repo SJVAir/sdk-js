@@ -27,7 +27,7 @@
 import { jsonCall } from "$http";
 import type { RequestOptions } from "$http";
 import { authHeaders } from "./auth_headers.ts";
-import type { UserDetails } from "./types.ts";
+import type { SessionUserDetails, UserDetails } from "./types.ts";
 
 /** The form used to update a user */
 export type UpdateUserForm =
@@ -37,19 +37,44 @@ export type UpdateUserForm =
 /**
  * Update a user.
  *
- * @param form The fields to update, plus an optional `api_token`. Without the
- *   token, the call relies on the session cookie; a missing sign-in surfaces
- *   as the server's 401/403.
+ * @param form The fields to update, plus the user's `api_token`.
  * @param options Request options.
- * @returns The modigied user object
+ * @returns The modified user object
  */
+export function updateUser(
+  form: UpdateUserForm & { api_token: string },
+  options?: RequestOptions,
+): Promise<UserDetails>;
+/**
+ * Update the signed-in user from the session cookie. The response has no
+ * `api_token`; a signed-out call rejects with the server's 401.
+ *
+ * @param form The fields to update, with no `api_token`.
+ * @param options Request options.
+ * @returns The modified user object, without `api_token`
+ */
+export function updateUser(
+  form: UpdateUserForm & { api_token?: undefined },
+  options?: RequestOptions,
+): Promise<SessionUserDetails>;
+/**
+ * Update a user with a token that may be absent.
+ *
+ * @param form The fields to update, plus an optional `api_token`.
+ * @param options Request options.
+ * @returns The modified user, with `api_token` only when a token was passed
+ */
+export function updateUser(
+  form: UpdateUserForm,
+  options?: RequestOptions,
+): Promise<UserDetails | SessionUserDetails>;
 export async function updateUser(
   form: UpdateUserForm,
   options?: RequestOptions,
-): Promise<UserDetails> {
+): Promise<UserDetails | SessionUserDetails> {
   const { api_token, ...userForm } = form;
 
-  return await jsonCall<UserDetails>({
+  return await jsonCall<UserDetails | SessionUserDetails>({
     url: "account",
     init: {
       method: "PATCH",

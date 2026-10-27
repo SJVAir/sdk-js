@@ -30,7 +30,7 @@
 import { jsonCall } from "$http";
 import type { RequestOptions } from "$http";
 import { authHeaders } from "./auth_headers.ts";
-import type { UserDetails } from "./types.ts";
+import type { SessionUserDetails, UserDetails } from "./types.ts";
 
 /**
  * The form data required to change a user's password.
@@ -51,16 +51,43 @@ export interface ChangePasswordConfig {
 /**
  * Submit a password change.
  *
- * @param config The password form and optional API token.
+ * @param config The password form and the user's API token.
  * @param options Request options.
  * @returns The user details object
  */
+export function changePassword(
+  config: ChangePasswordConfig & { api_token: string },
+  options?: RequestOptions,
+): Promise<UserDetails>;
+/**
+ * Submit a password change for the signed-in user from the session cookie. The
+ * response has no `api_token`; a signed-out call rejects with the server's 401.
+ *
+ * @param config The password form, with no `api_token`.
+ * @param options Request options.
+ * @returns The user details object, without `api_token`
+ */
+export function changePassword(
+  config: ChangePasswordConfig & { api_token?: undefined },
+  options?: RequestOptions,
+): Promise<SessionUserDetails>;
+/**
+ * Submit a password change with a token that may be absent.
+ *
+ * @param config The password form and optional API token.
+ * @param options Request options.
+ * @returns The user details, with `api_token` only when a token was passed
+ */
+export function changePassword(
+  config: ChangePasswordConfig,
+  options?: RequestOptions,
+): Promise<UserDetails | SessionUserDetails>;
 export async function changePassword(
   config: ChangePasswordConfig,
   options?: RequestOptions,
-): Promise<UserDetails> {
+): Promise<UserDetails | SessionUserDetails> {
   const { api_token, ...form } = config;
-  return await jsonCall<UserDetails>({
+  return await jsonCall<UserDetails | SessionUserDetails>({
     url: "account/password",
     init: {
       method: "PUT",
