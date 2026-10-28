@@ -6,7 +6,7 @@
  */
 import type * as z from "zod";
 import { type APIRequestConfig, httpRequest } from "$http";
-import { toDocumentRefusal } from "./refusal.ts";
+import { DocumentResponseError, toDocumentRefusal } from "./refusal.ts";
 
 /** Builds a `documents/...` endpoint path, encoding each segment. */
 export function documentsPath(
@@ -36,7 +36,7 @@ async function request(config: APIRequestConfig) {
 /**
  * Makes a documents request and returns its `data`, checked against
  * `schema`. A refusal throws `DocumentRefusal`; a response that doesn't match
- * the schema throws an `Error` whose `cause` is the `ZodError`.
+ * the schema throws a `DocumentResponseError` whose `cause` is the `ZodError`.
  */
 export async function documentsCall<S extends z.ZodType>(
   config: APIRequestConfig,
@@ -48,7 +48,7 @@ export async function documentsCall<S extends z.ZodType>(
     typeof body === "object" && body !== null ? body.data : undefined,
   );
   if (!parsed.success) {
-    throw new Error(
+    throw new DocumentResponseError(
       `Unexpected response from "${config.url}"`,
       { cause: parsed.error },
     );

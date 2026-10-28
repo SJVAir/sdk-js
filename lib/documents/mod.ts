@@ -40,6 +40,7 @@ export { getSnapshot, listSnapshots } from "./snapshots.ts";
 export { getDocumentProfile, updateDocumentProfile } from "./profile.ts";
 export {
   DocumentRefusal,
+  DocumentResponseError,
   isDocumentRefusal,
   REFUSAL_CODES,
   type RefusalCode,

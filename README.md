@@ -75,8 +75,11 @@ The calls rely on the session cookie (there is no `apiToken` parameter); outside
 a browser, pass `Cookie` and `X-CSRFToken` through `options.init`. Any error
 response throws a `DocumentRefusal` with the server's refusal `code`, the HTTP
 `status`, and the refusal's `data`. `REFUSAL_CODES` lists every code, including
-the fallbacks for responses without one: `unauthorized` (a 401, such as signed
-out), `forbidden` (a 403, such as a failed CSRF check), and `unknown`.
+the fallbacks for responses without one (non-JSON and empty bodies included,
+such as a proxy's HTML 503): `unauthorized` (a 401, such as signed out),
+`forbidden` (a 403, such as a failed CSRF check), `not_found` (a 404), and
+`unknown`. A successful response the SDK can't use (not JSON, or not matching
+the schema) throws a `DocumentResponseError` instead.
 
 ```ts
 import {

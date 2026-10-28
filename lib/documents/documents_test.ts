@@ -12,6 +12,7 @@ import {
   createShareLink,
   deleteDocument,
   DocumentRefusal,
+  DocumentResponseError,
   getDocument,
   getDocumentChanges,
   getDocumentCredit,
@@ -463,7 +464,8 @@ Deno.test("a malformed success response is rejected by the schema", async () => 
     async () => {
       const error = await assertRejects(() => getDocument("abc"));
       assertFalse(isDocumentRefusal(error));
-      assertInstanceOf(error, Error);
+      assertInstanceOf(error, DocumentResponseError);
+      assertEquals(error.name, "DocumentResponseError");
     },
   );
   await withStub(
@@ -481,6 +483,79 @@ Deno.test("a shared document without its id is rejected", async () => {
   const { id: _id, ...noId } = SHARED;
   await withStub(() => jsonResponse({ data: noId }), async () => {
     const error = await assertRejects(() => getSharedDocument("t0k"));
+    assertFalse(isDocumentRefusal(error));
+  });
+});
+
+Deno.test("an HTML 503 (a proxy error) becomes unknown with its status", async () => {
+  const respond = () =>
+    new Response("<h1>Service Unavailable</h1>", {
+      status: 503,
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    });
+  await withStub(respond, async () => {
+    const error = await assertRejects(() => saveDocument("abc", FORM));
+    assert(isDocumentRefusal(error, "unknown"));
+    assertEquals(error.status, 503);
+    assertEquals(error.data, undefined);
+  });
+});
+
+Deno.test("an HTML 404 (an unmatched route) becomes not_found", async () => {
+  const respond = () =>
+    new Response("<h1>Not Found</h1>", {
+      status: 404,
+      headers: { "Content-Type": "text/html" },
+    });
+  await withStub(respond, async () => {
+    const error = await assertRejects(() => getDocument("abc"));
+    assert(isDocumentRefusal(error, "not_found"));
+    assertEquals(error.status, 404);
+  });
+});
+
+Deno.test("a JSON 404 without a code becomes not_found", async () => {
+  const body = { errors: { detail: [{ message: "Not found." }] } };
+  await withStub(() => json(body, 404), async () => {
+    const error = await assertRejects(() => getDocument("abc"));
+    assert(isDocumentRefusal(error, "not_found"));
+  });
+});
+
+Deno.test("an empty-body error, with or without a Content-Type, keeps its status", async () => {
+  await withStub(() => new Response(null, { status: 502 }), async () => {
+    const error = await assertRejects(() => listDocuments());
+    assert(isDocumentRefusal(error, "unknown"));
+    assertEquals(error.status, 502);
+  });
+  await withStub(
+    () =>
+      new Response("", {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }),
+    async () => {
+      const error = await assertRejects(() => deleteDocument("abc"));
+      assert(isDocumentRefusal(error, "unknown"));
+      assertEquals(error.status, 500);
+    },
+  );
+  await withStub(() => new Response(null, { status: 401 }), async () => {
+    const error = await assertRejects(() => getDocumentProfile());
+    assert(isDocumentRefusal(error, "unauthorized"));
+  });
+});
+
+Deno.test("a non-JSON success is a DocumentResponseError, not a refusal", async () => {
+  const respond = () =>
+    new Response("<html></html>", {
+      status: 200,
+      headers: { "Content-Type": "text/html" },
+    });
+  await withStub(respond, async () => {
+    const error = await assertRejects(() => getDocument("abc"));
+    assertInstanceOf(error, DocumentResponseError);
+    assertEquals(error.name, "DocumentResponseError");
     assertFalse(isDocumentRefusal(error));
   });
 });
