@@ -32,6 +32,31 @@ Collocation site info
 
 - [x] `/api/2.0/calibrations/`
 
+## Documents
+
+Signed-in users' saved dashboards (private API, used with the session cookie)
+
+- [x] `/api/2.0/documents/`
+- [x] `/api/2.0/documents/?since=<iso_datetime>`
+- [x] `/api/2.0/documents/<id>/`
+  - [x] `GET`
+  - [x] `PUT`
+  - [x] `DELETE`
+- [x] `/api/2.0/documents/<id>/changes/?since=<version>`
+- [x] `/api/2.0/documents/<id>/credit/`
+- [x] `/api/2.0/documents/<id>/share/`
+  - [x] `POST`
+  - [x] `DELETE`
+- [x] `/api/2.0/documents/<id>/snapshots/`
+- [x] `/api/2.0/documents/<id>/snapshots/<snapshot_id>/`
+- [x] `/api/2.0/documents/profile/`
+  - [x] `GET`
+  - [x] `PUT`
+- [x] `/api/2.0/documents/shared/<token>/`
+- [x] `/api/2.0/documents/shared/<token>/changes/?since=<version>`
+- [ ] `/api/2.0/documents/export/` <- A file download (the dashboards backup)
+      for a browser link, not an SDK call
+
 ## HMS Smoke
 
 HMS Smoke GeoJSON
