@@ -99,6 +99,7 @@
 export * from "./lib/account/mod.ts";
 export * from "./lib/collocation_sites/mod.ts";
 export * from "$datetime";
+export * from "./lib/documents/mod.ts";
 export * from "./lib/hms/smoke/mod.ts";
 export * from "./lib/hms/fire/mod.ts";
 export * from "./lib/meta/mod.ts";

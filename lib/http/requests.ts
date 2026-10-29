@@ -98,6 +98,7 @@ async function parseBody<T>(response: Response): Promise<T> {
   if (!response.headers.has("Content-Type")) {
     throw new Error(
       "Unable to handle server response, no Content-Type header was found",
+      { cause: response },
     );
   }
 
@@ -117,6 +118,14 @@ async function parseBody<T>(response: Response): Promise<T> {
         );
     }
   } catch (error) {
+    // A failed response whose body can't be read (such as an empty JSON
+    // error body) still carries the response, so callers can see its status.
+    if (!response.ok && !(error instanceof Error && error.cause === response)) {
+      throw new Error(
+        `Unable to parse the "${contentType}" error response`,
+        { cause: response },
+      );
+    }
     throw error;
   }
 }
