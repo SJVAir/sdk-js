@@ -26,13 +26,17 @@ deno test lib/datetime/mod_test.ts
 
 Copy `.env.template` to `.env` and fill in:
 
-| Variable               | Purpose                                                                                         |
-| ---------------------- | ----------------------------------------------------------------------------------------------- |
-| `TEST_PHONE`           | Phone number for account tests                                                                  |
-| `TEST_MONITOR_ID`      | Monitor ID for entry tests                                                                      |
-| `TEST_LATITUDE`        | Latitude for closest-monitor tests                                                              |
-| `TEST_LONGITUDE`       | Longitude for closest-monitor tests                                                             |
-| `TEST_LOCATION_CCL_ID` | Optional: a known cdss-ccl location code for the locations round-trip test (skipped when unset) |
+| Variable                    | Purpose                                                                                         |
+| --------------------------- | ----------------------------------------------------------------------------------------------- |
+| `TEST_PHONE`                | Phone number for account tests                                                                  |
+| `TEST_MONITOR_ID`           | Monitor ID for entry tests                                                                      |
+| `TEST_LATITUDE`             | Latitude for closest-monitor tests                                                              |
+| `TEST_LONGITUDE`            | Longitude for closest-monitor tests                                                             |
+| `TEST_LOCATION_CCL_ID`      | Optional: a known cdss-ccl location code for the locations round-trip test (skipped when unset) |
+| `TEST_DOCUMENTS`            | `1` to run the documents integration test (`lib/documents/mod_test.ts`); skipped otherwise      |
+| `TEST_DOCUMENTS_ORIGIN`     | Server for the documents test (e.g. `http://127.0.0.1:8000`)                                    |
+| `TEST_DOCUMENTS_IDENTIFIER` | Sign-in for the documents test (sjvair.com's `.env` `WORKSPACE_E2E_IDENTIFIER` works)           |
+| `TEST_DOCUMENTS_PASSWORD`   | Password for that account (`WORKSPACE_E2E_PASSWORD`)                                            |
 
 Tests default to `http://127.0.0.1:8000`; set `TEST_REMOTE=1` to use
 `https://www.sjvair.com`.

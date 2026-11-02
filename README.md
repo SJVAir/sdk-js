@@ -116,6 +116,15 @@ if ("document" in result) {
 }
 ```
 
+`listSnapshots` and `getSnapshot` read a document's snapshots (kept 30 days).
+`createSnapshot(id, form)` keeps content the client sends (such as this device's
+version, set aside in a conflict) as a `conflict` snapshot at
+`form.base_version`, without changing the document; an out-of-date
+`base_version` is refused as `stale_base`, like a save.
+
+The documents module is expected to move out of the public SDK before 4.8.0 is
+released (see `DEFERRED.md`).
+
 `listDocuments({ since })` takes the previous list's `cursor`; it lists
 documents updated since then, including ones only shared or unshared (their
 `version` is unchanged). The dashboards backup
