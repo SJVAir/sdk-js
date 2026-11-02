@@ -131,6 +131,34 @@ export interface SaveDocumentForm {
   snapshot: null | "conflict";
 }
 
+/**
+ * The request body for keeping given content as a snapshot
+ * (`POST documents/<id>/snapshots/`). Every field is required.
+ */
+export interface CreateSnapshotForm {
+  /**
+   * The server version the content was set aside against; it must be the
+   * document's current version (otherwise refused as `stale_base`). The
+   * snapshot records it as its `version`.
+   */
+  base_version: number;
+
+  /** The document format version of `body`; may be older than the document's */
+  schema_version: number;
+
+  /** The content's name, or `null` */
+  name: string | null;
+
+  /** The content to keep (a JSON object) */
+  body: unknown;
+
+  /** The id of the account the client believes is signed in */
+  account_id: string;
+
+  /** The client build's id (its git sha) */
+  build_id: string;
+}
+
 /** Parameters for listing documents */
 export interface DocumentListParams {
   /**

@@ -10,6 +10,8 @@ import { setEnvironmentForTests } from "../http/environment.ts";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import {
   createShareLink,
+  createSnapshot,
+  type CreateSnapshotForm,
   deleteDocument,
   DocumentRefusal,
   DocumentResponseError,
@@ -112,6 +114,23 @@ const FORM: SaveDocumentForm = {
   account_id: "u1",
   build_id: "deadbeef",
   snapshot: null,
+};
+
+const SNAPSHOT_FORM: CreateSnapshotForm = {
+  base_version: 4,
+  schema_version: 1,
+  name: "Mine",
+  body: { widgets: [1] },
+  account_id: "u1",
+  build_id: "deadbeef",
+};
+
+const SNAPSHOT_META = {
+  id: 8,
+  version: 4,
+  schema_version: 1,
+  reason: "conflict" as const,
+  created_at: "2026-11-02T12:00:00Z",
 };
 
 function refusal(code: string, status: number, data?: unknown) {
@@ -275,6 +294,20 @@ Deno.test("listSnapshots and getSnapshot: GET documents/<id>/snapshots/", async 
   );
 });
 
+Deno.test("createSnapshot: POST documents/<id>/snapshots/ with the form as JSON and CSRF", async () => {
+  await withStub(() => json({ data: SNAPSHOT_META }, 201), async (calls) => {
+    assertEquals(await createSnapshot("abc", SNAPSHOT_FORM), SNAPSHOT_META);
+    assertEquals(method(calls[0]), "POST");
+    assertEquals(
+      calls[0].url.href,
+      `${ORIGIN}/api/2.0/documents/abc/snapshots/`,
+    );
+    assertEquals(JSON.parse(calls[0].init.body as string), SNAPSHOT_FORM);
+    assertEquals(header(calls[0], "content-type"), "application/json");
+    assertEquals(header(calls[0], "x-csrftoken"), "tok");
+  });
+});
+
 Deno.test("getDocumentCredit: GET documents/<id>/credit/", async () => {
   const data = { name: "Fresno", display_name: "Ana" };
   await withStub(() => jsonResponse({ data }), async (calls) => {
@@ -386,6 +419,23 @@ Deno.test("a 409 stale_base becomes a DocumentRefusal with its data", async () =
   });
 });
 
+Deno.test("createSnapshot: a stale base is refused with the save's data", async () => {
+  const data = {
+    version: 5,
+    schema_version: 1,
+    changes: [{ ...ENTRY, version: 5 }],
+    document: { ...DOCUMENT, version: 5 },
+  };
+  await withStub(refusal("stale_base", 409, data), async () => {
+    const error = await assertRejects(() =>
+      createSnapshot("abc", SNAPSHOT_FORM)
+    );
+    assert(isDocumentRefusal(error, "stale_base"));
+    assertEquals(error.status, 409);
+    assertEquals(staleBaseDataSchema.parse(error.data).version, 5);
+  });
+});
+
 Deno.test("a 404 shared read becomes not_found", async () => {
   await withStub(refusal("not_found", 404), async () => {
     const error = await assertRejects(() => getSharedDocument("nope"));
@@ -477,6 +527,18 @@ Deno.test("a malformed success response is rejected by the schema", async () => 
   await withStub(() => jsonResponse({ nope: 1 }), async () => {
     await assertRejects(() => listDocuments());
   });
+});
+
+Deno.test("createSnapshot: a malformed answer is a DocumentResponseError", async () => {
+  await withStub(
+    () => json({ data: { ...SNAPSHOT_META, reason: "manual" } }, 201),
+    async () => {
+      const error = await assertRejects(() =>
+        createSnapshot("abc", SNAPSHOT_FORM)
+      );
+      assertInstanceOf(error, DocumentResponseError);
+    },
+  );
 });
 
 Deno.test("a shared document without its id is rejected", async () => {

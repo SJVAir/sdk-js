@@ -27,6 +27,7 @@ import { type RequestOptions, setOrigin } from "$http";
 import { getUserDetails } from "../account/details.ts";
 import {
   createShareLink,
+  createSnapshot,
   deleteDocument,
   getDocument,
   getDocumentChanges,
@@ -34,6 +35,7 @@ import {
   getDocumentProfile,
   getSharedDocument,
   getSharedDocumentChanges,
+  getSnapshot,
   isDocumentRefusal,
   listDocuments,
   listSnapshots,
@@ -222,6 +224,66 @@ Deno.test({
       await t.step("snapshots list", async () => {
         assert(Array.isArray(await listSnapshots(id, session)));
       });
+
+      await t.step(
+        "keep given content as a snapshot, leaving the document as it was",
+        async () => {
+          const before = await getDocument(id, session);
+          const kept = await createSnapshot(id, {
+            base_version: second.version,
+            schema_version: 1,
+            name: "Set aside",
+            body: { widgets: ["mine"] },
+            account_id: account.id,
+            build_id: "sdk-js-test",
+          }, session);
+          assertEquals(kept.reason, "conflict");
+          assertEquals(kept.version, second.version);
+
+          const listed = await listSnapshots(id, session);
+          assert(listed.some((s) => s.id === kept.id));
+          const snapshot = await getSnapshot(id, kept.id, session);
+          assertEquals(snapshot.name, "Set aside");
+          assertEquals(snapshot.body, { widgets: ["mine"] });
+
+          const after = await getDocument(id, session);
+          assertEquals(after.version, before.version);
+          assertEquals(after.updated_at, before.updated_at);
+          assertEquals(after.body, before.body);
+        },
+      );
+
+      await t.step(
+        "a snapshot on an old base is stale_base; an unknown id is not_found",
+        async () => {
+          const snapshotForm = {
+            base_version: first.version,
+            schema_version: 1,
+            name: null,
+            body: { widgets: [] },
+            account_id: account.id,
+            build_id: "sdk-js-test",
+          };
+          const error = await assertRefused(
+            () => createSnapshot(id, snapshotForm, session),
+            "stale_base",
+          );
+          assertEquals(error.status, 409);
+          assertEquals(
+            staleBaseDataSchema.parse(error.data).version,
+            second.version,
+          );
+          await assertRefused(
+            () =>
+              createSnapshot(
+                `${id}-missing`,
+                { ...snapshotForm, base_version: 0 },
+                session,
+              ),
+            "not_found",
+          );
+        },
+      );
 
       await t.step("share, read signed out, then revoke", async () => {
         const before = await getDocumentProfile(session);
