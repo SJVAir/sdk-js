@@ -7,27 +7,29 @@ this file only by being done or explicitly dropped by the user (moved to
 
 ## Before 4.8.0 final
 
-- **Whether the documents module ships in the public SDK.** _Proposed 2026-11-02
-  by the user._ `@sjvair/sdk/documents` wraps the private `/documents/`
-  endpoints (session cookie, signed-in users' dashboards), and the data
-  dashboard is its only caller. The rest of the SDK is public air data. The
-  idea: move the documents module (and any later private endpoints) into an
-  internal package built on the public SDK's exports (`httpRequest`,
-  `setOrigin`, request defaults), or into the dashboard repo itself while it
-  stays the only caller.
+- **Move the documents module out of the public SDK.** _Decided 2026-11-02 by
+  the user: it must happen before the data dashboard goes live._
+  `@sjvair/sdk/documents` wraps the private `/documents/` endpoints (session
+  cookie, signed-in users' dashboards), and the data dashboard is its only
+  caller. The rest of the SDK is public air data. The plan: move the documents
+  module (and any later private endpoints) into an internal package built on the
+  public SDK's exports (`httpRequest`, `setOrigin`, request defaults), or into
+  the dashboard repo itself while it stays the only caller. Where it goes is
+  still open. The data dashboard's `DEFERRED.md` tracks the same item.
 
   Kept for now so the dashboard isn't blocked: the module has shipped only in
   prereleases (4.8.0-beta.2, and `createSnapshot` in beta.3), and `latest` is
   still 4.7.0, so removing it before 4.8.0 final breaks no stable release. Once
   4.8.0 final ships with it, removing it waits for 5.0.
 
-  Things to settle when deciding:
+  Things to settle when doing it:
   - a separate JSR package is still public; to keep it out of view, it has to
     live in the dashboard repo or stay unpublished;
   - a second package only pays off once a second app needs these endpoints;
   - the dashboard's pin and imports (`@sjvair/sdk/documents`) move with it.
 
-  **Revisit when** 4.8.0 final is being prepared, before its tag.
+  **Revisit when** 4.8.0 final is being prepared (before its tag), or the data
+  dashboard's go-live is being planned, whichever comes first.
 
 ## Breaking changes (next major version)
 
