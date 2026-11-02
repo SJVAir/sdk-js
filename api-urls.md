@@ -48,6 +48,8 @@ Signed-in users' saved dashboards (private API, used with the session cookie)
   - [x] `POST`
   - [x] `DELETE`
 - [x] `/api/2.0/documents/<id>/snapshots/`
+  - [x] `GET`
+  - [x] `POST`
 - [x] `/api/2.0/documents/<id>/snapshots/<snapshot_id>/`
 - [x] `/api/2.0/documents/profile/`
   - [x] `GET`

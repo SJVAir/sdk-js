@@ -1,7 +1,7 @@
 /**
  * Utilities for the SJVAir `/documents/` endpoints: the signed-in user's
- * saved dashboards, their change log, share links, snapshots, and public
- * display name.
+ * saved dashboards, their change log, share links, snapshots (including
+ * keeping given content as one), and public display name.
  *
  * The calls rely on the session cookie (pass extra headers through
  * `options.init` outside a browser) and throw `DocumentRefusal` with the
@@ -36,7 +36,7 @@ export {
   getSharedDocumentChanges,
   revokeShareLink,
 } from "./sharing.ts";
-export { getSnapshot, listSnapshots } from "./snapshots.ts";
+export { createSnapshot, getSnapshot, listSnapshots } from "./snapshots.ts";
 export { getDocumentProfile, updateDocumentProfile } from "./profile.ts";
 export {
   DocumentRefusal,
