@@ -3,6 +3,10 @@ import type { RequestOptions } from "$http";
 import { stubFetch } from "./http/fetch_stub_test_utils.ts";
 import { getCollocationSites } from "./collocation_sites/get_collocation_sites.ts";
 import { getCalHeatScoreMeta } from "./calheatscore/get_calheatscore_meta.ts";
+import { getCalHeatScores } from "./calheatscore/get_calheatscores.ts";
+import { getHeatForPlace } from "./calheatscore/get_heat_for_place.ts";
+import { getForecastForPlace } from "./forecasts/get_forecast_for_place.ts";
+import { getForecasts } from "./forecasts/get_forecasts.ts";
 import { getForecastsMeta } from "./forecasts/get_forecasts_meta.ts";
 import { getHmsMeta } from "./hms/get_hms_meta.ts";
 import { getHMSFire } from "./hms/fire/get_fire.ts";
@@ -100,6 +104,16 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getHmsMeta", (o) => getHmsMeta(o)],
   ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
   ["getForecastsMeta", (o) => getForecastsMeta(o)],
+  ["getCalHeatScores", (o) => getCalHeatScores({}, o)],
+  [
+    "getHeatForPlace",
+    (o) => getHeatForPlace({ monitor: "m" }, {}, o),
+  ],
+  ["getForecasts", (o) => getForecasts({}, o)],
+  [
+    "getForecastForPlace",
+    (o) => getForecastForPlace({ monitor: "m" }, {}, o),
+  ],
   ["getClosestMonitors", (o) => getClosestMonitors("pm25", 1, 2, o)],
   ["getClosestMonitor", (o) => getClosestMonitor("pm25", 1, 2, o)],
   ["listMonitorArchivesPage", (o) => listMonitorArchivesPage("m", 1, o)],

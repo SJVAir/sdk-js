@@ -11,6 +11,7 @@ import type {
   datasetCatalogSchema,
   datasetEntryDisplaySchema,
   datasetEntryTypeSchema,
+  placeSchema,
   resolutionSchema,
   retiredSchema,
   scaleLevelSchema,
@@ -92,3 +93,6 @@ export type CoverageQuery = {
  * `Date`s) of a dataset's data; both are null when there is none.
  */
 export type Coverage = zinfer<typeof coverageSchema>;
+
+/** The place a by-place answer is about, as echoed back by the server */
+export type Place = zinfer<typeof placeSchema>;

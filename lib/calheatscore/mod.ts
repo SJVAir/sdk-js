@@ -13,4 +13,6 @@
  * @module
  */
 export * from "./get_calheatscore_meta.ts";
+export * from "./get_calheatscores.ts";
+export * from "./get_heat_for_place.ts";
 export * from "./types.ts";

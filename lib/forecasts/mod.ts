@@ -12,5 +12,7 @@
  *
  * @module
  */
+export * from "./get_forecast_for_place.ts";
+export * from "./get_forecasts.ts";
 export * from "./get_forecasts_meta.ts";
 export * from "./types.ts";
