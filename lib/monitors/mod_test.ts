@@ -49,7 +49,10 @@ import {
   mergeMonitorSummaryBulkPages,
 } from "./get_monitor_summaries_bulk.ts";
 import { monitorWithSummariesSchema } from "./schemas/mod.ts";
-import type { MonitorWithSummaries } from "./types.ts";
+import type { MonitorWithSummaries, SJVAirMonitorsMeta } from "./types.ts";
+import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
+  type: "json",
+};
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -666,5 +669,42 @@ Deno.test("Module: Monitors request params (stubbed fetch)", async (t) => {
       url.searchParams.get("timestamp__lte"),
       "2026-10-23T06:59:59.999Z",
     );
+  });
+});
+
+Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
+  const fetchMeta = async (data: unknown) => {
+    const stub = stubFetch(() => jsonResponse({ data }));
+    try {
+      return await getMonitorsMeta();
+    } finally {
+      stub.restore();
+    }
+  };
+
+  await t.step("exposes scales, tiers, stages and processors", async () => {
+    const meta = await fetchMeta(monitorsMetaFixture.data);
+    const scale = meta.entryType("pm25").scale;
+    assertExists(scale);
+    assertEquals(scale.levels[0].tier, 0);
+    assertEquals(meta.stages.raw.key, "raw");
+    assertEquals(meta.asIter.stages.length, Object.keys(meta.stages).length);
+    assertEquals(
+      meta.asIter.processors.length,
+      Object.keys(meta.processors).length,
+    );
+  });
+
+  await t.step("older servers without the fields still work", async () => {
+    const old = structuredClone(
+      monitorsMetaFixture.data,
+    ) as unknown as SJVAirMonitorsMeta;
+    delete old.stages;
+    delete old.processors;
+    for (const entry of Object.values(old.entries)) delete entry.scale;
+    const meta = await fetchMeta(old);
+    assertEquals(meta.entryType("pm25").scale, null);
+    assertEquals(meta.stages, {});
+    assertEquals(meta.asIter.processors, []);
   });
 });

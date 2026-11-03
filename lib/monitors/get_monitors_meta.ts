@@ -73,6 +73,7 @@
  *
  * @module
  */
+import type { Choice, Scale } from "../meta/types.ts";
 import { jsonCall, type RequestOptions } from "$http";
 import type {
   MonitorEntryType,
@@ -132,6 +133,14 @@ class EntriesMeta implements SJVAirEntryMeta {
   }
 
   /**
+   * The scale that turns this entry type's value into a level, or null when
+   * it has none (or the server predates scales).
+   */
+  get scale(): Scale | null {
+    return this.meta.scale ?? null;
+  }
+
+  /**
    * The type of monitor entry (e.g., "pm25", "o3", etc.).
    */
   get type(): string {
@@ -160,6 +169,16 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
      * An array of monitor metadata.
      */
     monitors: Array<SJVAirMonitorDeviceMeta>;
+
+    /**
+     * An array of the documented data stages.
+     */
+    stages: Array<Choice>;
+
+    /**
+     * An array of the documented processors.
+     */
+    processors: Array<Choice>;
   };
 
   /**
@@ -169,6 +188,8 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
     this.asIter = {
       entries: Object.values(this.meta.entries),
       monitors: Object.values(this.meta.monitors),
+      stages: Object.values(this.meta.stages ?? {}),
+      processors: Object.values(this.meta.processors ?? {}),
     };
   }
 
@@ -206,6 +227,24 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
    */
   get monitors(): Record<string, SJVAirMonitorDeviceMeta> {
     return this.meta.monitors;
+  }
+
+  /**
+   * Returns the documented data stages by key (empty on older servers).
+   *
+   * @returns A record of stages.
+   */
+  get stages(): Record<string, Choice> {
+    return this.meta.stages ?? {};
+  }
+
+  /**
+   * Returns the documented processors by key (empty on older servers).
+   *
+   * @returns A record of processors.
+   */
+  get processors(): Record<string, Choice> {
+    return this.meta.processors ?? {};
   }
 
   /**

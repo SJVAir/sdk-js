@@ -79,6 +79,22 @@ export const retiredSchema: RetiredSchema = z.object({
   replaced_by: z.string().nullable().optional(),
 });
 
+interface DatasetEntryDisplaySchema extends
+  z.ZodObject<{
+    /** Decimal places to show, or null when unspecified */
+    precision: z.ZodNullable<z.ZodNumber>;
+    /** The chart type that suits the data, or null when unspecified */
+    chart: z.ZodNullable<z.ZodEnum<{ line: "line"; bar: "bar" }>>;
+    /** The lowest value a chart's y axis should start at, or null */
+    y_min: z.ZodNullable<z.ZodNumber>;
+  }> {}
+/** Hints for presenting an entry type's values */
+export const datasetEntryDisplaySchema: DatasetEntryDisplaySchema = z.object({
+  precision: z.number().nullable(),
+  chart: z.enum(["line", "bar"]).nullable(),
+  y_min: z.number().nullable(),
+});
+
 interface DatasetEntryTypeSchema extends
   z.ZodObject<{
     /** The permanent id of this entry type */
@@ -91,6 +107,8 @@ interface DatasetEntryTypeSchema extends
     units: z.ZodString;
     /** The resolutions this entry type can be summarized at */
     resolutions: z.ZodArray<typeof resolutionSchema>;
+    /** Hints for presenting this entry type's values */
+    display: z.ZodOptional<DatasetEntryDisplaySchema>;
     /** Null while current; the retirement marker once retired */
     retired: z.ZodNullable<typeof retiredSchema>;
     /** Whether this pollutant is published on the map (air-quality pollutants only) */
@@ -102,6 +120,7 @@ export const datasetEntryTypeSchema: DatasetEntryTypeSchema = z.object({
   kind: datasetEntryKindSchema,
   units: z.string(),
   resolutions: z.array(resolutionSchema),
+  display: datasetEntryDisplaySchema.optional(),
   retired: retiredSchema.nullable(),
   available: z.boolean().optional(),
 });

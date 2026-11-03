@@ -78,6 +78,38 @@ Deno.test({
       assertEquals(data.available_pollutants.includes("pm25"), true);
     });
 
+    await t.step("new scale, display, stages and processors fields", () => {
+      const data = monitorsMetaData;
+      const scale = data.entries.pm25.scale;
+      assertExists(scale);
+      assertEquals(scale.kind, "range");
+      assertEquals(scale.levels[0].tier, 0);
+      assertEquals(Object.keys(data.stages ?? {}).includes("raw"), true);
+      assertEquals(Object.keys(data.processors ?? {}).length > 0, true);
+      const pm25 = catalogData.datasets.find((d) => d.id === "air-quality")
+        ?.entry_types.find((e) => e.id === "pm25");
+      assertEquals(pm25?.display?.chart, "line");
+      assertEquals(pm25?.display?.precision, 1);
+    });
+
+    await t.step("fixtures without the new fields still parse", () => {
+      const meta = structuredClone(monitorsMetaData);
+      delete meta.stages;
+      delete meta.processors;
+      for (const entry of Object.values(meta.entries)) {
+        delete entry.scale;
+        for (const level of Object.values(entry.levels ?? {})) {
+          delete level.tier;
+        }
+      }
+      validateMonitorsMeta(meta);
+      const catalog = structuredClone(catalogData);
+      for (const d of catalog.datasets) {
+        for (const e of d.entry_types) delete e.display;
+      }
+      validateCatalog(catalog);
+    });
+
     await t.step("a set `retired` marker is accepted", () => {
       const data = structuredClone(catalogData);
       data.datasets[0].retired = { since: "2026-01-01T00:00:00-08:00" };

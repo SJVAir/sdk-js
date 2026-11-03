@@ -5,12 +5,17 @@
 import type { infer as zinfer } from "zod";
 import type { RegionType } from "../regions/types.ts";
 import type {
+  choiceSchema,
   coverageSchema,
   datasetCatalogEntrySchema,
   datasetCatalogSchema,
+  datasetEntryDisplaySchema,
   datasetEntryTypeSchema,
   resolutionSchema,
   retiredSchema,
+  scaleLevelSchema,
+  scaleSchema,
+  scaleSourceSchema,
 } from "./schemas/mod.ts";
 
 /** A summary resolution an entry type can be read at */
@@ -38,6 +43,21 @@ export type DatasetEntryKind =
   | "other"
   // deno-lint-ignore ban-types
   | (string & {});
+
+/** Hints for presenting an entry type's values */
+export type DatasetEntryDisplay = zinfer<typeof datasetEntryDisplaySchema>;
+
+/** A scale that turns a value into a named, colored level */
+export type Scale = zinfer<typeof scaleSchema>;
+
+/** One level (breakpoint or category) of a scale */
+export type ScaleLevel = zinfer<typeof scaleLevelSchema>;
+
+/** Where a scale's breakpoints come from */
+export type ScaleSource = zinfer<typeof scaleSourceSchema>;
+
+/** A documented option, such as a data stage or a processor */
+export type Choice = zinfer<typeof choiceSchema>;
 
 /** One entry type of a dataset */
 export type DatasetEntryType = zinfer<typeof datasetEntryTypeSchema>;
