@@ -2,10 +2,8 @@
  * Types for the HMS metadata.
  * @module
  */
-import type { Scale } from "../meta/types.ts";
+import type { infer as zinfer } from "zod";
+import type { hmsMetaSchema } from "./schemas/mod.ts";
 
 /** The metadata returned from hms/meta */
-export type HmsMeta = {
-  /** The scales HMS smoke and fire are rated on, by id */
-  scales: Record<string, Scale>;
-};
+export type HmsMeta = zinfer<typeof hmsMetaSchema>;
