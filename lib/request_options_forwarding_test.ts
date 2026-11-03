@@ -2,6 +2,9 @@ import { assert, assertEquals, assertRejects } from "@std/assert";
 import type { RequestOptions } from "$http";
 import { stubFetch } from "./http/fetch_stub_test_utils.ts";
 import { getCollocationSites } from "./collocation_sites/get_collocation_sites.ts";
+import { getCalHeatScoreMeta } from "./calheatscore/get_calheatscore_meta.ts";
+import { getForecastsMeta } from "./forecasts/get_forecasts_meta.ts";
+import { getHmsMeta } from "./hms/get_hms_meta.ts";
 import { getHMSFire } from "./hms/fire/get_fire.ts";
 import { getHMSFireById } from "./hms/fire/get_fire_by_id.ts";
 import { getHMSSmoke } from "./hms/smoke/get_smoke.ts";
@@ -94,6 +97,9 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getHMSFireById", (o) => getHMSFireById("x", o)],
   ["getHMSSmoke", (o) => getHMSSmoke(o)],
   ["getHMSSmokeById", (o) => getHMSSmokeById("x", o)],
+  ["getHmsMeta", (o) => getHmsMeta(o)],
+  ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
+  ["getForecastsMeta", (o) => getForecastsMeta(o)],
   ["getClosestMonitors", (o) => getClosestMonitors("pm25", 1, 2, o)],
   ["getClosestMonitor", (o) => getClosestMonitor("pm25", 1, 2, o)],
   ["listMonitorArchivesPage", (o) => listMonitorArchivesPage("m", 1, o)],

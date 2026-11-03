@@ -10,6 +10,7 @@ import type {
   locationSourceSchema,
   regionCategorySchema,
   regionListItemSchema,
+  regionRefSchema,
   regionSchema,
   regionsMetaSchema,
   regionSummarySchema,
@@ -25,6 +26,9 @@ export type RegionType = zinfer<typeof regionTypeSchema>;
 
 /** The backend classification a region's type belongs to */
 export type RegionCategory = zinfer<typeof regionCategorySchema>;
+
+/** A short reference to a region: its id, type, code and name */
+export type RegionRef = zinfer<typeof regionRefSchema>;
 
 /** A region's current boundary */
 export type RegionBoundary = zinfer<typeof boundarySchema>;

@@ -66,6 +66,15 @@ HMS Smoke GeoJSON
 - [x] `/api/2.0/hms-smoke/`
 - [x] `/api/2.0/hms-smoke/<smoke_id>/`
 - [x] `/api/2.0/hms-smoke/ongoing/`
+- [x] `/api/2.0/hms/meta/`
+
+## CalHeatScore
+
+- [x] `/api/2.0/calheatscore/meta/`
+
+## Forecasts
+
+- [x] `/api/2.0/forecasts/meta/`
 
 ## Monitors and Entries
 
