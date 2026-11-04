@@ -76,25 +76,25 @@ export interface MonitorEntryRequestConfig {
   timestampLte?: Date | number | string;
 
   /**
-   * Send the timestamps exactly as given. By default two bounds within five
-   * minutes of each other are widened to whole Pacific days; with `exact` they
-   * are sent unchanged, for short windows such as the current hour. Missing
-   * bounds still default as usual.
+   * Round the range out to whole Pacific days: the start to the start of its
+   * day, the end to the end of its day. Without it, the bounds are sent as
+   * given (only ordered), however close together. Missing bounds default to
+   * Pacific days either way.
    *
    * @example
    * ```ts
    * await getMonitorEntries({
    *   monitorId: "xgXCRh68SdG5FOdbUXvR6Q",
    *   entryType: "pm25",
-   *   timestampGte: "2026-10-22T18:00:00Z",
-   *   timestampLte: "2026-10-22T18:02:00Z",
-   *   exact: true,
+   *   timestampGte: "2026-11-02T17:00:00Z", // 9:00 Monday, Pacific
+   *   timestampLte: "2026-11-04T11:00:00Z", // 3:00 Wednesday, Pacific
+   *   wholeDays: true, // midnight Monday to the end of Wednesday
    * });
    * ```
    *
    * @defaultValue false
    */
-  exact?: boolean;
+  wholeDays?: boolean;
 }
 
 /**
@@ -133,7 +133,7 @@ class MonitorEntryRequestOptions {
     const timestamps = getValidDateRange(
       options.timestampGte,
       options.timestampLte,
-      { exact: options.exact },
+      { wholeDays: options.wholeDays },
     );
 
     this.page = options.page?.toString() ?? "1";
@@ -150,7 +150,7 @@ class MonitorEntryRequestOptions {
  * Fetch all pages of entries for a given monitor, using native fetch api
  *
  * @param config An object containing the monitor ID and search parameters
- * (including the optional `processor`, `stage` and `exact`)
+ * (including the optional `processor`, `stage` and `wholeDays`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of monitor entries
