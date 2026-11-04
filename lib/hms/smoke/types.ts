@@ -4,6 +4,7 @@
  */
 import type { infer as zinfer } from "zod";
 import type { APIRequestResponse, PaginatedResponse } from "$http";
+import type { HMSBaseQuery } from "../query.ts";
 import type { hmsSmokeSchema } from "./schema.ts";
 
 export type HMSSmokeGeoJSON = zinfer<typeof hmsSmokeSchema>;
@@ -22,3 +23,9 @@ export interface HMSSmokeRequestConfig {
 export type FetchHMSSmokeResponse = APIRequestResponse<
   PaginatedResponse<HMSSmokeGeoJSON>
 >;
+
+/** The filters for an HMS smoke list: a day or range, a region, and density */
+export type HMSSmokeQuery = HMSBaseQuery & {
+  /** Only plumes of this density; labels and colors are in `getHMSMeta` */
+  density?: HMSSmokeGeoJSON["density"];
+};

@@ -100,9 +100,9 @@ const archive = {
 
 const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getCollocationSites", (o) => getCollocationSites(o)],
-  ["getHMSFire", (o) => getHMSFire(o)],
+  ["getHMSFire", (o) => getHMSFire(undefined, o)],
   ["getHMSFireById", (o) => getHMSFireById("x", o)],
-  ["getHMSSmoke", (o) => getHMSSmoke(o)],
+  ["getHMSSmoke", (o) => getHMSSmoke(undefined, o)],
   ["getHMSSmokeById", (o) => getHMSSmokeById("x", o)],
   ["getHMSMeta", (o) => getHMSMeta(o)],
   ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
