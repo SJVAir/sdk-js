@@ -163,7 +163,7 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/region/<region_id>/use/`
 - [x] `/api/2.0/pesticides/use/`
 - [x] `/api/2.0/pesticides/use/<use_id>/`
-- [ ] `/api/2.0/pesticides/locations/`
+- [x] `/api/2.0/pesticides/locations/`
 - [ ] `/api/2.0/pesticides/notices/active/`
 - [ ] `/api/2.0/pesticides/notices/archive/`
 - [ ] `/api/2.0/pesticides/search/`

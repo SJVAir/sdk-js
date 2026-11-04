@@ -11,6 +11,9 @@ import type {
   commodityDetailSchema,
   commoditySchema,
   iarcGroupSchema,
+  pesticideLocationCollectionSchema,
+  pesticideLocationFeatureSchema,
+  pesticideLocationPropertiesSchema,
   pesticideNoticeSchema,
   pesticideRegionSchema,
   pesticideSummaryResponseSchema,
@@ -59,4 +62,19 @@ export type PesticideSummaryData = zinfer<typeof pesticideSummarySchema>;
 /** The aggregated pesticide use summary for a region */
 export type PesticideSummaryResponseData = zinfer<
   typeof pesticideSummaryResponseSchema
+>;
+
+/** The properties of a school or child care site on the pesticides map */
+export type PesticideLocationProperties = zinfer<
+  typeof pesticideLocationPropertiesSchema
+>;
+
+/** A GeoJSON Point feature for a school or child care site */
+export type PesticideLocationFeature = zinfer<
+  typeof pesticideLocationFeatureSchema
+>;
+
+/** Schools and child care sites as a GeoJSON FeatureCollection of points */
+export type PesticideLocationCollection = zinfer<
+  typeof pesticideLocationCollectionSchema
 >;

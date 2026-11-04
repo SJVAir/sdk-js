@@ -58,6 +58,8 @@ import { getProductsList } from "./pesticides/get_products_list.ts";
 import { getRegionPesticideNotices } from "./pesticides/get_region_pesticide_notices.ts";
 import { getRegionPesticideSummary } from "./pesticides/get_region_pesticide_summary.ts";
 import { getRegionPesticideUse } from "./pesticides/get_region_pesticide_use.ts";
+import { searchLocations } from "./regions/search_locations.ts";
+import { getPesticideLocations } from "./pesticides/get_pesticide_locations.ts";
 import { getRegionDetails } from "./regions/get_region_details.ts";
 import {
   lookupRegionPlace,
@@ -187,6 +189,11 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getRegionPesticideSummary", (o) => getRegionPesticideSummary("r", {}, o)],
   ["getRegionPesticideUse", (o) => getRegionPesticideUse("r", {}, o)],
   ["getRegionDetails", (o) => getRegionDetails("r", o)],
+  ["searchLocations", (o) => searchLocations({ q: "lincoln", ...o })],
+  [
+    "getPesticideLocations",
+    (o) => getPesticideLocations({ bbox: [0, 0, 1, 1], ...o }),
+  ],
   ["searchRegionPlaces", (o) => searchRegionPlaces("x", undefined, o)],
   ["lookupRegionPlace", (o) => lookupRegionPlace("x", undefined, o)],
   [

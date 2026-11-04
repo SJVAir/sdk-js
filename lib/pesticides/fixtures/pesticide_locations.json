@@ -1,0 +1,105 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "efddk",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.7707346,
+          36.80167838
+        ]
+      },
+      "properties": {
+        "id": "efddk",
+        "name": "A BETTER CHOICE PRESCHOOL",
+        "type": "child_care",
+        "type_label": "Child care",
+        "address": "3225 E. GETTYSBURG AVENUE",
+        "city": "FRESNO",
+        "school_district": "Fresno Unified",
+        "school_district_id": "rb2rf",
+        "school_district_url": "/tools/pesticides/region/rb2rf/fresno-unified/",
+        "grade_span": null,
+        "enrollment": null,
+        "capacity": 100
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "8m5cc",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8363647,
+          36.76430504
+        ]
+      },
+      "properties": {
+        "id": "8m5cc",
+        "name": "Addams Elementary",
+        "type": "public_school",
+        "type_label": "Public school",
+        "address": "2117 West McKinley Ave.",
+        "city": "Fresno",
+        "school_district": "Fresno Unified",
+        "school_district_id": "rb2rf",
+        "school_district_url": "/tools/pesticides/region/rb2rf/fresno-unified/",
+        "grade_span": "K-6",
+        "enrollment": 739,
+        "capacity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "y4q95",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.74668567119843,
+          36.83666360429772
+        ]
+      },
+      "properties": {
+        "id": "y4q95",
+        "name": "Carden School of Fresno",
+        "type": "private_school",
+        "type_label": "Private school",
+        "address": "6901 North Maple Ave, Suite 7",
+        "city": "Fresno",
+        "school_district": "Fresno Unified",
+        "school_district_id": "rb2rf",
+        "school_district_url": "/tools/pesticides/region/rb2rf/fresno-unified/",
+        "grade_span": "K-8",
+        "enrollment": 130,
+        "capacity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gf8bc",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.7691257,
+          36.82542905
+        ]
+      },
+      "properties": {
+        "id": "gf8bc",
+        "name": "Ahwahnee Middle",
+        "type": "public_school",
+        "type_label": "Public school",
+        "address": "1127 East Escalon Ave.",
+        "city": "Fresno",
+        "school_district": "Fresno Unified",
+        "school_district_id": "rb2rf",
+        "school_district_url": "/tools/pesticides/region/rb2rf/fresno-unified/",
+        "grade_span": "7-8",
+        "enrollment": 713,
+        "capacity": null
+      }
+    }
+  ]
+}

@@ -37,6 +37,7 @@ export * from "./get_pesticide_use_list.ts";
 export * from "./get_pesticide_use_details.ts";
 export * from "./get_pesticide_notice_list.ts";
 export * from "./get_pesticide_notice_details.ts";
+export * from "./get_pesticide_locations.ts";
 export * from "./get_region_pesticide_summary.ts";
 export * from "./get_region_pesticide_notices.ts";
 export * from "./get_region_pesticide_use.ts";
