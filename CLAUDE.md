@@ -188,6 +188,10 @@ the request `body` replaced by `"[redacted]"`.
   current server really omits a field or sends `null` (e.g. `available` exists
   only on air-quality pollutants). A beta therefore needs a server running the
   matching sjvair.com branch; say so in the PR.
+- **Specs and plans** for SDK work live in this repo: `docs/superpowers/specs/`
+  (designs) and `docs/superpowers/plans/` (implementation plans), named
+  `YYYY-MM-DD-<topic>`. SDK work done for the data dashboard is tracked in
+  data-dashboard's `TODO.md`, but its spec and plan still go here.
 - **`CHANGELOG.md`** records what each release adds, changes and breaks. Add a
   line under the upcoming version in the PR that makes the change.
 - **`DEFERRED.md`** is the register of deferred SDK work, including breaking
