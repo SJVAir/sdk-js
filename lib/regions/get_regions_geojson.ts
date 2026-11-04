@@ -17,6 +17,7 @@
  * @module
  */
 import { apiCall, type RequestOptions } from "$http";
+import { fetchChunked } from "./lookup.ts";
 import type { RegionFeatureCollection, RegionType } from "./types.ts";
 import type { RegionsWithinMode } from "./types.ts";
 
@@ -41,6 +42,11 @@ export interface RegionsGeoJSONQuery {
  * region's id and its `properties` carry the region's name, slug, type, code,
  * and retired marker.
  *
+ * Any number of codes can be given: the API takes 100 per request, so longer
+ * lists go out in concurrent batches (duplicates sent once) and come back as
+ * one collection. To get every region of a type inside an area, pass `within`
+ * instead of listing codes: that's one request, however many regions match.
+ *
  * @param query The type of regions and any further filters.
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -57,11 +63,6 @@ export async function getRegionsGeoJSON(
   const searchParams: Record<string, string | Array<string>> = {
     type: query.type,
   };
-  if (query.external_id !== undefined) {
-    searchParams.external_id = Array.isArray(query.external_id)
-      ? query.external_id.join(",")
-      : query.external_id;
-  }
   if (query.within !== undefined) searchParams.within = query.within;
   if (query.within_mode !== undefined) {
     searchParams.within_mode = query.within_mode;
@@ -71,9 +72,28 @@ export async function getRegionsGeoJSON(
   if (query.simplify) searchParams.simplify = "1";
 
   // The GeoJSON isn't wrapped in the usual `{ data }` envelope.
-  return await apiCall<RegionFeatureCollection>({
-    url: "regions/geojson",
-    searchParams,
-    options,
-  });
+  const request = (external_id?: string) =>
+    apiCall<RegionFeatureCollection>({
+      url: "regions/geojson",
+      searchParams: external_id === undefined
+        ? searchParams
+        : { ...searchParams, external_id },
+      options,
+    });
+
+  if (!Array.isArray(query.external_id)) {
+    return await request(query.external_id);
+  }
+
+  // The API resolves at most 100 codes per request, so longer lists go out
+  // in concurrent batches, merged in order.
+  const pages = await fetchChunked(
+    query.external_id,
+    (chunk) => request(chunk.join(",")),
+  );
+  return {
+    ...pages[0],
+    type: "FeatureCollection",
+    features: pages.flatMap((page) => page.features),
+  };
 }
