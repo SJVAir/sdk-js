@@ -141,6 +141,8 @@ interface DatasetCatalogEntrySchema extends
     geographies: z.ZodArray<typeof geographySchema>;
     /** A URL for further metadata about this dataset, or an empty string */
     meta_url: z.ZodString;
+    /** A URL listing the dataset's places (e.g. its monitors), or an empty string */
+    places_url: z.ZodString;
     /** The entry types the dataset holds */
     entry_types: z.ZodArray<DatasetEntryTypeSchema>;
     /** Null while current; the retirement marker once retired */
@@ -154,6 +156,7 @@ export const datasetCatalogEntrySchema: DatasetCatalogEntrySchema = z.object({
   license: z.string(),
   geographies: z.array(geographySchema),
   meta_url: z.string(),
+  places_url: z.string(),
   entry_types: z.array(datasetEntryTypeSchema),
   retired: retiredSchema.nullable(),
 });

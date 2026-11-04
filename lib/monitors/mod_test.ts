@@ -23,7 +23,13 @@ import { getMonitors } from "./get_monitors.ts";
 import { getMonitorDetails } from "./get_monitor_details.ts";
 import type { MonitorEntryType } from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
-import { assertEquals, assertExists, assertMatch, fail } from "@std/assert";
+import {
+  assertEquals,
+  assertExists,
+  assertMatch,
+  assertRejects,
+  fail,
+} from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import { getMonitorEntriesCSVUrl } from "./get_monitor_entries_csv.ts";
 import {
@@ -125,13 +131,27 @@ Deno.test({
       async () => validateMonitorData(await getMonitorsList()),
     );
 
+    await t.step("GET  monitors/?dataset=weather", async () => {
+      const stations = await getMonitorsList({ dataset: "weather" });
+      validateMonitorData(stations);
+      if (stations.length === 0) {
+        console.warn("Skipping CIMIS checks: no weather stations returned.");
+        return;
+      }
+      assertEquals(stations.every((m) => m.type === "cimis"), true);
+    });
+
+    await t.step("GET  monitors/?dataset=air-quality", async () => {
+      validateMonitorData(await getMonitorsList({ dataset: "air-quality" }));
+    });
+
     await t.step("GET  monitors/ (vozbox monitor type)", async () => {
       const monitors = await getMonitorsList();
       const vozbox = monitors.find((monitor) => monitor.type === "vozbox");
 
       assertExists(vozbox, "No vozbox monitor found in monitors/ response");
       assertEquals(typeof vozbox.sensor_id, "string");
-      assertEquals(["fem", "frm", "lcs"].includes(vozbox.grade), true);
+      assertEquals(["fem", "frm", "lcs"].includes(vozbox.grade ?? ""), true);
     });
 
     // Some steps need data a local copy of the server may not have. They're
@@ -162,7 +182,7 @@ Deno.test({
 
         assertExists(aqlite, "No aqlite monitor found in monitors/ response");
         assertEquals(typeof aqlite.device_id, "string");
-        assertEquals(["fem", "frm", "lcs"].includes(aqlite.grade), true);
+        assertEquals(["fem", "frm", "lcs"].includes(aqlite.grade ?? ""), true);
       },
     });
 
@@ -707,4 +727,35 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
     assertEquals(meta.stages, {});
     assertEquals(meta.asIter.processors, []);
   });
+});
+
+Deno.test("getMonitorsList sends dataset as a query param, not fetch init", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ dataset: "weather" });
+    await getMonitorsList({ dataset: "weather", signal: undefined });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.get("dataset"), "weather");
+  assertEquals("dataset" in stub.calls[0].init, false);
+});
+
+Deno.test("getMonitorsList without dataset sends no dataset param", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [{ id: "m" }] }));
+  try {
+    await getMonitorsList();
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.has("dataset"), false);
+});
+
+Deno.test("getMonitorsList still rejects an empty default list", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await assertRejects(() => getMonitorsList());
+  } finally {
+    stub.restore();
+  }
 });

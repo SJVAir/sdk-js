@@ -70,6 +70,9 @@ Deno.test({
       const pesticides = data.datasets.find((d) => d.id === "pesticide-use");
       assertEquals(pesticides?.license, "");
       assertEquals(pesticides?.meta_url, "");
+      assertEquals(pesticides?.places_url, "");
+      const weather = data.datasets.find((d) => d.id === "weather");
+      assertEquals(weather?.places_url, "/api/2.0/monitors/?dataset=weather");
     });
 
     await t.step("monitors meta fixture matches the schema", () => {

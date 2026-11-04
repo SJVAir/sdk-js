@@ -105,7 +105,7 @@ Air quality forecasts, and by place
 Air monitors, current and historical data, monitor subscriptions, and entry
 archives
 
-- [x] `/api/2.0/monitors/`
+- [x] `/api/2.0/monitors/` (`?dataset=`)
 - [x] `/api/2.0/monitors/<entry_type>/at/`
 - [x] `/api/2.0/monitors/<entry_type>/closest/`
 - [x] `/api/2.0/monitors/<entry_type>/current/`
@@ -182,7 +182,8 @@ Region and place lookups, boundaries, and region-level entry summaries
 - [x] `/api/2.0/regions/meta/`
 - [x] `/api/2.0/regions/locations/?source=<source>&external_id=<code>,<code>`
 - [x] `/api/2.0/regions/places/search/`
-- [x] `/api/2.0/regions/places/lookup/`
+- [x] `/api/2.0/regions/places/lookup/` (name `?q=`; monitor `?monitor=`; point
+      via POST)
 - [x] `/api/2.0/regions/<entry_type>/summaries/hourly/`
 - [x] `/api/2.0/regions/<entry_type>/summaries/daily/`
 - [x] `/api/2.0/regions/<entry_type>/summaries/monthly/`

@@ -51,20 +51,30 @@ import { APIError, jsonCall, type RequestOptions } from "$http";
 import type { MonitorData } from "./types.ts";
 
 /**
- * Fetches all monitors.
+ * Fetches all monitors, or the monitors of one dataset.
  *
- * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ * @param options Optional per-request options: an AbortSignal and extra fetch
+ * init, plus `dataset`. With `dataset: "weather"` the list holds CIMIS weather
+ * stations; `"air-quality"` is the default list. See `places_url` in the
+ * dataset catalog. An unknown dataset rejects with a 400.
  *
- * @returns An array containing all monitors.
+ * @returns An array of monitors. The default list rejects when empty; a
+ * dataset list may be empty (an empty weather list is not an error).
  */
 export async function getMonitorsList(
-  options?: RequestOptions,
+  options?: RequestOptions & { dataset?: string },
 ): Promise<Array<MonitorData>> {
+  const { dataset, ...requestOptions } = options ?? {};
   return await jsonCall<Array<MonitorData>>(
-    { url: "monitors", options },
+    {
+      url: "monitors",
+      searchParams: dataset ? { dataset } : undefined,
+      options: requestOptions,
+    },
     (response) => {
       if (
-        !Array.isArray(response.body.data) || response.body.data.length <= 0
+        !Array.isArray(response.body.data) ||
+        (dataset === undefined && response.body.data.length <= 0)
       ) {
         throw new APIError("Failed to fetch all monitors", response);
       }
