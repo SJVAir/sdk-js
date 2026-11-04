@@ -31,7 +31,7 @@
  * @module
  */
 import { paginatedApiCall, type RequestOptions } from "$http";
-import { hmsSearchParams } from "../query.ts";
+import { hmsSearchParams } from "../search_params.ts";
 import type { HMSSmokeGeoJSON, HMSSmokeQuery } from "./types.ts";
 
 /**
