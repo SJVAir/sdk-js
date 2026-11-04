@@ -59,26 +59,46 @@ Signed-in users' saved dashboards (private API, used with the session cookie)
 - [ ] `/api/2.0/documents/export/` <- A file download (the dashboards backup)
       for a browser link, not an SDK call
 
-## HMS Smoke
+## HMS Smoke and Fire
 
-HMS Smoke GeoJSON
+HMS smoke and fire GeoJSON, and the smoke scale metadata
 
-- [x] `/api/2.0/hms-smoke/`
-- [x] `/api/2.0/hms-smoke/<smoke_id>/`
-- [x] `/api/2.0/hms-smoke/ongoing/`
 - [x] `/api/2.0/hms/meta/`
+- [x] `/api/2.0/hms/smoke/`
+- [x] `/api/2.0/hms/smoke/<smoke_id>/`
+- [x] `/api/2.0/hms/fire/`
+- [x] `/api/2.0/hms/fire/<fire_id>/`
 
 ## CalHeatScore
 
+Heat scores by ZIP code, and by place
+
 - [x] `/api/2.0/calheatscore/`
-- [x] `/api/2.0/calheatscore/place/`
 - [x] `/api/2.0/calheatscore/meta/`
+- [x] `/api/2.0/calheatscore/place/`
+- [ ] `/api/2.0/calheatscore/<zipcode>/` <- Covered by the `zipcode` filter on
+      the list
+
+## CalEnviroScreen
+
+- [ ] `/api/2.0/calenviroscreen/4.0/`
+- [ ] `/api/2.0/calenviroscreen/4.0/<tract>/`
+- [ ] `/api/2.0/calenviroscreen/5.0/`
+- [ ] `/api/2.0/calenviroscreen/5.0/<tract>/`
+
+## Emissions
+
+- [ ] `/api/2.0/emissions/` (and everything under it: facilities, dairies,
+      wells, schools, methane, places, districts, areas, years)
 
 ## Forecasts
 
+Air quality forecasts, and by place
+
 - [x] `/api/2.0/forecasts/`
-- [x] `/api/2.0/forecasts/place/`
 - [x] `/api/2.0/forecasts/meta/`
+- [x] `/api/2.0/forecasts/place/`
+- [ ] `/api/2.0/forecasts/<forecast_id>/`
 
 ## Monitors and Entries
 
@@ -143,6 +163,13 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/region/<region_id>/use/`
 - [x] `/api/2.0/pesticides/use/`
 - [x] `/api/2.0/pesticides/use/<use_id>/`
+- [ ] `/api/2.0/pesticides/locations/`
+- [ ] `/api/2.0/pesticides/notices/active/`
+- [ ] `/api/2.0/pesticides/notices/archive/`
+- [ ] `/api/2.0/pesticides/search/`
+- [ ] `/api/2.0/pesticides/sections/`
+- [ ] `/api/2.0/pesticides/sections/<section_id>/`
+- [ ] `/api/2.0/pesticides/townships/`
 
 ## Regions
 
@@ -152,9 +179,16 @@ Region and place lookups, boundaries, and region-level entry summaries
 - [x] `/api/2.0/regions/?type=<type>&external_id=<code>,<code>`
 - [x] `/api/2.0/regions/?type=<type>&within=<region_id>&within_mode=overlaps`
 - [x] `/api/2.0/regions/geojson/`
+- [x] `/api/2.0/regions/meta/`
 - [x] `/api/2.0/regions/locations/?source=<source>&external_id=<code>,<code>`
 - [x] `/api/2.0/regions/places/search/`
 - [x] `/api/2.0/regions/places/lookup/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/hourly/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/daily/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/monthly/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/quarterly/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/seasonal/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/yearly/`
 - [x] `/api/2.0/regions/<region_id>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/`
@@ -171,6 +205,10 @@ Region and place lookups, boundaries, and region-level entry summaries
 Task status
 
 - [ ] `/api/2.0/task/<task_id>/`
+
+## TEMPO
+
+- [ ] `/api/2.0/tempo/` (and everything under it: granules, point, region)
 
 ## Time
 
