@@ -50,9 +50,13 @@ export async function getLocationsByCode(
       }))).flat();
 
   // Keep only the locations asked for, by `external_id` or any alias, in case
-  // a server ignores the code filter.
-  return locations.filter((location) =>
-    wanted.has(location.external_id) ||
-    location.aliases.some((alias) => wanted.has(alias))
-  );
+  // a server ignores the code filter. A location whose codes fell in
+  // different batches comes back once per batch, so keep the first.
+  const seen = new Set<string>();
+  return locations.filter((location) => {
+    if (seen.has(location.id)) return false;
+    seen.add(location.id);
+    return wanted.has(location.external_id) ||
+      location.aliases.some((alias) => wanted.has(alias));
+  });
 }

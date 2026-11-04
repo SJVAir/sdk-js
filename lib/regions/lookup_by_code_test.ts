@@ -178,6 +178,7 @@ function echoLocations(url: URL): Response {
   return jsonResponse({
     data: requested.map((code) => ({
       ...schools[1],
+      id: `loc-${code}`,
       external_id: code,
       aliases: [],
     })),
@@ -279,8 +280,13 @@ Deno.test("getLocationsByCode keeps alias matches across chunks", async () => {
     return jsonResponse({
       data: requested.map((code) =>
         code === wanted[149]
-          ? { ...schools[1], external_id: "renumbered", aliases: [code] }
-          : { ...schools[1], external_id: code, aliases: [] }
+          ? {
+            ...schools[1],
+            id: "loc-renumbered",
+            external_id: "renumbered",
+            aliases: [code],
+          }
+          : { ...schools[1], id: `loc-${code}`, external_id: code, aliases: [] }
       ),
     });
   });
@@ -307,6 +313,32 @@ Deno.test("getLocationsByCode drops duplicate codes and rejects when aborted mid
       signal: controller.signal,
     }).then(() => "resolved", (e) => e);
     assertEquals(reason, "stop");
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getLocationsByCode returns a location once when its codes land in different chunks", async () => {
+  const wanted = codes(150);
+  // The site's current code is in the first chunk, its old one in the second.
+  const site = {
+    ...schools[1],
+    external_id: wanted[0],
+    aliases: [wanted[120]],
+  };
+  const stub = stubFetch((url) => {
+    const requested = url.searchParams.get("external_id")!.split(",");
+    return jsonResponse({
+      data: requested.includes(wanted[0]) || requested.includes(wanted[120])
+        ? [site]
+        : [],
+    });
+  });
+  try {
+    const found = await getLocationsByCode("cde-public", wanted);
+    assertEquals(stub.calls.length, 2);
+    assertEquals(found.length, 1);
+    assertEquals(found[0].id, site.id);
   } finally {
     stub.restore();
   }
