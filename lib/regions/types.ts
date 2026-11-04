@@ -32,6 +32,14 @@ export type RegionsWithinMode = "contained" | "overlaps";
 /** The type of geography a region represents */
 export type RegionType = zinfer<typeof regionTypeSchema>;
 
+/** The region types a location search can be narrowed to (others are a 400) */
+export type LocationSearchRegionType =
+  | "county"
+  | "city"
+  | "cdp"
+  | "zipcode"
+  | "school_district";
+
 /** The backend classification a region's type belongs to */
 export type RegionCategory = zinfer<typeof regionCategorySchema>;
 

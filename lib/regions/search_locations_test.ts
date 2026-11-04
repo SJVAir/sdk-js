@@ -102,3 +102,13 @@ Deno.test("regions meta lists location types", () => {
   assertEquals(types.child_care.source, "cdss-ccl");
   assertEquals(types.public_school.label, "Public school");
 });
+
+Deno.test("searchLocations region type only accepts filterable types", () => {
+  const unused = (_: Parameters<typeof searchLocations>[0]) => {};
+  unused({
+    q: "lincoln",
+    region: { type: "school_district", external_id: "1" },
+  });
+  // @ts-expect-error land_use regions can't filter a location search
+  unused({ q: "lincoln", region: { type: "land_use", external_id: "1" } });
+});

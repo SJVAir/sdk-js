@@ -18,9 +18,9 @@
 import { apiCall, type RequestOptions } from "$http";
 import type {
   Location,
+  LocationSearchRegionType,
   LocationSearchResult,
   LocationType,
-  RegionType,
 } from "./types.ts";
 
 /** The fewest characters (after trimming) a search needs before it is sent */
@@ -32,8 +32,12 @@ export type LocationSearchParams = {
   q: string;
   /** Limits the search to one location type, or several */
   type?: LocationType | Array<LocationType>;
-  /** Limits the search to locations inside this region (by code) */
-  region?: { type: RegionType; external_id: string };
+  /**
+   * Limits the search to locations inside this region (by code). Only
+   * county, city, cdp, zipcode and school_district regions can filter; any
+   * other type is rejected by the server (400).
+   */
+  region?: { type: LocationSearchRegionType; external_id: string };
 } & RequestOptions;
 
 /**
