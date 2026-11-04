@@ -117,6 +117,10 @@ Deno.test({
       }
     });
 
+    await t.step("a monitor place validates", () => {
+      validatePlace({ ...placeData, place: { monitor: "abc" } });
+    });
+
     await t.step("getForecastForPlace sends a region and dates", async () => {
       const stub = stubFetch(() => jsonResponse(placeFixture));
       try {

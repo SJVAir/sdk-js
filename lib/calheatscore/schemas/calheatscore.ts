@@ -24,9 +24,12 @@ interface HeatForPlaceSchema extends
   z.ZodObject<{
     /** The place asked about */
     place: typeof placeSchema;
-    /** How many ZIP codes the place covers */
+    /** How many ZIP codes the place covers (a region covers each ZIP with at least 1% of its area inside it) */
     zip_count: z.ZodNumber;
-    /** The heat scores of the place's ZIP codes, by day */
+    /**
+     * One entry per date: the highest score among the place's ZIP codes, with
+     * the ZIP code that set it in `zipcode` (ties go to the lowest ZIP code)
+     */
     days: z.ZodArray<CalHeatScoreSchema>;
   }> {}
 /** The heat scores for a place, as returned from calheatscore/place */
