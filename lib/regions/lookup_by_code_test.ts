@@ -85,7 +85,7 @@ Deno.test("getRegionsByCode returns [] for an empty result", async () => {
   }
 });
 
-Deno.test("getRegionsByCode throws before calling when it can't be served", async () => {
+Deno.test("getRegionsByCode throws before calling for land-use regions", async () => {
   const stub = stubFetch(() => jsonResponse({ data: [] }));
   try {
     await assertRejects(
@@ -94,20 +94,8 @@ Deno.test("getRegionsByCode throws before calling when it can't be served", asyn
       Error,
       "Land-use",
     );
-    const tooMany = Array.from({ length: 101 }, (_, i) => String(i));
-    await assertRejects(
-      () => getRegionsByCode("county", tooMany),
-      Error,
-      "at most 100",
-    );
-    assertEquals(stub.calls.length, 0);
-
-    // Exactly 100 is allowed, and no codes means no request.
-    const hundred = tooMany.slice(0, 100);
-    await getRegionsByCode("county", hundred);
-    assertEquals(stub.calls.length, 1);
     assertEquals(await getRegionsByCode("county", []), []);
-    assertEquals(stub.calls.length, 1);
+    assertEquals(stub.calls.length, 0);
   } finally {
     stub.restore();
   }
@@ -131,22 +119,6 @@ Deno.test("getLocationsByCode returns [] for an empty result", async () => {
   const stub = stubFetch(() => jsonResponse({ data: [] }));
   try {
     assertEquals(await getLocationsByCode("cde-public", ["000"]), []);
-  } finally {
-    stub.restore();
-  }
-});
-
-Deno.test("getLocationsByCode throws before calling past 100 codes", async () => {
-  const stub = stubFetch();
-  try {
-    const tooMany = Array.from({ length: 101 }, (_, i) => String(i));
-    await assertRejects(
-      () => getLocationsByCode("cde-public", tooMany),
-      Error,
-      "at most 100",
-    );
-    assertEquals(await getLocationsByCode("cde-public", []), []);
-    assertEquals(stub.calls.length, 0);
   } finally {
     stub.restore();
   }
@@ -182,6 +154,159 @@ Deno.test("getLocationsByCode drops rows the server returned unfiltered", async 
       1,
     );
     assertEquals(await getLocationsByCode("cdss-ccl", ["unrelated"]), []);
+  } finally {
+    stub.restore();
+  }
+});
+
+// Batching: the server resolves at most 100 codes per request.
+
+const codes = (n: number) =>
+  Array.from({ length: n }, (_, i) => String(i).padStart(5, "0"));
+
+/** Answers each request with one region per requested code. */
+function echoRegions(url: URL): Response {
+  const requested = url.searchParams.get("external_id")!.split(",");
+  return jsonResponse({
+    data: requested.map((code) => ({ ...regions[0], external_id: code })),
+  });
+}
+
+/** Answers each request with one location per requested code. */
+function echoLocations(url: URL): Response {
+  const requested = url.searchParams.get("external_id")!.split(",");
+  return jsonResponse({
+    data: requested.map((code) => ({
+      ...schools[1],
+      external_id: code,
+      aliases: [],
+    })),
+  });
+}
+
+const requestedCodes = (stub: { calls: Array<{ url: URL }> }) =>
+  stub.calls.map(({ url }) => url.searchParams.get("external_id")!.split(","));
+
+Deno.test("getRegionsByCode splits 250 codes into 3 requests", async () => {
+  const stub = stubFetch(echoRegions);
+  try {
+    const wanted = codes(250);
+    const found = await getRegionsByCode("county", wanted);
+    assertEquals(requestedCodes(stub), [
+      wanted.slice(0, 100),
+      wanted.slice(100, 200),
+      wanted.slice(200),
+    ]);
+    assertEquals(found.map((region) => region.external_id), wanted);
+    for (const { url } of stub.calls) {
+      assertEquals(url.searchParams.get("type"), "county");
+    }
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getRegionsByCode sends 100 codes in one request and 101 in two", async () => {
+  const stub = stubFetch(echoRegions);
+  try {
+    await getRegionsByCode("county", codes(100));
+    assertEquals(stub.calls.length, 1);
+    await getRegionsByCode("county", codes(101));
+    assertEquals(stub.calls.length, 3);
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getRegionsByCode drops duplicate and blank codes", async () => {
+  const stub = stubFetch(echoRegions);
+  try {
+    await getRegionsByCode("county", ["06019", " 06019 ", "", "06019"]);
+    assertEquals(requestedCodes(stub), [["06019"]]);
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getRegionsByCode rejects with the signal's reason when aborted mid-batch", async () => {
+  const controller = new AbortController();
+  const stub = stubFetch((url, _init, call) => {
+    if (call === 0) controller.abort("stop");
+    return echoRegions(url);
+  });
+  try {
+    const reason = await getRegionsByCode("county", codes(250), {
+      signal: controller.signal,
+    }).then(() => "resolved", (e) => e);
+    assertEquals(reason, "stop");
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getRegionsByCode rejects when one chunk fails", async () => {
+  const stub = stubFetch((url, _init, call) =>
+    call === 1 ? new Response("boom", { status: 500 }) : echoRegions(url)
+  );
+  try {
+    await assertRejects(() => getRegionsByCode("county", codes(250)));
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getLocationsByCode splits 250 codes into 3 requests", async () => {
+  const stub = stubFetch(echoLocations);
+  try {
+    const wanted = codes(250);
+    const found = await getLocationsByCode("cde-public", wanted);
+    assertEquals(requestedCodes(stub), [
+      wanted.slice(0, 100),
+      wanted.slice(100, 200),
+      wanted.slice(200),
+    ]);
+    assertEquals(found.map((location) => location.external_id), wanted);
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getLocationsByCode keeps alias matches across chunks", async () => {
+  const wanted = codes(150);
+  const stub = stubFetch((url) => {
+    const requested = url.searchParams.get("external_id")!.split(",");
+    // Answer the last code by alias only.
+    return jsonResponse({
+      data: requested.map((code) =>
+        code === wanted[149]
+          ? { ...schools[1], external_id: "renumbered", aliases: [code] }
+          : { ...schools[1], external_id: code, aliases: [] }
+      ),
+    });
+  });
+  try {
+    const found = await getLocationsByCode("cde-public", wanted);
+    assertEquals(stub.calls.length, 2);
+    assertEquals(found.length, 150);
+    assertEquals(found.at(-1)?.external_id, "renumbered");
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("getLocationsByCode drops duplicate codes and rejects when aborted mid-batch", async () => {
+  const controller = new AbortController();
+  const stub = stubFetch((url, _init, call) => {
+    if (call === 1) controller.abort("stop");
+    return echoLocations(url);
+  });
+  try {
+    await getLocationsByCode("cde-public", ["1", " 1", "1"]);
+    assertEquals(requestedCodes(stub), [["1"]]);
+    const reason = await getLocationsByCode("cde-public", codes(250), {
+      signal: controller.signal,
+    }).then(() => "resolved", (e) => e);
+    assertEquals(reason, "stop");
   } finally {
     stub.restore();
   }
