@@ -37,8 +37,11 @@ interface MonitorDataSchema extends
     /** The brand/model of air monitor */
     device: z.ZodString;
 
-    /** The regulatory grade of the monitor's measurements */
-    grade: MonitorGradeSchema;
+    /**
+     * The regulatory grade of the monitor's measurements
+     * @remarks Null for monitors that have none, such as CIMIS weather stations
+     */
+    grade: z.ZodNullable<MonitorGradeSchema>;
 
     /**
      * The device identifier of an AQLite monitor
@@ -101,7 +104,7 @@ export const monitorDataSchema: MonitorDataSchema = z.object({
   data_source: monitorDataVendorSchema,
   data_providers: z.array(monitorDataVendorSchema),
   device: z.string(),
-  grade: monitorGradeSchema,
+  grade: z.nullable(monitorGradeSchema),
   device_id: z.optional(z.string()),
   dual_channel: z.optional(z.boolean()),
   health: z.optional(monitorHealthSchema),

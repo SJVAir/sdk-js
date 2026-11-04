@@ -12,6 +12,7 @@
           "region"
         ],
         "meta_url": "/api/2.0/monitors/meta/",
+        "places_url": "/api/2.0/monitors/?dataset=air-quality",
         "entry_types": [
           {
             "id": "co",
@@ -244,6 +245,7 @@
           "monitor"
         ],
         "meta_url": "/api/2.0/monitors/meta/",
+        "places_url": "/api/2.0/monitors/?dataset=weather",
         "entry_types": [
           {
             "id": "dewpoint",
@@ -438,6 +440,7 @@
           "polygon"
         ],
         "meta_url": "/api/2.0/hms/meta/",
+        "places_url": "",
         "entry_types": [
           {
             "id": "smoke-density",
@@ -467,6 +470,7 @@
           "point"
         ],
         "meta_url": "/api/2.0/hms/meta/",
+        "places_url": "",
         "entry_types": [
           {
             "id": "fire-frp",
@@ -496,6 +500,7 @@
           "region"
         ],
         "meta_url": "",
+        "places_url": "",
         "entry_types": [
           {
             "id": "pounds-applied",
@@ -542,6 +547,7 @@
           "point"
         ],
         "meta_url": "",
+        "places_url": "",
         "entry_types": [
           {
             "id": "spray-notice",
@@ -571,6 +577,7 @@
           "zone"
         ],
         "meta_url": "/api/2.0/forecasts/meta/",
+        "places_url": "",
         "entry_types": [
           {
             "id": "aqi-forecast",
@@ -615,6 +622,7 @@
           "zip"
         ],
         "meta_url": "/api/2.0/calheatscore/meta/",
+        "places_url": "",
         "entry_types": [
           {
             "id": "heat-score",
@@ -644,6 +652,7 @@
           "tract"
         ],
         "meta_url": "",
+        "places_url": "",
         "entry_types": [
           {
             "id": "ces-score",
@@ -672,6 +681,7 @@
           "region"
         ],
         "meta_url": "",
+        "places_url": "",
         "entry_types": [
           {
             "id": "facility-nox",
@@ -822,6 +832,7 @@
           "region"
         ],
         "meta_url": "",
+        "places_url": "",
         "entry_types": [
           {
             "id": "no2",

@@ -1,5 +1,10 @@
 import { setOrigin } from "$http";
-import { getSimpleValidationTest, isUnavailable } from "$testing";
+import {
+  EXISTING_MONITOR_ID,
+  getSimpleValidationTest,
+  isUnavailable,
+} from "$testing";
+import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import { assertEquals, assertExists, assertRejects } from "@std/assert";
 import {
   locationSchema,
@@ -176,6 +181,40 @@ Deno.test({
         assertEquals(match, null);
       },
     );
+
+    await t.step("POST regions/places/lookup/ (point)", async () => {
+      const places = await lookupRegionPlace({
+        lat: 36.7378,
+        lon: -119.7871,
+      });
+      validateRegionListItem(places);
+      const fresno = places.find((place) => place.type === "county");
+      assertExists(fresno, "No county in the point lookup response");
+      assertEquals(fresno.name, "Fresno County");
+    });
+
+    await t.step("POST regions/places/lookup/ (type array)", async () => {
+      const places = await lookupRegionPlace({
+        lat: 36.7378,
+        lon: -119.7871,
+        type: ["zipcode", "county"],
+      });
+      validateRegionListItem(places);
+      assertEquals(places.length > 0, true);
+      assertEquals(
+        places.every((p) => p.type === "zipcode" || p.type === "county"),
+        true,
+      );
+    });
+
+    await t.step("GET  regions/places/lookup/ (monitor)", async () => {
+      const places = await lookupRegionPlace({
+        monitor: EXISTING_MONITOR_ID,
+        type: ["county"],
+      });
+      validateRegionListItem(places);
+      assertEquals(places.every((p) => p.type === "county"), true);
+    });
 
     await t.step(
       "GET  regions/{REGION_ID}/summaries/pm25/hourly/{YEAR}/",
@@ -354,4 +393,70 @@ Deno.test({
       },
     });
   },
+});
+
+Deno.test("lookupRegionPlace (point) rounds coordinates and POSTs a JSON body", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    const result = await lookupRegionPlace({
+      lat: 36.73749,
+      lon: -119.78712,
+      type: ["zipcode", "county"],
+    });
+    assertEquals(result, []);
+  } finally {
+    stub.restore();
+  }
+
+  const { url, init } = stub.calls[0];
+  assertEquals(init.method, "POST");
+  assertEquals(url.search, "");
+  assertEquals(url.pathname.endsWith("regions/places/lookup/"), true);
+  assertEquals(JSON.parse(init.body as string), {
+    lat: 36.737,
+    lon: -119.787,
+    type: "zipcode,county",
+  });
+});
+
+Deno.test("lookupRegionPlace (point) omits type when not given", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await lookupRegionPlace({ lat: 36.5, lon: -119.5 });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(JSON.parse(stub.calls[0].init.body as string), {
+    lat: 36.5,
+    lon: -119.5,
+  });
+});
+
+Deno.test("lookupRegionPlace (monitor) GETs with searchParams", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await lookupRegionPlace({ monitor: "abc", type: ["zipcode", "county"] });
+  } finally {
+    stub.restore();
+  }
+  const { url, init } = stub.calls[0];
+  assertEquals(init.method ?? "GET", "GET");
+  assertEquals(url.searchParams.get("monitor"), "abc");
+  assertEquals(url.searchParams.get("type"), "zipcode,county");
+  assertEquals(url.searchParams.has("lat"), false);
+});
+
+Deno.test("lookupRegionPlace omits an empty type array", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await lookupRegionPlace({ monitor: "abc", type: [] });
+    await lookupRegionPlace({ lat: 36.5, lon: -119.5, type: [] });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.has("type"), false);
+  assertEquals(
+    "type" in JSON.parse(stub.calls[1].init.body as string),
+    false,
+  );
 });

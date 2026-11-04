@@ -24,7 +24,11 @@ import { getCoverage } from "./get_coverage.ts";
 import { getMonitorsMeta } from "../monitors/get_monitors_meta.ts";
 import { sjvairMonitorsMetaSchema } from "../monitors/schemas/mod.ts";
 import { getDatasetCatalog } from "./get_dataset_catalog.ts";
-import { coverageSchema, datasetCatalogSchema } from "./schemas/mod.ts";
+import {
+  coverageSchema,
+  datasetCatalogEntrySchema,
+  datasetCatalogSchema,
+} from "./schemas/mod.ts";
 import type { SJVAirMonitorsMeta } from "../monitors/types.ts";
 import type { Coverage, DatasetCatalog } from "./types.ts";
 
@@ -70,6 +74,14 @@ Deno.test({
       const pesticides = data.datasets.find((d) => d.id === "pesticide-use");
       assertEquals(pesticides?.license, "");
       assertEquals(pesticides?.meta_url, "");
+      assertEquals(pesticides?.places_url, "");
+      const weather = data.datasets.find((d) => d.id === "weather");
+      assertEquals(weather?.places_url, "/api/2.0/monitors/?dataset=weather");
+    });
+
+    await t.step("a catalog item without places_url parses to empty", () => {
+      const { places_url: _omit, ...legacy } = catalogData.datasets[0];
+      assertEquals(datasetCatalogEntrySchema.parse(legacy).places_url, "");
     });
 
     await t.step("monitors meta fixture matches the schema", () => {
