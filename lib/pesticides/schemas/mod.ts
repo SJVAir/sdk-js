@@ -10,3 +10,4 @@ export * from "./product_detail.ts";
 export * from "./pesticide_use.ts";
 export * from "./pesticide_notice.ts";
 export * from "./pesticide_summary.ts";
+export * from "./pesticide_locations.ts";

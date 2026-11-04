@@ -55,7 +55,7 @@ import {
   mergeMonitorSummaryBulkPages,
 } from "./get_monitor_summaries_bulk.ts";
 import { monitorWithSummariesSchema } from "./schemas/mod.ts";
-import type { MonitorWithSummaries, SJVAirMonitorsMeta } from "./types.ts";
+import type { MonitorWithSummaries } from "./types.ts";
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
 };
@@ -713,19 +713,6 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
       meta.asIter.processors.length,
       Object.keys(meta.processors).length,
     );
-  });
-
-  await t.step("older servers without the fields still work", async () => {
-    const old = structuredClone(
-      monitorsMetaFixture.data,
-    ) as unknown as SJVAirMonitorsMeta;
-    delete old.stages;
-    delete old.processors;
-    for (const entry of Object.values(old.entries)) delete entry.scale;
-    const meta = await fetchMeta(old);
-    assertEquals(meta.entryType("pm25").scale, null);
-    assertEquals(meta.stages, {});
-    assertEquals(meta.asIter.processors, []);
   });
 });
 

@@ -179,6 +179,15 @@ the request `body` replaced by `"[redacted]"`.
   `@module` tag.
 - **`api-urls.md`** tracks which API endpoints are implemented — update it when
   adding new endpoints.
+- **No fallbacks for older server responses.** An SDK release goes live together
+  with the sjvair.com change it wraps (`release/*` tracks sjvair.com `develop`,
+  and both reach production together). So a field the server now always sends is
+  required in its schema: no `.optional()`, `.default()` or `?? {}` just in case
+  an older server lacks it, and no tests that strip new fields to check old
+  responses still parse. Use `.optional()` or `.nullable()` only when the
+  current server really omits a field or sends `null` (e.g. `available` exists
+  only on air-quality pollutants). A beta therefore needs a server running the
+  matching sjvair.com branch; say so in the PR.
 - **`DEFERRED.md`** is the register of deferred SDK work, including breaking
   changes waiting for the next major version. Add an entry (with why and a
   revisit trigger) whenever something is deferred, and check it when planning a

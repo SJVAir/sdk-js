@@ -24,11 +24,7 @@ import { getCoverage } from "./get_coverage.ts";
 import { getMonitorsMeta } from "../monitors/get_monitors_meta.ts";
 import { sjvairMonitorsMetaSchema } from "../monitors/schemas/mod.ts";
 import { getDatasetCatalog } from "./get_dataset_catalog.ts";
-import {
-  coverageSchema,
-  datasetCatalogEntrySchema,
-  datasetCatalogSchema,
-} from "./schemas/mod.ts";
+import { coverageSchema, datasetCatalogSchema } from "./schemas/mod.ts";
 import type { SJVAirMonitorsMeta } from "../monitors/types.ts";
 import type { Coverage, DatasetCatalog } from "./types.ts";
 
@@ -79,11 +75,6 @@ Deno.test({
       assertEquals(weather?.places_url, "/api/2.0/monitors/?dataset=weather");
     });
 
-    await t.step("a catalog item without places_url parses to empty", () => {
-      const { places_url: _omit, ...legacy } = catalogData.datasets[0];
-      assertEquals(datasetCatalogEntrySchema.parse(legacy).places_url, "");
-    });
-
     await t.step("monitors meta fixture matches the schema", () => {
       const data = monitorsMetaData;
       validateMonitorsMeta(data);
@@ -96,30 +87,12 @@ Deno.test({
       assertExists(scale);
       assertEquals(scale.kind, "range");
       assertEquals(scale.levels[0].tier, 0);
-      assertEquals(Object.keys(data.stages ?? {}).includes("raw"), true);
-      assertEquals(Object.keys(data.processors ?? {}).length > 0, true);
+      assertEquals(Object.keys(data.stages).includes("raw"), true);
+      assertEquals(Object.keys(data.processors).length > 0, true);
       const pm25 = catalogData.datasets.find((d) => d.id === "air-quality")
         ?.entry_types.find((e) => e.id === "pm25");
-      assertEquals(pm25?.display?.chart, "line");
-      assertEquals(pm25?.display?.precision, 1);
-    });
-
-    await t.step("fixtures without the new fields still parse", () => {
-      const meta = structuredClone(monitorsMetaData);
-      delete meta.stages;
-      delete meta.processors;
-      for (const entry of Object.values(meta.entries)) {
-        delete entry.scale;
-        for (const level of Object.values(entry.levels ?? {})) {
-          delete level.tier;
-        }
-      }
-      validateMonitorsMeta(meta);
-      const catalog = structuredClone(catalogData);
-      for (const d of catalog.datasets) {
-        for (const e of d.entry_types) delete e.display;
-      }
-      validateCatalog(catalog);
+      assertEquals(pm25?.display.chart, "line");
+      assertEquals(pm25?.display.precision, 1);
     });
 
     await t.step("a set `retired` marker is accepted", () => {

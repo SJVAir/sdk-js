@@ -163,7 +163,7 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/region/<region_id>/use/`
 - [x] `/api/2.0/pesticides/use/`
 - [x] `/api/2.0/pesticides/use/<use_id>/`
-- [ ] `/api/2.0/pesticides/locations/`
+- [x] `/api/2.0/pesticides/locations/`
 - [ ] `/api/2.0/pesticides/notices/active/`
 - [ ] `/api/2.0/pesticides/notices/archive/`
 - [ ] `/api/2.0/pesticides/search/`
@@ -181,6 +181,7 @@ Region and place lookups, boundaries, and region-level entry summaries
 - [x] `/api/2.0/regions/geojson/`
 - [x] `/api/2.0/regions/meta/`
 - [x] `/api/2.0/regions/locations/?source=<source>&external_id=<code>,<code>`
+- [x] `/api/2.0/regions/locations/search/?q=<name>&type=<type>,<type>&region_type=<type>&region=<code>`
 - [x] `/api/2.0/regions/places/search/`
 - [x] `/api/2.0/regions/places/lookup/` (name `?q=`; monitor `?monitor=`; point
       via POST)

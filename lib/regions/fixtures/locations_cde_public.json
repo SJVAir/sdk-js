@@ -45,7 +45,8 @@
       "regions": {
         "county": {
           "type": "county",
-          "external_id": "06019"
+          "external_id": "06019",
+          "name": "Fresno County"
         },
         "city": null,
         "zipcode": null,

@@ -159,6 +159,23 @@
         "referenceable": true,
         "browsable": true
       }
+    },
+    "location_types": {
+      "public_school": {
+        "type": "public_school",
+        "label": "Public school",
+        "source": "cde-public"
+      },
+      "private_school": {
+        "type": "private_school",
+        "label": "Private school",
+        "source": "cde-private"
+      },
+      "child_care": {
+        "type": "child_care",
+        "label": "Child care",
+        "source": "cdss-ccl"
+      }
     }
   }
 }

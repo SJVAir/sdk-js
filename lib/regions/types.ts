@@ -8,6 +8,8 @@ import type {
   boundarySchema,
   locationSchema,
   locationSourceSchema,
+  locationTypeMetaSchema,
+  locationTypeSchema,
   regionCategorySchema,
   regionFeatureCollectionSchema,
   regionFeatureSchema,
@@ -29,6 +31,14 @@ export type RegionsWithinMode = "contained" | "overlaps";
 
 /** The type of geography a region represents */
 export type RegionType = zinfer<typeof regionTypeSchema>;
+
+/** The region types a location search can be narrowed to (others are a 400) */
+export type LocationSearchRegionType =
+  | "county"
+  | "city"
+  | "cdp"
+  | "zipcode"
+  | "school_district";
 
 /** The backend classification a region's type belongs to */
 export type RegionCategory = zinfer<typeof regionCategorySchema>;
@@ -72,6 +82,15 @@ export type RegionRetired = zinfer<typeof retiredRegionSchema>;
 
 /** Where a location's code comes from */
 export type LocationSource = zinfer<typeof locationSourceSchema>;
+
+/** The kind of a location */
+export type LocationType = zinfer<typeof locationTypeSchema>;
+
+/** The metadata about a given location type */
+export type LocationTypeMeta = zinfer<typeof locationTypeMetaSchema>;
+
+/** What `searchLocations` returns: the matches, and whether more were left out */
+export type LocationSearchResult = { results: Array<Location>; more: boolean };
 
 /** A school or child care location, looked up by its official code */
 export type Location = zinfer<typeof locationSchema>;
