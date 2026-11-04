@@ -134,10 +134,10 @@ class EntriesMeta implements SJVAirEntryMeta {
 
   /**
    * The scale that turns this entry type's value into a level, or null when
-   * it has none (or the server predates scales).
+   * it has none.
    */
   get scale(): Scale | null {
-    return this.meta.scale ?? null;
+    return this.meta.scale;
   }
 
   /**
@@ -188,8 +188,8 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
     this.asIter = {
       entries: Object.values(this.meta.entries),
       monitors: Object.values(this.meta.monitors),
-      stages: Object.values(this.meta.stages ?? {}),
-      processors: Object.values(this.meta.processors ?? {}),
+      stages: Object.values(this.meta.stages),
+      processors: Object.values(this.meta.processors),
     };
   }
 
@@ -230,21 +230,21 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
   }
 
   /**
-   * Returns the documented data stages by key (empty on older servers).
+   * Returns the documented data stages by key.
    *
    * @returns A record of stages.
    */
   get stages(): Record<string, Choice> {
-    return this.meta.stages ?? {};
+    return this.meta.stages;
   }
 
   /**
-   * Returns the documented processors by key (empty on older servers).
+   * Returns the documented processors by key.
    *
    * @returns A record of processors.
    */
   get processors(): Record<string, Choice> {
-    return this.meta.processors ?? {};
+    return this.meta.processors;
   }
 
   /**
