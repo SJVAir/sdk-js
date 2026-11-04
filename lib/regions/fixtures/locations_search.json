@@ -1,0 +1,461 @@
+{
+  "data": [
+    {
+      "id": "etmuk",
+      "source": "cde-public",
+      "external_id": "54755316053987",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "850 North Eaton Ave.",
+      "city_name": "Dinuba",
+      "zip": "93618",
+      "point": {
+        "lat": 36.55220505,
+        "lng": -119.38991261
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06107",
+          "name": "Tulare County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0619318",
+          "name": "Dinuba"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93618",
+          "name": "93618"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "54755310000000",
+          "name": "Dinuba Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "bk2kq",
+      "source": "cde-public",
+      "external_id": "54768366054043",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "333 South D St.",
+      "city_name": "Exeter",
+      "zip": "93221",
+      "point": {
+        "lat": 36.29343504,
+        "lng": -119.13710254
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06107",
+          "name": "Tulare County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0623126",
+          "name": "Exeter"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93221",
+          "name": "93221"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "54768360000000",
+          "name": "Exeter Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "wapyp",
+      "source": "cde-public",
+      "external_id": "10621176100408",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "774 East Alluvial Ave.",
+      "city_name": "Fresno",
+      "zip": "93720",
+      "point": {
+        "lat": 36.84554205,
+        "lng": -119.7707557
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06019",
+          "name": "Fresno County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0627000",
+          "name": "Fresno"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93720",
+          "name": "93720"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "10621170000000",
+          "name": "Clovis Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "bfmq2",
+      "source": "cde-public",
+      "external_id": "10621666006365",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "1100 Mono St.",
+      "city_name": "Fresno",
+      "zip": "93706",
+      "point": {
+        "lat": 36.72379304,
+        "lng": -119.79570869
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06019",
+          "name": "Fresno County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0627000",
+          "name": "Fresno"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93706",
+          "name": "93706"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "10621660000000",
+          "name": "Fresno Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "j63tw",
+      "source": "cde-public",
+      "external_id": "16639176010417",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "832 South Harris St.",
+      "city_name": "Hanford",
+      "zip": "93230",
+      "point": {
+        "lat": 36.31542101,
+        "lng": -119.64482863
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06031",
+          "name": "Kings County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0631960",
+          "name": "Hanford"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93230",
+          "name": "93230"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "16639170000000",
+          "name": "Hanford Elementary"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "9brsr",
+      "source": "cde-public",
+      "external_id": "10622406006704",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "1900 Mariposa St.",
+      "city_name": "Kingsburg",
+      "zip": "93631",
+      "point": {
+        "lat": 36.51190603,
+        "lng": -119.54661163
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06019",
+          "name": "Fresno County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0638562",
+          "name": "Kingsburg"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93631",
+          "name": "93631"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "10622400000000",
+          "name": "Kingsburg Elementary Charter"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "xb5y3",
+      "source": "cde-public",
+      "external_id": "54719936107262",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "851 North Stanford Ave.",
+      "city_name": "Lindsay",
+      "zip": "93247",
+      "point": {
+        "lat": 36.21327603,
+        "lng": -119.08030552
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06107",
+          "name": "Tulare County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0641712",
+          "name": "Lindsay"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93247",
+          "name": "93247"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "54719930000000",
+          "name": "Lindsay Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "gk6ub",
+      "source": "cdss-ccl",
+      "external_id": "543801791",
+      "aliases": [],
+      "type": "child_care",
+      "name": "LINCOLN PRESCHOOL",
+      "address": "851 N. STANFORD",
+      "city_name": "LINDSAY",
+      "zip": "93247",
+      "point": {
+        "lat": 36.21323001,
+        "lng": -119.0807
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06107",
+          "name": "Tulare County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0641712",
+          "name": "Lindsay"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93247",
+          "name": "93247"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "54719930000000",
+          "name": "Lindsay Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "jhkjt",
+      "source": "cdss-ccl",
+      "external_id": "393621425",
+      "aliases": [],
+      "type": "child_care",
+      "name": "LINCOLN TECH ACADEMY",
+      "address": "542 E PINE STREET",
+      "city_name": "LODI",
+      "zip": "95240",
+      "point": {
+        "lat": 38.13398101,
+        "lng": -121.2622985
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06077",
+          "name": "San Joaquin County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0642202",
+          "name": "Lodi"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "95240",
+          "name": "95240"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "39685850000000",
+          "name": "Lodi Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "39ng5",
+      "source": "cde-public",
+      "external_id": "20652436112312",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "650 Liberty Ln.",
+      "city_name": "Madera",
+      "zip": "93637",
+      "point": {
+        "lat": 36.96100804,
+        "lng": -120.10441977
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06039",
+          "name": "Madera County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0645022",
+          "name": "Madera"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93637",
+          "name": "93637"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "20652430000000",
+          "name": "Madera Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "bkkcq",
+      "source": "cde-public",
+      "external_id": "39685936042345",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "750 East Yosemite Ave.",
+      "city_name": "Manteca",
+      "zip": "95336",
+      "point": {
+        "lat": 37.79690503,
+        "lng": -121.20681303
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06077",
+          "name": "San Joaquin County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0645484",
+          "name": "Manteca"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "95336",
+          "name": "95336"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "39685930000000",
+          "name": "Manteca Unified"
+        }
+      },
+      "retired": null
+    },
+    {
+      "id": "3rkg5",
+      "source": "cde-public",
+      "external_id": "10622656006803",
+      "aliases": [],
+      "type": "public_school",
+      "name": "Lincoln Elementary",
+      "address": "374 East North Ave.",
+      "city_name": "Reedley",
+      "zip": "93654",
+      "point": {
+        "lat": 36.60120505,
+        "lng": -119.44601262
+      },
+      "regions": {
+        "county": {
+          "type": "county",
+          "external_id": "06019",
+          "name": "Fresno County"
+        },
+        "city": {
+          "type": "city",
+          "external_id": "0660242",
+          "name": "Reedley"
+        },
+        "zipcode": {
+          "type": "zipcode",
+          "external_id": "93654",
+          "name": "93654"
+        },
+        "school_district": {
+          "type": "school_district",
+          "external_id": "10622650000000",
+          "name": "Kings Canyon Joint Unified"
+        }
+      },
+      "retired": null
+    }
+  ],
+  "more": true
+}

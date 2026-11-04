@@ -12,15 +12,29 @@ export const locationSourceSchema: LocationSourceSchema = z.enum(
   ["cde-public", "cde-private", "cdss-ccl"] as const,
 );
 
+/** The kinds of location the API serves */
+export type LocationTypeSchema = z.ZodEnum<{
+  public_school: "public_school";
+  private_school: "private_school";
+  child_care: "child_care";
+}>;
+
+export const locationTypeSchema: LocationTypeSchema = z.enum(
+  ["public_school", "private_school", "child_care"] as const,
+);
+
 interface LocationRegionRefSchema extends
   z.ZodObject<{
     type: RegionTypeSchema;
     external_id: z.ZodString;
+    /** The region's name */
+    name: z.ZodString;
   }> {}
 
 const locationRegionRefSchema: LocationRegionRefSchema = z.object({
   type: regionTypeSchema,
   external_id: z.string(),
+  name: z.string(),
 });
 
 export interface LocationRetiredSchema extends
@@ -61,7 +75,7 @@ export interface LocationSchema extends
     aliases: z.ZodArray<z.ZodString>;
 
     /** The kind of location (e.g. "public_school", "child_care") */
-    type: z.ZodString;
+    type: LocationTypeSchema;
 
     name: z.ZodString;
     address: z.ZodString;
@@ -70,7 +84,7 @@ export interface LocationSchema extends
 
     point: z.ZodObject<{ lat: z.ZodNumber; lng: z.ZodNumber }>;
 
-    /** The regions containing the location, named by code; null if none */
+    /** The regions containing the location, named by code and name; null if none */
     regions: z.ZodObject<{
       county: z.ZodNullable<LocationRegionRefSchema>;
       city: z.ZodNullable<LocationRegionRefSchema>;
@@ -87,7 +101,7 @@ export const locationSchema: LocationSchema = z.object({
   source: locationSourceSchema,
   external_id: z.string(),
   aliases: z.array(z.string()),
-  type: z.string(),
+  type: locationTypeSchema,
   name: z.string(),
   address: z.string(),
   city_name: z.string(),

@@ -23,7 +23,13 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import type { RegionsMetaData, RegionType, RegionTypeMeta } from "./types.ts";
+import type {
+  LocationType,
+  LocationTypeMeta,
+  RegionsMetaData,
+  RegionType,
+  RegionTypeMeta,
+} from "./types.ts";
 
 export class RegionsMeta implements RegionsMetaData {
   /**
@@ -34,6 +40,11 @@ export class RegionsMeta implements RegionsMetaData {
      * An array of region type metadata.
      */
     types: Array<RegionTypeMeta>;
+
+    /**
+     * An array of location type metadata.
+     */
+    locationTypes: Array<LocationTypeMeta>;
   };
 
   /**
@@ -42,6 +53,7 @@ export class RegionsMeta implements RegionsMetaData {
   constructor(private meta: RegionsMetaData) {
     this.asIter = {
       types: Object.values(this.meta.types),
+      locationTypes: Object.values(this.meta.location_types),
     };
   }
 
@@ -52,6 +64,15 @@ export class RegionsMeta implements RegionsMetaData {
    */
   get types(): Record<string, RegionTypeMeta> {
     return this.meta.types;
+  }
+
+  /**
+   * Returns a record of all location type metadata, keyed by type.
+   *
+   * @returns A record of all location type metadata.
+   */
+  get location_types(): Record<LocationType, LocationTypeMeta> {
+    return this.meta.location_types;
   }
 
   /**

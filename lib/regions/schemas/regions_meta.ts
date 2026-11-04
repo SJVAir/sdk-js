@@ -1,4 +1,10 @@
 import * as z from "zod";
+import {
+  type LocationSourceSchema,
+  locationSourceSchema,
+  type LocationTypeSchema,
+  locationTypeSchema,
+} from "./location.ts";
 import { regionCategorySchema } from "./region_category.ts";
 import { regionTypeSchema } from "./region_type.ts";
 
@@ -29,11 +35,29 @@ export const regionTypeMetaSchema: RegionTypeMetaSchema = z.object({
   browsable: z.boolean().optional(),
 });
 
+interface LocationTypeMetaSchema extends
+  z.ZodObject<{
+    /** The location type this metadata describes */
+    type: LocationTypeSchema;
+    /** The type in presentation form */
+    label: z.ZodString;
+    /** Where locations of this type get their codes */
+    source: LocationSourceSchema;
+  }> {}
+export const locationTypeMetaSchema: LocationTypeMetaSchema = z.object({
+  type: locationTypeSchema,
+  label: z.string(),
+  source: locationSourceSchema,
+});
+
 interface RegionsMetaSchema extends
   z.ZodObject<{
     /** The types of regions used by SJVAir */
     types: z.ZodRecord<z.ZodString, RegionTypeMetaSchema>;
+    /** The types of locations (schools, child care), keyed by type */
+    location_types: z.ZodRecord<LocationTypeSchema, LocationTypeMetaSchema>;
   }> {}
 export const regionsMetaSchema: RegionsMetaSchema = z.object({
   types: z.record(z.string(), regionTypeMetaSchema),
+  location_types: z.record(locationTypeSchema, locationTypeMetaSchema),
 });
