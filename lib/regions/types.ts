@@ -10,6 +10,7 @@ import type {
   locationSourceSchema,
   locationTypeMetaSchema,
   locationTypeSchema,
+  regionBufferSchema,
   regionCategorySchema,
   regionFeatureCollectionSchema,
   regionFeatureSchema,
@@ -76,6 +77,18 @@ export type RegionTypeMeta = zinfer<typeof regionTypeMetaSchema>;
 
 /** The metadata returned from regions/meta */
 export type RegionsMetaData = zinfer<typeof regionsMetaSchema>;
+
+/** A distance a region's boundary can be widened by, with its label */
+export type RegionBuffer = zinfer<typeof regionBufferSchema>;
+
+/** The options for a region details request */
+export interface RegionDetailsQuery {
+  /**
+   * Widen the boundary by this many miles. The allowed values are in
+   * `getRegionsMeta()`'s `buffers`; any other is the server's 400.
+   */
+  buffer?: number;
+}
 
 /** The marker a retired region carries; its code still resolves */
 export type RegionRetired = zinfer<typeof retiredRegionSchema>;

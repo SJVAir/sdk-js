@@ -188,7 +188,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getRegionPesticideNotices", (o) => getRegionPesticideNotices("r", {}, o)],
   ["getRegionPesticideSummary", (o) => getRegionPesticideSummary("r", {}, o)],
   ["getRegionPesticideUse", (o) => getRegionPesticideUse("r", {}, o)],
-  ["getRegionDetails", (o) => getRegionDetails("r", o)],
+  ["getRegionDetails", (o) => getRegionDetails("r", undefined, o)],
   ["searchLocations", (o) => searchLocations({ q: "lincoln", ...o })],
   [
     "getPesticideLocations",

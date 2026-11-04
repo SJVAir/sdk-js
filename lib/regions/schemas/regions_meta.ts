@@ -50,14 +50,29 @@ export const locationTypeMetaSchema: LocationTypeMetaSchema = z.object({
   source: locationSourceSchema,
 });
 
+interface RegionBufferSchema extends
+  z.ZodObject<{
+    /** How far the boundary is widened, in miles (0 is the boundary itself) */
+    miles: z.ZodNumber;
+    /** The label to show for this choice, e.g. "+1 mile" */
+    label: z.ZodString;
+  }> {}
+export const regionBufferSchema: RegionBufferSchema = z.object({
+  miles: z.number(),
+  label: z.string(),
+});
+
 interface RegionsMetaSchema extends
   z.ZodObject<{
     /** The types of regions used by SJVAir */
     types: z.ZodRecord<z.ZodString, RegionTypeMetaSchema>;
     /** The types of locations (schools, child care), keyed by type */
     location_types: z.ZodRecord<LocationTypeSchema, LocationTypeMetaSchema>;
+    /** The distances every `?buffer=` parameter accepts */
+    buffers: z.ZodArray<RegionBufferSchema>;
   }> {}
 export const regionsMetaSchema: RegionsMetaSchema = z.object({
   types: z.record(z.string(), regionTypeMetaSchema),
   location_types: z.record(locationTypeSchema, locationTypeMetaSchema),
+  buffers: z.array(regionBufferSchema),
 });
