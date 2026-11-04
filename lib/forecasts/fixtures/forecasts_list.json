@@ -1,0 +1,75 @@
+{
+  "data": [
+    {
+      "id": "6f859",
+      "region": {
+        "id": "r6phe",
+        "type": "county",
+        "external_id": "06019",
+        "name": "Fresno County"
+      },
+      "zone_name": "Fresno",
+      "forecast_date": "2026-11-04",
+      "issued_date": "2026-11-03",
+      "published_at": "2026-11-03T21:35:56Z",
+      "aqi_value": 71,
+      "aqi_category": "Moderate",
+      "pollutant": "PM2.5",
+      "color": "#ffcb00",
+      "burn_status": "Registered",
+      "burn_status_text": "Registered: No Burning Unless Registered",
+      "air_alert": false,
+      "air_alert_start": null,
+      "air_alert_end": null
+    },
+    {
+      "id": "cqbm4",
+      "region": {
+        "id": "zuaty",
+        "type": "custom",
+        "external_id": "sjvapcd-kern-airbasin",
+        "name": "Kern (SJV Air Basin portion)"
+      },
+      "zone_name": "Kern (SJV Air Basin portion)",
+      "forecast_date": "2026-11-04",
+      "issued_date": "2026-11-03",
+      "published_at": "2026-11-03T21:35:56Z",
+      "aqi_value": 60,
+      "aqi_category": "Moderate",
+      "pollutant": "PM2.5",
+      "color": "#ffe800",
+      "burn_status": "Registered",
+      "burn_status_text": "Registered: No Burning Unless Registered",
+      "air_alert": false,
+      "air_alert_start": null,
+      "air_alert_end": null
+    },
+    {
+      "id": "a89r8",
+      "region": {
+        "id": "ecxum",
+        "type": "county",
+        "external_id": "06031",
+        "name": "Kings County"
+      },
+      "zone_name": "Kings",
+      "forecast_date": "2026-11-04",
+      "issued_date": "2026-11-03",
+      "published_at": "2026-11-03T21:35:56Z",
+      "aqi_value": 64,
+      "aqi_category": "Moderate",
+      "pollutant": "PM2.5",
+      "color": "#ffdd00",
+      "burn_status": "Registered",
+      "burn_status_text": "Registered: No Burning Unless Registered",
+      "air_alert": false,
+      "air_alert_start": null,
+      "air_alert_end": null
+    }
+  ],
+  "page": 1,
+  "count": 9,
+  "pages": 1,
+  "has_next_page": false,
+  "has_previous_page": false
+}

@@ -1,0 +1,114 @@
+{
+  "data": [
+    {
+      "id": "hu7vc",
+      "name": "93631",
+      "slug": "93631",
+      "type": "zipcode",
+      "external_id": "93631",
+      "retired": null,
+      "boundary": {
+        "id": "c2tau",
+        "version": "2020",
+        "bbox": [
+          -119.618098,
+          36.390338,
+          -119.39483,
+          36.575828
+        ]
+      },
+      "also_in": [
+        {
+          "type": "county",
+          "external_id": "06031",
+          "name": "Kings County"
+        },
+        {
+          "type": "county",
+          "external_id": "06107",
+          "name": "Tulare County"
+        }
+      ]
+    },
+    {
+      "id": "rdvph",
+      "name": "93622",
+      "slug": "93622",
+      "type": "zipcode",
+      "external_id": "93622",
+      "retired": null,
+      "boundary": {
+        "id": "w9hpe",
+        "version": "2020",
+        "bbox": [
+          -120.889493,
+          36.604538,
+          -120.31188,
+          36.995425999999995
+        ]
+      },
+      "also_in": [
+        {
+          "type": "county",
+          "external_id": "06039",
+          "name": "Madera County"
+        },
+        {
+          "type": "county",
+          "external_id": "06047",
+          "name": "Merced County"
+        }
+      ]
+    },
+    {
+      "id": "9224e",
+      "name": "93656",
+      "slug": "93656",
+      "type": "zipcode",
+      "external_id": "93656",
+      "retired": null,
+      "boundary": {
+        "id": "jtty3",
+        "version": "2020",
+        "bbox": [
+          -120.06380300000001,
+          36.371587999999996,
+          -119.79344499999999,
+          36.553872999999996
+        ]
+      },
+      "also_in": [
+        {
+          "type": "county",
+          "external_id": "06031",
+          "name": "Kings County"
+        }
+      ]
+    },
+    {
+      "id": "xstz8",
+      "name": "93654",
+      "slug": "93654",
+      "type": "zipcode",
+      "external_id": "93654",
+      "retired": null,
+      "boundary": {
+        "id": "79rwf",
+        "version": "2020",
+        "bbox": [
+          -119.503452,
+          36.531853999999996,
+          -119.29875799999999,
+          36.793501
+        ]
+      },
+      "also_in": [
+        {
+          "type": "county",
+          "external_id": "06107",
+          "name": "Tulare County"
+        }
+      ]
+    }
+  ]
+}

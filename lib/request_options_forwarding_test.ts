@@ -2,6 +2,13 @@ import { assert, assertEquals, assertRejects } from "@std/assert";
 import type { RequestOptions } from "$http";
 import { stubFetch } from "./http/fetch_stub_test_utils.ts";
 import { getCollocationSites } from "./collocation_sites/get_collocation_sites.ts";
+import { getCalHeatScoreMeta } from "./calheatscore/get_calheatscore_meta.ts";
+import { getCalHeatScores } from "./calheatscore/get_calheatscores.ts";
+import { getHeatForPlace } from "./calheatscore/get_heat_for_place.ts";
+import { getForecastForPlace } from "./forecasts/get_forecast_for_place.ts";
+import { getForecasts } from "./forecasts/get_forecasts.ts";
+import { getForecastsMeta } from "./forecasts/get_forecasts_meta.ts";
+import { getHMSMeta } from "./hms/get_hms_meta.ts";
 import { getHMSFire } from "./hms/fire/get_fire.ts";
 import { getHMSFireById } from "./hms/fire/get_fire_by_id.ts";
 import { getHMSSmoke } from "./hms/smoke/get_smoke.ts";
@@ -72,6 +79,7 @@ import {
   getRegionSummariesBulkSeasonal,
   getRegionSummariesBulkYearly,
 } from "./regions/get_region_summaries_bulk.ts";
+import { getRegionsGeoJSON } from "./regions/get_regions_geojson.ts";
 import { getRegionsList } from "./regions/get_regions_list.ts";
 import { getRegionsMeta } from "./regions/get_regions_meta.ts";
 
@@ -94,6 +102,19 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getHMSFireById", (o) => getHMSFireById("x", o)],
   ["getHMSSmoke", (o) => getHMSSmoke(o)],
   ["getHMSSmokeById", (o) => getHMSSmokeById("x", o)],
+  ["getHMSMeta", (o) => getHMSMeta(o)],
+  ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
+  ["getForecastsMeta", (o) => getForecastsMeta(o)],
+  ["getCalHeatScores", (o) => getCalHeatScores({}, o)],
+  [
+    "getHeatForPlace",
+    (o) => getHeatForPlace({ monitor: "m" }, {}, o),
+  ],
+  ["getForecasts", (o) => getForecasts({}, o)],
+  [
+    "getForecastForPlace",
+    (o) => getForecastForPlace({ monitor: "m" }, {}, o),
+  ],
   ["getClosestMonitors", (o) => getClosestMonitors("pm25", 1, 2, o)],
   ["getClosestMonitor", (o) => getClosestMonitor("pm25", 1, 2, o)],
   ["listMonitorArchivesPage", (o) => listMonitorArchivesPage("m", 1, o)],
@@ -215,6 +236,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ],
   ["getRegionsList", (o) => getRegionsList({ name: "x" }, o)],
   ["getRegionsMeta", (o) => getRegionsMeta(o)],
+  ["getRegionsGeoJSON", (o) => getRegionsGeoJSON({ type: "county" }, o)],
 ];
 
 for (const [name, call] of rows) {

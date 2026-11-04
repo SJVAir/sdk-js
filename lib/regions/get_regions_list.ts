@@ -27,7 +27,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import type { RegionListItem, RegionType } from "./types.ts";
+import type { RegionListItem, RegionsWithinMode, RegionType } from "./types.ts";
 
 /**
  * The filters available when listing regions. At least one of `name`, `slug`,
@@ -38,6 +38,9 @@ import type { RegionListItem, RegionType } from "./types.ts";
  * `within` is an additional filter on top of whichever of `name`/`slug`/`type`
  * satisfies the requirement above — it restricts results to regions whose
  * boundary falls within one or more other regions, by region sqid.
+ * `within_mode` chooses how: `"contained"` (the default) keeps regions wholly
+ * inside, `"overlaps"` also keeps ones that straddle the edge, and flags each
+ * with the other regions it is in (`also_in`).
  */
 export type RegionsListFilters =
   | {
@@ -45,18 +48,21 @@ export type RegionsListFilters =
     slug?: string;
     type?: RegionType;
     within?: string | Array<string>;
+    within_mode?: RegionsWithinMode;
   }
   | {
     name?: string;
     slug: string;
     type?: RegionType;
     within?: string | Array<string>;
+    within_mode?: RegionsWithinMode;
   }
   | {
     name?: string;
     slug?: string;
     type: RegionType;
     within?: string | Array<string>;
+    within_mode?: RegionsWithinMode;
   };
 
 /**
@@ -95,6 +101,10 @@ export async function getRegionsList(
 
   if (filters.within !== undefined) {
     searchParams.within = filters.within;
+  }
+
+  if (filters.within_mode !== undefined) {
+    searchParams.within_mode = filters.within_mode;
   }
 
   return await jsonCall<Array<RegionListItem>>({

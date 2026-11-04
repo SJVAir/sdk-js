@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { choiceSchema, scaleSchema } from "../../meta/schemas/scale.ts";
 
 interface SJVAirMonitorEntryMetaSchema extends
   z.ZodObject<{
@@ -53,6 +54,8 @@ interface SJVAirEntryLevelMetaSchema extends
     range: z.ZodTuple<[z.ZodNumber, z.ZodNumber]>;
     /** A presentable representation of any notice that may accompany this level */
     guidance: z.ZodNullable<z.ZodString>;
+    /** The rank of this level; 0 is the lowest */
+    tier: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
   }> {}
 export const sjvairEntryLevelMetaSchema: SJVAirEntryLevelMetaSchema = z.object({
   name: z.string(),
@@ -60,6 +63,7 @@ export const sjvairEntryLevelMetaSchema: SJVAirEntryLevelMetaSchema = z.object({
   color: z.string(),
   range: z.tuple([z.number(), z.number()]),
   guidance: z.string().nullable(),
+  tier: z.number().nullable().optional(),
 });
 
 interface SJVAirEntryMetaSchema extends
@@ -76,6 +80,8 @@ interface SJVAirEntryMetaSchema extends
     levels: z.ZodNullable<z.ZodRecord<z.ZodString, SJVAirEntryLevelMetaSchema>>;
     /** The fields included on this entry type */
     fields: z.ZodArray<z.ZodString>;
+    /** The scale that turns this entry type's value into a level */
+    scale: z.ZodOptional<z.ZodNullable<typeof scaleSchema>>;
   }> {}
 export const sjvairEntryMetaSchema: SJVAirEntryMetaSchema = z.object({
   label: z.string(),
@@ -84,6 +90,7 @@ export const sjvairEntryMetaSchema: SJVAirEntryMetaSchema = z.object({
   epa_aqs_code: z.number().nullable(),
   levels: z.record(z.string(), sjvairEntryLevelMetaSchema).nullable(),
   fields: z.array(z.string()),
+  scale: scaleSchema.nullable().optional(),
 });
 
 interface SJVAirMonitorsMetaSchema extends
@@ -96,6 +103,10 @@ interface SJVAirMonitorsMetaSchema extends
     monitors: z.ZodRecord<z.ZodString, SJVAirMonitorDeviceMetaSchema>;
     /** The types of entries contained in SJVAir */
     entries: z.ZodRecord<z.ZodString, SJVAirEntryMetaSchema>;
+    /** The data stages, by key */
+    stages: z.ZodOptional<z.ZodRecord<z.ZodString, typeof choiceSchema>>;
+    /** The processors, by key */
+    processors: z.ZodOptional<z.ZodRecord<z.ZodString, typeof choiceSchema>>;
   }> {}
 
 export const sjvairMonitorsMetaSchema: SJVAirMonitorsMetaSchema = z.object({
@@ -103,4 +114,6 @@ export const sjvairMonitorsMetaSchema: SJVAirMonitorsMetaSchema = z.object({
   available_pollutants: z.array(z.string()),
   monitors: z.record(z.string(), sjvairMonitorDeviceMetaSchema),
   entries: z.record(z.string(), sjvairEntryMetaSchema),
+  stages: z.record(z.string(), choiceSchema).optional(),
+  processors: z.record(z.string(), choiceSchema).optional(),
 });

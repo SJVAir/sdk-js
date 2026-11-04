@@ -9,7 +9,11 @@ import type {
   locationSchema,
   locationSourceSchema,
   regionCategorySchema,
+  regionFeatureCollectionSchema,
+  regionFeatureSchema,
   regionListItemSchema,
+  regionOverlapSchema,
+  regionRefSchema,
   regionSchema,
   regionsMetaSchema,
   regionSummarySchema,
@@ -20,11 +24,17 @@ import type {
   retiredRegionSchema,
 } from "./schemas/mod.ts";
 
+/** How `within` matches: wholly inside (the default), or touching at all */
+export type RegionsWithinMode = "contained" | "overlaps";
+
 /** The type of geography a region represents */
 export type RegionType = zinfer<typeof regionTypeSchema>;
 
 /** The backend classification a region's type belongs to */
 export type RegionCategory = zinfer<typeof regionCategorySchema>;
+
+/** A short reference to a region: its id, type, code and name */
+export type RegionRef = zinfer<typeof regionRefSchema>;
 
 /** A region's current boundary */
 export type RegionBoundary = zinfer<typeof boundarySchema>;
@@ -68,3 +78,14 @@ export type Location = zinfer<typeof locationSchema>;
 
 /** The marker a retired location carries; its code still resolves */
 export type LocationRetired = zinfer<typeof retiredLocationSchema>;
+
+/** A region named by its code, as `also_in` lists the other regions it straddles */
+export type RegionOverlap = zinfer<typeof regionOverlapSchema>;
+
+/** One region as a GeoJSON feature */
+export type RegionFeature = zinfer<typeof regionFeatureSchema>;
+
+/** Regions as a GeoJSON feature collection */
+export type RegionFeatureCollection = zinfer<
+  typeof regionFeatureCollectionSchema
+>;

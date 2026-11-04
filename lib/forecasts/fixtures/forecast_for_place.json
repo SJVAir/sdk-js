@@ -1,0 +1,64 @@
+{
+  "data": {
+    "place": {
+      "region": {
+        "type": "county",
+        "external_id": "06019",
+        "name": "Fresno County"
+      }
+    },
+    "zone": {
+      "id": "r6phe",
+      "type": "county",
+      "external_id": "06019",
+      "name": "Fresno County"
+    },
+    "rule": "county",
+    "forecasts": [
+      {
+        "id": "jaegc",
+        "region": {
+          "id": "r6phe",
+          "type": "county",
+          "external_id": "06019",
+          "name": "Fresno County"
+        },
+        "zone_name": "Fresno",
+        "forecast_date": "2026-11-03",
+        "issued_date": "2026-11-03",
+        "published_at": "2026-11-03T21:35:56Z",
+        "aqi_value": 56,
+        "aqi_category": "Moderate",
+        "pollutant": "PM2.5",
+        "color": "#fff200",
+        "burn_status": "Registered",
+        "burn_status_text": "Registered: No Burning Unless Registered",
+        "air_alert": false,
+        "air_alert_start": null,
+        "air_alert_end": null
+      },
+      {
+        "id": "6f859",
+        "region": {
+          "id": "r6phe",
+          "type": "county",
+          "external_id": "06019",
+          "name": "Fresno County"
+        },
+        "zone_name": "Fresno",
+        "forecast_date": "2026-11-04",
+        "issued_date": "2026-11-03",
+        "published_at": "2026-11-03T21:35:56Z",
+        "aqi_value": 71,
+        "aqi_category": "Moderate",
+        "pollutant": "PM2.5",
+        "color": "#ffcb00",
+        "burn_status": "Registered",
+        "burn_status_text": "Registered: No Burning Unless Registered",
+        "air_alert": false,
+        "air_alert_start": null,
+        "air_alert_end": null
+      }
+    ]
+  }
+}

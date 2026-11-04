@@ -64,6 +64,20 @@ export const regionSchema: RegionSchema = z.object({
   boundary: z.nullable(boundarySchema),
 });
 
+export interface RegionOverlapSchema extends
+  z.ZodObject<{
+    type: RegionTypeSchema;
+    external_id: z.ZodNullable<z.ZodString>;
+    name: z.ZodString;
+  }> {}
+
+/** A region named by its code, as `also_in` lists the other regions it straddles */
+export const regionOverlapSchema: RegionOverlapSchema = z.object({
+  type: regionTypeSchema,
+  external_id: z.nullable(z.string()),
+  name: z.string(),
+});
+
 export interface RegionListItemSchema extends
   z.ZodObject<{
     id: z.ZodString;
@@ -82,6 +96,12 @@ export interface RegionListItemSchema extends
 
     /** The region's current boundary, without its geometry */
     boundary: z.ZodNullable<BoundaryListSchema>;
+
+    /**
+     * The other regions of the parent types this region straddles; only sent
+     * when listing with `within_mode: "overlaps"`
+     */
+    also_in: z.ZodOptional<z.ZodArray<RegionOverlapSchema>>;
   }> {}
 
 /**
@@ -96,4 +116,5 @@ export const regionListItemSchema: RegionListItemSchema = z.object({
   external_id: z.nullable(z.string()),
   retired: z.nullable(retiredRegionSchema),
   boundary: z.nullable(boundaryListSchema),
+  also_in: z.array(regionOverlapSchema).optional(),
 });
