@@ -191,9 +191,7 @@ the request `body` replaced by `"[redacted]"`.
 - **Specs and plans** for SDK work live in this repo: `docs/superpowers/specs/`
   (designs) and `docs/superpowers/plans/` (implementation plans), named
   `YYYY-MM-DD-<topic>`. SDK work done for the data dashboard is tracked in
-  data-dashboard's `TODO.md`, but its spec and plan still go here; a server
-  change it needs gets its own spec in sjvair.com only if it's more than a small
-  part of the work.
+  data-dashboard's `TODO.md`, but its spec and plan still go here.
 - **`CHANGELOG.md`** records what each release adds, changes and breaks. Add a
   line under the upcoming version in the PR that makes the change.
 - **`DEFERRED.md`** is the register of deferred SDK work, including breaking
