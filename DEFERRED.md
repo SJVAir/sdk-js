@@ -34,8 +34,8 @@ this file only by being done or explicitly dropped by the user (moved to
 
 ## Breaking changes (next major version)
 
-None open. (Exact entry bounds by default is done for 5.0.0, not yet in a beta;
-see `docs/superpowers/specs/2026-11-04-exact-entry-bounds-design.md`.)
+None open. (Exact entry bounds by default shipped in 5.0.0-beta.2; see
+`docs/superpowers/specs/2026-11-04-exact-entry-bounds-design.md`.)
 
 ## Small follow-ups
 
