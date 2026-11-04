@@ -188,6 +188,8 @@ the request `body` replaced by `"[redacted]"`.
   current server really omits a field or sends `null` (e.g. `available` exists
   only on air-quality pollutants). A beta therefore needs a server running the
   matching sjvair.com branch; say so in the PR.
+- **`CHANGELOG.md`** records what each release adds, changes and breaks. Add a
+  line under the upcoming version in the PR that makes the change.
 - **`DEFERRED.md`** is the register of deferred SDK work, including breaking
   changes waiting for the next major version. Add an entry (with why and a
   revisit trigger) whenever something is deferred, and check it when planning a
@@ -200,7 +202,7 @@ Pushing a `v*` git tag triggers the GitHub Actions workflow which runs
 
 **Branches (decided 2026-10-25):** `main` matches the latest published release.
 Work for an upcoming version goes through a `release/<version>` branch (e.g.
-`release/4.8.0`), created from `main`. Feature and fix branches open their PRs
+`release/5.0.0`), created from `main`. Feature and fix branches open their PRs
 into that release branch, and pre-releases (`<version>-beta.N`) are tagged from
 it. At the final release, the release branch merges into `main` and `v<version>`
 is tagged there. Only urgent fixes to the current release go straight to `main`

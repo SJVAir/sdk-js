@@ -122,7 +122,7 @@ version, set aside in a conflict) as a `conflict` snapshot at
 `form.base_version`, without changing the document; an out-of-date
 `base_version` is refused as `stale_base`, like a save.
 
-The documents module is expected to move out of the public SDK before 4.8.0 is
+The documents module is expected to move out of the public SDK before 5.0.0 is
 released (see `DEFERRED.md`).
 
 `listDocuments({ since })` takes the previous list's `cursor`; it lists

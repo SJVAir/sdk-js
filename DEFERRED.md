@@ -5,7 +5,7 @@ Each entry says why it was deferred and what triggers revisiting it. Items leave
 this file only by being done or explicitly dropped by the user (moved to
 "Dropped", with a reason).
 
-## Before 4.8.0 final
+## Before 5.0.0 final
 
 - **Move the documents module out of the public SDK.** _Decided 2026-11-02 by
   the user: it must happen before the data dashboard goes live._
@@ -18,9 +18,10 @@ this file only by being done or explicitly dropped by the user (moved to
   still open. The data dashboard's `DEFERRED.md` tracks the same item.
 
   Kept for now so the dashboard isn't blocked: the module has shipped only in
-  prereleases (4.8.0-beta.2, and `createSnapshot` in beta.3), and `latest` is
-  still 4.7.0, so removing it before 4.8.0 final breaks no stable release. Once
-  4.8.0 final ships with it, removing it waits for 5.0.
+  prereleases (4.8.0-beta.2, and `createSnapshot` in beta.3; the release was
+  renamed 5.0.0 on 2026-11-04), and `latest` is still 4.7.0, so removing it
+  before 5.0.0 final breaks no stable release. Once 5.0.0 final ships with it,
+  removing it waits for 6.0.
 
   Things to settle when doing it:
   - a separate JSR package is still public; to keep it out of view, it has to
@@ -28,7 +29,7 @@ this file only by being done or explicitly dropped by the user (moved to
   - a second package only pays off once a second app needs these endpoints;
   - the dashboard's pin and imports (`@sjvair/sdk/documents`) move with it.
 
-  **Revisit when** 4.8.0 final is being prepared (before its tag), or the data
+  **Revisit when** 5.0.0 final is being prepared (before its tag), or the data
   dashboard's go-live is being planned, whichever comes first.
 
 ## Breaking changes (next major version)
@@ -52,8 +53,9 @@ this file only by being done or explicitly dropped by the user (moved to
   - add the day-rounding flag wherever one relies on today's widening;
   - drop `exact: true` from the data dashboard, which passes it today.
 
-  **Revisit when** the next major sdk-js version is planned, or sooner if
-  another caller is surprised by the widening.
+  **Scheduled for 5.0.0** (the user, 2026-11-04): it comes as its own spec and
+  PR into `release/5.0.0`, after the caller audit above. **Revisit when** that
+  spec starts, before 5.0.0 final.
 
 ## Dropped
 
