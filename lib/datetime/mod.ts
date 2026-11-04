@@ -21,8 +21,9 @@
  * console.log(dateRange);
  * // Prints: { gte: 2023-01-01T00:00:00.000Z, lte: 2023-12-31T00:00:00.000Z }
  *
- * const otherDateRange = getValidDateRange(new Date(), new Date());
- * console.log(otherDateRange);
+ * // Round out to whole Pacific days (bounds are otherwise kept as given).
+ * const today = getValidDateRange(new Date(), new Date(), { wholeDays: true });
+ * console.log(today);
  * // Prints: { gte: 2025-09-25T07:00:00.000Z, lte: 2025-09-26T06:59:59.999Z } (example output)
  *
  * const yetAnother = getValidDateRange("03-17-1994");
