@@ -7,6 +7,8 @@
 for older server responses. It was called 4.8.0 through 4.8.0-beta.6; the call
 changes below made it a major version.
 
+Betas: **5.0.0-beta.1** (2026-11-04): everything below except "Planned".
+
 ### Breaking
 
 - `getHMSSmoke(options)` and `getHMSFire(options)` are now

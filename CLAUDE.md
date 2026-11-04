@@ -202,7 +202,8 @@ the request `body` replaced by `"[redacted]"`.
 ## Publishing
 
 Pushing a `v*` git tag triggers the GitHub Actions workflow which runs
-`deno publish` to JSR. Update `"version"` in `deno.json` before tagging.
+`deno publish` to JSR. Update `"version"` in `deno.json` before tagging (a
+`chore: Release <version>` commit), and note the release in `CHANGELOG.md`.
 
 **Branches (decided 2026-10-25):** `main` matches the latest published release.
 Work for an upcoming version goes through a `release/<version>` branch (e.g.
