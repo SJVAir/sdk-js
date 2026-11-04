@@ -28,6 +28,10 @@ export async function getCalHeatScores(
   filters: CalHeatScoreFilters = {},
   options?: RequestOptions,
 ): Promise<Array<CalHeatScore>> {
+  // An empty `zipcode__in` filter is ignored by the server and would return
+  // every ZIP code, so an empty list means there is nothing to ask for.
+  if (Array.isArray(filters.zipcode) && filters.zipcode.length === 0) return [];
+
   const searchParams: Record<string, string> = {};
   if (filters.date !== undefined) searchParams.date = filters.date;
   if (Array.isArray(filters.zipcode)) {

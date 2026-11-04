@@ -114,6 +114,20 @@ Deno.test({
       }
     });
 
+    await t.step(
+      "getCalHeatScores with no zipcodes sends nothing",
+      async () => {
+        const stub = stubFetch(() => jsonResponse(listFixture));
+        try {
+          const rows = await getCalHeatScores({ zipcode: [] });
+          assertEquals(rows, []);
+          assertEquals(stub.calls.length, 0);
+        } finally {
+          stub.restore();
+        }
+      },
+    );
+
     await t.step("getCalHeatScores follows pages", async () => {
       const stub = stubFetch((url) => {
         const page = url.searchParams.get("page") ?? "1";
@@ -152,6 +166,13 @@ Deno.test({
       } finally {
         stub.restore();
       }
+    });
+
+    await t.step("a monitor place validates", () => {
+      validatePlace({
+        ...placeData,
+        place: { monitor: "abc" },
+      });
     });
 
     await t.step("getHeatForPlace sends a monitor and one date", async () => {
