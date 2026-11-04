@@ -19,6 +19,11 @@ Betas: **5.0.0-beta.1** (2026-11-04): everything below except "Planned".
   their request options without an error. (#40)
 - `getRegionDetails(regionId, options)` is now
   `getRegionDetails(regionId, query?, options?)`. (#40)
+- Entry date ranges (`getMonitorEntries`, `getMonitorEntriesCSVUrl`,
+  `getValidDateRange`) send the bounds you give unchanged; they no longer widen
+  two bounds within five minutes of each other to whole Pacific days. Pass
+  `wholeDays: true` to round a range out to whole Pacific days. `exact`
+  (5.0.0-beta.1 and earlier betas) is removed.
 - Metadata fields the server now always sends are required in the schemas, e.g.
   `getRegionsMeta` needs `location_types` and `buffers`. (#39, #40)
 
@@ -40,7 +45,6 @@ Betas: **5.0.0-beta.1** (2026-11-04): everything below except "Planned".
   region and smoke density. (#40)
 - `@sjvair/sdk/calenviroscreen`: tract scores by region (`getCalEnviroScreen`)
   and for one tract (`getCalEnviroScreenTract`), for CES 4.0 and 5.0. (#40)
-- `exact: true` on entry date ranges, to send bounds unchanged.
 - The documents module (private; moves out of the public SDK before 5.0.0, see
   `DEFERRED.md`).
 
@@ -51,6 +55,4 @@ Betas: **5.0.0-beta.1** (2026-11-04): everything below except "Planned".
 
 ### Planned for 5.0.0
 
-- Exact entry bounds by default, with whole Pacific days as an opt-in (see
-  `DEFERRED.md`).
 - The documents module moves out of the public SDK.

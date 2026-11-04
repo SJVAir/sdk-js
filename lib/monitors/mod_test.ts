@@ -1,4 +1,3 @@
-import { toApiTimestamp } from "$datetime";
 import { origin, setOrigin } from "$http";
 import {
   COORDINATES,
@@ -568,70 +567,78 @@ Deno.test("Module: Monitors request params (stubbed fetch)", async (t) => {
   });
 
   await t.step(
-    "getMonitorEntries exact sends the exact instants, no widening",
+    "getMonitorEntries sends close bounds unchanged by default",
     async () => {
-      const gte = new Date("2026-10-22T18:00:30.250Z");
-      const lte = new Date("2026-10-22T18:02:10.500Z");
       const stub = stubFetch(emptyPage);
       try {
         await getMonitorEntries({
           monitorId: "m",
           entryType: "pm25",
-          timestampGte: gte,
-          timestampLte: lte,
-          exact: true,
+          timestampGte: new Date("2026-10-22T18:00:30.250Z"),
+          timestampLte: new Date("2026-10-22T18:02:10.500Z"),
         });
       } finally {
         stub.restore();
       }
 
       const params = stub.calls[0].url.searchParams;
-      assertEquals(params.get("timestamp__gte"), toApiTimestamp(gte));
-      assertEquals(params.get("timestamp__lte"), toApiTimestamp(lte));
       assertEquals(params.get("timestamp__gte"), "2026-10-22T18:00:30.250Z");
       assertEquals(params.get("timestamp__lte"), "2026-10-22T18:02:10.500Z");
-      assertEquals(params.has("exact"), false);
     },
   );
 
   await t.step(
-    "getMonitorEntries without exact still widens close bounds",
+    "getMonitorEntries wholeDays rounds to Pacific days",
     async () => {
       const stub = stubFetch(emptyPage);
       try {
         await getMonitorEntries({
           monitorId: "m",
           entryType: "pm25",
-          timestampGte: new Date("2026-10-22T18:00:00Z"),
-          timestampLte: new Date("2026-10-22T18:02:00Z"),
+          timestampGte: "2026-11-02T17:00:00Z",
+          timestampLte: "2026-11-04T11:00:00Z",
+          wholeDays: true,
         });
       } finally {
         stub.restore();
       }
 
       const params = stub.calls[0].url.searchParams;
-      assertEquals(params.get("timestamp__gte"), "2026-10-22T07:00:00.000Z");
-      assertEquals(params.get("timestamp__lte"), "2026-10-23T06:59:59.999Z");
+      assertEquals(params.get("timestamp__gte"), "2026-11-02T08:00:00.000Z");
+      assertEquals(params.get("timestamp__lte"), "2026-11-05T07:59:59.999Z");
+      assertEquals(params.has("wholeDays"), false);
     },
   );
 
-  await t.step("getMonitorEntriesCSVUrl exact keeps the exact instants", () => {
-    const url = getMonitorEntriesCSVUrl({
-      monitorId: "m",
-      entryType: "pm25",
-      timestampGte: new Date("2026-10-22T18:00:30.250Z"),
-      timestampLte: new Date("2026-10-22T18:02:10.500Z"),
-      exact: true,
-    });
-    assertEquals(
-      url.searchParams.get("timestamp__gte"),
-      "2026-10-22T18:00:30.250Z",
-    );
-    assertEquals(
-      url.searchParams.get("timestamp__lte"),
-      "2026-10-22T18:02:10.500Z",
-    );
-  });
+  await t.step(
+    "getMonitorEntriesCSVUrl sends close bounds unchanged by default",
+    () => {
+      const params = getMonitorEntriesCSVUrl({
+        monitorId: "m",
+        entryType: "pm25",
+        timestampGte: new Date("2026-10-22T18:00:30.250Z"),
+        timestampLte: new Date("2026-10-22T18:02:10.500Z"),
+      }).searchParams;
+      assertEquals(params.get("timestamp__gte"), "2026-10-22T18:00:30.250Z");
+      assertEquals(params.get("timestamp__lte"), "2026-10-22T18:02:10.500Z");
+    },
+  );
+
+  await t.step(
+    "getMonitorEntriesCSVUrl wholeDays rounds to Pacific days",
+    () => {
+      const params = getMonitorEntriesCSVUrl({
+        monitorId: "m",
+        entryType: "pm25",
+        timestampGte: "2026-11-02T17:00:00Z",
+        timestampLte: "2026-11-04T11:00:00Z",
+        wholeDays: true,
+      }).searchParams;
+      assertEquals(params.get("timestamp__gte"), "2026-11-02T08:00:00.000Z");
+      assertEquals(params.get("timestamp__lte"), "2026-11-05T07:59:59.999Z");
+      assertEquals(params.has("wholeDays"), false);
+    },
+  );
 
   await t.step(
     "getMonitorEntriesCSVUrl sends processor and stage when given",
@@ -683,11 +690,11 @@ Deno.test("Module: Monitors request params (stubbed fetch)", async (t) => {
 
     assertEquals(
       url.searchParams.get("timestamp__gte"),
-      "2026-10-22T07:00:00.000Z",
+      "2026-10-22T12:00:00.000Z",
     );
     assertEquals(
       url.searchParams.get("timestamp__lte"),
-      "2026-10-23T06:59:59.999Z",
+      "2026-10-22T12:01:00.000Z",
     );
   });
 });
