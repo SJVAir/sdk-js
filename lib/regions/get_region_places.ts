@@ -81,8 +81,10 @@ export type MonitorPlace = {
   type?: PlaceLookupType;
 };
 
-function joinTypes(type: PlaceLookupType): string {
-  return Array.isArray(type) ? type.join(",") : type;
+/** The `type` value to send, or undefined when there is nothing to scope by */
+function joinTypes(type?: PlaceLookupType): string | undefined {
+  const joined = Array.isArray(type) ? type.join(",") : type;
+  return joined || undefined;
 }
 
 function roundCoordinate(value: number): number {
@@ -149,7 +151,8 @@ export async function lookupRegionPlace(
 
   if ("monitor" in first) {
     const searchParams: Record<string, string> = { monitor: first.monitor };
-    if (first.type) searchParams.type = joinTypes(first.type);
+    const type = joinTypes(first.type);
+    if (type) searchParams.type = type;
     return await jsonCall<Array<RegionListItem>>({
       url: "regions/places/lookup",
       searchParams,
@@ -161,7 +164,8 @@ export async function lookupRegionPlace(
     lat: roundCoordinate(first.lat),
     lon: roundCoordinate(first.lon),
   };
-  if (first.type) body.type = joinTypes(first.type);
+  const type = joinTypes(first.type);
+  if (type) body.type = type;
   return await jsonCall<Array<RegionListItem>>({
     url: "regions/places/lookup",
     init: {

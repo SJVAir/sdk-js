@@ -445,3 +445,18 @@ Deno.test("lookupRegionPlace (monitor) GETs with searchParams", async () => {
   assertEquals(url.searchParams.get("type"), "zipcode,county");
   assertEquals(url.searchParams.has("lat"), false);
 });
+
+Deno.test("lookupRegionPlace omits an empty type array", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await lookupRegionPlace({ monitor: "abc", type: [] });
+    await lookupRegionPlace({ lat: 36.5, lon: -119.5, type: [] });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.has("type"), false);
+  assertEquals(
+    "type" in JSON.parse(stub.calls[1].init.body as string),
+    false,
+  );
+});

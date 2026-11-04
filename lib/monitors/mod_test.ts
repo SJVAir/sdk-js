@@ -759,3 +759,13 @@ Deno.test("getMonitorsList still rejects an empty default list", async () => {
     stub.restore();
   }
 });
+
+Deno.test("getMonitorsList treats an empty dataset as absent", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await assertRejects(() => getMonitorsList({ dataset: "" }));
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.has("dataset"), false);
+});

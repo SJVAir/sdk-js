@@ -74,7 +74,7 @@ export async function getMonitorsList(
     (response) => {
       if (
         !Array.isArray(response.body.data) ||
-        (dataset === undefined && response.body.data.length <= 0)
+        (!dataset && response.body.data.length <= 0)
       ) {
         throw new APIError("Failed to fetch all monitors", response);
       }
