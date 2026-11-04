@@ -3,9 +3,9 @@
  *
  * @example Usage
  * ```ts
- * import { getHmsMeta } from "@sjvair/sdk/hms/get_hms_meta";
+ * import { getHMSMeta } from "@sjvair/sdk/hms/get_hms_meta";
  *
- * const { scales } = await getHmsMeta();
+ * const { scales } = await getHMSMeta();
  * console.log(Object.keys(scales));
  * // Prints: [ "smoke-density", "fire-frp" ]
  * ```
@@ -13,7 +13,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import type { HmsMeta } from "./types.ts";
+import type { HMSMeta } from "./types.ts";
 
 /**
  * Fetches the scales HMS smoke density and fire radiative power are rated on,
@@ -23,6 +23,6 @@ import type { HmsMeta } from "./types.ts";
  *
  * @returns The `scales` by id: `smoke-density` and `fire-frp`.
  */
-export async function getHmsMeta(options?: RequestOptions): Promise<HmsMeta> {
-  return await jsonCall<HmsMeta>({ url: "hms/meta", options });
+export async function getHMSMeta(options?: RequestOptions): Promise<HMSMeta> {
+  return await jsonCall<HMSMeta>({ url: "hms/meta", options });
 }

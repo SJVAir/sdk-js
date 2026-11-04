@@ -8,7 +8,7 @@ import { getHeatForPlace } from "./calheatscore/get_heat_for_place.ts";
 import { getForecastForPlace } from "./forecasts/get_forecast_for_place.ts";
 import { getForecasts } from "./forecasts/get_forecasts.ts";
 import { getForecastsMeta } from "./forecasts/get_forecasts_meta.ts";
-import { getHmsMeta } from "./hms/get_hms_meta.ts";
+import { getHMSMeta } from "./hms/get_hms_meta.ts";
 import { getHMSFire } from "./hms/fire/get_fire.ts";
 import { getHMSFireById } from "./hms/fire/get_fire_by_id.ts";
 import { getHMSSmoke } from "./hms/smoke/get_smoke.ts";
@@ -102,7 +102,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getHMSFireById", (o) => getHMSFireById("x", o)],
   ["getHMSSmoke", (o) => getHMSSmoke(o)],
   ["getHMSSmokeById", (o) => getHMSSmokeById("x", o)],
-  ["getHmsMeta", (o) => getHmsMeta(o)],
+  ["getHMSMeta", (o) => getHMSMeta(o)],
   ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
   ["getForecastsMeta", (o) => getForecastsMeta(o)],
   ["getCalHeatScores", (o) => getCalHeatScores({}, o)],
