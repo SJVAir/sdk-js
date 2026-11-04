@@ -13,7 +13,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import { LOOKUP_MAX_CODES } from "./lookup.ts";
+import { fetchChunked } from "./lookup.ts";
 import type { RegionListItem, RegionType } from "./types.ts";
 
 /**
@@ -25,7 +25,9 @@ import type { RegionListItem, RegionType } from "./types.ts";
  *
  * @param type The type of the regions. Land-use regions have no codes yet
  * and are rejected at runtime.
- * @param codes The codes to look up, at most 100. An empty list returns `[]`
+ * @param codes The codes to look up, any number (the API takes 100 per
+ * request, so longer lists go out in concurrent batches; duplicates are sent
+ * once). An empty list returns `[]`
  * without a request.
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -39,19 +41,18 @@ export async function getRegionsByCode(
   if ((type as RegionType) === "land_use") {
     throw new Error("Land-use regions can't be looked up by code");
   }
-  if (codes.length > LOOKUP_MAX_CODES) {
-    throw new Error(
-      `getRegionsByCode looks up at most ${LOOKUP_MAX_CODES} codes at once`,
-    );
-  }
   if (codes.length === 0) return [];
 
   const wanted = new Set(codes.map((code) => code.trim()));
-  const regions = await jsonCall<Array<RegionListItem>>({
-    url: "regions",
-    searchParams: { type, external_id: codes.join(",") },
-    options,
-  });
+  // The API resolves at most 100 codes per request, so longer lists go out
+  // in concurrent batches.
+  const regions =
+    (await fetchChunked(codes, (chunk) =>
+      jsonCall<Array<RegionListItem>>({
+        url: "regions",
+        searchParams: { type, external_id: chunk.join(",") },
+        options,
+      }))).flat();
 
   // A server without the code filter ignores it and returns every region of
   // the type, so keep only the ones asked for.

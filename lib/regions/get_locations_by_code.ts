@@ -13,7 +13,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import { LOOKUP_MAX_CODES } from "./lookup.ts";
+import { fetchChunked } from "./lookup.ts";
 import type { Location, LocationSource } from "./types.ts";
 
 /**
@@ -23,7 +23,9 @@ import type { Location, LocationSource } from "./types.ts";
  * Unknown codes are left out of the result.
  *
  * @param source Where the codes come from.
- * @param codes The codes to look up, at most 100. An empty list returns `[]`
+ * @param codes The codes to look up, any number (the API takes 100 per
+ * request, so longer lists go out in concurrent batches; duplicates are sent
+ * once). An empty list returns `[]`
  * without a request.
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -34,24 +36,27 @@ export async function getLocationsByCode(
   codes: Array<string>,
   options?: RequestOptions,
 ): Promise<Array<Location>> {
-  if (codes.length > LOOKUP_MAX_CODES) {
-    throw new Error(
-      `getLocationsByCode looks up at most ${LOOKUP_MAX_CODES} codes at once`,
-    );
-  }
   if (codes.length === 0) return [];
 
   const wanted = new Set(codes.map((code) => code.trim()));
-  const locations = await jsonCall<Array<Location>>({
-    url: "regions/locations",
-    searchParams: { source, external_id: codes.join(",") },
-    options,
-  });
+  // The API resolves at most 100 codes per request, so longer lists go out
+  // in concurrent batches.
+  const locations =
+    (await fetchChunked(codes, (chunk) =>
+      jsonCall<Array<Location>>({
+        url: "regions/locations",
+        searchParams: { source, external_id: chunk.join(",") },
+        options,
+      }))).flat();
 
   // Keep only the locations asked for, by `external_id` or any alias, in case
-  // a server ignores the code filter.
-  return locations.filter((location) =>
-    wanted.has(location.external_id) ||
-    location.aliases.some((alias) => wanted.has(alias))
-  );
+  // a server ignores the code filter. A location whose codes fell in
+  // different batches comes back once per batch, so keep the first.
+  const seen = new Set<string>();
+  return locations.filter((location) => {
+    if (seen.has(location.id)) return false;
+    seen.add(location.id);
+    return wanted.has(location.external_id) ||
+      location.aliases.some((alias) => wanted.has(alias));
+  });
 }

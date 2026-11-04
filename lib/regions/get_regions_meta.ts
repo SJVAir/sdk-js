@@ -26,6 +26,7 @@ import { jsonCall, type RequestOptions } from "$http";
 import type {
   LocationType,
   LocationTypeMeta,
+  RegionBuffer,
   RegionsMetaData,
   RegionType,
   RegionTypeMeta,
@@ -73,6 +74,16 @@ export class RegionsMeta implements RegionsMetaData {
    */
   get location_types(): Record<LocationType, LocationTypeMeta> {
     return this.meta.location_types;
+  }
+
+  /**
+   * Returns the distances a region's boundary can be widened by (the
+   * `buffer` of `getRegionDetails`), with their labels.
+   *
+   * @returns The buffer choices, smallest first.
+   */
+  get buffers(): Array<RegionBuffer> {
+    return this.meta.buffers;
   }
 
   /**

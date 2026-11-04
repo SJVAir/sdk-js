@@ -2,6 +2,8 @@ import { assert, assertEquals, assertRejects } from "@std/assert";
 import type { RequestOptions } from "$http";
 import { stubFetch } from "./http/fetch_stub_test_utils.ts";
 import { getCollocationSites } from "./collocation_sites/get_collocation_sites.ts";
+import { getCalEnviroScreen } from "./calenviroscreen/get_calenviroscreen.ts";
+import { getCalEnviroScreenTract } from "./calenviroscreen/get_calenviroscreen_tract.ts";
 import { getCalHeatScoreMeta } from "./calheatscore/get_calheatscore_meta.ts";
 import { getCalHeatScores } from "./calheatscore/get_calheatscores.ts";
 import { getHeatForPlace } from "./calheatscore/get_heat_for_place.ts";
@@ -100,11 +102,16 @@ const archive = {
 
 const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getCollocationSites", (o) => getCollocationSites(o)],
-  ["getHMSFire", (o) => getHMSFire(o)],
+  ["getHMSFire", (o) => getHMSFire(undefined, o)],
   ["getHMSFireById", (o) => getHMSFireById("x", o)],
-  ["getHMSSmoke", (o) => getHMSSmoke(o)],
+  ["getHMSSmoke", (o) => getHMSSmoke(undefined, o)],
   ["getHMSSmokeById", (o) => getHMSSmokeById("x", o)],
   ["getHMSMeta", (o) => getHMSMeta(o)],
+  ["getCalEnviroScreen", (o) => getCalEnviroScreen("5.0", undefined, o)],
+  [
+    "getCalEnviroScreenTract",
+    (o) => getCalEnviroScreenTract("5.0", "t", undefined, o),
+  ],
   ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
   ["getForecastsMeta", (o) => getForecastsMeta(o)],
   ["getCalHeatScores", (o) => getCalHeatScores({}, o)],
@@ -188,7 +195,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getRegionPesticideNotices", (o) => getRegionPesticideNotices("r", {}, o)],
   ["getRegionPesticideSummary", (o) => getRegionPesticideSummary("r", {}, o)],
   ["getRegionPesticideUse", (o) => getRegionPesticideUse("r", {}, o)],
-  ["getRegionDetails", (o) => getRegionDetails("r", o)],
+  ["getRegionDetails", (o) => getRegionDetails("r", undefined, o)],
   ["searchLocations", (o) => searchLocations({ q: "lincoln", ...o })],
   [
     "getPesticideLocations",

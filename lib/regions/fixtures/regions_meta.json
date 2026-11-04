@@ -176,6 +176,24 @@
         "label": "Child care",
         "source": "cdss-ccl"
       }
-    }
+    },
+    "buffers": [
+      {
+        "miles": 0,
+        "label": "Exact boundary"
+      },
+      {
+        "miles": 1,
+        "label": "+1 mile"
+      },
+      {
+        "miles": 3,
+        "label": "+3 miles"
+      },
+      {
+        "miles": 5,
+        "label": "+5 miles"
+      }
+    ]
   }
 }

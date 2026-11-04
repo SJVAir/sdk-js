@@ -29,3 +29,4 @@ export * from "./smoke/mod.ts";
 export * from "./fire/mod.ts";
 export * from "./get_hms_meta.ts";
 export * from "./types.ts";
+export * from "./query.ts";
