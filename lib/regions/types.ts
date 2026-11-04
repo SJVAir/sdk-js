@@ -9,7 +9,10 @@ import type {
   locationSchema,
   locationSourceSchema,
   regionCategorySchema,
+  regionFeatureCollectionSchema,
+  regionFeatureSchema,
   regionListItemSchema,
+  regionOverlapSchema,
   regionRefSchema,
   regionSchema,
   regionsMetaSchema,
@@ -72,3 +75,14 @@ export type Location = zinfer<typeof locationSchema>;
 
 /** The marker a retired location carries; its code still resolves */
 export type LocationRetired = zinfer<typeof retiredLocationSchema>;
+
+/** A region named by its code, as `also_in` lists the other regions it straddles */
+export type RegionOverlap = zinfer<typeof regionOverlapSchema>;
+
+/** One region as a GeoJSON feature */
+export type RegionFeature = zinfer<typeof regionFeatureSchema>;
+
+/** Regions as a GeoJSON feature collection */
+export type RegionFeatureCollection = zinfer<
+  typeof regionFeatureCollectionSchema
+>;

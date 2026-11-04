@@ -150,6 +150,8 @@ Region and place lookups, boundaries, and region-level entry summaries
 
 - [x] `/api/2.0/regions/`
 - [x] `/api/2.0/regions/?type=<type>&external_id=<code>,<code>`
+- [x] `/api/2.0/regions/?type=<type>&within=<region_id>&within_mode=overlaps`
+- [x] `/api/2.0/regions/geojson/`
 - [x] `/api/2.0/regions/locations/?source=<source>&external_id=<code>,<code>`
 - [x] `/api/2.0/regions/places/search/`
 - [x] `/api/2.0/regions/places/lookup/`

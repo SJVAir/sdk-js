@@ -1,0 +1,164 @@
+{
+  "data": {
+    "types": {
+      "county": {
+        "type": "county",
+        "label": "County",
+        "category": "administrative",
+        "count": 8,
+        "parents": [],
+        "referenceable": true,
+        "browsable": true
+      },
+      "city": {
+        "type": "city",
+        "label": "City",
+        "category": "administrative",
+        "count": 62,
+        "parents": [
+          "county"
+        ],
+        "referenceable": true,
+        "browsable": true
+      },
+      "zipcode": {
+        "type": "zipcode",
+        "label": "ZIP Code",
+        "category": "administrative",
+        "count": 237,
+        "parents": [
+          "county"
+        ],
+        "referenceable": true,
+        "browsable": true
+      },
+      "tract": {
+        "type": "tract",
+        "label": "Census Tract",
+        "category": "census",
+        "count": 1161,
+        "parents": [
+          "county"
+        ],
+        "referenceable": true,
+        "browsable": true
+      },
+      "cdp": {
+        "type": "cdp",
+        "label": "Census Designated Place",
+        "category": "census",
+        "count": 215,
+        "parents": [
+          "county"
+        ],
+        "referenceable": true,
+        "browsable": true
+      },
+      "congressional_district": {
+        "type": "congressional_district",
+        "label": "Congressional District",
+        "category": "district",
+        "count": 0,
+        "parents": [],
+        "referenceable": true,
+        "browsable": true
+      },
+      "state_assembly": {
+        "type": "state_assembly",
+        "label": "State Assembly District",
+        "category": "district",
+        "count": 0,
+        "parents": [],
+        "referenceable": true,
+        "browsable": true
+      },
+      "state_senate": {
+        "type": "state_senate",
+        "label": "State Senate District",
+        "category": "district",
+        "count": 0,
+        "parents": [],
+        "referenceable": true,
+        "browsable": true
+      },
+      "school_district": {
+        "type": "school_district",
+        "label": "School District",
+        "category": "district",
+        "count": 200,
+        "parents": [
+          "county"
+        ],
+        "referenceable": true,
+        "browsable": true
+      },
+      "air_district": {
+        "type": "air_district",
+        "label": "Air District",
+        "category": "district",
+        "count": 2,
+        "parents": [],
+        "referenceable": true,
+        "browsable": true
+      },
+      "urban_area": {
+        "type": "urban_area",
+        "label": "Urban Area",
+        "category": "environmental",
+        "count": 56,
+        "parents": [
+          "county"
+        ],
+        "referenceable": true,
+        "browsable": true
+      },
+      "land_use": {
+        "type": "land_use",
+        "label": "Land Use",
+        "category": "environmental",
+        "count": 0,
+        "parents": [],
+        "referenceable": false,
+        "browsable": false
+      },
+      "protected": {
+        "type": "protected",
+        "label": "Protected Area",
+        "category": "environmental",
+        "count": 0,
+        "parents": [],
+        "referenceable": true,
+        "browsable": true
+      },
+      "ab617": {
+        "type": "ab617",
+        "label": "AB 617 Community",
+        "category": "environmental",
+        "count": 4,
+        "parents": [
+          "county"
+        ],
+        "referenceable": true,
+        "browsable": true
+      },
+      "mtrs": {
+        "type": "mtrs",
+        "label": "MTRS Section",
+        "category": "agricultural",
+        "count": 27917,
+        "parents": [],
+        "referenceable": true,
+        "browsable": false
+      },
+      "custom": {
+        "type": "custom",
+        "label": "Custom Region",
+        "category": "custom",
+        "count": 3,
+        "parents": [],
+        "referenceable": true,
+        "browsable": true
+      }
+    }
+  }
+}

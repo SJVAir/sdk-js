@@ -79,6 +79,7 @@ import {
   getRegionSummariesBulkSeasonal,
   getRegionSummariesBulkYearly,
 } from "./regions/get_region_summaries_bulk.ts";
+import { getRegionsGeoJSON } from "./regions/get_regions_geojson.ts";
 import { getRegionsList } from "./regions/get_regions_list.ts";
 import { getRegionsMeta } from "./regions/get_regions_meta.ts";
 
@@ -235,6 +236,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ],
   ["getRegionsList", (o) => getRegionsList({ name: "x" }, o)],
   ["getRegionsMeta", (o) => getRegionsMeta(o)],
+  ["getRegionsGeoJSON", (o) => getRegionsGeoJSON({ type: "county" }, o)],
 ];
 
 for (const [name, call] of rows) {
