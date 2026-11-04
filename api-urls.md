@@ -61,7 +61,7 @@ Signed-in users' saved dashboards (private API, used with the session cookie)
 
 ## HMS Smoke and Fire
 
-HMS smoke and fire GeoJSON, and the smoke scale metadata
+HMS smoke and fire GeoJSON, and the smoke-density and fire-FRP scale metadata
 
 - [x] `/api/2.0/hms/meta/`
 - [x] `/api/2.0/hms/smoke/`

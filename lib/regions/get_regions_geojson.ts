@@ -18,7 +18,7 @@
  */
 import { apiCall, type RequestOptions } from "$http";
 import type { RegionFeatureCollection, RegionType } from "./types.ts";
-import type { RegionsWithinMode } from "./get_regions_list.ts";
+import type { RegionsWithinMode } from "./types.ts";
 
 /** The filters for a regions GeoJSON request; `type` is required */
 export interface RegionsGeoJSONQuery {

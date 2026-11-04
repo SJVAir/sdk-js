@@ -27,10 +27,7 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import type { RegionListItem, RegionType } from "./types.ts";
-
-/** How `within` matches: wholly inside (the default), or touching at all */
-export type RegionsWithinMode = "contained" | "overlaps";
+import type { RegionListItem, RegionsWithinMode, RegionType } from "./types.ts";
 
 /**
  * The filters available when listing regions. At least one of `name`, `slug`,

@@ -24,6 +24,9 @@ import type {
   retiredRegionSchema,
 } from "./schemas/mod.ts";
 
+/** How `within` matches: wholly inside (the default), or touching at all */
+export type RegionsWithinMode = "contained" | "overlaps";
+
 /** The type of geography a region represents */
 export type RegionType = zinfer<typeof regionTypeSchema>;
 
