@@ -2,16 +2,37 @@ import * as z from "zod";
 import { type RegionRetiredSchema, retiredRegionSchema } from "./region.ts";
 import { type RegionTypeSchema, regionTypeSchema } from "./region_type.ts";
 
-/** The longitude/latitude geometry of a region's shape */
-export type RegionGeometrySchema = z.ZodObject<{
-  type: z.ZodEnum<{ Polygon: "Polygon"; MultiPolygon: "MultiPolygon" }>;
-  coordinates: z.ZodArray<z.ZodUnknown>;
-}>;
+interface PolygonGeometrySchema extends
+  z.ZodObject<{
+    type: z.ZodLiteral<"Polygon">;
+    /** Rings of `[longitude, latitude]` positions: the outline, then any holes */
+    coordinates: z.ZodArray<z.ZodArray<z.ZodArray<z.ZodNumber>>>;
+  }> {}
 
-export const regionGeometrySchema: RegionGeometrySchema = z.object({
-  type: z.enum(["Polygon", "MultiPolygon"]),
-  coordinates: z.array(z.unknown()),
-});
+interface MultiPolygonGeometrySchema extends
+  z.ZodObject<{
+    type: z.ZodLiteral<"MultiPolygon">;
+    /** One set of rings per polygon */
+    coordinates: z.ZodArray<z.ZodArray<z.ZodArray<z.ZodArray<z.ZodNumber>>>>;
+  }> {}
+
+/** The longitude/latitude geometry of a region's shape */
+export type RegionGeometrySchema = z.ZodDiscriminatedUnion<
+  [PolygonGeometrySchema, MultiPolygonGeometrySchema],
+  "type"
+>;
+
+export const regionGeometrySchema: RegionGeometrySchema = z
+  .discriminatedUnion("type", [
+    z.object({
+      type: z.literal("Polygon"),
+      coordinates: z.array(z.array(z.array(z.number()))),
+    }),
+    z.object({
+      type: z.literal("MultiPolygon"),
+      coordinates: z.array(z.array(z.array(z.array(z.number())))),
+    }),
+  ]);
 
 export interface RegionFeaturePropertiesSchema extends
   z.ZodObject<{

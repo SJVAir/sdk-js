@@ -16,7 +16,9 @@ import { getRegionsList } from "./get_regions_list.ts";
 import { getRegionsMeta } from "./get_regions_meta.ts";
 import {
   regionFeatureCollectionSchema,
+  regionGeometrySchema,
   regionListItemSchema,
+  regionOverlapSchema,
   regionsMetaSchema,
 } from "./schemas/mod.ts";
 import type {
@@ -65,6 +67,35 @@ Deno.test("getRegionsList sends within_mode", async () => {
   } finally {
     stub.restore();
   }
+});
+
+Deno.test("region geometry accepts polygons and rejects untyped coordinates", () => {
+  const polygon = {
+    type: "Polygon",
+    coordinates: [[[-119, 36], [-119, 37], [-118, 37], [-119, 36]]],
+  };
+  assertEquals(regionGeometrySchema.safeParse(polygon).success, true);
+  assertEquals(
+    regionGeometrySchema.safeParse({ ...polygon, type: "MultiPolygon" })
+      .success,
+    false,
+  );
+  assertEquals(
+    regionGeometrySchema.safeParse({ type: "Polygon", coordinates: ["x"] })
+      .success,
+    false,
+  );
+});
+
+Deno.test("an overlap entry may have no external_id", () => {
+  assertEquals(
+    regionOverlapSchema.safeParse({
+      type: "county",
+      external_id: null,
+      name: "X",
+    }).success,
+    true,
+  );
 });
 
 Deno.test("region GeoJSON fixture matches the schema", () => {

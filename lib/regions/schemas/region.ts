@@ -67,14 +67,14 @@ export const regionSchema: RegionSchema = z.object({
 export interface RegionOverlapSchema extends
   z.ZodObject<{
     type: RegionTypeSchema;
-    external_id: z.ZodString;
+    external_id: z.ZodNullable<z.ZodString>;
     name: z.ZodString;
   }> {}
 
 /** A region named by its code, as `also_in` lists the other regions it straddles */
 export const regionOverlapSchema: RegionOverlapSchema = z.object({
   type: regionTypeSchema,
-  external_id: z.string(),
+  external_id: z.nullable(z.string()),
   name: z.string(),
 });
 
