@@ -32,6 +32,9 @@ the forecast `color` / `aqi_category` change.
   two bounds within five minutes of each other to whole Pacific days. Pass
   `wholeDays: true` to round a range out to whole Pacific days. `exact`
   (5.0.0-beta.1 and earlier betas) is removed.
+- `searchRegionPlaces` returns `RegionPlaceMatch[]` instead of `RegionData[]`:
+  rows have no boundary geometry (only `bbox`; use `getRegionDetails`) and carry
+  their containing `county` (`null` on county rows). (sjvair.com #308)
 - Metadata fields the server now always sends are required in the schemas, e.g.
   `getRegionsMeta` needs `location_types` and `buffers`. (#39, #40)
 

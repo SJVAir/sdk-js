@@ -16,6 +16,7 @@ import type {
   regionFeatureSchema,
   regionListItemSchema,
   regionOverlapSchema,
+  regionPlaceMatchSchema,
   regionRefSchema,
   regionSchema,
   regionsMetaSchema,
@@ -61,6 +62,13 @@ export type RegionListBoundary = zinfer<typeof boundaryListSchema>;
  * but no `geometry`; use `getRegionDetails` for the full geometry.
  */
 export type RegionListItem = zinfer<typeof regionListItemSchema>;
+
+/**
+ * A region as `searchRegionPlaces` returns it: its boundary has a `bbox` but no
+ * `geometry`, and `county` names the county containing it (`null` on county
+ * rows and outside every county).
+ */
+export type RegionPlaceMatch = zinfer<typeof regionPlaceMatchSchema>;
 
 /** A single aggregated summary of a region's entries over a period of time */
 export type RegionSummary = zinfer<typeof regionSummarySchema>;

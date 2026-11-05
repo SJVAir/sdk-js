@@ -9,6 +9,7 @@ import { assertEquals, assertExists, assertRejects } from "@std/assert";
 import {
   locationSchema,
   regionListItemSchema,
+  regionPlaceMatchSchema,
   regionSchema,
   regionsMetaSchema,
   regionSummarySchema,
@@ -46,6 +47,9 @@ const skippable = <T>(validate: (data: T) => void) => (data: T) => {
 const validateRegion = skippable(getSimpleValidationTest(regionSchema));
 const validateRegionListItem = skippable(
   getSimpleValidationTest(regionListItemSchema),
+);
+const validatePlaceMatch = skippable(
+  getSimpleValidationTest(regionPlaceMatchSchema),
 );
 const validateRegionSummary = getSimpleValidationTest(regionSummarySchema);
 const validateRegionsMeta = getSimpleValidationTest(regionsMetaSchema);
@@ -151,7 +155,7 @@ Deno.test({
       "GET  regions/places/search/",
       async () => {
         const matches = await searchRegionPlaces(county.name, "county");
-        validateRegion(matches);
+        validatePlaceMatch(matches);
         assertEquals(
           matches.some((region) => region.id === county.id),
           true,

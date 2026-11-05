@@ -61,6 +61,14 @@ any time.
   **Revisit when** someone next works on the regions batching or the
   CalEnviroScreen module, or a caller hits one of these.
 
+- **Every county on multi-county place search rows.** _Deferred 2026-11-04 by
+  the user (sjvair.com #308 keeps one `county` per `regions/places/search/`
+  row)._ A region that straddles counties names only one. When the server adds a
+  `counties` list, `regionPlaceMatchSchema` and `RegionPlaceMatch` follow.
+  Tracked in data-dashboard DEFERRED.md under the same title.
+
+  **Revisit when** sjvair.com adds `counties` to place search rows.
+
 ## Dropped
 
 None yet.

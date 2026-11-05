@@ -118,3 +118,39 @@ export const regionListItemSchema: RegionListItemSchema = z.object({
   boundary: z.nullable(boundaryListSchema),
   also_in: z.array(regionOverlapSchema).optional(),
 });
+
+export interface RegionPlaceMatchSchema extends
+  z.ZodObject<{
+    id: z.ZodString;
+
+    name: z.ZodString;
+
+    slug: z.ZodString;
+
+    type: RegionTypeSchema;
+
+    /** The region's permanent official code (e.g. a county FIPS), if it has one */
+    external_id: z.ZodNullable<z.ZodString>;
+
+    /** Set when the region has been retired; its code still resolves */
+    retired: z.ZodNullable<RegionRetiredSchema>;
+
+    /** The region's current boundary, without its geometry */
+    boundary: z.ZodNullable<BoundaryListSchema>;
+
+    /**
+     * The county containing the region; `null` on county rows and for regions
+     * outside every county
+     */
+    county: z.ZodNullable<RegionOverlapSchema>;
+  }> {}
+
+/**
+ * A region as place search returns it: a regions list row without `also_in`,
+ * plus its containing `county`. Its boundary has a `bbox` but no `geometry`;
+ * fetch the region's details for the full geometry.
+ */
+export const regionPlaceMatchSchema: RegionPlaceMatchSchema =
+  regionListItemSchema.omit({ also_in: true }).extend({
+    county: regionOverlapSchema.nullable(),
+  });
