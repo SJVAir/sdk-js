@@ -173,7 +173,7 @@ the request `body` replaced by `"[redacted]"`.
 - **Wrapper classes with `.asIter`**: when an API response is a record keyed by
   string (e.g. `monitors/meta`), expose an `asIter` property that converts
   record values to arrays for easy iteration. Wrapper classes like
-  `MonitorsMeta`/`EntriesMeta` follow this pattern — always add `.asIter` when
+  `MonitorsMeta`/`RegionsMeta` follow this pattern — always add `.asIter` when
   wrapping a record-shaped API response.
 - **Each module file** should include a JSDoc block with `@example Usage` and
   `@module` tag.
