@@ -44,6 +44,9 @@ package (#48).
 
 ### Added
 
+- `sum` on monitor summary rows (and bulk rows): the total of the values in the
+  period; for precipitation, ETo and ETr, the period's total. Region summary
+  rows do not carry it.
 - `getWeatherStationsForPlace`: the weather stations inside a region, or the
   nearest ones, for a region or monitor (`monitors/weather/place/`).
 - `MonitorEntryType` includes the CIMIS weather types (`dewpoint`,

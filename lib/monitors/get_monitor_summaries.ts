@@ -19,6 +19,7 @@
  * //     "resolution": "day",
  * //     "processor": "",
  * //     "count": 288,
+ * //     "sum": 1612.8,
  * //     "expected_count": 288,
  * //     "minimum": 2.1,
  * //     "maximum": 9.4,

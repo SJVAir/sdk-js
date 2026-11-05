@@ -73,7 +73,7 @@ import { getWeatherStationsForPlace } from "./get_weather_stations_for_place.ts"
 import weatherFixture from "./fixtures/weather_stations_for_place.json" with {
   type: "json",
 };
-import type { MonitorWithSummaries } from "./types.ts";
+import type { MonitorSummary, MonitorWithSummaries } from "./types.ts";
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
 };
@@ -93,10 +93,36 @@ const validateMonitorsMeta = getSimpleValidationTest(sjvairMonitorsMetaSchema);
 const validateMonitorArchive = getSimpleValidationTest(
   monitorEntriesArchiveSchema,
 );
-const validateMonitorSummary = getSimpleValidationTest(monitorSummarySchema);
-const validateMonitorWithSummaries = getSimpleValidationTest(
+const validateMonitorSummaryStrict = getSimpleValidationTest(
+  monitorSummarySchema,
+);
+const validateMonitorWithSummariesStrict = getSimpleValidationTest(
   monitorWithSummariesSchema,
 );
+
+// `sum` is required, but a server without sjvair.com #313 does not send it.
+// Skip validating such responses, with a note, instead of failing.
+// TODO: remove once #313 is on develop
+const lacksSum = (row: unknown) =>
+  row !== undefined && !("sum" in (row as Record<string, unknown>));
+
+const validateMonitorSummary = (rows: Array<MonitorSummary>) => {
+  if (lacksSum(rows[0])) {
+    console.warn("Skipping summary validation: server lacks `sum` (#313)");
+    return;
+  }
+  validateMonitorSummaryStrict(rows);
+};
+
+const validateMonitorWithSummaries = (
+  monitors: Array<MonitorWithSummaries>,
+) => {
+  if (lacksSum(monitors.find((m) => m.summaries.length)?.summaries[0])) {
+    console.warn("Skipping summary validation: server lacks `sum` (#313)");
+    return;
+  }
+  validateMonitorWithSummariesStrict(monitors);
+};
 
 Deno.test({
   name: "Module: Monitors Endpoints",
@@ -468,6 +494,32 @@ Deno.test({
 });
 
 Deno.test({
+  name: "monitorSummarySchema requires sum",
+  permissions: { net: false },
+  fn() {
+    const row = {
+      timestamp: "2024-01-01T00:00:00-08:00",
+      entry_type: "precipitation",
+      resolution: "day",
+      processor: "",
+      count: 24,
+      sum: 12.0,
+      expected_count: 24,
+      minimum: 0,
+      maximum: 2.5,
+      mean: 0.5,
+      stddev: 0.7,
+      p25: 0,
+      p75: 0.8,
+      is_complete: true,
+    };
+    assert(monitorSummarySchema.safeParse(row).success);
+    const { sum: _sum, ...noSum } = row;
+    assert(!monitorSummarySchema.safeParse(noSum).success);
+  },
+});
+
+Deno.test({
   name: "mergeMonitorSummaryBulkPages",
   permissions: { net: false },
   fn() {
@@ -477,6 +529,7 @@ Deno.test({
       resolution: "day",
       processor: "",
       count: 288,
+      sum: 1612.8,
       expected_count: 288,
       minimum: 2.1,
       maximum: 9.4,

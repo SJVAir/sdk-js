@@ -30,6 +30,12 @@ export interface MonitorSummarySchema extends
     /** The number of entries included in this summary */
     count: z.ZodNumber;
 
+    /**
+     * The total of the values recorded during this summary's period; for
+     * precipitation, ETo and ETr this is the period's total
+     */
+    sum: z.ZodNumber;
+
     /** The number of entries expected for this summary to be considered complete */
     expected_count: z.ZodNumber;
 
@@ -61,6 +67,7 @@ export const monitorSummarySchema: MonitorSummarySchema = z.object({
   resolution: monitorSummaryResolutionSchema,
   processor: z.string(),
   count: z.number(),
+  sum: z.number(),
   expected_count: z.number(),
   minimum: z.number(),
   maximum: z.number(),
