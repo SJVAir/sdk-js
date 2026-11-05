@@ -16,6 +16,11 @@ interface RegionTypeMetaSchema extends
     label: z.ZodString;
     /** The type's plural label, in Title Case (e.g. "Counties") */
     label_plural: z.ZodString;
+    /**
+     * The pattern for showing a region of this type, with `{name}` standing for
+     * the region's name; `null` shows the name as it is
+     */
+    name_template: z.ZodNullable<z.ZodString>;
     /** The backend classification this region type belongs to */
     category: typeof regionCategorySchema;
     /** How many current regions of this type there are */
@@ -31,6 +36,7 @@ export const regionTypeMetaSchema: RegionTypeMetaSchema = z.object({
   type: regionTypeSchema,
   label: z.string(),
   label_plural: z.string(),
+  name_template: z.nullable(z.string()),
   category: regionCategorySchema,
   count: z.number(),
   parents: z.array(regionTypeSchema),

@@ -68,6 +68,9 @@ filter (#46).
   id; several give the union). (#46, sjvair.com #308)
 - Region types in `regions/meta/` gain `label_plural`, the type's plural label
   in Title Case (e.g. "Counties"). (#46, sjvair.com #307)
+- Region types in `regions/meta/` gain `name_template`, how to show a region of
+  that type (e.g. "ZIP {name}"; `null` shows the plain name), and
+  `regionDisplayName(region, meta)` fills it in, falling back to `name`.
 
 ### Changed
 
