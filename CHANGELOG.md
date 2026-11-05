@@ -70,7 +70,8 @@ filter (#46).
   in Title Case (e.g. "Counties"). (#46, sjvair.com #307)
 - Region types in `regions/meta/` gain `name_template`, how to show a region of
   that type (e.g. "ZIP {name}"; `null` shows the plain name), and
-  `regionDisplayName(region, meta)` fills it in, falling back to `name`.
+  `regionDisplayName(region, meta)` fills it in, falling back to `name`. (#50,
+  sjvair.com #309)
 
 ### Changed
 
