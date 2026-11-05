@@ -817,3 +817,71 @@ Deno.test("getMonitorsList treats an empty dataset as absent", async () => {
   }
   assertEquals(stub.calls[0].url.searchParams.has("dataset"), false);
 });
+
+Deno.test("getMonitorsList sends one region", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: "abc" });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.getAll("region"), ["abc"]);
+});
+
+Deno.test("getMonitorsList repeats region for several ids", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: ["abc", "def"] });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.getAll("region"), [
+    "abc",
+    "def",
+  ]);
+});
+
+Deno.test("getMonitorsList sends region with dataset", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: "abc", dataset: "weather" });
+  } finally {
+    stub.restore();
+  }
+  const { searchParams } = stub.calls[0].url;
+  assertEquals(searchParams.getAll("region"), ["abc"]);
+  assertEquals(searchParams.get("dataset"), "weather");
+});
+
+Deno.test("getMonitorsList drops empty region values", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: ["", "abc"] });
+    await assertRejects(() => getMonitorsList({ region: "" }));
+    await assertRejects(() => getMonitorsList({ region: [] }));
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.getAll("region"), ["abc"]);
+  assertEquals(stub.calls[1].url.searchParams.has("region"), false);
+  assertEquals(stub.calls[2].url.searchParams.has("region"), false);
+});
+
+Deno.test("getMonitorsList keeps region out of fetch init", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: "abc", signal: undefined });
+  } finally {
+    stub.restore();
+  }
+  assertEquals("region" in stub.calls[0].init, false);
+});
+
+Deno.test("getMonitorsList with region resolves an empty list", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    assertEquals(await getMonitorsList({ region: "abc" }), []);
+  } finally {
+    stub.restore();
+  }
+});

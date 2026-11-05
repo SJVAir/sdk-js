@@ -51,30 +51,39 @@ import { APIError, jsonCall, type RequestOptions } from "$http";
 import type { MonitorData } from "./types.ts";
 
 /**
- * Fetches all monitors, or the monitors of one dataset.
+ * Fetches all monitors, the monitors of one dataset, or the monitors in some
+ * regions.
  *
  * @param options Optional per-request options: an AbortSignal and extra fetch
- * init, plus `dataset`. With `dataset: "weather"` the list holds CIMIS weather
- * stations; `"air-quality"` is the default list. See `places_url` in the
- * dataset catalog. An unknown dataset rejects with a 400.
+ * init, plus:
+ * - `dataset`: with `"weather"` the list holds CIMIS weather stations;
+ *   `"air-quality"` is the default list. See `places_url` in the dataset
+ *   catalog. An unknown dataset rejects with a 400.
+ * - `region`: one region id, or several (the monitors in any of them). Empty
+ *   ids are dropped. An unknown id rejects with a 404. Combines with `dataset`.
  *
- * @returns An array of monitors. The default list rejects when empty; a
- * dataset list may be empty (an empty weather list is not an error).
+ * @returns An array of monitors. The default list rejects when empty; a list
+ * filtered by `dataset` or `region` may be empty.
  */
 export async function getMonitorsList(
-  options?: RequestOptions & { dataset?: string },
+  options?: RequestOptions & { dataset?: string; region?: string | string[] },
 ): Promise<Array<MonitorData>> {
-  const { dataset, ...requestOptions } = options ?? {};
+  const { dataset, region, ...requestOptions } = options ?? {};
+  const regions = [region ?? []].flat().filter((id) => id !== "");
+  const searchParams: Record<string, string | string[]> = {};
+  if (dataset) searchParams.dataset = dataset;
+  if (regions.length > 0) searchParams.region = regions;
+  const filtered = Object.keys(searchParams).length > 0;
   return await jsonCall<Array<MonitorData>>(
     {
       url: "monitors",
-      searchParams: dataset ? { dataset } : undefined,
+      searchParams: filtered ? searchParams : undefined,
       options: requestOptions,
     },
     (response) => {
       if (
         !Array.isArray(response.body.data) ||
-        (!dataset && response.body.data.length <= 0)
+        (!filtered && response.body.data.length <= 0)
       ) {
         throw new APIError("Failed to fetch all monitors", response);
       }

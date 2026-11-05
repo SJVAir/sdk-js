@@ -111,7 +111,7 @@ Air quality forecasts, and by place
 Air monitors, current and historical data, monitor subscriptions, and entry
 archives
 
-- [x] `/api/2.0/monitors/` (`?dataset=`)
+- [x] `/api/2.0/monitors/` (`?dataset=`, `?region=`)
 - [x] `/api/2.0/monitors/<entry_type>/at/`
 - [x] `/api/2.0/monitors/<entry_type>/closest/`
 - [x] `/api/2.0/monitors/<entry_type>/current/`

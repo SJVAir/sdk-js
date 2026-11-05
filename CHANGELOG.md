@@ -10,8 +10,9 @@ changes below made it a major version.
 Betas: **5.0.0-beta.1** (2026-11-04): everything below except "Planned" and the
 entry-bounds change. **5.0.0-beta.2** (2026-11-04): adds the entry-bounds change
 (bounds sent as given, `wholeDays` replaces `exact`). (#44) Not in a beta yet:
-the `monitors/meta/` change (`levels` removed, `school_guidelines` added) and
-the forecast `color` / `aqi_category` change.
+the `monitors/meta/` change (`levels` removed, `school_guidelines` added), the
+forecast `color` / `aqi_category` change, `label_plural`, the
+`searchRegionPlaces` rows and the `getMonitorsList` region filter.
 
 ### Breaking
 
@@ -62,6 +63,8 @@ the forecast `color` / `aqi_category` change.
   (`EntriesMeta.school_guidelines`, types `SchoolGuidelines` and
   `SchoolActivity`): outdoor activity guidelines for schools, `null` except for
   `pm25`.
+- `getMonitorsList({ region })`: the monitors in one or more regions (by region
+  id; several give the union). (sjvair.com #308)
 - Region types in `regions/meta/` gain `label_plural`, the type's plural label
   in Title Case (e.g. "Counties"). (sjvair.com #307)
 
