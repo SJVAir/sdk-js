@@ -21,7 +21,11 @@ import {
 } from "./get_closest_monitor.ts";
 import { getMonitors } from "./get_monitors.ts";
 import { getMonitorDetails } from "./get_monitor_details.ts";
-import type { MonitorEntryType, SJVAirMonitorsMeta } from "./types.ts";
+import type {
+  MonitorEntryType,
+  SJVAirMonitorsMeta,
+  WeatherStationsForPlace,
+} from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
 import {
   assert,
@@ -59,7 +63,9 @@ import {
   mergeMonitorSummaryBulkPages,
 } from "./get_monitor_summaries_bulk.ts";
 import {
+  monitorDewPointEntrySchema,
   monitorEntryTypeSchema,
+  monitorSoilTemperatureEntrySchema,
   monitorWithSummariesSchema,
   weatherStationsForPlaceSchema,
 } from "./schemas/mod.ts";
@@ -67,7 +73,6 @@ import { getWeatherStationsForPlace } from "./get_weather_stations_for_place.ts"
 import weatherFixture from "./fixtures/weather_stations_for_place.json" with {
   type: "json",
 };
-import type { WeatherStationsForPlace } from "./types.ts";
 import type { MonitorWithSummaries } from "./types.ts";
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
@@ -940,7 +945,7 @@ Deno.test("Module: Monitors weather stations for a place", async (t) => {
   await t.step("fixture matches the schema", () => {
     validate(data);
     assertEquals(data.stations[0].inside, true);
-    assertEquals(data.stations[0].distance, 0);
+    assertEquals(data.stations[0].distance, 0); // the doc example's "0"
   });
 
   await t.step("sends a region and returns stations", async () => {
@@ -1001,4 +1006,35 @@ Deno.test("Module: Monitors weather stations for a place", async (t) => {
       console.warn("monitors/weather/place/ unavailable; skipping.");
     }
   });
+});
+
+Deno.test("Module: Monitors dew point and soil temperature entries", () => {
+  const base = {
+    timestamp: "2026-11-05T12:00:00-08:00",
+    sensor: "",
+    stage: "raw",
+    processor: "",
+  };
+  const dew = {
+    ...base,
+    entry_type: "dewpoint",
+    dew_point_f: "41.0",
+    dew_point_c: "5.0",
+  };
+  assert(monitorDewPointEntrySchema.safeParse(dew).success);
+  assert(someMonitorEntrySchema.safeParse(dew).success);
+  const { dew_point_f: _f, ...noF } = dew;
+  assert(!monitorDewPointEntrySchema.safeParse(noF).success);
+  assert(!someMonitorEntrySchema.safeParse(noF).success);
+
+  const soil = {
+    ...base,
+    entry_type: "soiltemperature",
+    soil_temperature_f: "55.0",
+    soil_temperature_c: "12.8",
+  };
+  assert(monitorSoilTemperatureEntrySchema.safeParse(soil).success);
+  assert(someMonitorEntrySchema.safeParse(soil).success);
+  const { soil_temperature_f: _g, ...noSoil } = soil;
+  assert(!monitorSoilTemperatureEntrySchema.safeParse(noSoil).success);
 });

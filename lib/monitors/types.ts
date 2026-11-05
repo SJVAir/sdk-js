@@ -8,6 +8,7 @@ import type {
   monitorDataSchema,
   monitorDataVendorSchema,
   monitorDetailsSchema,
+  monitorDewPointEntrySchema,
   monitorEntriesArchiveSchema,
   monitorEntryMetaSchema,
   monitorEntrySchema,
@@ -17,6 +18,7 @@ import type {
   monitorLatestSchema,
   monitorParticulatesEntrySchema,
   monitorPressureEntrySchema,
+  monitorSoilTemperatureEntrySchema,
   monitorSummarySchema,
   monitorTemperatureEntrySchema,
   monitorTypeSchema,
@@ -73,6 +75,18 @@ export type MonitorTemperatureEntry = zinfer<
 >;
 
 /**
+ * The Entry type for dew point values
+ */
+export type MonitorDewPointEntry = zinfer<typeof monitorDewPointEntrySchema>;
+
+/**
+ * The Entry type for soil temperature values
+ */
+export type MonitorSoilTemperatureEntry = zinfer<
+  typeof monitorSoilTemperatureEntrySchema
+>;
+
+/**
  * The Entry type for pressure values
  */
 export type MonitorPressureEntry = zinfer<typeof monitorPressureEntrySchema>;
@@ -102,8 +116,8 @@ export interface MonitorEntries {
   pressure: MonitorPressureEntry;
   temperature: MonitorTemperatureEntry;
   particulates: MonitorParticulatesEntry;
-  dewpoint: ExplicitMonitorEntry<"dewpoint">;
-  soiltemperature: ExplicitMonitorEntry<"soiltemperature">;
+  dewpoint: MonitorDewPointEntry;
+  soiltemperature: MonitorSoilTemperatureEntry;
   windspeed: ExplicitMonitorEntry<"windspeed">;
   winddirection: ExplicitMonitorEntry<"winddirection">;
   precipitation: ExplicitMonitorEntry<"precipitation">;
