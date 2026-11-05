@@ -70,6 +70,7 @@
     "./hms/fire/types": "./lib/hms/fire/types.ts",
     "./hms/smoke": "./lib/hms/smoke/mod.ts",
     "./hms/smoke/get_smoke": "./lib/hms/smoke/get_smoke.ts",
+    "./hms/smoke/get_smoke_for_place": "./lib/hms/smoke/get_smoke_for_place.ts",
     "./hms/smoke/types": "./lib/hms/smoke/types.ts",
     "./http": "./lib/http/mod.ts",
     "./http/defaults": "./lib/http/defaults.ts",
