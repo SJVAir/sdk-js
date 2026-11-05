@@ -119,6 +119,7 @@
     "./regions/get_regions_geojson": "./lib/regions/get_regions_geojson.ts",
     "./regions/get_regions_list": "./lib/regions/get_regions_list.ts",
     "./regions/get_regions_meta": "./lib/regions/get_regions_meta.ts",
+    "./regions/region_display_name": "./lib/regions/region_display_name.ts",
     "./regions/types": "./lib/regions/types.ts"
   },
   "imports": {

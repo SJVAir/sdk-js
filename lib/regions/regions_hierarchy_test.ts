@@ -230,3 +230,16 @@ Deno.test("regions meta types carry a plural label", () => {
   const { label_plural: _, ...withoutPlural } = metaData.types.county;
   assertEquals(regionTypeMetaSchema.safeParse(withoutPlural).success, false);
 });
+
+Deno.test("regions meta types carry a name template", () => {
+  assertEquals(metaData.types.zipcode.name_template, "ZIP {name}");
+  assertEquals(metaData.types.tract.name_template, "Census Tract {name}");
+  assertEquals(metaData.types.urban_area.name_template, "{name} Urban Area");
+  assertEquals(
+    metaData.types.ab617.name_template,
+    "{name} AB 617 Community",
+  );
+  assertEquals(metaData.types.city.name_template, null);
+  const { name_template: _, ...withoutTemplate } = metaData.types.county;
+  assertEquals(regionTypeMetaSchema.safeParse(withoutTemplate).success, false);
+});

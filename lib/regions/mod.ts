@@ -35,5 +35,6 @@ export * from "./get_regions_by_code.ts";
 export * from "./get_regions_geojson.ts";
 export * from "./get_regions_list.ts";
 export * from "./get_regions_meta.ts";
+export * from "./region_display_name.ts";
 export * from "./search_locations.ts";
 export * from "./types.ts";
