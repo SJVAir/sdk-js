@@ -170,6 +170,7 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/use/`
 - [x] `/api/2.0/pesticides/use/<use_id>/`
 - [x] `/api/2.0/pesticides/locations/`
+- [x] `/api/2.0/pesticides/place/`
 - [ ] `/api/2.0/pesticides/notices/active/` <- Not wrapped yet: comes with the
       pesticide metadata and widgets spec
 - [ ] `/api/2.0/pesticides/notices/archive/` <- Same

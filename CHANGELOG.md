@@ -56,6 +56,9 @@ package (#48).
 - Point and monitor modes for `lookupRegionPlace`, and a `dataset` option for
   `getMonitorsList`.
 - Forecasts and CalHeatScore, including by place.
+- `getPesticidesForPlace`: monthly and yearly pesticide use for a region or
+  monitor, with chemical, commodity, category, IARC group, application method
+  and year filters. Needs a server running sjvair.com #310.
 - HMS smoke and fire by day or date range (`{ date }` or `{ start, end }`),
   region and smoke density. (#40)
 - `@sjvair/sdk/calenviroscreen`: tract scores by region (`getCalEnviroScreen`)

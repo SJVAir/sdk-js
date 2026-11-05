@@ -1,12 +1,18 @@
 import { apiCall, setOrigin } from "$http";
-import { getSimpleValidationTest } from "$testing";
-import { assertEquals, assertExists } from "@std/assert";
+import { getSimpleValidationTest, isUnavailable } from "$testing";
+import { assert, assertEquals, assertExists } from "@std/assert";
+import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
+import placeFixture from "./fixtures/pesticides_for_place.json" with {
+  type: "json",
+};
+import { getPesticidesForPlace } from "./get_pesticides_for_place.ts";
 import {
   chemicalDetailSchema,
   chemicalSchema,
   commodityDetailSchema,
   commoditySchema,
   pesticideNoticeSchema,
+  pesticidesForPlaceSchema,
   pesticideSummaryResponseSchema,
   pesticideUseSchema,
   productDetailSchema,
@@ -25,7 +31,7 @@ import { getPesticideNoticeDetails } from "./get_pesticide_notice_details.ts";
 import { getRegionPesticideSummary } from "./get_region_pesticide_summary.ts";
 import { getRegionPesticideNotices } from "./get_region_pesticide_notices.ts";
 import { getRegionPesticideUse } from "./get_region_pesticide_use.ts";
-import type { PesticideUseData } from "./types.ts";
+import type { PesticidesForPlace, PesticideUseData } from "./types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -202,5 +208,56 @@ Deno.test({
         validatePesticideNotice(notices);
       },
     );
+  },
+});
+
+Deno.test({
+  name: "Module: pesticides for a place",
+  fn: async (t) => {
+    const validatePlace = getSimpleValidationTest(pesticidesForPlaceSchema);
+    const placeData = placeFixture.data as unknown as PesticidesForPlace;
+    const county = {
+      region: { type: "county" as const, external_id: "06019" },
+    };
+
+    await t.step("the fixture matches the schema", () => {
+      validatePlace(placeData);
+    });
+
+    await t.step("sends the place and only the filters given", async () => {
+      const stub = stubFetch(() => jsonResponse(placeFixture));
+      try {
+        const result = await getPesticidesForPlace(county, {
+          chemical: 253,
+          year__gte: 2022,
+        });
+        const { pathname, searchParams } = stub.calls[0].url;
+        assertEquals(pathname, "/api/2.0/pesticides/place/");
+        assertEquals(
+          [...searchParams.keys()].sort(),
+          ["chemical", "region", "region_type", "year__gte"],
+        );
+        assertEquals(searchParams.get("region_type"), "county");
+        assertEquals(searchParams.get("region"), "06019");
+        assertEquals(searchParams.get("chemical"), "253");
+        assertEquals(searchParams.get("year__gte"), "2022");
+        assertEquals(result.years[0].year, 2022);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    await t.step("GET  pesticides/place/ for Fresno County", async () => {
+      try {
+        const result = await getPesticidesForPlace(county, {
+          year__gte: 2022,
+        });
+        validatePlace(result);
+        assert(result.years.length > 0);
+      } catch (error) {
+        if (!isUnavailable(error)) throw error;
+        console.warn("pesticides/place/ unavailable; skipping.");
+      }
+    });
   },
 });
