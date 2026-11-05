@@ -16,6 +16,7 @@ import type {
   pesticideLocationPropertiesSchema,
   pesticideNoticeSchema,
   pesticideRegionSchema,
+  pesticidesForPlaceSchema,
   pesticideSummaryResponseSchema,
   pesticideSummarySchema,
   pesticideUseSchema,
@@ -78,3 +79,20 @@ export type PesticideLocationFeature = zinfer<
 export type PesticideLocationCollection = zinfer<
   typeof pesticideLocationCollectionSchema
 >;
+
+/** Monthly and yearly pesticide use for a place, as returned from pesticides/place */
+export type PesticidesForPlace = zinfer<typeof pesticidesForPlaceSchema>;
+
+/** Filters for pesticide use in a place; unset filters are not sent */
+export type PesticidesForPlaceFilters = {
+  /** The chemical, by its numeric id */
+  chemical?: number;
+  commodity?: string;
+  category?: string;
+  iarc_group?: IARCGroup;
+  aerial_ground?: AerialGround;
+  /** First year to include (1900 to 2100) */
+  year__gte?: number;
+  /** Last year to include (1900 to 2100) */
+  year__lte?: number;
+};
