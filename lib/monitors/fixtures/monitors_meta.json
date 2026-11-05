@@ -538,6 +538,7 @@
         "epa_aqs_code": 42102,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -726,6 +727,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -868,6 +870,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -883,6 +886,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -903,6 +907,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1091,6 +1096,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1256,6 +1262,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1271,6 +1278,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1286,6 +1294,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1301,6 +1310,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1466,6 +1476,126 @@
             }
           ]
         },
+        "school_guidelines": {
+          "label": "Outdoor Activity Guidelines for Schools",
+          "resolution": "hour",
+          "source": {
+            "name": "SJVAir",
+            "url": "https://www.sjvair.com/guidelines/schools/"
+          },
+          "activities": [
+            {
+              "key": "recess",
+              "label": "Recess",
+              "duration": "15 minutes",
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Sensitive individuals should exercise indoors or avoid vigorous outdoor activities."
+                ],
+                "unhealthy": [
+                  "Exercise indoors or avoid vigorous outdoor activities.",
+                  "Sensitive individuals should remain indoors."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            },
+            {
+              "key": "pe",
+              "label": "P.E.",
+              "duration": "1 hour",
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Sensitive individuals should exercise indoors or avoid vigorous outdoor activities."
+                ],
+                "unhealthy": [
+                  "Exercise indoors or limit vigorous outdoor activities to a maximum of 15 minutes.",
+                  "Sensitive individuals should remain indoors."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            },
+            {
+              "key": "athletics",
+              "label": "Athletic Practice & Training",
+              "duration": "2-4 hours",
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Reduce vigorous exercise to 30 min per hour of practice time with increased breaks and substitutions.",
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy": [
+                  "Exercise indoors or reduce vigorous exercise to 30 minutes of practice time with increased rest breaks and substitutions.",
+                  "Sensitive individuals should remain indoors."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            },
+            {
+              "key": "events",
+              "label": "Scheduled Sporting Events",
+              "duration": null,
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Increase rest breaks and substitutions per CIF guidelines for extreme heat.",
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy": [
+                  "Increase rest breaks and substitutions per CIF guidelines for extreme heat.",
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            }
+          ]
+        },
         "fields": [
           "timestamp",
           "sensor",
@@ -1481,6 +1611,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1496,6 +1627,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1511,6 +1643,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1526,6 +1659,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1541,6 +1675,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1556,6 +1691,7 @@
         "epa_aqs_code": 62101,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1571,6 +1707,7 @@
         "epa_aqs_code": 62201,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1759,6 +1896,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1774,6 +1912,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1789,6 +1928,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1804,6 +1944,7 @@
         "epa_aqs_code": null,
         "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",

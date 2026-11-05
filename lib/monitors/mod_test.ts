@@ -20,9 +20,10 @@ import {
 } from "./get_closest_monitor.ts";
 import { getMonitors } from "./get_monitors.ts";
 import { getMonitorDetails } from "./get_monitor_details.ts";
-import type { MonitorEntryType } from "./types.ts";
+import type { MonitorEntryType, SJVAirMonitorsMeta } from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
 import {
+  assert,
   assertEquals,
   assertExists,
   assertMatch,
@@ -719,6 +720,45 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
     assertEquals(
       meta.asIter.processors.length,
       Object.keys(meta.processors).length,
+    );
+  });
+
+  await t.step("exposes school guidelines for pm25 only", async () => {
+    const meta = await fetchMeta(monitorsMetaFixture.data);
+    const pm25 = meta.entryType("pm25");
+    const guidelines = pm25.school_guidelines;
+    assertExists(guidelines);
+    assertEquals(guidelines.label, "Outdoor Activity Guidelines for Schools");
+    assertEquals(guidelines.resolution, "hour");
+    assertEquals(
+      guidelines.source.url,
+      "https://www.sjvair.com/guidelines/schools/",
+    );
+    assertEquals(
+      guidelines.activities.map((a) => a.key),
+      ["recess", "pe", "athletics", "events"],
+    );
+    assertEquals(
+      guidelines.activities.map((a) => a.duration),
+      ["15 minutes", "1 hour", "2-4 hours", null],
+    );
+    const levelKeys = pm25.scale!.levels.map((l) => l.key);
+    for (const activity of guidelines.activities) {
+      assertEquals(Object.keys(activity.levels), levelKeys);
+      for (const paragraphs of Object.values(activity.levels)) {
+        assert(paragraphs.length > 0);
+        for (const text of paragraphs) {
+          assert(!text.includes("<") && !text.includes("&amp;"), text);
+        }
+      }
+    }
+    assertEquals(guidelines.activities[0].levels.good, ["No restrictions."]);
+    for (const entry of meta.asIter.entries) {
+      if (entry.type === "pm25") continue;
+      assertEquals(entry.school_guidelines, null, entry.type);
+    }
+    validateMonitorsMeta(
+      monitorsMetaFixture.data as unknown as SJVAirMonitorsMeta,
     );
   });
 });

@@ -1,5 +1,10 @@
 import * as z from "zod";
-import { choiceSchema, scaleSchema } from "../../meta/schemas/scale.ts";
+import { resolutionSchema } from "../../meta/schemas/dataset_catalog.ts";
+import {
+  choiceSchema,
+  scaleSchema,
+  scaleSourceSchema,
+} from "../../meta/schemas/scale.ts";
 
 interface SJVAirMonitorEntryMetaSchema extends
   z.ZodObject<{
@@ -66,6 +71,49 @@ export const sjvairEntryLevelMetaSchema: SJVAirEntryLevelMetaSchema = z.object({
   tier: z.number().nullable(),
 });
 
+interface SchoolActivitySchema extends
+  z.ZodObject<{
+    /** The permanent key of this activity */
+    key: z.ZodEnum<{
+      recess: "recess";
+      pe: "pe";
+      athletics: "athletics";
+      events: "events";
+    }>;
+    /** The activity in presentation form */
+    label: z.ZodString;
+    /** How long the activity lasts in presentation form, if stated */
+    duration: z.ZodNullable<z.ZodString>;
+    /** The guidance for each level, keyed by the scale's level keys, as paragraphs */
+    levels: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+  }> {}
+/** One school activity and its guidance at each level */
+export const schoolActivitySchema: SchoolActivitySchema = z.object({
+  key: z.enum(["recess", "pe", "athletics", "events"]),
+  label: z.string(),
+  duration: z.string().nullable(),
+  levels: z.record(z.string(), z.array(z.string())),
+});
+
+interface SchoolGuidelinesSchema extends
+  z.ZodObject<{
+    /** The guidelines in presentation form */
+    label: z.ZodString;
+    /** The resolution of the values the guidelines apply to */
+    resolution: typeof resolutionSchema;
+    /** Where the guidelines come from */
+    source: typeof scaleSourceSchema;
+    /** The activities, in order */
+    activities: z.ZodArray<SchoolActivitySchema>;
+  }> {}
+/** Outdoor activity guidelines for schools, by level */
+export const schoolGuidelinesSchema: SchoolGuidelinesSchema = z.object({
+  label: z.string(),
+  resolution: resolutionSchema,
+  source: scaleSourceSchema,
+  activities: z.array(schoolActivitySchema),
+});
+
 interface SJVAirEntryMetaSchema extends
   z.ZodObject<{
     /** The name of this entry type in presentation form */
@@ -82,6 +130,8 @@ interface SJVAirEntryMetaSchema extends
     fields: z.ZodArray<z.ZodString>;
     /** The scale that turns this entry type's value into a level */
     scale: z.ZodNullable<typeof scaleSchema>;
+    /** Outdoor activity guidelines for schools, if this entry type has them */
+    school_guidelines: z.ZodNullable<SchoolGuidelinesSchema>;
   }> {}
 export const sjvairEntryMetaSchema: SJVAirEntryMetaSchema = z.object({
   label: z.string(),
@@ -91,6 +141,7 @@ export const sjvairEntryMetaSchema: SJVAirEntryMetaSchema = z.object({
   levels: z.record(z.string(), sjvairEntryLevelMetaSchema).nullable(),
   fields: z.array(z.string()),
   scale: scaleSchema.nullable(),
+  school_guidelines: schoolGuidelinesSchema.nullable(),
 });
 
 interface SJVAirMonitorsMetaSchema extends

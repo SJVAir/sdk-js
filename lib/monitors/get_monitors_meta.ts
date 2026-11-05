@@ -78,6 +78,7 @@ import { jsonCall, type RequestOptions } from "$http";
 import type {
   MonitorEntryType,
   MonitorType,
+  SchoolGuidelines,
   SJVAirEntryLevel,
   SJVAirEntryMeta,
   SJVAirMonitorDeviceMeta,
@@ -138,6 +139,15 @@ class EntriesMeta implements SJVAirEntryMeta {
    */
   get scale(): Scale | null {
     return this.meta.scale;
+  }
+
+  /**
+   * The outdoor activity guidelines for schools, or null when this entry type
+   * has none (only PM2.5 has them). Each activity's `levels` is keyed by the
+   * scale's level keys, and the guidelines apply to hourly values.
+   */
+  get school_guidelines(): SchoolGuidelines | null {
+    return this.meta.school_guidelines;
   }
 
   /**

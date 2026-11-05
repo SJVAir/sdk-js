@@ -9,7 +9,9 @@ changes below made it a major version.
 
 Betas: **5.0.0-beta.1** (2026-11-04): everything below except "Planned" and the
 entry-bounds change. **5.0.0-beta.2** (2026-11-04): adds the entry-bounds change
-(bounds sent as given, `wholeDays` replaces `exact`). (#44)
+(bounds sent as given, `wholeDays` replaces `exact`). (#44) Not in a beta yet:
+the `monitors/meta/` change (`levels` removed, `school_guidelines` added) and
+the forecast `color` / `aqi_category` change.
 
 ### Breaking
 
@@ -49,6 +51,10 @@ entry-bounds change. **5.0.0-beta.2** (2026-11-04): adds the entry-bounds change
   and for one tract (`getCalEnviroScreenTract`), for CES 4.0 and 5.0. (#40)
 - The documents module (private; moves out of the public SDK before 5.0.0, see
   `DEFERRED.md`).
+- `monitors/meta/` entries gain `school_guidelines`
+  (`EntriesMeta.school_guidelines`, types `SchoolGuidelines` and
+  `SchoolActivity`): outdoor activity guidelines for schools, `null` except for
+  `pm25`.
 
 ### Changed
 
