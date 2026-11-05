@@ -43,6 +43,10 @@
  * //     }
  * //     ... (more monitors)
  * //   ]
+ *
+ * // The monitors in one region, or in any of several (by region id):
+ * const inFresno = await getMonitorsList({ region: "r6phe" });
+ * const inEither = await getMonitorsList({ region: ["r6phe", "hu7vc"] });
  * ```
  *
  * @module

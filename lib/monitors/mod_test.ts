@@ -844,7 +844,10 @@ Deno.test("getMonitorsList repeats region for several ids", async () => {
 Deno.test("getMonitorsList sends region with dataset", async () => {
   const stub = stubFetch(() => jsonResponse({ data: [] }));
   try {
-    await getMonitorsList({ region: "abc", dataset: "weather" });
+    assertEquals(
+      await getMonitorsList({ region: "abc", dataset: "weather" }),
+      [],
+    );
   } finally {
     stub.restore();
   }
@@ -867,14 +870,25 @@ Deno.test("getMonitorsList drops empty region values", async () => {
   assertEquals(stub.calls[2].url.searchParams.has("region"), false);
 });
 
-Deno.test("getMonitorsList keeps region out of fetch init", async () => {
+Deno.test("getMonitorsList sends region only in the URL", async () => {
   const stub = stubFetch(() => jsonResponse({ data: [] }));
   try {
-    await getMonitorsList({ region: "abc", signal: undefined });
+    await getMonitorsList({
+      region: "abc",
+      init: { headers: { "X-Test": "1" } },
+    });
   } finally {
     stub.restore();
   }
-  assertEquals("region" in stub.calls[0].init, false);
+  const { url, init } = stub.calls[0];
+  assertEquals(url.searchParams.getAll("region"), ["abc"]);
+  assertEquals(new Headers(init.headers).get("X-Test"), "1");
+  const { headers: _, ...rest } = init;
+  assertEquals(JSON.stringify(rest).includes("abc"), false);
+  assertEquals(
+    [...new Headers(init.headers).values()].includes("abc"),
+    false,
+  );
 });
 
 Deno.test("getMonitorsList with region resolves an empty list", async () => {
