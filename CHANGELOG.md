@@ -64,6 +64,9 @@ the forecast `color` / `aqi_category` change.
 
 - Entry date ranges send zone-aware bounds and snap days in Pacific time.
 - By-code lookups return only the codes asked for.
+- Forecast `color` is the AQI scale level's color for `aqi_value` (it was a
+  blended gradient), and `aqi_category` is that level's label. The types are
+  unchanged.
 
 ### Planned for 5.0.0
 

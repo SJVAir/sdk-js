@@ -15,9 +15,10 @@ interface ForecastSchema extends
     /** When the forecast was published, an ISO timestamp */
     published_at: z.ZodString;
     aqi_value: z.ZodNumber;
+    /** The label of the AQI scale level for `aqi_value` */
     aqi_category: z.ZodString;
     pollutant: z.ZodString;
-    /** The AQI category's color, a hex string */
+    /** The color of the AQI scale level for `aqi_value`, a hex string */
     color: z.ZodString;
     burn_status: z.ZodString;
     burn_status_text: z.ZodString;
