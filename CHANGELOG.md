@@ -15,6 +15,10 @@ the forecast `color` / `aqi_category` change.
 
 ### Breaking
 
+- `monitors/meta/` entries no longer have `levels`. `EntriesMeta.levels`,
+  `EntriesMeta.asIter`, `SJVAirEntryLevel` and `sjvairEntryLevelMetaSchema` are
+  removed. Use `scale` instead: a legacy level's `name` is the scale level's
+  `key`.
 - `getHMSSmoke(options)` and `getHMSFire(options)` are now
   `getHMSSmoke(query?, options?)` and `getHMSFire(query?, options?)`. Pass
   `undefined` for the query to keep today's data:

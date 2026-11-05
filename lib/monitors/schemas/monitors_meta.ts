@@ -47,30 +47,6 @@ export const sjvairMonitorDeviceMetaSchema: SJVAirMonitorDeviceMetaSchema = z
     entries: z.record(z.string(), sjvairMonitorEntryMetaSchema),
   });
 
-interface SJVAirEntryLevelMetaSchema extends
-  z.ZodObject<{
-    /** The name of this level in data form */
-    name: z.ZodString;
-    /** The name of this level in presentation form */
-    label: z.ZodString;
-    /** The color used to represent this level */
-    color: z.ZodString;
-    /** The inclusive start and end values for this level */
-    range: z.ZodTuple<[z.ZodNumber, z.ZodNumber]>;
-    /** A presentable representation of any notice that may accompany this level */
-    guidance: z.ZodNullable<z.ZodString>;
-    /** The rank of this level; 0 is the lowest */
-    tier: z.ZodNullable<z.ZodNumber>;
-  }> {}
-export const sjvairEntryLevelMetaSchema: SJVAirEntryLevelMetaSchema = z.object({
-  name: z.string(),
-  label: z.string(),
-  color: z.string(),
-  range: z.tuple([z.number(), z.number()]),
-  guidance: z.string().nullable(),
-  tier: z.number().nullable(),
-});
-
 interface SchoolActivitySchema extends
   z.ZodObject<{
     /** The permanent key of this activity */
@@ -124,8 +100,6 @@ interface SJVAirEntryMetaSchema extends
     units: z.ZodNullable<z.ZodString>;
     /** The code used to represent this entry type in the EPA's Air Quality System */
     epa_aqs_code: z.ZodNullable<z.ZodNumber>;
-    /** The breakpoints used to represent the severity of this entry type's value */
-    levels: z.ZodNullable<z.ZodRecord<z.ZodString, SJVAirEntryLevelMetaSchema>>;
     /** The fields included on this entry type */
     fields: z.ZodArray<z.ZodString>;
     /** The scale that turns this entry type's value into a level */
@@ -138,7 +112,6 @@ export const sjvairEntryMetaSchema: SJVAirEntryMetaSchema = z.object({
   type: z.string(),
   units: z.string().nullable(),
   epa_aqs_code: z.number().nullable(),
-  levels: z.record(z.string(), sjvairEntryLevelMetaSchema).nullable(),
   fields: z.array(z.string()),
   scale: scaleSchema.nullable(),
   school_guidelines: schoolGuidelinesSchema.nullable(),

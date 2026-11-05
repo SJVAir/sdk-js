@@ -37,7 +37,10 @@ import {
   getMonitorEntriesExportJSON,
 } from "./get_monitor_entries_export.ts";
 import { getMonitorsMeta } from "./get_monitors_meta.ts";
-import { sjvairMonitorsMetaSchema } from "./schemas/monitors_meta.ts";
+import {
+  sjvairEntryMetaSchema,
+  sjvairMonitorsMetaSchema,
+} from "./schemas/monitors_meta.ts";
 import {
   listAllMonitorArchives,
   listMonitorArchivesPage,
@@ -760,6 +763,17 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
     validateMonitorsMeta(
       monitorsMetaFixture.data as unknown as SJVAirMonitorsMeta,
     );
+  });
+
+  await t.step("has no legacy levels", async () => {
+    assertEquals("levels" in sjvairEntryMetaSchema.shape, false);
+    const meta = await fetchMeta(monitorsMetaFixture.data);
+    const pm25 = meta.entryType("pm25");
+    assertEquals("levels" in pm25, false);
+    assertEquals("asIter" in pm25, false);
+    for (const entry of Object.values(monitorsMetaFixture.data.entries)) {
+      assertEquals("levels" in entry, false);
+    }
   });
 });
 

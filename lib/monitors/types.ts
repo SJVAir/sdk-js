@@ -23,7 +23,6 @@ import type {
   monitorWithSummariesSchema,
   schoolActivitySchema,
   schoolGuidelinesSchema,
-  sjvairEntryLevelMetaSchema,
   sjvairEntryMetaSchema,
   sjvairMonitorDeviceMetaSchema,
   sjvairMonitorEntryMetaSchema,
@@ -149,12 +148,6 @@ export type SJVAirMonitorEntryMeta = zinfer<
 export type SJVAirMonitorDeviceMeta = zinfer<
   typeof sjvairMonitorDeviceMetaSchema
 >;
-
-/**
- * The metadata about the breakpoints used to determine the severity of a
- * specific entry type of a given monitor type
- */
-export type SJVAirEntryLevel = zinfer<typeof sjvairEntryLevelMetaSchema>;
 
 /** One school activity and its guidance at each level */
 export type SchoolActivity = zinfer<typeof schoolActivitySchema>;
