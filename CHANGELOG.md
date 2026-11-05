@@ -13,7 +13,9 @@ entry-bounds change. **5.0.0-beta.2** (2026-11-04): adds the entry-bounds change
 (2026-11-04): adds the `monitors/meta/` change (`levels` removed,
 `school_guidelines` added), the forecast `color` / `aqi_category` change (#45),
 `label_plural`, the `searchRegionPlaces` rows and the `getMonitorsList` region
-filter (#46).
+filter (#46). **5.0.0-beta.4** (2026-11-05): adds `name_template` and
+`regionDisplayName` (#50), and leaves repo-only files out of the published
+package (#48).
 
 ### Breaking
 
