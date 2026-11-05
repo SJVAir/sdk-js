@@ -6,7 +6,17 @@
     "dev": "deno run --watch main.ts"
   },
   "publish": {
-    "exclude": ["**/*_test.ts", "**/*_test_utils.ts", "**/fixtures/"]
+    "exclude": [
+      "**/*_test.ts",
+      "**/*_test_utils.ts",
+      "**/fixtures/",
+      "docs/",
+      ".github/",
+      ".env.template",
+      "CLAUDE.md",
+      "DEFERRED.md",
+      "api-urls.md"
+    ]
   },
   "exports": {
     ".": "./mod.ts",
