@@ -58,4 +58,5 @@ export * from "./get_monitor_summaries_bulk.ts";
 export * from "./get_monitors.ts";
 export * from "./get_monitors_list.ts";
 export * from "./get_monitors_meta.ts";
+export * from "./get_weather_stations_for_place.ts";
 export * from "./types.ts";

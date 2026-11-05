@@ -143,6 +143,7 @@ archives
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/seasonal/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/yearly/`
 - [x] `/api/2.0/monitors/meta/`
+- [x] `/api/2.0/monitors/weather/place/`
 
 ## Meta
 

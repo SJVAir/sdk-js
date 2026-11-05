@@ -3,6 +3,7 @@ import {
   COORDINATES,
   EXISTING_MONITOR_ID,
   getSimpleValidationTest,
+  isUnavailable,
 } from "$testing";
 import {
   monitorClosestSchema,
@@ -20,7 +21,11 @@ import {
 } from "./get_closest_monitor.ts";
 import { getMonitors } from "./get_monitors.ts";
 import { getMonitorDetails } from "./get_monitor_details.ts";
-import type { MonitorEntryType, SJVAirMonitorsMeta } from "./types.ts";
+import type {
+  MonitorEntryType,
+  SJVAirMonitorsMeta,
+  WeatherStationsForPlace,
+} from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
 import {
   assert,
@@ -57,7 +62,17 @@ import {
   getMonitorSummariesBulkDaily,
   mergeMonitorSummaryBulkPages,
 } from "./get_monitor_summaries_bulk.ts";
-import { monitorWithSummariesSchema } from "./schemas/mod.ts";
+import {
+  monitorDewPointEntrySchema,
+  monitorEntryTypeSchema,
+  monitorSoilTemperatureEntrySchema,
+  monitorWithSummariesSchema,
+  weatherStationsForPlaceSchema,
+} from "./schemas/mod.ts";
+import { getWeatherStationsForPlace } from "./get_weather_stations_for_place.ts";
+import weatherFixture from "./fixtures/weather_stations_for_place.json" with {
+  type: "json",
+};
 import type { MonitorWithSummaries } from "./types.ts";
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
@@ -898,4 +913,128 @@ Deno.test("getMonitorsList with region resolves an empty list", async () => {
   } finally {
     stub.restore();
   }
+});
+
+Deno.test("MonitorEntryType includes the CIMIS weather types", () => {
+  const ids = [
+    "temperature",
+    "humidity",
+    "dewpoint",
+    "soiltemperature",
+    "windspeed",
+    "winddirection",
+    "precipitation",
+    "solarradiation",
+    "netradiation",
+    "vaporpressure",
+    "eto",
+    "etr",
+  ];
+  for (const id of ids) {
+    assert(monitorEntryTypeSchema.safeParse(id).success, id);
+  }
+  const t: MonitorEntryType = "eto";
+  assertEquals(t, "eto");
+});
+
+Deno.test("Module: Monitors weather stations for a place", async (t) => {
+  const validate = getSimpleValidationTest(weatherStationsForPlaceSchema);
+  // JSON imports widen string literals, so state the shape the schema will check.
+  const data = weatherFixture.data as unknown as WeatherStationsForPlace;
+
+  await t.step("fixture matches the schema", () => {
+    validate(data);
+    assertEquals(data.stations[0].inside, true);
+    assertEquals(data.stations[0].distance, 0); // the doc example's "0"
+  });
+
+  await t.step("sends a region and returns stations", async () => {
+    const stub = stubFetch(() => jsonResponse(weatherFixture));
+    try {
+      const result = await getWeatherStationsForPlace({
+        region: { type: "county", external_id: "06019" },
+      });
+      const { pathname, searchParams } = stub.calls[0].url;
+      assertEquals(pathname, "/api/2.0/monitors/weather/place/");
+      assertEquals(searchParams.get("region_type"), "county");
+      assertEquals(searchParams.get("region"), "06019");
+      assertEquals(result.stations[0].inside, true);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step("sends a monitor and no region", async () => {
+    const stub = stubFetch(() => jsonResponse(weatherFixture));
+    try {
+      await getWeatherStationsForPlace({ monitor: "abc" });
+      const { searchParams } = stub.calls[0].url;
+      assertEquals(searchParams.get("monitor"), "abc");
+      assertEquals(searchParams.has("region"), false);
+      assertEquals(searchParams.has("region_type"), false);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step("refuses land use before fetching", async () => {
+    const stub = stubFetch(() => jsonResponse(weatherFixture));
+    try {
+      await assertRejects(
+        () =>
+          getWeatherStationsForPlace({
+            // deno-lint-ignore no-explicit-any
+            region: { type: "land_use" as any, external_id: "1" },
+          }),
+        Error,
+        "Land-use regions can't be looked up by code",
+      );
+      assertEquals(stub.calls.length, 0);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step("GET  monitors/weather/place/ for Fresno County", async () => {
+    try {
+      const result = await getWeatherStationsForPlace({
+        region: { type: "county", external_id: "06019" },
+      });
+      validate(result);
+    } catch (error) {
+      if (!isUnavailable(error)) throw error;
+      console.warn("monitors/weather/place/ unavailable; skipping.");
+    }
+  });
+});
+
+Deno.test("Module: Monitors dew point and soil temperature entries", () => {
+  const base = {
+    timestamp: "2026-11-05T12:00:00-08:00",
+    sensor: "",
+    stage: "raw",
+    processor: "",
+  };
+  const dew = {
+    ...base,
+    entry_type: "dewpoint",
+    dew_point_f: "41.0",
+    dew_point_c: "5.0",
+  };
+  assert(monitorDewPointEntrySchema.safeParse(dew).success);
+  assert(someMonitorEntrySchema.safeParse(dew).success);
+  const { dew_point_f: _f, ...noF } = dew;
+  assert(!monitorDewPointEntrySchema.safeParse(noF).success);
+  assert(!someMonitorEntrySchema.safeParse(noF).success);
+
+  const soil = {
+    ...base,
+    entry_type: "soiltemperature",
+    soil_temperature_f: "55.0",
+    soil_temperature_c: "12.8",
+  };
+  assert(monitorSoilTemperatureEntrySchema.safeParse(soil).success);
+  assert(someMonitorEntrySchema.safeParse(soil).success);
+  const { soil_temperature_f: _g, ...noSoil } = soil;
+  assert(!monitorSoilTemperatureEntrySchema.safeParse(noSoil).success);
 });

@@ -8,6 +8,7 @@ import type {
   monitorDataSchema,
   monitorDataVendorSchema,
   monitorDetailsSchema,
+  monitorDewPointEntrySchema,
   monitorEntriesArchiveSchema,
   monitorEntryMetaSchema,
   monitorEntrySchema,
@@ -17,6 +18,7 @@ import type {
   monitorLatestSchema,
   monitorParticulatesEntrySchema,
   monitorPressureEntrySchema,
+  monitorSoilTemperatureEntrySchema,
   monitorSummarySchema,
   monitorTemperatureEntrySchema,
   monitorTypeSchema,
@@ -27,6 +29,8 @@ import type {
   sjvairMonitorDeviceMetaSchema,
   sjvairMonitorEntryMetaSchema,
   sjvairMonitorsMetaSchema,
+  weatherStationSchema,
+  weatherStationsForPlaceSchema,
 } from "./schemas/mod.ts";
 
 export type MonitorEntriesArchive = zinfer<typeof monitorEntriesArchiveSchema>;
@@ -71,6 +75,18 @@ export type MonitorTemperatureEntry = zinfer<
 >;
 
 /**
+ * The Entry type for dew point values
+ */
+export type MonitorDewPointEntry = zinfer<typeof monitorDewPointEntrySchema>;
+
+/**
+ * The Entry type for soil temperature values
+ */
+export type MonitorSoilTemperatureEntry = zinfer<
+  typeof monitorSoilTemperatureEntrySchema
+>;
+
+/**
  * The Entry type for pressure values
  */
 export type MonitorPressureEntry = zinfer<typeof monitorPressureEntrySchema>;
@@ -100,6 +116,16 @@ export interface MonitorEntries {
   pressure: MonitorPressureEntry;
   temperature: MonitorTemperatureEntry;
   particulates: MonitorParticulatesEntry;
+  dewpoint: MonitorDewPointEntry;
+  soiltemperature: MonitorSoilTemperatureEntry;
+  windspeed: ExplicitMonitorEntry<"windspeed">;
+  winddirection: ExplicitMonitorEntry<"winddirection">;
+  precipitation: ExplicitMonitorEntry<"precipitation">;
+  solarradiation: ExplicitMonitorEntry<"solarradiation">;
+  netradiation: ExplicitMonitorEntry<"netradiation">;
+  vaporpressure: ExplicitMonitorEntry<"vaporpressure">;
+  eto: ExplicitMonitorEntry<"eto">;
+  etr: ExplicitMonitorEntry<"etr">;
 }
 
 /**
@@ -166,3 +192,11 @@ export type MonitorSummary = zinfer<typeof monitorSummarySchema>;
 
 /** A monitor with its matching summary rows nested under `summaries` */
 export type MonitorWithSummaries = zinfer<typeof monitorWithSummariesSchema>;
+
+/** A weather station near a place: a monitor row plus `distance` and `inside` */
+export type WeatherStation = zinfer<typeof weatherStationSchema>;
+
+/** The weather stations for a place, as returned from monitors/weather/place */
+export type WeatherStationsForPlace = zinfer<
+  typeof weatherStationsForPlaceSchema
+>;
