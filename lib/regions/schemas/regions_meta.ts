@@ -14,6 +14,8 @@ interface RegionTypeMetaSchema extends
     type: typeof regionTypeSchema;
     /** The type of this region in presentation form */
     label: z.ZodString;
+    /** The type's plural label, in Title Case (e.g. "Counties") */
+    label_plural: z.ZodString;
     /** The backend classification this region type belongs to */
     category: typeof regionCategorySchema;
     /** How many current regions of this type there are */
@@ -28,6 +30,7 @@ interface RegionTypeMetaSchema extends
 export const regionTypeMetaSchema: RegionTypeMetaSchema = z.object({
   type: regionTypeSchema,
   label: z.string(),
+  label_plural: z.string(),
   category: regionCategorySchema,
   count: z.number(),
   parents: z.array(regionTypeSchema),

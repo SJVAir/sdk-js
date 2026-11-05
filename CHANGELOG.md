@@ -59,6 +59,8 @@ the forecast `color` / `aqi_category` change.
   (`EntriesMeta.school_guidelines`, types `SchoolGuidelines` and
   `SchoolActivity`): outdoor activity guidelines for schools, `null` except for
   `pm25`.
+- Region types in `regions/meta/` gain `label_plural`, the type's plural label
+  in Title Case (e.g. "Counties"). (sjvair.com #307)
 
 ### Changed
 
