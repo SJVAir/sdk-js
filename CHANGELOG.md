@@ -76,6 +76,9 @@ filter (#46).
 - Forecast `color` is the AQI scale level's color for `aqi_value` (it was a
   blended gradient), and `aqi_category` is that level's label. The types are
   unchanged. (#45)
+- The published package leaves out repo-only files: `docs/` (specs and plans),
+  `CLAUDE.md`, `DEFERRED.md`, `api-urls.md`, `.env.template` and `.github/`.
+  5.0.0-beta.1 to beta.3 include them.
 
 ### Planned for 5.0.0
 
