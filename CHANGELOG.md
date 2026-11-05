@@ -44,6 +44,8 @@ package (#48).
 
 ### Added
 
+- `getSmokeForPlace`: the smoke over a region or monitor by day, with the
+  heaviest density and the coverage of each (`hms/smoke/place/`).
 - `getWeatherStationsForPlace`: the weather stations inside a region, or the
   nearest ones, for a region or monitor (`monitors/weather/place/`).
 - `MonitorEntryType` includes the CIMIS weather types (`dewpoint`,

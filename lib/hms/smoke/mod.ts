@@ -27,4 +27,5 @@
  */
 export * from "./get_smoke.ts";
 export * from "./get_smoke_by_id.ts";
+export * from "./get_smoke_for_place.ts";
 export * from "./types.ts";

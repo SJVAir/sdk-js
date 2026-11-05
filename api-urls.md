@@ -66,6 +66,7 @@ HMS smoke and fire GeoJSON, and the smoke-density and fire-FRP scale metadata
 - [x] `/api/2.0/hms/meta/`
 - [x] `/api/2.0/hms/smoke/` (`?date=`, or `?date__gte=&date__lte=`;
       `?region_id=`, `?density=`)
+- [x] `/api/2.0/hms/smoke/place/` (`?date__gte=&date__lte=`)
 - [x] `/api/2.0/hms/smoke/<smoke_id>/`
 - [x] `/api/2.0/hms/fire/` (`?date=`, or `?date__gte=&date__lte=`;
       `?region_id=`)
