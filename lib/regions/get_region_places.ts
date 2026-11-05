@@ -10,7 +10,9 @@
  *
  * const matches = await searchRegionPlaces("fresno");
  * console.log(matches);
- * // Prints an array of RegionData objects ordered by similarity
+ * // Prints an array of RegionPlaceMatch objects ordered by similarity: no
+ * // boundary geometry (use getRegionDetails for it), and each row's `county`
+ * // names its containing county (null on county rows)
  *
  * const place = await lookupRegionPlace("fresno");
  * console.log(place);
@@ -29,7 +31,12 @@
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import type { RegionData, RegionListItem, RegionType } from "./types.ts";
+import type {
+  RegionData,
+  RegionListItem,
+  RegionPlaceMatch,
+  RegionType,
+} from "./types.ts";
 
 function getPlaceSearchParams(
   q: string,
@@ -51,14 +58,15 @@ function getPlaceSearchParams(
  * @param type When provided, scopes the search to a specific region type
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
- * @returns An array of matching regions
+ * @returns An array of matching regions, without boundary geometry (only its
+ * `bbox`), each with its containing `county` (`null` on county rows)
  */
 export async function searchRegionPlaces(
   q: string,
   type?: RegionType,
   options?: RequestOptions,
-): Promise<Array<RegionData>> {
-  return await jsonCall<Array<RegionData>>({
+): Promise<Array<RegionPlaceMatch>> {
+  return await jsonCall<Array<RegionPlaceMatch>>({
     url: "regions/places/search",
     searchParams: getPlaceSearchParams(q, type),
     options,

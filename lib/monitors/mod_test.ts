@@ -20,9 +20,10 @@ import {
 } from "./get_closest_monitor.ts";
 import { getMonitors } from "./get_monitors.ts";
 import { getMonitorDetails } from "./get_monitor_details.ts";
-import type { MonitorEntryType } from "./types.ts";
+import type { MonitorEntryType, SJVAirMonitorsMeta } from "./types.ts";
 import { getMonitorEntries } from "./get_monitor_entries.ts";
 import {
+  assert,
   assertEquals,
   assertExists,
   assertMatch,
@@ -36,7 +37,10 @@ import {
   getMonitorEntriesExportJSON,
 } from "./get_monitor_entries_export.ts";
 import { getMonitorsMeta } from "./get_monitors_meta.ts";
-import { sjvairMonitorsMetaSchema } from "./schemas/monitors_meta.ts";
+import {
+  sjvairEntryMetaSchema,
+  sjvairMonitorsMetaSchema,
+} from "./schemas/monitors_meta.ts";
 import {
   listAllMonitorArchives,
   listMonitorArchivesPage,
@@ -721,6 +725,56 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
       Object.keys(meta.processors).length,
     );
   });
+
+  await t.step("exposes school guidelines for pm25 only", async () => {
+    const meta = await fetchMeta(monitorsMetaFixture.data);
+    const pm25 = meta.entryType("pm25");
+    const guidelines = pm25.school_guidelines;
+    assertExists(guidelines);
+    assertEquals(guidelines.label, "Outdoor Activity Guidelines for Schools");
+    assertEquals(guidelines.resolution, "hour");
+    assertEquals(
+      guidelines.source.url,
+      "https://www.sjvair.com/guidelines/schools/",
+    );
+    assertEquals(
+      guidelines.activities.map((a) => a.key),
+      ["recess", "pe", "athletics", "events"],
+    );
+    assertEquals(
+      guidelines.activities.map((a) => a.duration),
+      ["15 minutes", "1 hour", "2-4 hours", null],
+    );
+    const levelKeys = pm25.scale!.levels.map((l) => l.key);
+    for (const activity of guidelines.activities) {
+      assertEquals(Object.keys(activity.levels), levelKeys);
+      for (const paragraphs of Object.values(activity.levels)) {
+        assert(paragraphs.length > 0);
+        for (const text of paragraphs) {
+          assert(!text.includes("<") && !text.includes("&amp;"), text);
+        }
+      }
+    }
+    assertEquals(guidelines.activities[0].levels.good, ["No restrictions."]);
+    for (const entry of meta.asIter.entries) {
+      if (entry.type === "pm25") continue;
+      assertEquals(entry.school_guidelines, null, entry.type);
+    }
+    validateMonitorsMeta(
+      monitorsMetaFixture.data as unknown as SJVAirMonitorsMeta,
+    );
+  });
+
+  await t.step("has no legacy levels", async () => {
+    assertEquals("levels" in sjvairEntryMetaSchema.shape, false);
+    const meta = await fetchMeta(monitorsMetaFixture.data);
+    const pm25 = meta.entryType("pm25");
+    assertEquals("levels" in pm25, false);
+    assertEquals("asIter" in pm25, false);
+    for (const entry of Object.values(monitorsMetaFixture.data.entries)) {
+      assertEquals("levels" in entry, false);
+    }
+  });
 });
 
 Deno.test("getMonitorsList sends dataset as a query param, not fetch init", async () => {
@@ -762,4 +816,86 @@ Deno.test("getMonitorsList treats an empty dataset as absent", async () => {
     stub.restore();
   }
   assertEquals(stub.calls[0].url.searchParams.has("dataset"), false);
+});
+
+Deno.test("getMonitorsList sends one region", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: "abc" });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.getAll("region"), ["abc"]);
+});
+
+Deno.test("getMonitorsList repeats region for several ids", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: ["abc", "def"] });
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.getAll("region"), [
+    "abc",
+    "def",
+  ]);
+});
+
+Deno.test("getMonitorsList sends region with dataset", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    assertEquals(
+      await getMonitorsList({ region: "abc", dataset: "weather" }),
+      [],
+    );
+  } finally {
+    stub.restore();
+  }
+  const { searchParams } = stub.calls[0].url;
+  assertEquals(searchParams.getAll("region"), ["abc"]);
+  assertEquals(searchParams.get("dataset"), "weather");
+});
+
+Deno.test("getMonitorsList drops empty region values", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({ region: ["", "abc"] });
+    await assertRejects(() => getMonitorsList({ region: "" }));
+    await assertRejects(() => getMonitorsList({ region: [] }));
+  } finally {
+    stub.restore();
+  }
+  assertEquals(stub.calls[0].url.searchParams.getAll("region"), ["abc"]);
+  assertEquals(stub.calls[1].url.searchParams.has("region"), false);
+  assertEquals(stub.calls[2].url.searchParams.has("region"), false);
+});
+
+Deno.test("getMonitorsList sends region only in the URL", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    await getMonitorsList({
+      region: "abc",
+      init: { headers: { "X-Test": "1" } },
+    });
+  } finally {
+    stub.restore();
+  }
+  const { url, init } = stub.calls[0];
+  assertEquals(url.searchParams.getAll("region"), ["abc"]);
+  assertEquals(new Headers(init.headers).get("X-Test"), "1");
+  const { headers: _, ...rest } = init;
+  assertEquals(JSON.stringify(rest).includes("abc"), false);
+  assertEquals(
+    [...new Headers(init.headers).values()].includes("abc"),
+    false,
+  );
+});
+
+Deno.test("getMonitorsList with region resolves an empty list", async () => {
+  const stub = stubFetch(() => jsonResponse({ data: [] }));
+  try {
+    assertEquals(await getMonitorsList({ region: "abc" }), []);
+  } finally {
+    stub.restore();
+  }
 });

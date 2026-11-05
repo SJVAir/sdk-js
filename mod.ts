@@ -16,8 +16,9 @@
  *
  * const subscribedMonitors = subscriptions.map((sub) => ({
  *   monitor: monitors.find((m) => m.id === sub.monitor),
- *   level: meta.entryType("pm25").asIter.levels.find((lvl) =>
- *     lvl.name === sub.level
+ *   // undefined when the scale has no level with this key
+ *   level: meta.entryType("pm25").scale?.levels.find((lvl) =>
+ *     lvl.key === sub.level
  *   ),
  * }));
  *

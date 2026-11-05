@@ -536,8 +536,8 @@
         "type": "co2",
         "units": "ppm",
         "epa_aqs_code": 42102,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -551,85 +551,6 @@
         "type": "co",
         "units": "ppm",
         "epa_aqs_code": 42101,
-        "levels": {
-          "GOOD": {
-            "name": "good",
-            "label": "Good",
-            "color": "#00e400",
-            "range": [
-              0.0,
-              4.4
-            ],
-            "guidance": null,
-            "tier": 0
-          },
-          "MODERATE": {
-            "name": "moderate",
-            "label": "Moderate",
-            "color": "#ffff00",
-            "range": [
-              4.5,
-              9.4
-            ],
-            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 1
-          },
-          "UNHEALTHY_SENSITIVE": {
-            "name": "unhealthy_sensitive",
-            "label": "Unhealthy for Sensitive Groups",
-            "color": "#ff7e00",
-            "range": [
-              9.5,
-              12.4
-            ],
-            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 2
-          },
-          "UNHEALTHY": {
-            "name": "unhealthy",
-            "label": "Unhealthy",
-            "color": "#ff0000",
-            "range": [
-              12.5,
-              15.4
-            ],
-            "guidance": "Everyone should reduce prolonged or heavy exertion.",
-            "tier": 3
-          },
-          "VERY_UNHEALTHY": {
-            "name": "very_unhealthy",
-            "label": "Very Unhealthy",
-            "color": "#8f3f97",
-            "range": [
-              15.5,
-              30.4
-            ],
-            "guidance": "Everyone should avoid prolonged or heavy exertion.",
-            "tier": 4
-          },
-          "HAZARDOUS": {
-            "name": "hazardous",
-            "label": "Hazardous",
-            "color": "#7e0023",
-            "range": [
-              30.5,
-              50.3
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          },
-          "VERY_HAZARDOUS": {
-            "name": "very_hazardous",
-            "label": "Very Hazardous",
-            "color": "#7e0023",
-            "range": [
-              50.4,
-              99999
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          }
-        },
         "scale": {
           "id": "co",
           "label": "Carbon Monoxide",
@@ -726,6 +647,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -739,63 +661,6 @@
         "type": "so2",
         "units": "ppb",
         "epa_aqs_code": 42401,
-        "levels": {
-          "GOOD": {
-            "name": "good",
-            "label": "Good",
-            "color": "#00e400",
-            "range": [
-              0,
-              35.9
-            ],
-            "guidance": null,
-            "tier": 0
-          },
-          "MODERATE": {
-            "name": "moderate",
-            "label": "Moderate",
-            "color": "#ffff00",
-            "range": [
-              36,
-              75.9
-            ],
-            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 1
-          },
-          "UNHEALTHY_SENSITIVE": {
-            "name": "unhealthy_sensitive",
-            "label": "Unhealthy for Sensitive Groups",
-            "color": "#ff7e00",
-            "range": [
-              76,
-              185.9
-            ],
-            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 2
-          },
-          "UNHEALTHY": {
-            "name": "unhealthy",
-            "label": "Unhealthy",
-            "color": "#ff0000",
-            "range": [
-              186,
-              304.9
-            ],
-            "guidance": "Everyone should reduce prolonged or heavy exertion.",
-            "tier": 3
-          },
-          "VERY_UNHEALTHY": {
-            "name": "very_unhealthy",
-            "label": "Very Unhealthy",
-            "color": "#8f3f97",
-            "range": [
-              305,
-              99999
-            ],
-            "guidance": "Everyone should avoid prolonged or heavy exertion.",
-            "tier": 4
-          }
-        },
         "scale": {
           "id": "so2",
           "label": "Sulfur Dioxide",
@@ -868,6 +733,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -881,8 +747,8 @@
         "type": "particulates",
         "units": null,
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -901,8 +767,8 @@
         "type": "eto",
         "units": "in",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -916,85 +782,6 @@
         "type": "no2",
         "units": "ppb",
         "epa_aqs_code": 42602,
-        "levels": {
-          "GOOD": {
-            "name": "good",
-            "label": "Good",
-            "color": "#00e400",
-            "range": [
-              0.0,
-              53.9
-            ],
-            "guidance": null,
-            "tier": 0
-          },
-          "MODERATE": {
-            "name": "moderate",
-            "label": "Moderate",
-            "color": "#ffff00",
-            "range": [
-              54.0,
-              100.9
-            ],
-            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 1
-          },
-          "UNHEALTHY_SENSITIVE": {
-            "name": "unhealthy_sensitive",
-            "label": "Unhealthy for Sensitive Groups",
-            "color": "#ff7e00",
-            "range": [
-              101.0,
-              360.9
-            ],
-            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 2
-          },
-          "UNHEALTHY": {
-            "name": "unhealthy",
-            "label": "Unhealthy",
-            "color": "#ff0000",
-            "range": [
-              361.0,
-              649.9
-            ],
-            "guidance": "Everyone should reduce prolonged or heavy exertion.",
-            "tier": 3
-          },
-          "VERY_UNHEALTHY": {
-            "name": "very_unhealthy",
-            "label": "Very Unhealthy",
-            "color": "#8f3f97",
-            "range": [
-              650.0,
-              1249.9
-            ],
-            "guidance": "Everyone should avoid prolonged or heavy exertion.",
-            "tier": 4
-          },
-          "HAZARDOUS": {
-            "name": "hazardous",
-            "label": "Hazardous",
-            "color": "#7e0023",
-            "range": [
-              1250.0,
-              2049.9
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          },
-          "VERY_HAZARDOUS": {
-            "name": "very_hazardous",
-            "label": "Very Hazardous",
-            "color": "#7e0023",
-            "range": [
-              2050.0,
-              99999
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          }
-        },
         "scale": {
           "id": "no2",
           "label": "Nitrogen Dioxide",
@@ -1091,6 +878,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1104,74 +892,6 @@
         "type": "o3",
         "units": "ppb",
         "epa_aqs_code": 44201,
-        "levels": {
-          "GOOD": {
-            "name": "good",
-            "label": "Good",
-            "color": "#00e400",
-            "range": [
-              0.0,
-              124.9
-            ],
-            "guidance": null,
-            "tier": 0
-          },
-          "UNHEALTHY_SENSITIVE": {
-            "name": "unhealthy_sensitive",
-            "label": "Unhealthy for Sensitive Groups",
-            "color": "#ff7e00",
-            "range": [
-              125,
-              164.9
-            ],
-            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 2
-          },
-          "UNHEALTHY": {
-            "name": "unhealthy",
-            "label": "Unhealthy",
-            "color": "#ff0000",
-            "range": [
-              165,
-              204.9
-            ],
-            "guidance": "Everyone should reduce prolonged or heavy exertion.",
-            "tier": 3
-          },
-          "VERY_UNHEALTHY": {
-            "name": "very_unhealthy",
-            "label": "Very Unhealthy",
-            "color": "#8f3f97",
-            "range": [
-              205,
-              404.9
-            ],
-            "guidance": "Everyone should avoid prolonged or heavy exertion.",
-            "tier": 4
-          },
-          "HAZARDOUS": {
-            "name": "hazardous",
-            "label": "Hazardous",
-            "color": "#7e0023",
-            "range": [
-              405,
-              604.9
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          },
-          "VERY_HAZARDOUS": {
-            "name": "very_hazardous",
-            "label": "Very Hazardous",
-            "color": "#7e0023",
-            "range": [
-              605,
-              99999
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          }
-        },
         "scale": {
           "id": "o3",
           "label": "Ozone",
@@ -1256,6 +976,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1269,8 +990,8 @@
         "type": "solarradiation",
         "units": "W/m²",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1284,8 +1005,8 @@
         "type": "pm10",
         "units": "µg/m³",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1299,8 +1020,8 @@
         "type": "vaporpressure",
         "units": "kPa",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1314,74 +1035,6 @@
         "type": "pm25",
         "units": "µg/m³",
         "epa_aqs_code": 88101,
-        "levels": {
-          "GOOD": {
-            "name": "good",
-            "label": "Good",
-            "color": "#00e400",
-            "range": [
-              0.0,
-              9.0
-            ],
-            "guidance": null,
-            "tier": 0
-          },
-          "MODERATE": {
-            "name": "moderate",
-            "label": "Moderate",
-            "color": "#ffff00",
-            "range": [
-              9.1,
-              35.4
-            ],
-            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 1
-          },
-          "UNHEALTHY_SENSITIVE": {
-            "name": "unhealthy_sensitive",
-            "label": "Unhealthy for Sensitive Groups",
-            "color": "#ff7e00",
-            "range": [
-              35.5,
-              55.4
-            ],
-            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 2
-          },
-          "UNHEALTHY": {
-            "name": "unhealthy",
-            "label": "Unhealthy",
-            "color": "#ff0000",
-            "range": [
-              55.5,
-              125.4
-            ],
-            "guidance": "Everyone should reduce prolonged or heavy exertion.",
-            "tier": 3
-          },
-          "VERY_UNHEALTHY": {
-            "name": "very_unhealthy",
-            "label": "Very Unhealthy",
-            "color": "#8f3f97",
-            "range": [
-              125.5,
-              225.4
-            ],
-            "guidance": "Everyone should avoid prolonged or heavy exertion.",
-            "tier": 4
-          },
-          "HAZARDOUS": {
-            "name": "hazardous",
-            "label": "Hazardous",
-            "color": "#7e0023",
-            "range": [
-              225.5,
-              99999
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          }
-        },
         "scale": {
           "id": "pm25",
           "label": "PM2.5",
@@ -1466,6 +1119,126 @@
             }
           ]
         },
+        "school_guidelines": {
+          "label": "Outdoor Activity Guidelines for Schools",
+          "resolution": "hour",
+          "source": {
+            "name": "SJVAir",
+            "url": "https://www.sjvair.com/guidelines/schools/"
+          },
+          "activities": [
+            {
+              "key": "recess",
+              "label": "Recess",
+              "duration": "15 minutes",
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Sensitive individuals should exercise indoors or avoid vigorous outdoor activities."
+                ],
+                "unhealthy": [
+                  "Exercise indoors or avoid vigorous outdoor activities.",
+                  "Sensitive individuals should remain indoors."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            },
+            {
+              "key": "pe",
+              "label": "P.E.",
+              "duration": "1 hour",
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Sensitive individuals should exercise indoors or avoid vigorous outdoor activities."
+                ],
+                "unhealthy": [
+                  "Exercise indoors or limit vigorous outdoor activities to a maximum of 15 minutes.",
+                  "Sensitive individuals should remain indoors."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            },
+            {
+              "key": "athletics",
+              "label": "Athletic Practice & Training",
+              "duration": "2-4 hours",
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Reduce vigorous exercise to 30 min per hour of practice time with increased breaks and substitutions.",
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy": [
+                  "Exercise indoors or reduce vigorous exercise to 30 minutes of practice time with increased rest breaks and substitutions.",
+                  "Sensitive individuals should remain indoors."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            },
+            {
+              "key": "events",
+              "label": "Scheduled Sporting Events",
+              "duration": null,
+              "levels": {
+                "good": [
+                  "No restrictions."
+                ],
+                "moderate": [
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy_sensitive": [
+                  "Increase rest breaks and substitutions per CIF guidelines for extreme heat.",
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "unhealthy": [
+                  "Increase rest breaks and substitutions per CIF guidelines for extreme heat.",
+                  "Ensure that sensitive individuals are medically managing their condition."
+                ],
+                "very_unhealthy": [
+                  "No outdoor activity.",
+                  "All activities should be moved indoors."
+                ],
+                "hazardous": [
+                  "No outdoor or indoor activities."
+                ]
+              }
+            }
+          ]
+        },
         "fields": [
           "timestamp",
           "sensor",
@@ -1479,8 +1252,8 @@
         "type": "windspeed",
         "units": "mph",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1494,8 +1267,8 @@
         "type": "precipitation",
         "units": "in",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1509,8 +1282,8 @@
         "type": "netradiation",
         "units": "W/m²",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1524,8 +1297,8 @@
         "type": "dewpoint",
         "units": "°F",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1539,8 +1312,8 @@
         "type": "soiltemperature",
         "units": "°F",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1554,8 +1327,8 @@
         "type": "temperature",
         "units": "°F",
         "epa_aqs_code": 62101,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1569,8 +1342,8 @@
         "type": "humidity",
         "units": "%",
         "epa_aqs_code": 62201,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1584,85 +1357,6 @@
         "type": "pm100",
         "units": "µg/m³",
         "epa_aqs_code": 81102,
-        "levels": {
-          "GOOD": {
-            "name": "good",
-            "label": "Good",
-            "color": "#00e400",
-            "range": [
-              0,
-              54.9
-            ],
-            "guidance": null,
-            "tier": 0
-          },
-          "MODERATE": {
-            "name": "moderate",
-            "label": "Moderate",
-            "color": "#ffff00",
-            "range": [
-              55,
-              154.9
-            ],
-            "guidance": "Highly sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 1
-          },
-          "UNHEALTHY_SENSITIVE": {
-            "name": "unhealthy_sensitive",
-            "label": "Unhealthy for Sensitive Groups",
-            "color": "#ff7e00",
-            "range": [
-              155,
-              254.9
-            ],
-            "guidance": "Sensitive groups should stay indoors and avoid outdoor activities.",
-            "tier": 2
-          },
-          "UNHEALTHY": {
-            "name": "unhealthy",
-            "label": "Unhealthy",
-            "color": "#ff0000",
-            "range": [
-              255,
-              354.9
-            ],
-            "guidance": "Everyone should reduce prolonged or heavy exertion.",
-            "tier": 3
-          },
-          "VERY_UNHEALTHY": {
-            "name": "very_unhealthy",
-            "label": "Very Unhealthy",
-            "color": "#8f3f97",
-            "range": [
-              355,
-              424.9
-            ],
-            "guidance": "Everyone should avoid prolonged or heavy exertion.",
-            "tier": 4
-          },
-          "HAZARDOUS": {
-            "name": "hazardous",
-            "label": "Hazardous",
-            "color": "#7e0023",
-            "range": [
-              425,
-              604.9
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          },
-          "VERY_HAZARDOUS": {
-            "name": "very_hazardous",
-            "label": "Very Hazardous",
-            "color": "#7e0023",
-            "range": [
-              605,
-              99999
-            ],
-            "guidance": "Everyone should stay indoors and avoid physical outdoor activities.",
-            "tier": 4
-          }
-        },
         "scale": {
           "id": "pm100",
           "label": "PM10.0",
@@ -1759,6 +1453,7 @@
             }
           ]
         },
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1772,8 +1467,8 @@
         "type": "winddirection",
         "units": "°",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1787,8 +1482,8 @@
         "type": "etr",
         "units": "in",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",
@@ -1802,8 +1497,8 @@
         "type": "pressure",
         "units": "mmHg",
         "epa_aqs_code": null,
-        "levels": null,
         "scale": null,
+        "school_guidelines": null,
         "fields": [
           "timestamp",
           "sensor",

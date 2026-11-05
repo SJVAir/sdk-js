@@ -45,19 +45,6 @@
  * //        "type": "pm25",
  * //        "units": "µg/m³",
  * //        "epa_aqs_code": 88101,
- * //        "levels": {
- * //          "GOOD": {
- * //            "name": "good",
- * //            "label": "Good",
- * //            "color": "#00e400",
- * //            "range": [
- * //              0.0,
- * //              9.0,
- * //            ],
- * //            "guidance": null,
- * //          },
- * //          ... (other levels omitted for brevity)
- * //        },
  * //        "fields": [
  * //          "timestamp",
  * //          "sensor",
@@ -65,6 +52,28 @@
  * //          "processor",
  * //          "value",
  * //        ],
+ * //        "scale": {
+ * //          "id": "pm25",
+ * //          "label": "PM2.5",
+ * //          "levels": [
+ * //            { "key": "good", "label": "Good", "color": "#00e400", "min": 0, ... },
+ * //            ... (other levels omitted for brevity)
+ * //          ],
+ * //          ... (other scale fields omitted for brevity)
+ * //        },
+ * //        "school_guidelines": {
+ * //          "label": "Outdoor Activity Guidelines for Schools",
+ * //          "resolution": "hour",
+ * //          "activities": [
+ * //            {
+ * //              "key": "recess",
+ * //              "label": "Recess",
+ * //              "duration": "15 minutes",
+ * //              "levels": { "good": ["No restrictions."], ... },
+ * //            },
+ * //            ... (other activities omitted for brevity)
+ * //          ],
+ * //        },
  * //      },
  * //      ... (other entry types omitted for brevity)
  * //    }
@@ -78,7 +87,7 @@ import { jsonCall, type RequestOptions } from "$http";
 import type {
   MonitorEntryType,
   MonitorType,
-  SJVAirEntryLevel,
+  SchoolGuidelines,
   SJVAirEntryMeta,
   SJVAirMonitorDeviceMeta,
   SJVAirMonitorsMeta,
@@ -86,23 +95,9 @@ import type {
 
 class EntriesMeta implements SJVAirEntryMeta {
   /**
-   * An iterable representation of the entry level metadata.
-   */
-  asIter: {
-    /**
-     * An array of entry level metadata.
-     */
-    levels: Array<SJVAirEntryLevel> | null;
-  };
-
-  /**
    * Creates an instance of EntriesMeta.
    */
-  constructor(private meta: SJVAirEntryMeta) {
-    this.asIter = {
-      levels: (this.meta.levels) ? Object.values(this.meta.levels) : null,
-    };
-  }
+  constructor(private meta: SJVAirEntryMeta) {}
 
   /**
    * The EPA AQS code associated with this entry type.
@@ -126,18 +121,20 @@ class EntriesMeta implements SJVAirEntryMeta {
   }
 
   /**
-   * The intensity levels associated with this entry type.
-   */
-  get levels(): Record<string, SJVAirEntryLevel> | null {
-    return this.meta.levels;
-  }
-
-  /**
    * The scale that turns this entry type's value into a level, or null when
    * it has none.
    */
   get scale(): Scale | null {
     return this.meta.scale;
+  }
+
+  /**
+   * The outdoor activity guidelines for schools, or null when this entry type
+   * has none (only PM2.5 has them). Each activity's `levels` is keyed by the
+   * scale's level keys, and the guidelines apply to hourly values.
+   */
+  get school_guidelines(): SchoolGuidelines | null {
+    return this.meta.school_guidelines;
   }
 
   /**

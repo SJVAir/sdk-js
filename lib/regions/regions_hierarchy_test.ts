@@ -1,6 +1,6 @@
 import { setOrigin } from "$http";
 import { getSimpleValidationTest, isUnavailable } from "$testing";
-import { assertEquals, assertExists, assertRejects } from "@std/assert";
+import { assert, assertEquals, assertExists, assertRejects } from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import regionsMetaFixture from "./fixtures/regions_meta.json" with {
   type: "json",
@@ -20,6 +20,7 @@ import {
   regionListItemSchema,
   regionOverlapSchema,
   regionsMetaSchema,
+  regionTypeMetaSchema,
 } from "./schemas/mod.ts";
 import type {
   RegionFeatureCollection,
@@ -217,4 +218,15 @@ Deno.test({
       assertEquals(result.features.length, 2);
     });
   },
+});
+
+Deno.test("regions meta types carry a plural label", () => {
+  assertEquals(metaData.types.county.label_plural, "Counties");
+  assertEquals(metaData.types.zipcode.label_plural, "ZIP Codes");
+  assertEquals(metaData.types.ab617.label_plural, "AB 617 Communities");
+  for (const meta of Object.values(metaData.types)) {
+    assert(meta.label_plural, `${meta.type} has no label_plural`);
+  }
+  const { label_plural: _, ...withoutPlural } = metaData.types.county;
+  assertEquals(regionTypeMetaSchema.safeParse(withoutPlural).success, false);
 });

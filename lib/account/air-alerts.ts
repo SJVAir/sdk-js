@@ -32,7 +32,7 @@
  * //    }
  * //  ]
  * //
- * // `level` is a key into the levels for the alert's `entry_type` from
+ * // `level` is a key into the `scale.levels` of the alert's `entry_type` in
  * // `monitors/meta/` (null before the alert's first update).
  * ```
  *

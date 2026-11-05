@@ -1,5 +1,10 @@
 import * as z from "zod";
-import { choiceSchema, scaleSchema } from "../../meta/schemas/scale.ts";
+import { resolutionSchema } from "../../meta/schemas/dataset_catalog.ts";
+import {
+  choiceSchema,
+  scaleSchema,
+  scaleSourceSchema,
+} from "../../meta/schemas/scale.ts";
 
 interface SJVAirMonitorEntryMetaSchema extends
   z.ZodObject<{
@@ -42,28 +47,47 @@ export const sjvairMonitorDeviceMetaSchema: SJVAirMonitorDeviceMetaSchema = z
     entries: z.record(z.string(), sjvairMonitorEntryMetaSchema),
   });
 
-interface SJVAirEntryLevelMetaSchema extends
+interface SchoolActivitySchema extends
   z.ZodObject<{
-    /** The name of this level in data form */
-    name: z.ZodString;
-    /** The name of this level in presentation form */
+    /** The permanent key of this activity */
+    key: z.ZodEnum<{
+      recess: "recess";
+      pe: "pe";
+      athletics: "athletics";
+      events: "events";
+    }>;
+    /** The activity in presentation form */
     label: z.ZodString;
-    /** The color used to represent this level */
-    color: z.ZodString;
-    /** The inclusive start and end values for this level */
-    range: z.ZodTuple<[z.ZodNumber, z.ZodNumber]>;
-    /** A presentable representation of any notice that may accompany this level */
-    guidance: z.ZodNullable<z.ZodString>;
-    /** The rank of this level; 0 is the lowest */
-    tier: z.ZodNullable<z.ZodNumber>;
+    /** How long the activity lasts in presentation form, if stated */
+    duration: z.ZodNullable<z.ZodString>;
+    /** The guidance for each level, keyed by the scale's level keys, as paragraphs */
+    levels: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
   }> {}
-export const sjvairEntryLevelMetaSchema: SJVAirEntryLevelMetaSchema = z.object({
-  name: z.string(),
+/** One school activity and its guidance at each level */
+export const schoolActivitySchema: SchoolActivitySchema = z.object({
+  key: z.enum(["recess", "pe", "athletics", "events"]),
   label: z.string(),
-  color: z.string(),
-  range: z.tuple([z.number(), z.number()]),
-  guidance: z.string().nullable(),
-  tier: z.number().nullable(),
+  duration: z.string().nullable(),
+  levels: z.record(z.string(), z.array(z.string())),
+});
+
+interface SchoolGuidelinesSchema extends
+  z.ZodObject<{
+    /** The guidelines in presentation form */
+    label: z.ZodString;
+    /** The resolution of the values the guidelines apply to */
+    resolution: typeof resolutionSchema;
+    /** Where the guidelines come from */
+    source: typeof scaleSourceSchema;
+    /** The activities, in order */
+    activities: z.ZodArray<SchoolActivitySchema>;
+  }> {}
+/** Outdoor activity guidelines for schools, by level */
+export const schoolGuidelinesSchema: SchoolGuidelinesSchema = z.object({
+  label: z.string(),
+  resolution: resolutionSchema,
+  source: scaleSourceSchema,
+  activities: z.array(schoolActivitySchema),
 });
 
 interface SJVAirEntryMetaSchema extends
@@ -76,21 +100,21 @@ interface SJVAirEntryMetaSchema extends
     units: z.ZodNullable<z.ZodString>;
     /** The code used to represent this entry type in the EPA's Air Quality System */
     epa_aqs_code: z.ZodNullable<z.ZodNumber>;
-    /** The breakpoints used to represent the severity of this entry type's value */
-    levels: z.ZodNullable<z.ZodRecord<z.ZodString, SJVAirEntryLevelMetaSchema>>;
     /** The fields included on this entry type */
     fields: z.ZodArray<z.ZodString>;
     /** The scale that turns this entry type's value into a level */
     scale: z.ZodNullable<typeof scaleSchema>;
+    /** Outdoor activity guidelines for schools, if this entry type has them */
+    school_guidelines: z.ZodNullable<SchoolGuidelinesSchema>;
   }> {}
 export const sjvairEntryMetaSchema: SJVAirEntryMetaSchema = z.object({
   label: z.string(),
   type: z.string(),
   units: z.string().nullable(),
   epa_aqs_code: z.number().nullable(),
-  levels: z.record(z.string(), sjvairEntryLevelMetaSchema).nullable(),
   fields: z.array(z.string()),
   scale: scaleSchema.nullable(),
+  school_guidelines: schoolGuidelinesSchema.nullable(),
 });
 
 interface SJVAirMonitorsMetaSchema extends

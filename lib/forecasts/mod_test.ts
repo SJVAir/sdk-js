@@ -86,6 +86,20 @@ Deno.test({
       assertEquals(placeData.rule, "county");
     });
 
+    await t.step(
+      "fixture colors and categories come from the AQI scale",
+      () => {
+        const levels = data.scales["aqi-forecast"].levels;
+        for (const forecast of [...listData, ...placeData.forecasts]) {
+          const level = levels.filter((l) => (l.min ?? 0) <= forecast.aqi_value)
+            .at(-1);
+          assert(level, `no AQI level for ${forecast.aqi_value}`);
+          assertEquals(forecast.color, level.color);
+          assertEquals(forecast.aqi_category, level.label);
+        }
+      },
+    );
+
     await t.step("getForecasts sends filters and unwraps rows", async () => {
       const stub = stubFetch(() => jsonResponse(listFixture));
       try {
