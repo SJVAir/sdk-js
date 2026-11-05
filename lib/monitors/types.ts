@@ -100,6 +100,16 @@ export interface MonitorEntries {
   pressure: MonitorPressureEntry;
   temperature: MonitorTemperatureEntry;
   particulates: MonitorParticulatesEntry;
+  dewpoint: ExplicitMonitorEntry<"dewpoint">;
+  soiltemperature: ExplicitMonitorEntry<"soiltemperature">;
+  windspeed: ExplicitMonitorEntry<"windspeed">;
+  winddirection: ExplicitMonitorEntry<"winddirection">;
+  precipitation: ExplicitMonitorEntry<"precipitation">;
+  solarradiation: ExplicitMonitorEntry<"solarradiation">;
+  netradiation: ExplicitMonitorEntry<"netradiation">;
+  vaporpressure: ExplicitMonitorEntry<"vaporpressure">;
+  eto: ExplicitMonitorEntry<"eto">;
+  etr: ExplicitMonitorEntry<"etr">;
 }
 
 /**

@@ -44,6 +44,9 @@ package (#48).
 
 ### Added
 
+- `MonitorEntryType` includes the CIMIS weather types (`dewpoint`,
+  `soiltemperature`, `windspeed`, `winddirection`, `precipitation`,
+  `solarradiation`, `netradiation`, `vaporpressure`, `eto`, `etr`).
 - Metadata: the dataset catalog and available pollutants (`getDatasetCatalog`),
   `getCoverage`, scales, the region hierarchy, and the HMS, forecast and
   CalHeatScore metas.

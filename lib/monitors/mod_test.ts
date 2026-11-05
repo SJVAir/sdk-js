@@ -57,7 +57,10 @@ import {
   getMonitorSummariesBulkDaily,
   mergeMonitorSummaryBulkPages,
 } from "./get_monitor_summaries_bulk.ts";
-import { monitorWithSummariesSchema } from "./schemas/mod.ts";
+import {
+  monitorEntryTypeSchema,
+  monitorWithSummariesSchema,
+} from "./schemas/mod.ts";
 import type { MonitorWithSummaries } from "./types.ts";
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
@@ -898,4 +901,26 @@ Deno.test("getMonitorsList with region resolves an empty list", async () => {
   } finally {
     stub.restore();
   }
+});
+
+Deno.test("MonitorEntryType includes the CIMIS weather types", () => {
+  const ids = [
+    "temperature",
+    "humidity",
+    "dewpoint",
+    "soiltemperature",
+    "windspeed",
+    "winddirection",
+    "precipitation",
+    "solarradiation",
+    "netradiation",
+    "vaporpressure",
+    "eto",
+    "etr",
+  ];
+  for (const id of ids) {
+    assert(monitorEntryTypeSchema.safeParse(id).success, id);
+  }
+  const t: MonitorEntryType = "eto";
+  assertEquals(t, "eto");
 });

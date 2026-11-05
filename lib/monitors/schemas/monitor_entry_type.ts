@@ -11,6 +11,16 @@ export type MonitorEntryTypeSchema = z.ZodEnum<{
   pressure: "pressure";
   temperature: "temperature";
   particulates: "particulates";
+  dewpoint: "dewpoint";
+  soiltemperature: "soiltemperature";
+  windspeed: "windspeed";
+  winddirection: "winddirection";
+  precipitation: "precipitation";
+  solarradiation: "solarradiation";
+  netradiation: "netradiation";
+  vaporpressure: "vaporpressure";
+  eto: "eto";
+  etr: "etr";
 }>;
 
 export const monitorEntryTypeSchema: MonitorEntryTypeSchema = z.enum(
@@ -24,5 +34,15 @@ export const monitorEntryTypeSchema: MonitorEntryTypeSchema = z.enum(
     "pressure",
     "temperature",
     "particulates",
+    "dewpoint",
+    "soiltemperature",
+    "windspeed",
+    "winddirection",
+    "precipitation",
+    "solarradiation",
+    "netradiation",
+    "vaporpressure",
+    "eto",
+    "etr",
   ] as const,
 );
