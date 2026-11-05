@@ -27,6 +27,8 @@ import type {
   sjvairMonitorDeviceMetaSchema,
   sjvairMonitorEntryMetaSchema,
   sjvairMonitorsMetaSchema,
+  weatherStationSchema,
+  weatherStationsForPlaceSchema,
 } from "./schemas/mod.ts";
 
 export type MonitorEntriesArchive = zinfer<typeof monitorEntriesArchiveSchema>;
@@ -176,3 +178,11 @@ export type MonitorSummary = zinfer<typeof monitorSummarySchema>;
 
 /** A monitor with its matching summary rows nested under `summaries` */
 export type MonitorWithSummaries = zinfer<typeof monitorWithSummariesSchema>;
+
+/** A weather station near a place: a monitor row plus `distance` and `inside` */
+export type WeatherStation = zinfer<typeof weatherStationSchema>;
+
+/** The weather stations for a place, as returned from monitors/weather/place */
+export type WeatherStationsForPlace = zinfer<
+  typeof weatherStationsForPlaceSchema
+>;

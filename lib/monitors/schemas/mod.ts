@@ -10,3 +10,4 @@ export * from "./monitor_summary.ts";
 export * from "./monitor_summary_bulk.ts";
 export * from "./monitor_type.ts";
 export * from "./monitors_meta.ts";
+export * from "./weather_stations_for_place.ts";
