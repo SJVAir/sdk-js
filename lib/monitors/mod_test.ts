@@ -73,7 +73,7 @@ import { getWeatherStationsForPlace } from "./get_weather_stations_for_place.ts"
 import weatherFixture from "./fixtures/weather_stations_for_place.json" with {
   type: "json",
 };
-import type { MonitorSummary, MonitorWithSummaries } from "./types.ts";
+import type { MonitorWithSummaries } from "./types.ts";
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
 };
@@ -93,36 +93,12 @@ const validateMonitorsMeta = getSimpleValidationTest(sjvairMonitorsMetaSchema);
 const validateMonitorArchive = getSimpleValidationTest(
   monitorEntriesArchiveSchema,
 );
-const validateMonitorSummaryStrict = getSimpleValidationTest(
+const validateMonitorSummary = getSimpleValidationTest(
   monitorSummarySchema,
 );
-const validateMonitorWithSummariesStrict = getSimpleValidationTest(
+const validateMonitorWithSummaries = getSimpleValidationTest(
   monitorWithSummariesSchema,
 );
-
-// `sum` is required, but a server without sjvair.com #313 does not send it.
-// Skip validating such responses, with a note, instead of failing.
-// TODO: remove once #313 is on develop
-const lacksSum = (row: unknown) =>
-  row !== undefined && !("sum" in (row as Record<string, unknown>));
-
-const validateMonitorSummary = (rows: Array<MonitorSummary>) => {
-  if (lacksSum(rows[0])) {
-    console.warn("Skipping summary validation: server lacks `sum` (#313)");
-    return;
-  }
-  validateMonitorSummaryStrict(rows);
-};
-
-const validateMonitorWithSummaries = (
-  monitors: Array<MonitorWithSummaries>,
-) => {
-  if (lacksSum(monitors.find((m) => m.summaries.length)?.summaries[0])) {
-    console.warn("Skipping summary validation: server lacks `sum` (#313)");
-    return;
-  }
-  validateMonitorWithSummariesStrict(monitors);
-};
 
 Deno.test({
   name: "Module: Monitors Endpoints",

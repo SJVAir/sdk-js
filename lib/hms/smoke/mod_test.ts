@@ -97,18 +97,8 @@ Deno.test({
         validateSmokeForPlace(smoke);
         assert(smoke.days.length === 30);
       } catch (error) {
-        // develop routes smoke/place/ to hms/smoke/<id>/, which answers 500 on
-        // a malformed id; skip on any non-200 until sjvair.com #312 merges.
-        const cause = (error as {
-          cause?: { status?: number; result?: { status?: number } };
-        })?.cause;
-        const status = cause?.status ?? cause?.result?.status;
-        if (!isUnavailable(error) && status === undefined) throw error;
-        console.warn(
-          `server without hms/smoke/place/ (sjvair.com #312); got ${
-            status ?? "no response"
-          }. Skipping.`,
-        );
+        if (!isUnavailable(error)) throw error;
+        console.warn("server without hms/smoke/place/. Skipping.");
       }
     });
   },
