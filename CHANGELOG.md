@@ -44,6 +44,8 @@ package (#48).
 
 ### Added
 
+- `sum` on monitor summary rows (and bulk rows): the total of the period's
+  values, e.g. precipitation, ETo and ETr. Region summary rows do not carry it.
 - `getSmokeForPlace`: the smoke over a region or monitor by day, with the
   heaviest density and the coverage of each (`hms/smoke/place/`).
 - `getWeatherStationsForPlace`: the weather stations inside a region, or the
