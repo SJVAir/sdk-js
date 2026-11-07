@@ -286,6 +286,20 @@ Deno.test({
       },
     );
 
+    await t.step("a read-only list of categories is accepted", async () => {
+      const stub = stubFetch(() => jsonResponse(placeFixture));
+      try {
+        const keys = Object.freeze(["carcinogen", "fumigant"] as const);
+        await getPesticidesForPlace(county, { category: keys });
+        assertEquals(stub.calls[0].url.searchParams.getAll("category"), [
+          "carcinogen",
+          "fumigant",
+        ]);
+      } finally {
+        stub.restore();
+      }
+    });
+
     await t.step("one category is sent once", async () => {
       const stub = stubFetch(() => jsonResponse(placeFixture));
       try {

@@ -136,7 +136,7 @@ export type PesticidesForPlaceFilters = {
    * keys are in `getPesticidesMeta().categories`. A list is sent as repeated
    * params.
    */
-  category?: string | Array<string>;
+  category?: string | ReadonlyArray<string>;
   /** Keep only what this narrowing keeps (see `getPesticidesMeta().narrows`) */
   narrow?: PesticideNarrow;
   /** The chemical's IARC group */

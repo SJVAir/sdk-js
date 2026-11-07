@@ -63,7 +63,7 @@ export async function getPesticidesForPlace(
     placeSearchParams(place);
   for (const [key, value] of Object.entries(filters)) {
     if (value === undefined) continue;
-    searchParams[key] = Array.isArray(value) ? value : String(value);
+    searchParams[key] = Array.isArray(value) ? [...value] : String(value);
   }
 
   return await jsonCall<PesticidesForPlace>({
