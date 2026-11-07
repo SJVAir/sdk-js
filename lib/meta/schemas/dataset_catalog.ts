@@ -107,6 +107,12 @@ interface DatasetEntryTypeSchema extends
     units: z.ZodString;
     /** The resolutions this entry type can be summarized at */
     resolutions: z.ZodArray<typeof resolutionSchema>;
+    /**
+     * How the values roll up over time: `sum` (e.g. precipitation, pounds
+     * applied), `mean` (e.g. pollutant concentrations), or `null` when they
+     * never roll up (e.g. wind direction, a score)
+     */
+    aggregate: z.ZodNullable<z.ZodEnum<{ sum: "sum"; mean: "mean" }>>;
     /** Hints for presenting this entry type's values */
     display: DatasetEntryDisplaySchema;
     /** Null while current; the retirement marker once retired */
@@ -120,6 +126,7 @@ export const datasetEntryTypeSchema: DatasetEntryTypeSchema = z.object({
   kind: datasetEntryKindSchema,
   units: z.string(),
   resolutions: z.array(resolutionSchema),
+  aggregate: z.enum(["sum", "mean"]).nullable(),
   display: datasetEntryDisplaySchema,
   retired: retiredSchema.nullable(),
   available: z.boolean().optional(),

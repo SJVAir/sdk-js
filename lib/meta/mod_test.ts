@@ -24,7 +24,11 @@ import { getCoverage } from "./get_coverage.ts";
 import { getMonitorsMeta } from "../monitors/get_monitors_meta.ts";
 import { sjvairMonitorsMetaSchema } from "../monitors/schemas/mod.ts";
 import { getDatasetCatalog } from "./get_dataset_catalog.ts";
-import { coverageSchema, datasetCatalogSchema } from "./schemas/mod.ts";
+import {
+  coverageSchema,
+  datasetCatalogSchema,
+  datasetEntryTypeSchema,
+} from "./schemas/mod.ts";
 import type { SJVAirMonitorsMeta } from "../monitors/types.ts";
 import type { Coverage, DatasetCatalog } from "./types.ts";
 
@@ -314,4 +318,29 @@ Deno.test({
       assertEquals(coverage.monitor, monitor);
     });
   },
+});
+
+Deno.test("Module: catalog entry aggregate", async (t) => {
+  const data = catalogFixture.data as unknown as DatasetCatalog;
+  const entry = (dataset: string, id: string) =>
+    data.datasets.find((d) => d.id === dataset)?.entry_types.find((e) =>
+      e.id === id
+    );
+
+  await t.step("the fixture says how each entry rolls up", () => {
+    assertEquals(entry("pesticide-use", "pounds-applied")?.aggregate, "sum");
+    assertEquals(entry("air-quality", "pm25")?.aggregate, "mean");
+    assertEquals(entry("weather", "winddirection")?.aggregate, null);
+  });
+
+  await t.step("an entry type needs a known aggregate", () => {
+    const pm25 = entry("air-quality", "pm25")!;
+    const { aggregate: _, ...rest } = pm25;
+    assertEquals(datasetEntryTypeSchema.safeParse(rest).success, false);
+    assertEquals(
+      datasetEntryTypeSchema.safeParse({ ...pm25, aggregate: "max" }).success,
+      false,
+    );
+    assertEquals(datasetEntryTypeSchema.safeParse(pm25).success, true);
+  });
 });

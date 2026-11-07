@@ -56,6 +56,9 @@ data layers.
 - `MonitorEntryType` includes the CIMIS weather types (`dewpoint`,
   `soiltemperature`, `windspeed`, `winddirection`, `precipitation`,
   `solarradiation`, `netradiation`, `vaporpressure`, `eto`, `etr`).
+- Catalog entry types gain `aggregate`: how their values roll up over time,
+  `"sum"`, `"mean"`, or `null` when they never roll up. Required. (sjvair.com
+  #318)
 - Metadata: the dataset catalog and available pollutants (`getDatasetCatalog`),
   `getCoverage`, scales, the region hierarchy, and the HMS, forecast and
   CalHeatScore metas.
