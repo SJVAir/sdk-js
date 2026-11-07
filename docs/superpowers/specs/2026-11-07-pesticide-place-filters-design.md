@@ -250,22 +250,31 @@ kinds are open strings. But:
 - `DEFERRED.md`: nothing is deferred by this spec. If the builder defers
   anything, it gets an entry in the same change.
 
-### 9. Catalog entry aggregate hint (pending a server PR)
+### 9. Catalog entry `aggregate` (pending a server PR)
 
 Added 2026-11-07, approved by the user through the coordinator
-(data-dashboard-23). sjvair-com-48 is adding a per-entry catalog hint for
-whether an entry's values sum or average over time, likely
-`display.aggregate: "sum" | "mean"`, possibly `null` where values never roll up.
+(data-dashboard-23). The shape below is final, from sjvair-com-48:
 
-- Add it to `datasetEntryDisplaySchema` (`lib/meta/schemas/dataset_catalog.ts`)
-  and its interface, required (no fallback), with JSDoc.
-- Refresh `lib/meta/fixtures/dataset_catalog.json` from the local stack, and
-  assert the value on one summed entry (e.g. `pounds-applied`) and one averaged
-  entry (e.g. `pm25`).
-- The name, values, nullability and placement come from that server PR. If they
-  differ from the above, the PR wins and this section is updated.
-- Same PR and beta as the rest. Done after that server PR merges and the local
-  stack runs it.
+- `aggregate` is a **top-level entry-type field**, next to `resolutions`, not
+  inside `display`.
+- Its type is `"sum" | "mean" | null`. It's always present; `null` means the
+  values never roll up over time.
+- `sum`: precipitation, eto, etr, pounds-applied, acres-treated, applications,
+  spray-notice.
+- `mean`: air-quality pollutants and particulates, the other weather types,
+  TEMPO.
+- `null`: winddirection, heat-score, aqi-forecast, ces-score, smoke-density,
+  burn-status, fire-frp, facility-*, methane-emission-rate.
+
+SDK work:
+
+- Add `aggregate: z.enum(["sum", "mean"]).nullable()` to
+  `datasetEntryTypeSchema` and its interface
+  (`lib/meta/schemas/dataset_catalog.ts`). It's required (no fallback) and gets
+  JSDoc.
+- Recapture `lib/meta/fixtures/dataset_catalog.json` from the local stack.
+- Same PR and beta as the rest. Do it after that server PR merges and the
+  coordinator says the local stack serves it.
 
 ## Tests
 
