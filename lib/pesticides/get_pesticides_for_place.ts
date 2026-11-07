@@ -91,17 +91,26 @@ export type PesticidePlaceFilterErrors = {
   year__lte?: "invalid" | "min_value" | "max_value";
 };
 
-const PLACE_FILTER_FIELDS: ReadonlyArray<keyof PesticidePlaceFilterErrors> = [
-  "chemical",
-  "commodity",
-  "product",
-  "category",
-  "narrow",
-  "iarc_group",
-  "aerial_ground",
-  "year__gte",
-  "year__lte",
-];
+const ID_CODES = ["invalid", "not_found"] as const;
+const CHOICE_CODES = ["invalid"] as const;
+const YEAR_CODES = ["invalid", "min_value", "max_value"] as const;
+
+/** The codes each place filter can carry, as the server's form sends them */
+const PLACE_FILTER_CODES: {
+  readonly [F in keyof PesticidePlaceFilterErrors]-?: ReadonlyArray<
+    NonNullable<PesticidePlaceFilterErrors[F]>
+  >;
+} = {
+  chemical: ID_CODES,
+  commodity: ID_CODES,
+  product: ID_CODES,
+  category: CHOICE_CODES,
+  narrow: CHOICE_CODES,
+  iarc_group: CHOICE_CODES,
+  aerial_ground: CHOICE_CODES,
+  year__gte: YEAR_CODES,
+  year__lte: YEAR_CODES,
+};
 
 /**
  * Reads the filter error codes from a failed `getPesticidesForPlace` call.
@@ -110,7 +119,8 @@ const PLACE_FILTER_FIELDS: ReadonlyArray<keyof PesticidePlaceFilterErrors> = [
  *
  * @returns The first code for each place filter the server rejected, or
  * `undefined` when the error isn't a 400 naming at least one of them (a
- * network failure, an abort, an unknown place, and so on).
+ * network failure, an abort, an unknown place, and so on). A code a field
+ * can't have (see `PesticidePlaceFilterErrors`) is left out.
  */
 export function pesticidePlaceFilterErrors(
   error: unknown,
@@ -124,10 +134,15 @@ export function pesticidePlaceFilterErrors(
   if (typeof details !== "object" || details === null) return undefined;
 
   const errors: Record<string, string> = {};
-  for (const field of PLACE_FILTER_FIELDS) {
+  for (
+    const [field, codes] of Object.entries(PLACE_FILTER_CODES) as Array<
+      [string, ReadonlyArray<string>]
+    >
+  ) {
     const issues = (details as Record<string, unknown>)[field];
     const code = Array.isArray(issues) ? issues[0]?.code : undefined;
-    if (typeof code === "string") errors[field] = code;
+    // A code this field can't have isn't reported, so the type stays true.
+    if (typeof code === "string" && codes.includes(code)) errors[field] = code;
   }
   return Object.keys(errors).length > 0
     ? errors as PesticidePlaceFilterErrors

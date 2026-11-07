@@ -428,6 +428,47 @@ Deno.test("Module: pesticide place filter errors", async (t) => {
     });
   });
 
+  await t.step("leaves out codes a field can't have", () => {
+    const error = failed(400, {
+      chemical: issue("required"),
+      category: issue("not_found"),
+      commodity: issue("not_found"),
+    });
+    assertEquals(pesticidePlaceFilterErrors(error), { commodity: "not_found" });
+    assertEquals(
+      pesticidePlaceFilterErrors(failed(400, { chemical: issue("required") })),
+      undefined,
+    );
+  });
+
+  await t.step(
+    "an abort while the request is pending is not a filter error",
+    async () => {
+      const stub = stubFetch((_url, init) =>
+        new Promise<Response>((_, reject) =>
+          init.signal?.addEventListener(
+            "abort",
+            () => reject(init.signal!.reason),
+          )
+        )
+      );
+      const controller = new AbortController();
+      try {
+        const pending = getPesticidesForPlace(county, {}, {
+          signal: controller.signal,
+        }).then(() => undefined, (e) => e);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        assertEquals(stub.calls.length, 1);
+        controller.abort("why");
+        const error = await pending;
+        assertEquals(error, "why");
+        assertEquals(pesticidePlaceFilterErrors(error), undefined);
+      } finally {
+        stub.restore();
+      }
+    },
+  );
+
   await t.step("undefined when only unknown fields are named", () => {
     assertEquals(
       pesticidePlaceFilterErrors(failed(400, { __all__: issue("x") })),
