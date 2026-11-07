@@ -5,7 +5,10 @@ import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import placeFixture from "./fixtures/pesticides_for_place.json" with {
   type: "json",
 };
-import { getPesticidesForPlace } from "./get_pesticides_for_place.ts";
+import {
+  getPesticidesForPlace,
+  pesticidePlaceFilterErrors,
+} from "./get_pesticides_for_place.ts";
 import {
   chemicalDetailSchema,
   chemicalSchema,
@@ -362,4 +365,111 @@ Deno.test("Module: pesticide row schemas", async (t) => {
       true,
     );
   });
+});
+
+Deno.test("Module: pesticide place filter errors", async (t) => {
+  const county = {
+    region: { type: "county" as const, external_id: "06019" },
+  };
+  // The shape the HTTP layer throws for a failed request.
+  const failed = (status: number, details: unknown) =>
+    new Error("Request failed", { cause: { result: { status }, details } });
+  const issue = (code: string) => [{ message: "m", code }];
+
+  await t.step("returns the first code of each place field", () => {
+    const error = failed(400, {
+      chemical: [
+        { message: "a", code: "not_found" },
+        { message: "b", code: "invalid" },
+      ],
+      year__gte: issue("min_value"),
+      __all__: issue("x"),
+    });
+    assertEquals(pesticidePlaceFilterErrors(error), {
+      chemical: "not_found",
+      year__gte: "min_value",
+    });
+  });
+
+  await t.step("undefined when only unknown fields are named", () => {
+    assertEquals(
+      pesticidePlaceFilterErrors(failed(400, { __all__: issue("x") })),
+      undefined,
+    );
+  });
+
+  await t.step("undefined for anything that isn't a filter 400", () => {
+    for (
+      const error of [
+        failed(404, { chemical: issue("invalid") }),
+        failed(400, undefined),
+        "why",
+        new DOMException("", "AbortError"),
+        new Error("x"),
+        undefined,
+      ]
+    ) {
+      assertEquals(pesticidePlaceFilterErrors(error), undefined);
+    }
+  });
+
+  await t.step("a 400 through getPesticidesForPlace", async () => {
+    const stub = stubFetch(() =>
+      new Response(
+        JSON.stringify({
+          errors: {
+            chemical: [
+              { message: "No chemical has this id.", code: "not_found" },
+            ],
+          },
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      )
+    );
+    try {
+      const error = await getPesticidesForPlace(county, { chemical: "gs65e" })
+        .then(() => undefined, (e) => e);
+      assertEquals(pesticidePlaceFilterErrors(error), {
+        chemical: "not_found",
+      });
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step("an abort is not a filter error", async () => {
+    const stub = stubFetch(() => jsonResponse(placeFixture));
+    const controller = new AbortController();
+    controller.abort();
+    try {
+      const error = await getPesticidesForPlace(county, {}, {
+        signal: controller.signal,
+      }).then(() => undefined, (e) => e);
+      assert(error === controller.signal.reason);
+      assertEquals(pesticidePlaceFilterErrors(error), undefined);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step(
+    "GET  pesticides/place/: an over-long id is invalid",
+    async () => {
+      try {
+        const error = await getPesticidesForPlace(county, {
+          chemical: "z".repeat(33),
+        }).then(() => undefined, (e) => e);
+        if (isUnavailable(error)) {
+          console.warn("pesticides/place/ unavailable; skipping.");
+          return;
+        }
+        assertEquals(pesticidePlaceFilterErrors(error), {
+          chemical: "invalid",
+        });
+      } catch (error) {
+        if (!isUnavailable(error)) throw error;
+        console.warn("pesticides/place/ unavailable; skipping.");
+      }
+    },
+  );
 });
