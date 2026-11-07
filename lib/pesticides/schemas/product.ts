@@ -14,6 +14,9 @@ export interface ProductSchema extends
     /** The name of the product */
     name: z.ZodString;
 
+    /** The name to show; the same as `name` for products */
+    display_name: z.ZodString;
+
     /** Whether the product is a fumigant (SJVAir's classification, which corrects CDPR's misses) */
     fumigant: z.ZodBoolean;
 
@@ -29,6 +32,7 @@ export const productSchema: ProductSchema = z.object({
   prodno: z.number(),
   reg_number: z.string(),
   name: z.string(),
+  display_name: z.string(),
   fumigant: z.boolean(),
   cdpr_fumigant: z.boolean(),
   california_restricted: z.boolean(),

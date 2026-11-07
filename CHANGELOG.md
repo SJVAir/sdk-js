@@ -83,7 +83,9 @@ data layers.
 - `searchPesticides`: one page of chemical, product or commodity matches by name
   (`pesticides/search/`), for pickers. (sjvair.com #316)
 - Chemical rows gain `preferred_name`, `display_name` and `placeholder`; product
-  rows gain `cdpr_fumigant`. All required. (sjvair.com #316 and earlier)
+  rows gain `display_name` and `cdpr_fumigant`; commodity rows gain
+  `display_name` (the name in sentence case). All required. (sjvair.com #316,
+  #317 and earlier)
 - HMS smoke and fire by day or date range (`{ date }` or `{ start, end }`),
   region and smoke density. (#40)
 - `@sjvair/sdk/calenviroscreen`: tract scores by region (`getCalEnviroScreen`)

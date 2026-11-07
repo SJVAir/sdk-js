@@ -359,20 +359,34 @@ Deno.test("Module: pesticide row schemas", async (t) => {
     });
   }
 
-  await t.step("a product needs cdpr_fumigant", () => {
+  await t.step("a product needs cdpr_fumigant and display_name", () => {
     const product = {
       id: "rhfum",
       prodno: 76126,
       reg_number: "45385-99-AA-92116",
       name: "$AVERPAK INSECTGUARD",
+      display_name: "$AVERPAK INSECTGUARD",
       fumigant: false,
+      cdpr_fumigant: false,
       california_restricted: false,
     };
-    assertEquals(productSchema.safeParse(product).success, false);
-    assertEquals(
-      productSchema.safeParse({ ...product, cdpr_fumigant: false }).success,
-      true,
-    );
+    assertEquals(productSchema.safeParse(product).success, true);
+    for (const field of ["cdpr_fumigant", "display_name"]) {
+      const { [field]: _, ...rest } = product as Record<string, unknown>;
+      assertEquals(productSchema.safeParse(rest).success, false);
+    }
+  });
+
+  await t.step("a commodity needs display_name", () => {
+    const commodity = {
+      id: "wv4qu",
+      site_code: "22007",
+      name: "WHEAT (FORAGE - FODDER)",
+      display_name: "Wheat (forage - fodder)",
+    };
+    assertEquals(commoditySchema.safeParse(commodity).success, true);
+    const { display_name: _, ...rest } = commodity;
+    assertEquals(commoditySchema.safeParse(rest).success, false);
   });
 });
 
