@@ -250,6 +250,23 @@ kinds are open strings. But:
 - `DEFERRED.md`: nothing is deferred by this spec. If the builder defers
   anything, it gets an entry in the same change.
 
+### 9. Catalog entry aggregate hint (pending a server PR)
+
+Added 2026-11-07, approved by the user through the coordinator
+(data-dashboard-23). sjvair-com-48 is adding a per-entry catalog hint for
+whether an entry's values sum or average over time, likely
+`display.aggregate: "sum" | "mean"`, possibly `null` where values never roll up.
+
+- Add it to `datasetEntryDisplaySchema` (`lib/meta/schemas/dataset_catalog.ts`)
+  and its interface, required (no fallback), with JSDoc.
+- Refresh `lib/meta/fixtures/dataset_catalog.json` from the local stack, and
+  assert the value on one summed entry (e.g. `pounds-applied`) and one averaged
+  entry (e.g. `pm25`).
+- The name, values, nullability and placement come from that server PR. If they
+  differ from the above, the PR wins and this section is updated.
+- Same PR and beta as the rest. Done after that server PR merges and the local
+  stack runs it.
+
 ## Tests
 
 Follow `lib/pesticides/mod_test.ts` and `lib/regions` (searchLocations):

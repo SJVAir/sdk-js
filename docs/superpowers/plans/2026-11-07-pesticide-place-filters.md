@@ -470,3 +470,40 @@ the PR and update the spec in this task.
 Then open the PR into `release/5.0.0`. The PR body says it needs a server
 running sjvair.com `develop` with #316 and the `display_name` PR. Send the
 coordinator (data-dashboard-23) the PR number.
+
+### Task 8 (blocked): Catalog entry aggregate hint
+
+**Start only when** sjvair-com-48's catalog PR (per-entry `display.aggregate`,
+spec §9) has merged into `develop` and the local stack serves it. Check with
+`curl -s http://127.0.0.1:8000/api/2.0/meta/datasets/`: the field must be on
+every entry's `display`. Take the exact name, values and nullability from that
+PR. If they differ from spec §9, update the spec in this task.
+
+Do it before opening the PR. Task 7's last step (open the PR, tell the
+coordinator) moves to the end of this task.
+
+**Files:**
+
+- Modify: `lib/meta/schemas/dataset_catalog.ts` (`DatasetEntryDisplaySchema` and
+  `datasetEntryDisplaySchema`)
+- Modify: `lib/meta/fixtures/dataset_catalog.json` (recapture it whole from the
+  local stack, then recheck Task 6's assertions)
+- Test: `lib/meta/mod_test.ts`
+
+- [ ] **Step 1: Write the tests.**
+  - The fixture's `pounds-applied` entry has `display.aggregate === "sum"`.
+  - An air-quality entry, e.g. `pm25`, has `"mean"`, or whatever values the PR
+    uses.
+  - A `display` without the field is rejected.
+- [ ] **Step 2: Run and see them fail.**
+- [ ] **Step 3: Add the field** as the PR defines it, e.g.
+      `aggregate: z.enum(["sum", "mean"]).nullable()`, with JSDoc. Make it
+      required. Recapture the fixture.
+- [ ] **Step 4: Run the full suite:** `deno test --allow-net --allow-env`.
+      Expected: PASS.
+- [ ] **Step 5: Commit:** `feat(meta): Add the catalog entry aggregate hint`.
+      Add a CHANGELOG line.
+
+Then open the PR into `release/5.0.0`. The body says it needs a server running
+sjvair.com `develop` with #316, #317 and the aggregate PR. Send the coordinator
+the PR number.
