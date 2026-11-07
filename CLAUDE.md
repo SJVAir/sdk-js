@@ -29,6 +29,7 @@ Copy `.env.template` to `.env` and fill in:
 | Variable                    | Purpose                                                                                         |
 | --------------------------- | ----------------------------------------------------------------------------------------------- |
 | `TEST_PHONE`                | Phone number for account tests                                                                  |
+| `TEST_ACCOUNTS`             | `1` to run the account integration test (`lib/account/mod_test.ts`); skipped otherwise          |
 | `TEST_MONITOR_ID`           | Monitor ID for entry tests                                                                      |
 | `TEST_LATITUDE`             | Latitude for closest-monitor tests                                                              |
 | `TEST_LONGITUDE`            | Longitude for closest-monitor tests                                                             |
@@ -40,6 +41,12 @@ Copy `.env.template` to `.env` and fill in:
 
 Tests default to `http://127.0.0.1:8000`; set `TEST_REMOTE=1` to use
 `https://www.sjvair.com`.
+
+The account test writes to the server you test against: it registers a user with
+`TEST_PHONE`, which sends a real verification text, asks for the code at a
+prompt, and deletes the user. Run it only on purpose, never against a shared
+stack without asking. `deno.json` excludes `.worktrees/`, so a run from the repo
+root doesn't also run every worktree's tests.
 
 `TEST_MONITOR_ID` must be a monitor that exists on the server you test against
 (local and production IDs differ). Steps that need data a local copy may lack

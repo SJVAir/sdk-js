@@ -69,6 +69,18 @@ any time.
 
   **Revisit when** sjvair.com adds `counties` to place search rows.
 
+- **Tests that run in CI.** _Raised 2026-11-07 by the user._ Most tests need a
+  locally running sjvair.com, and the account test also needs a real phone and a
+  code typed at a prompt, so sdk-js has no PR CI (only the tag publish workflow)
+  and every check is a local run. Redo them so CI can run them without a server
+  or user input: stubbed fetch with captured fixtures (the pattern
+  `lib/http/fetch_stub_test_utils.ts` and the pesticides, regions and meta tests
+  already use), keeping live-server steps as an opt-in layer. Deferred because
+  it touches every module's tests and isn't blocking the dashboard work.
+
+  **Revisit when** planning 5.0.0 final, or the next time a test hits a shared
+  stack by mistake or a change ships without a local run.
+
 ## Dropped
 
 None yet.
