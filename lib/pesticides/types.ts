@@ -9,6 +9,7 @@ import type {
   aerialGroundSchema,
   chemicalDetailSchema,
   chemicalSchema,
+  chemicalSearchHitSchema,
   commodityDetailSchema,
   commoditySchema,
   iarcGroupSchema,
@@ -18,6 +19,7 @@ import type {
   pesticideNarrowSchema,
   pesticideNoticeSchema,
   pesticideRegionSchema,
+  pesticideSearchHitSchema,
   pesticidesForPlaceSchema,
   pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
@@ -94,6 +96,25 @@ export type PesticideLocationCollection = zinfer<
 
 /** Monthly and yearly pesticide use for a place, as returned from pesticides/place */
 export type PesticidesForPlace = zinfer<typeof pesticidesForPlaceSchema>;
+
+/** What `searchPesticides` can search */
+export type PesticideSearchType = "chemical" | "product" | "commodity";
+
+/** One product or commodity match from pesticides/search */
+export type PesticideSearchHitData = zinfer<typeof pesticideSearchHitSchema>;
+
+/** One chemical match from pesticides/search; only chemicals carry `placeholder` */
+export type ChemicalSearchHitData = zinfer<typeof chemicalSearchHitSchema>;
+
+/** A match of the given search type */
+export type PesticideSearchHit<T extends PesticideSearchType> = T extends
+  "chemical" ? ChemicalSearchHitData : PesticideSearchHitData;
+
+/** One page of pesticide search matches, and whether more were left out */
+export type PesticideSearchResult<T extends PesticideSearchType> = {
+  results: Array<PesticideSearchHit<T>>;
+  more: boolean;
+};
 
 /** Labels and descriptions for the pesticide filters, from pesticides/meta */
 export type PesticidesMeta = zinfer<typeof pesticidesMetaSchema>;
