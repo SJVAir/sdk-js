@@ -18,7 +18,11 @@ filter (#46). **5.0.0-beta.4** (2026-11-05): adds `name_template` and
 package (#48). **5.0.0-beta.5** (2026-11-05): adds `getPesticidesForPlace`
 (#51), `getWeatherStationsForPlace` and the CIMIS weather entry types (#52),
 `getSmokeForPlace` (#53), and `sum` on monitor summary rows (#54), for the Get
-data layers.
+data layers. **5.0.0-beta.6** (2026-11-07): pesticide place filters by id (with
+product, narrowing, several categories and method `none`),
+`pesticidePlaceFilterErrors`, `getPesticidesMeta`, `searchPesticides`, the new
+pesticide row fields, and catalog `aggregate` (#56, for sjvair.com #316, #317
+and #318).
 
 ### Breaking
 
