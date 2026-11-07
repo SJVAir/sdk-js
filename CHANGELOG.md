@@ -69,8 +69,21 @@ data layers.
   `getMonitorsList`.
 - Forecasts and CalHeatScore, including by place.
 - `getPesticidesForPlace`: monthly and yearly pesticide use for a region or
-  monitor, with chemical, commodity, category, IARC group, application method
-  and year filters. Needs a server running sjvair.com #310.
+  monitor, with chemical, commodity, product, category, narrowing, IARC group,
+  application method and year filters. Needs a server running sjvair.com #310
+  and #316. **Changed since 5.0.0-beta.5:** `chemical` and `commodity` take our
+  ids (the list endpoints' `id`, a `string`), not CDPR codes, which the server
+  now refuses. New: `product`, `narrow`, `category` as a list (any of them), and
+  `aerial_ground: "none"` (no reported method). `pesticidePlaceFilterErrors`
+  reads the codes of a rejected filter (`invalid`, or `not_found` for an id
+  whose row is gone).
+- `getPesticidesMeta`: labels and descriptions for the pesticide filters
+  (`pesticides/meta/`), the catalog `meta_url` of both pesticide datasets.
+  (sjvair.com #316)
+- `searchPesticides`: one page of chemical, product or commodity matches by name
+  (`pesticides/search/`), for pickers. (sjvair.com #316)
+- Chemical rows gain `preferred_name`, `display_name` and `placeholder`; product
+  rows gain `cdpr_fumigant`. All required. (sjvair.com #316 and earlier)
 - HMS smoke and fire by day or date range (`{ date }` or `{ start, end }`),
   region and smoke density. (#40)
 - `@sjvair/sdk/calenviroscreen`: tract scores by region (`getCalEnviroScreen`)

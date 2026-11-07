@@ -66,11 +66,20 @@ Deno.test({
         data.summary_rules.complete_after_period_end.includes("year"),
         true,
       );
-      // `license` and `meta_url` may be empty strings.
+      // `license`, `meta_url` and `places_url` may be empty strings.
+      const ces = data.datasets.find((d) => d.id === "calenviroscreen");
+      assertEquals(ces?.meta_url, "");
       const pesticides = data.datasets.find((d) => d.id === "pesticide-use");
       assertEquals(pesticides?.license, "");
-      assertEquals(pesticides?.meta_url, "");
+      assertEquals(pesticides?.meta_url, "/api/2.0/pesticides/meta/");
       assertEquals(pesticides?.places_url, "");
+      assertEquals(pesticides?.entry_types.map((e) => e.id), [
+        "pounds-applied",
+        "acres-treated",
+        "applications",
+      ]);
+      const notices = data.datasets.find((d) => d.id === "pesticide-notices");
+      assertEquals(notices?.meta_url, "/api/2.0/pesticides/meta/");
       const weather = data.datasets.find((d) => d.id === "weather");
       assertEquals(weather?.places_url, "/api/2.0/monitors/?dataset=weather");
     });
