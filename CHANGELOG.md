@@ -44,6 +44,11 @@ data layers.
   their containing `county` (`null` on county rows). (#46, sjvair.com #308)
 - Metadata fields the server now always sends are required in the schemas, e.g.
   `getRegionsMeta` needs `location_types` and `buffers`. (#39, #40)
+- Pesticide rows and catalog entry types have new required fields: chemicals
+  `preferred_name`, `display_name` and `placeholder`; products `display_name`
+  and `cdpr_fumigant`; commodities `display_name`; catalog entry types
+  `aggregate`. Code that builds these objects by hand (mocks, fixtures) must add
+  them. (#56)
 
 ### Added
 
