@@ -62,6 +62,7 @@ import { getRegionPesticideSummary } from "./pesticides/get_region_pesticide_sum
 import { getRegionPesticideUse } from "./pesticides/get_region_pesticide_use.ts";
 import { searchLocations } from "./regions/search_locations.ts";
 import { getPesticideLocations } from "./pesticides/get_pesticide_locations.ts";
+import { getPesticidesMeta } from "./pesticides/get_pesticides_meta.ts";
 import { getRegionDetails } from "./regions/get_region_details.ts";
 import {
   lookupRegionPlace,
@@ -113,6 +114,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
     (o) => getCalEnviroScreenTract("5.0", "t", undefined, o),
   ],
   ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
+  ["getPesticidesMeta", (o) => getPesticidesMeta(o)],
   ["getForecastsMeta", (o) => getForecastsMeta(o)],
   ["getCalHeatScores", (o) => getCalHeatScores({}, o)],
   [

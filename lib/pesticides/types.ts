@@ -19,6 +19,7 @@ import type {
   pesticideNoticeSchema,
   pesticideRegionSchema,
   pesticidesForPlaceSchema,
+  pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
   pesticideSummarySchema,
   pesticideUseSchema,
@@ -93,6 +94,9 @@ export type PesticideLocationCollection = zinfer<
 
 /** Monthly and yearly pesticide use for a place, as returned from pesticides/place */
 export type PesticidesForPlace = zinfer<typeof pesticidesForPlaceSchema>;
+
+/** Labels and descriptions for the pesticide filters, from pesticides/meta */
+export type PesticidesMeta = zinfer<typeof pesticidesMetaSchema>;
 
 /**
  * Filters for pesticide use in a place; unset filters are not sent. The

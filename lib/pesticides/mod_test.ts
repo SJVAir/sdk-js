@@ -2,6 +2,10 @@ import { apiCall, setOrigin } from "$http";
 import { getSimpleValidationTest, isUnavailable } from "$testing";
 import { assert, assertEquals, assertExists } from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
+import metaFixture from "./fixtures/pesticides_meta.json" with {
+  type: "json",
+};
+import { getPesticidesMeta } from "./get_pesticides_meta.ts";
 import placeFixture from "./fixtures/pesticides_for_place.json" with {
   type: "json",
 };
@@ -16,6 +20,7 @@ import {
   commoditySchema,
   pesticideNoticeSchema,
   pesticidesForPlaceSchema,
+  pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
   pesticideUseSchema,
   productDetailSchema,
@@ -34,7 +39,11 @@ import { getPesticideNoticeDetails } from "./get_pesticide_notice_details.ts";
 import { getRegionPesticideSummary } from "./get_region_pesticide_summary.ts";
 import { getRegionPesticideNotices } from "./get_region_pesticide_notices.ts";
 import { getRegionPesticideUse } from "./get_region_pesticide_use.ts";
-import type { PesticidesForPlace, PesticideUseData } from "./types.ts";
+import type {
+  PesticidesForPlace,
+  PesticidesMeta,
+  PesticideUseData,
+} from "./types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -472,4 +481,54 @@ Deno.test("Module: pesticide place filter errors", async (t) => {
       }
     },
   );
+});
+
+Deno.test("Module: pesticides meta", async (t) => {
+  const validateMeta = getSimpleValidationTest(pesticidesMetaSchema);
+  const meta = metaFixture.data as unknown as PesticidesMeta;
+
+  await t.step("the fixture matches the schema", () => {
+    validateMeta(meta);
+    assertEquals(meta.categories.length, 10);
+    assert(meta.categories.some((category) => !category.in_use));
+    assertEquals(meta.methods.map((method) => method.key), [
+      "G",
+      "A",
+      "F",
+      "O",
+      "none",
+    ]);
+    assert(meta.placeholder_chemicals.length > 0);
+  });
+
+  await t.step("a category without in_use is rejected", () => {
+    const { in_use: _, ...category } = meta.categories[0];
+    const parsed = pesticidesMetaSchema.safeParse({
+      ...meta,
+      categories: [category],
+    });
+    assertEquals(parsed.success, false);
+  });
+
+  await t.step("fetches pesticides/meta/", async () => {
+    const stub = stubFetch(() => jsonResponse(metaFixture));
+    try {
+      const result = await getPesticidesMeta();
+      assertEquals(stub.calls[0].url.pathname, "/api/2.0/pesticides/meta/");
+      assertEquals(result, meta);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step("GET  pesticides/meta/", async () => {
+    try {
+      const result = await getPesticidesMeta();
+      validateMeta(result);
+      assertEquals(result.categories.length, 10);
+    } catch (error) {
+      if (!isUnavailable(error)) throw error;
+      console.warn("pesticides/meta/ unavailable; skipping.");
+    }
+  });
 });

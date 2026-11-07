@@ -13,3 +13,4 @@ export * from "./pesticide_notice.ts";
 export * from "./pesticide_summary.ts";
 export * from "./pesticide_locations.ts";
 export * from "./pesticides_for_place.ts";
+export * from "./pesticides_meta.ts";
