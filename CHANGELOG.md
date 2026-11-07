@@ -57,8 +57,8 @@ data layers.
   `soiltemperature`, `windspeed`, `winddirection`, `precipitation`,
   `solarradiation`, `netradiation`, `vaporpressure`, `eto`, `etr`).
 - Catalog entry types gain `aggregate`: how their values roll up over time,
-  `"sum"`, `"mean"`, or `null` when they never roll up. Required. (sjvair.com
-  #318)
+  `"sum"`, `"mean"`, or `null` when they never roll up. Required. (#56,
+  sjvair.com #318)
 - Metadata: the dataset catalog and available pollutants (`getDatasetCatalog`),
   `getCoverage`, scales, the region hierarchy, and the HMS, forecast and
   CalHeatScore metas.
@@ -79,16 +79,16 @@ data layers.
   now refuses. New: `product`, `narrow`, `category` as a list (any of them), and
   `aerial_ground: "none"` (no reported method). `pesticidePlaceFilterErrors`
   reads the codes of a rejected filter (`invalid`, or `not_found` for an id
-  whose row is gone).
+  whose row is gone). (#56)
 - `getPesticidesMeta`: labels and descriptions for the pesticide filters
-  (`pesticides/meta/`), the catalog `meta_url` of both pesticide datasets.
-  (sjvair.com #316)
+  (`pesticides/meta/`), the catalog `meta_url` of both pesticide datasets. (#56,
+  sjvair.com #316)
 - `searchPesticides`: one page of chemical, product or commodity matches by name
-  (`pesticides/search/`), for pickers. (sjvair.com #316)
+  (`pesticides/search/`), for pickers. (#56, sjvair.com #316)
 - Chemical rows gain `preferred_name`, `display_name` and `placeholder`; product
   rows gain `display_name` and `cdpr_fumigant`; commodity rows gain
-  `display_name` (the name in sentence case). All required. (sjvair.com #316,
-  #317 and earlier)
+  `display_name` (the name in sentence case). All required. (#56, sjvair.com
+  #316, #317 and earlier)
 - HMS smoke and fire by day or date range (`{ date }` or `{ start, end }`),
   region and smoke density. (#40)
 - `@sjvair/sdk/calenviroscreen`: tract scores by region (`getCalEnviroScreen`)
