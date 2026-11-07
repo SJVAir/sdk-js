@@ -2,10 +2,17 @@ import { apiCall, setOrigin } from "$http";
 import { getSimpleValidationTest, isUnavailable } from "$testing";
 import { assert, assertEquals, assertExists } from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
+import metaFixture from "./fixtures/pesticides_meta.json" with {
+  type: "json",
+};
+import { getPesticidesMeta } from "./get_pesticides_meta.ts";
 import placeFixture from "./fixtures/pesticides_for_place.json" with {
   type: "json",
 };
-import { getPesticidesForPlace } from "./get_pesticides_for_place.ts";
+import {
+  getPesticidesForPlace,
+  pesticidePlaceFilterErrors,
+} from "./get_pesticides_for_place.ts";
 import {
   chemicalDetailSchema,
   chemicalSchema,
@@ -13,6 +20,7 @@ import {
   commoditySchema,
   pesticideNoticeSchema,
   pesticidesForPlaceSchema,
+  pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
   pesticideUseSchema,
   productDetailSchema,
@@ -31,7 +39,11 @@ import { getPesticideNoticeDetails } from "./get_pesticide_notice_details.ts";
 import { getRegionPesticideSummary } from "./get_region_pesticide_summary.ts";
 import { getRegionPesticideNotices } from "./get_region_pesticide_notices.ts";
 import { getRegionPesticideUse } from "./get_region_pesticide_use.ts";
-import type { PesticidesForPlace, PesticideUseData } from "./types.ts";
+import type {
+  PesticidesForPlace,
+  PesticidesMeta,
+  PesticideUseData,
+} from "./types.ts";
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -228,7 +240,7 @@ Deno.test({
       const stub = stubFetch(() => jsonResponse(placeFixture));
       try {
         const result = await getPesticidesForPlace(county, {
-          chemical: 253,
+          chemical: "gs65e",
           year__gte: 2022,
         });
         const { pathname, searchParams } = stub.calls[0].url;
@@ -239,13 +251,86 @@ Deno.test({
         );
         assertEquals(searchParams.get("region_type"), "county");
         assertEquals(searchParams.get("region"), "06019");
-        assertEquals(searchParams.get("chemical"), "253");
+        assertEquals(searchParams.get("chemical"), "gs65e");
         assertEquals(searchParams.get("year__gte"), "2022");
         assertEquals(result.years[0].year, 2022);
       } finally {
         stub.restore();
       }
     });
+
+    await t.step(
+      "sends ids, narrow, method none and a list of categories",
+      async () => {
+        const stub = stubFetch(() => jsonResponse(placeFixture));
+        try {
+          await getPesticidesForPlace(county, {
+            product: "6ezxm",
+            commodity: "9xvrg",
+            narrow: "concern",
+            aerial_ground: "none",
+            category: ["carcinogen", "fumigant"],
+          });
+          const { searchParams } = stub.calls[0].url;
+          assertEquals(searchParams.getAll("category"), [
+            "carcinogen",
+            "fumigant",
+          ]);
+          assertEquals(searchParams.get("product"), "6ezxm");
+          assertEquals(searchParams.get("commodity"), "9xvrg");
+          assertEquals(searchParams.get("narrow"), "concern");
+          assertEquals(searchParams.get("aerial_ground"), "none");
+        } finally {
+          stub.restore();
+        }
+      },
+    );
+
+    await t.step("a read-only list of categories is accepted", async () => {
+      const stub = stubFetch(() => jsonResponse(placeFixture));
+      try {
+        const keys = Object.freeze(["carcinogen", "fumigant"] as const);
+        await getPesticidesForPlace(county, { category: keys });
+        assertEquals(stub.calls[0].url.searchParams.getAll("category"), [
+          "carcinogen",
+          "fumigant",
+        ]);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    await t.step("one category is sent once", async () => {
+      const stub = stubFetch(() => jsonResponse(placeFixture));
+      try {
+        await getPesticidesForPlace(county, { category: "carcinogen" });
+        assertEquals(stub.calls[0].url.searchParams.getAll("category"), [
+          "carcinogen",
+        ]);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    await t.step(
+      "an empty category list and undefined values are not sent",
+      async () => {
+        const stub = stubFetch(() => jsonResponse(placeFixture));
+        try {
+          await getPesticidesForPlace(county, {
+            category: [],
+            narrow: undefined,
+            year__gte: 2022,
+          });
+          assertEquals(
+            [...stub.calls[0].url.searchParams.keys()].sort(),
+            ["region", "region_type", "year__gte"],
+          );
+        } finally {
+          stub.restore();
+        }
+      },
+    );
 
     await t.step("GET  pesticides/place/ for Fresno County", async () => {
       try {
@@ -260,4 +345,259 @@ Deno.test({
       }
     });
   },
+});
+
+Deno.test("Module: pesticide row schemas", async (t) => {
+  // A chemical row as pesticides/chemicals/ sends it (Sulfur, on the local stack).
+  const chemical = {
+    id: "gs65e",
+    chem_code: 560,
+    name: "SULFUR",
+    preferred_name: "Sulfur",
+    display_name: "Sulfur",
+    cas_number: "7704-34-9",
+    dtxsid: "DTXSID9034941",
+    iarc_group: "",
+    categories: [],
+    placeholder: false,
+  };
+
+  await t.step("a chemical with the new fields parses", () => {
+    assertEquals(chemicalSchema.safeParse(chemical).success, true);
+  });
+
+  for (const field of ["preferred_name", "display_name", "placeholder"]) {
+    await t.step(`a chemical without ${field} is rejected`, () => {
+      const { [field]: _, ...rest } = chemical as Record<string, unknown>;
+      assertEquals(chemicalSchema.safeParse(rest).success, false);
+    });
+  }
+
+  await t.step("a product needs cdpr_fumigant and display_name", () => {
+    const product = {
+      id: "rhfum",
+      prodno: 76126,
+      reg_number: "45385-99-AA-92116",
+      name: "$AVERPAK INSECTGUARD",
+      display_name: "$AVERPAK INSECTGUARD",
+      fumigant: false,
+      cdpr_fumigant: false,
+      california_restricted: false,
+    };
+    assertEquals(productSchema.safeParse(product).success, true);
+    for (const field of ["cdpr_fumigant", "display_name"]) {
+      const { [field]: _, ...rest } = product as Record<string, unknown>;
+      assertEquals(productSchema.safeParse(rest).success, false);
+    }
+  });
+
+  await t.step("a commodity needs display_name", () => {
+    const commodity = {
+      id: "wv4qu",
+      site_code: "22007",
+      name: "WHEAT (FORAGE - FODDER)",
+      display_name: "Wheat (forage - fodder)",
+    };
+    assertEquals(commoditySchema.safeParse(commodity).success, true);
+    const { display_name: _, ...rest } = commodity;
+    assertEquals(commoditySchema.safeParse(rest).success, false);
+  });
+});
+
+Deno.test("Module: pesticide place filter errors", async (t) => {
+  const county = {
+    region: { type: "county" as const, external_id: "06019" },
+  };
+  // The shape the HTTP layer throws for a failed request.
+  const failed = (status: number, details: unknown) =>
+    new Error("Request failed", { cause: { result: { status }, details } });
+  const issue = (code: string) => [{ message: "m", code }];
+
+  await t.step("returns the first code of each place field", () => {
+    const error = failed(400, {
+      chemical: [
+        { message: "a", code: "not_found" },
+        { message: "b", code: "invalid" },
+      ],
+      year__gte: issue("min_value"),
+      __all__: issue("x"),
+    });
+    assertEquals(pesticidePlaceFilterErrors(error), {
+      chemical: "not_found",
+      year__gte: "min_value",
+    });
+  });
+
+  await t.step("leaves out codes a field can't have", () => {
+    const error = failed(400, {
+      chemical: issue("required"),
+      category: issue("not_found"),
+      commodity: issue("not_found"),
+    });
+    assertEquals(pesticidePlaceFilterErrors(error), { commodity: "not_found" });
+    assertEquals(
+      pesticidePlaceFilterErrors(failed(400, { chemical: issue("required") })),
+      undefined,
+    );
+  });
+
+  await t.step(
+    "an abort while the request is pending is not a filter error",
+    async () => {
+      const stub = stubFetch((_url, init) =>
+        new Promise<Response>((_, reject) =>
+          init.signal?.addEventListener(
+            "abort",
+            () => reject(init.signal!.reason),
+          )
+        )
+      );
+      const controller = new AbortController();
+      try {
+        const pending = getPesticidesForPlace(county, {}, {
+          signal: controller.signal,
+        }).then(() => undefined, (e) => e);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        assertEquals(stub.calls.length, 1);
+        controller.abort("why");
+        const error = await pending;
+        assertEquals(error, "why");
+        assertEquals(pesticidePlaceFilterErrors(error), undefined);
+      } finally {
+        stub.restore();
+      }
+    },
+  );
+
+  await t.step("undefined when only unknown fields are named", () => {
+    assertEquals(
+      pesticidePlaceFilterErrors(failed(400, { __all__: issue("x") })),
+      undefined,
+    );
+  });
+
+  await t.step("undefined for anything that isn't a filter 400", () => {
+    for (
+      const error of [
+        failed(404, { chemical: issue("invalid") }),
+        failed(400, undefined),
+        "why",
+        new DOMException("", "AbortError"),
+        new Error("x"),
+        undefined,
+      ]
+    ) {
+      assertEquals(pesticidePlaceFilterErrors(error), undefined);
+    }
+  });
+
+  await t.step("a 400 through getPesticidesForPlace", async () => {
+    const stub = stubFetch(() =>
+      new Response(
+        JSON.stringify({
+          errors: {
+            chemical: [
+              { message: "No chemical has this id.", code: "not_found" },
+            ],
+          },
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      )
+    );
+    try {
+      const error = await getPesticidesForPlace(county, { chemical: "gs65e" })
+        .then(() => undefined, (e) => e);
+      assertEquals(pesticidePlaceFilterErrors(error), {
+        chemical: "not_found",
+      });
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step("an abort is not a filter error", async () => {
+    const stub = stubFetch(() => jsonResponse(placeFixture));
+    const controller = new AbortController();
+    controller.abort();
+    try {
+      const error = await getPesticidesForPlace(county, {}, {
+        signal: controller.signal,
+      }).then(() => undefined, (e) => e);
+      assert(error === controller.signal.reason);
+      assertEquals(pesticidePlaceFilterErrors(error), undefined);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step(
+    "GET  pesticides/place/: an over-long id is invalid",
+    async () => {
+      try {
+        const error = await getPesticidesForPlace(county, {
+          chemical: "z".repeat(33),
+        }).then(() => undefined, (e) => e);
+        if (isUnavailable(error)) {
+          console.warn("pesticides/place/ unavailable; skipping.");
+          return;
+        }
+        assertEquals(pesticidePlaceFilterErrors(error), {
+          chemical: "invalid",
+        });
+      } catch (error) {
+        if (!isUnavailable(error)) throw error;
+        console.warn("pesticides/place/ unavailable; skipping.");
+      }
+    },
+  );
+});
+
+Deno.test("Module: pesticides meta", async (t) => {
+  const validateMeta = getSimpleValidationTest(pesticidesMetaSchema);
+  const meta = metaFixture.data as unknown as PesticidesMeta;
+
+  await t.step("the fixture matches the schema", () => {
+    validateMeta(meta);
+    assertEquals(meta.categories.length, 10);
+    assert(meta.categories.some((category) => !category.in_use));
+    assertEquals(meta.methods.map((method) => method.key), [
+      "G",
+      "A",
+      "F",
+      "O",
+      "none",
+    ]);
+    assert(meta.placeholder_chemicals.length > 0);
+  });
+
+  await t.step("a category without in_use is rejected", () => {
+    const { in_use: _, ...category } = meta.categories[0];
+    const parsed = pesticidesMetaSchema.safeParse({
+      ...meta,
+      categories: [category],
+    });
+    assertEquals(parsed.success, false);
+  });
+
+  await t.step("fetches pesticides/meta/", async () => {
+    const stub = stubFetch(() => jsonResponse(metaFixture));
+    try {
+      const result = await getPesticidesMeta();
+      assertEquals(stub.calls[0].url.pathname, "/api/2.0/pesticides/meta/");
+      assertEquals(result, meta);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  await t.step("GET  pesticides/meta/", async () => {
+    try {
+      const result = await getPesticidesMeta();
+      validateMeta(result);
+      assertEquals(result.categories.length, 10);
+    } catch (error) {
+      if (!isUnavailable(error)) throw error;
+      console.warn("pesticides/meta/ unavailable; skipping.");
+    }
+  });
 });

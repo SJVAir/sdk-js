@@ -109,6 +109,8 @@
     "./pesticides/get_region_pesticide_notices": "./lib/pesticides/get_region_pesticide_notices.ts",
     "./pesticides/get_region_pesticide_summary": "./lib/pesticides/get_region_pesticide_summary.ts",
     "./pesticides/get_pesticides_for_place": "./lib/pesticides/get_pesticides_for_place.ts",
+    "./pesticides/get_pesticides_meta": "./lib/pesticides/get_pesticides_meta.ts",
+    "./pesticides/search_pesticides": "./lib/pesticides/search_pesticides.ts",
     "./pesticides/get_region_pesticide_use": "./lib/pesticides/get_region_pesticide_use.ts",
     "./pesticides/types": "./lib/pesticides/types.ts",
     "./regions": "./lib/regions/mod.ts",

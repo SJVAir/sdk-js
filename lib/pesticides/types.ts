@@ -5,18 +5,23 @@
  */
 import type { infer as zinfer } from "zod";
 import type {
+  aerialGroundFilterSchema,
   aerialGroundSchema,
   chemicalDetailSchema,
   chemicalSchema,
+  chemicalSearchHitSchema,
   commodityDetailSchema,
   commoditySchema,
   iarcGroupSchema,
   pesticideLocationCollectionSchema,
   pesticideLocationFeatureSchema,
   pesticideLocationPropertiesSchema,
+  pesticideNarrowSchema,
   pesticideNoticeSchema,
   pesticideRegionSchema,
+  pesticideSearchHitSchema,
   pesticidesForPlaceSchema,
+  pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
   pesticideSummarySchema,
   pesticideUseSchema,
@@ -26,6 +31,15 @@ import type {
 
 /** The application method of a pesticide use or notice record */
 export type AerialGround = zinfer<typeof aerialGroundSchema>;
+
+/**
+ * An application method a filter can ask for: a record's method, or `none` for
+ * records with no reported method
+ */
+export type AerialGroundFilter = zinfer<typeof aerialGroundFilterSchema>;
+
+/** A pesticide narrowing: concern, restricted, fumigant or aerial */
+export type PesticideNarrow = zinfer<typeof pesticideNarrowSchema>;
 
 /** The IARC carcinogenicity classification group of a chemical */
 export type IARCGroup = zinfer<typeof iarcGroupSchema>;
@@ -83,14 +97,52 @@ export type PesticideLocationCollection = zinfer<
 /** Monthly and yearly pesticide use for a place, as returned from pesticides/place */
 export type PesticidesForPlace = zinfer<typeof pesticidesForPlaceSchema>;
 
-/** Filters for pesticide use in a place; unset filters are not sent */
+/** What `searchPesticides` can search */
+export type PesticideSearchType = "chemical" | "product" | "commodity";
+
+/** One product or commodity match from pesticides/search */
+export type PesticideSearchHitData = zinfer<typeof pesticideSearchHitSchema>;
+
+/** One chemical match from pesticides/search; only chemicals carry `placeholder` */
+export type ChemicalSearchHitData = zinfer<typeof chemicalSearchHitSchema>;
+
+/** A match of the given search type */
+export type PesticideSearchHit<T extends PesticideSearchType> = T extends
+  "chemical" ? ChemicalSearchHitData : PesticideSearchHitData;
+
+/** One page of pesticide search matches, and whether more were left out */
+export type PesticideSearchResult<T extends PesticideSearchType> = {
+  results: Array<PesticideSearchHit<T>>;
+  more: boolean;
+};
+
+/** Labels and descriptions for the pesticide filters, from pesticides/meta */
+export type PesticidesMeta = zinfer<typeof pesticidesMetaSchema>;
+
+/**
+ * Filters for pesticide use in a place; unset filters are not sent. The
+ * chemical, commodity and product are our ids (the `id` the list endpoints
+ * and `searchPesticides` return), not CDPR codes, which the server refuses.
+ */
 export type PesticidesForPlaceFilters = {
-  /** The chemical, by its numeric id */
-  chemical?: number;
+  /** The chemical, by its id (not its CDPR chem code) */
+  chemical?: string;
+  /** The commodity, by its id (not its CDPR site code) */
   commodity?: string;
-  category?: string;
+  /** The product, by its id (not its CDPR product number) */
+  product?: string;
+  /**
+   * Chemical categories; records with a chemical in any of them count. Valid
+   * keys are in `getPesticidesMeta().categories`. A list is sent as repeated
+   * params.
+   */
+  category?: string | ReadonlyArray<string>;
+  /** Keep only what this narrowing keeps (see `getPesticidesMeta().narrows`) */
+  narrow?: PesticideNarrow;
+  /** The chemical's IARC group */
   iarc_group?: IARCGroup;
-  aerial_ground?: AerialGround;
+  /** The application method; `none` keeps records with no reported method */
+  aerial_ground?: AerialGroundFilter;
   /** First year to include (1900 to 2100) */
   year__gte?: number;
   /** Last year to include (1900 to 2100) */

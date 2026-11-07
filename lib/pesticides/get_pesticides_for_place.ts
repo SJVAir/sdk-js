@@ -14,6 +14,27 @@
  * //   undated: { pounds: 0, acres: 0, applications: 0 } }
  * ```
  *
+ * @example A saved filter whose chemical is gone
+ * ```ts
+ * import {
+ *   getPesticidesForPlace,
+ *   pesticidePlaceFilterErrors,
+ * } from "@sjvair/sdk/pesticides/get_pesticides_for_place";
+ *
+ * try {
+ *   await getPesticidesForPlace(
+ *     { region: { type: "county", external_id: "06019" } },
+ *     { chemical: "gs65e" },
+ *   );
+ * } catch (error) {
+ *   const errors = pesticidePlaceFilterErrors(error);
+ *   if (errors?.chemical === "not_found") {
+ *     // The id is well formed but no chemical has it any more: show the
+ *     // filter as retired.
+ *   }
+ * }
+ * ```
+ *
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
@@ -25,8 +46,9 @@ import type { PesticidesForPlace, PesticidesForPlaceFilters } from "./types.ts";
  *
  * @param place A region by type and official code, or a monitor by id.
  * Land-use regions can't be looked up by code.
- * @param filters Narrow by chemical, commodity, category, IARC group,
- * application method, or a year range (1900 to 2100). Unset filters are not sent.
+ * @param filters Narrow by chemical, commodity or product (by id, not CDPR
+ * code), categories, a narrowing, IARC group, application method, or a year
+ * range (1900 to 2100). Unset filters are not sent.
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns The place, use by month (only months with use) and use by year
@@ -37,9 +59,11 @@ export async function getPesticidesForPlace(
   filters: PesticidesForPlaceFilters = {},
   options?: RequestOptions,
 ): Promise<PesticidesForPlace> {
-  const searchParams = placeSearchParams(place);
+  const searchParams: Record<string, string | Array<string>> =
+    placeSearchParams(place);
   for (const [key, value] of Object.entries(filters)) {
-    if (value !== undefined) searchParams[key] = String(value);
+    if (value === undefined) continue;
+    searchParams[key] = Array.isArray(value) ? [...value] : String(value);
   }
 
   return await jsonCall<PesticidesForPlace>({
@@ -47,4 +71,80 @@ export async function getPesticidesForPlace(
     searchParams,
     options,
   });
+}
+
+/**
+ * The first error code the server gave for each rejected place filter.
+ * `invalid` means the value isn't valid at all (for an id: not one of our ids,
+ * such as a CDPR code or a typo). `not_found` means a well-formed id that no
+ * row has any more. The year bounds report Django's `min_value` / `max_value`.
+ */
+export type PesticidePlaceFilterErrors = {
+  chemical?: "invalid" | "not_found";
+  commodity?: "invalid" | "not_found";
+  product?: "invalid" | "not_found";
+  category?: "invalid";
+  narrow?: "invalid";
+  iarc_group?: "invalid";
+  aerial_ground?: "invalid";
+  year__gte?: "invalid" | "min_value" | "max_value";
+  year__lte?: "invalid" | "min_value" | "max_value";
+};
+
+const ID_CODES = ["invalid", "not_found"] as const;
+const CHOICE_CODES = ["invalid"] as const;
+const YEAR_CODES = ["invalid", "min_value", "max_value"] as const;
+
+/** The codes each place filter can carry, as the server's form sends them */
+const PLACE_FILTER_CODES: {
+  readonly [F in keyof PesticidePlaceFilterErrors]-?: ReadonlyArray<
+    NonNullable<PesticidePlaceFilterErrors[F]>
+  >;
+} = {
+  chemical: ID_CODES,
+  commodity: ID_CODES,
+  product: ID_CODES,
+  category: CHOICE_CODES,
+  narrow: CHOICE_CODES,
+  iarc_group: CHOICE_CODES,
+  aerial_ground: CHOICE_CODES,
+  year__gte: YEAR_CODES,
+  year__lte: YEAR_CODES,
+};
+
+/**
+ * Reads the filter error codes from a failed `getPesticidesForPlace` call.
+ *
+ * @param error What the call rejected with.
+ *
+ * @returns The first code for each place filter the server rejected, or
+ * `undefined` when the error isn't a 400 naming at least one of them (a
+ * network failure, an abort, an unknown place, and so on). A code a field
+ * can't have (see `PesticidePlaceFilterErrors`) is left out.
+ */
+export function pesticidePlaceFilterErrors(
+  error: unknown,
+): PesticidePlaceFilterErrors | undefined {
+  if (!(error instanceof Error)) return undefined;
+  const cause = error.cause as
+    | { result?: { status?: unknown }; details?: unknown }
+    | undefined;
+  if (cause?.result?.status !== 400) return undefined;
+  const details = cause.details;
+  if (typeof details !== "object" || details === null) return undefined;
+
+  const errors: Record<string, string> = {};
+  for (
+    const [field, codes] of Object.entries(PLACE_FILTER_CODES) as Array<
+      [string, ReadonlyArray<string>]
+    >
+  ) {
+    const issues = (details as Record<string, unknown>)[field];
+    const code = Array.isArray(issues) ? issues[0]?.code : undefined;
+    // A code this field can't have isn't reported, so the type stays true.
+    if (typeof code === "string" && codes.includes(code)) errors[field] = code;
+  }
+  return Object.keys(errors).length > 0
+    ? errors as PesticidePlaceFilterErrors
+    : undefined;
 }

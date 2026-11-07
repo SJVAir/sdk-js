@@ -1,5 +1,6 @@
 export * from "./aerial_ground.ts";
 export * from "./iarc_group.ts";
+export * from "./narrow.ts";
 export * from "./pesticide_region.ts";
 export * from "./chemical.ts";
 export * from "./chemical_detail.ts";
@@ -12,3 +13,5 @@ export * from "./pesticide_notice.ts";
 export * from "./pesticide_summary.ts";
 export * from "./pesticide_locations.ts";
 export * from "./pesticides_for_place.ts";
+export * from "./pesticides_meta.ts";
+export * from "./pesticide_search.ts";

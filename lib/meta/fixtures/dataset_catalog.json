@@ -28,6 +28,7 @@
               "season",
               "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -44,6 +45,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -60,6 +62,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -81,6 +84,7 @@
               "season",
               "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -103,6 +107,7 @@
               "season",
               "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -119,6 +124,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 0,
               "chart": "line",
@@ -134,6 +140,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -150,6 +157,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -172,6 +180,7 @@
               "season",
               "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -188,6 +197,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -209,6 +219,7 @@
               "season",
               "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -225,6 +236,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -253,8 +265,15 @@
             "kind": "meteorological",
             "units": "°F",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -268,12 +287,19 @@
             "kind": "meteorological",
             "units": "in",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "sum",
             "display": {
-              "precision": 1,
-              "chart": "line",
-              "y_min": null
+              "precision": 2,
+              "chart": "bar",
+              "y_min": 0
             },
             "retired": null
           },
@@ -283,12 +309,19 @@
             "kind": "meteorological",
             "units": "in",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "sum",
             "display": {
-              "precision": 1,
-              "chart": "line",
-              "y_min": null
+              "precision": 2,
+              "chart": "bar",
+              "y_min": 0
             },
             "retired": null
           },
@@ -298,8 +331,15 @@
             "kind": "meteorological",
             "units": "%",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -313,8 +353,15 @@
             "kind": "meteorological",
             "units": "W/m²",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -328,12 +375,19 @@
             "kind": "meteorological",
             "units": "in",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "sum",
             "display": {
-              "precision": 1,
-              "chart": "line",
-              "y_min": null
+              "precision": 2,
+              "chart": "bar",
+              "y_min": 0
             },
             "retired": null
           },
@@ -343,8 +397,15 @@
             "kind": "meteorological",
             "units": "°F",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -358,8 +419,15 @@
             "kind": "meteorological",
             "units": "W/m²",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -373,8 +441,15 @@
             "kind": "meteorological",
             "units": "°F",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -388,8 +463,15 @@
             "kind": "meteorological",
             "units": "kPa",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -405,6 +487,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "line",
@@ -418,8 +501,15 @@
             "kind": "meteorological",
             "units": "mph",
             "resolutions": [
-              "raw"
+              "raw",
+              "hour",
+              "day",
+              "month",
+              "quarter",
+              "season",
+              "year"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": 1,
               "chart": "line",
@@ -450,6 +540,7 @@
             "resolutions": [
               "day"
             ],
+            "aggregate": null,
             "display": {
               "precision": null,
               "chart": null,
@@ -480,6 +571,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -499,7 +591,7 @@
         "geographies": [
           "region"
         ],
-        "meta_url": "",
+        "meta_url": "/api/2.0/pesticides/meta/",
         "places_url": "",
         "entry_types": [
           {
@@ -511,6 +603,7 @@
               "month",
               "year"
             ],
+            "aggregate": "sum",
             "display": {
               "precision": 0,
               "chart": "bar",
@@ -527,6 +620,24 @@
               "month",
               "year"
             ],
+            "aggregate": "sum",
+            "display": {
+              "precision": 0,
+              "chart": "bar",
+              "y_min": 0
+            },
+            "retired": null
+          },
+          {
+            "id": "applications",
+            "label": "Applications",
+            "kind": "other",
+            "units": "applications",
+            "resolutions": [
+              "month",
+              "year"
+            ],
+            "aggregate": "sum",
             "display": {
               "precision": 0,
               "chart": "bar",
@@ -546,7 +657,7 @@
         "geographies": [
           "point"
         ],
-        "meta_url": "",
+        "meta_url": "/api/2.0/pesticides/meta/",
         "places_url": "",
         "entry_types": [
           {
@@ -557,6 +668,7 @@
             "resolutions": [
               "day"
             ],
+            "aggregate": "sum",
             "display": {
               "precision": 0,
               "chart": "bar",
@@ -587,6 +699,7 @@
             "resolutions": [
               "day"
             ],
+            "aggregate": null,
             "display": {
               "precision": 0,
               "chart": "bar",
@@ -602,6 +715,7 @@
             "resolutions": [
               "day"
             ],
+            "aggregate": null,
             "display": {
               "precision": null,
               "chart": null,
@@ -632,6 +746,7 @@
             "resolutions": [
               "day"
             ],
+            "aggregate": null,
             "display": {
               "precision": 0,
               "chart": "bar",
@@ -660,6 +775,7 @@
             "kind": "other",
             "units": "percentile",
             "resolutions": [],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -691,6 +807,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -706,6 +823,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -721,6 +839,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -736,6 +855,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -751,6 +871,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -766,6 +887,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -781,6 +903,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -796,6 +919,7 @@
             "resolutions": [
               "year"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "bar",
@@ -811,6 +935,7 @@
             "resolutions": [
               "raw"
             ],
+            "aggregate": null,
             "display": {
               "precision": 1,
               "chart": "line",
@@ -842,6 +967,7 @@
             "resolutions": [
               "hour"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": null,
               "chart": "line",
@@ -857,6 +983,7 @@
             "resolutions": [
               "hour"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": null,
               "chart": "line",
@@ -872,6 +999,7 @@
             "resolutions": [
               "hour"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": null,
               "chart": "line",
@@ -887,6 +1015,7 @@
             "resolutions": [
               "hour"
             ],
+            "aggregate": "mean",
             "display": {
               "precision": null,
               "chart": "line",
