@@ -261,3 +261,46 @@ Deno.test({
     });
   },
 });
+
+Deno.test("Module: pesticide row schemas", async (t) => {
+  // A chemical row as pesticides/chemicals/ sends it (Sulfur, on the local stack).
+  const chemical = {
+    id: "gs65e",
+    chem_code: 560,
+    name: "SULFUR",
+    preferred_name: "Sulfur",
+    display_name: "Sulfur",
+    cas_number: "7704-34-9",
+    dtxsid: "DTXSID9034941",
+    iarc_group: "",
+    categories: [],
+    placeholder: false,
+  };
+
+  await t.step("a chemical with the new fields parses", () => {
+    assertEquals(chemicalSchema.safeParse(chemical).success, true);
+  });
+
+  for (const field of ["preferred_name", "display_name", "placeholder"]) {
+    await t.step(`a chemical without ${field} is rejected`, () => {
+      const { [field]: _, ...rest } = chemical as Record<string, unknown>;
+      assertEquals(chemicalSchema.safeParse(rest).success, false);
+    });
+  }
+
+  await t.step("a product needs cdpr_fumigant", () => {
+    const product = {
+      id: "rhfum",
+      prodno: 76126,
+      reg_number: "45385-99-AA-92116",
+      name: "$AVERPAK INSECTGUARD",
+      fumigant: false,
+      california_restricted: false,
+    };
+    assertEquals(productSchema.safeParse(product).success, false);
+    assertEquals(
+      productSchema.safeParse({ ...product, cdpr_fumigant: false }).success,
+      true,
+    );
+  });
+});
