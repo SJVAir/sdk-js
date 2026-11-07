@@ -25,8 +25,9 @@ import type { PesticidesForPlace, PesticidesForPlaceFilters } from "./types.ts";
  *
  * @param place A region by type and official code, or a monitor by id.
  * Land-use regions can't be looked up by code.
- * @param filters Narrow by chemical, commodity, category, IARC group,
- * application method, or a year range (1900 to 2100). Unset filters are not sent.
+ * @param filters Narrow by chemical, commodity or product (by id, not CDPR
+ * code), categories, a narrowing, IARC group, application method, or a year
+ * range (1900 to 2100). Unset filters are not sent.
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns The place, use by month (only months with use) and use by year
@@ -37,9 +38,11 @@ export async function getPesticidesForPlace(
   filters: PesticidesForPlaceFilters = {},
   options?: RequestOptions,
 ): Promise<PesticidesForPlace> {
-  const searchParams = placeSearchParams(place);
+  const searchParams: Record<string, string | Array<string>> =
+    placeSearchParams(place);
   for (const [key, value] of Object.entries(filters)) {
-    if (value !== undefined) searchParams[key] = String(value);
+    if (value === undefined) continue;
+    searchParams[key] = Array.isArray(value) ? value : String(value);
   }
 
   return await jsonCall<PesticidesForPlace>({

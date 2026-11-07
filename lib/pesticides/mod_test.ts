@@ -228,7 +228,7 @@ Deno.test({
       const stub = stubFetch(() => jsonResponse(placeFixture));
       try {
         const result = await getPesticidesForPlace(county, {
-          chemical: 253,
+          chemical: "gs65e",
           year__gte: 2022,
         });
         const { pathname, searchParams } = stub.calls[0].url;
@@ -239,13 +239,72 @@ Deno.test({
         );
         assertEquals(searchParams.get("region_type"), "county");
         assertEquals(searchParams.get("region"), "06019");
-        assertEquals(searchParams.get("chemical"), "253");
+        assertEquals(searchParams.get("chemical"), "gs65e");
         assertEquals(searchParams.get("year__gte"), "2022");
         assertEquals(result.years[0].year, 2022);
       } finally {
         stub.restore();
       }
     });
+
+    await t.step(
+      "sends ids, narrow, method none and a list of categories",
+      async () => {
+        const stub = stubFetch(() => jsonResponse(placeFixture));
+        try {
+          await getPesticidesForPlace(county, {
+            product: "6ezxm",
+            commodity: "9xvrg",
+            narrow: "concern",
+            aerial_ground: "none",
+            category: ["carcinogen", "fumigant"],
+          });
+          const { searchParams } = stub.calls[0].url;
+          assertEquals(searchParams.getAll("category"), [
+            "carcinogen",
+            "fumigant",
+          ]);
+          assertEquals(searchParams.get("product"), "6ezxm");
+          assertEquals(searchParams.get("commodity"), "9xvrg");
+          assertEquals(searchParams.get("narrow"), "concern");
+          assertEquals(searchParams.get("aerial_ground"), "none");
+        } finally {
+          stub.restore();
+        }
+      },
+    );
+
+    await t.step("one category is sent once", async () => {
+      const stub = stubFetch(() => jsonResponse(placeFixture));
+      try {
+        await getPesticidesForPlace(county, { category: "carcinogen" });
+        assertEquals(stub.calls[0].url.searchParams.getAll("category"), [
+          "carcinogen",
+        ]);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    await t.step(
+      "an empty category list and undefined values are not sent",
+      async () => {
+        const stub = stubFetch(() => jsonResponse(placeFixture));
+        try {
+          await getPesticidesForPlace(county, {
+            category: [],
+            narrow: undefined,
+            year__gte: 2022,
+          });
+          assertEquals(
+            [...stub.calls[0].url.searchParams.keys()].sort(),
+            ["region", "region_type", "year__gte"],
+          );
+        } finally {
+          stub.restore();
+        }
+      },
+    );
 
     await t.step("GET  pesticides/place/ for Fresno County", async () => {
       try {

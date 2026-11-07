@@ -1,5 +1,6 @@
 export * from "./aerial_ground.ts";
 export * from "./iarc_group.ts";
+export * from "./narrow.ts";
 export * from "./pesticide_region.ts";
 export * from "./chemical.ts";
 export * from "./chemical_detail.ts";
