@@ -123,6 +123,7 @@ archives
 - [x] `/api/2.0/monitors/<entry_type>/summaries/seasonal/`
 - [x] `/api/2.0/monitors/<entry_type>/summaries/yearly/`
 - [x] `/api/2.0/monitors/<monitor_id>/`
+- [x] `/api/2.0/monitors/<monitor_id>/alerts/current/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/unsubscribe/`
 - [x] `/api/2.0/monitors/<monitor_id>/archive/`

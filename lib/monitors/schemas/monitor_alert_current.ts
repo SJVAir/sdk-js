@@ -5,9 +5,11 @@ import * as z from "zod";
  * - `ok`: a value and level were computed
  * - `insufficient`: under 50% of the expected readings, or an hourly feed's
  *   latest reading is older than twice its interval
- * - `no_data`: no readings, or an inactive monitor with no stored result
- * - `pending`: no stored result yet, for example just after a server cache
- *   restart
+ * - `no_data`: no readings in the window, or an inactive monitor with no
+ *   stored result (then every other field is null)
+ * - `pending`: an active monitor with no stored result yet: the server's cache
+ *   was cleared, or no alert run has stored one in the last 30 minutes (every
+ *   other field is null)
  */
 export const monitorAlertStatusSchema: z.ZodEnum<{
   ok: "ok";
@@ -51,17 +53,20 @@ interface MonitorAlertCurrentSchema extends
     value: z.ZodNullable<z.ZodNumber>;
     /** The level key from the monitors/meta scale, null unless status is "ok" */
     level: z.ZodNullable<z.ZodString>;
-    /** The averaging window, null when pending */
+    /** The window read, null when there is no stored result */
     window: z.ZodNullable<MonitorAlertWindowSchema>;
-    /** The timestamp of the latest reading (ISO 8601 with offset), null when pending */
+    /**
+     * The timestamp of the latest reading in the window (ISO 8601 with
+     * offset), null when the window has none
+     */
     latest_timestamp: z.ZodNullable<z.ZodString>;
-    /** The number of readings in the window, null when pending */
+    /** The number of readings in the window, null when there is no stored result */
     readings: z.ZodNullable<z.ZodNumber>;
-    /** The number of readings required for an "ok" result, null when pending */
+    /** The number of readings required for an "ok" result, null when there is no stored result */
     required: z.ZodNullable<z.ZodNumber>;
-    /** The previous evaluation, if any */
+    /** The same evaluation an hour earlier, null when there is no stored result */
     previous: z.ZodNullable<MonitorAlertPreviousSchema>;
-    /** When this result was evaluated (ISO 8601 with offset), null when pending */
+    /** When this result was evaluated (ISO 8601 with offset), null when there is no stored result */
     evaluated_at: z.ZodNullable<z.ZodString>;
   }> {}
 /** One entry type's current alert result for a monitor */

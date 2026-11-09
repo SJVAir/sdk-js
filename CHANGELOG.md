@@ -62,8 +62,9 @@ and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
   (`monitors/<id>/alerts/current/`): the 60-minute average (or an hourly feed's
   latest reading), its level, the window, the reading counts, the same
   evaluation an hour earlier (`previous`), and `evaluated_at`. `status` is `ok`,
-  `insufficient`, `no_data` or `pending`; every other field is `null` when
-  `pending`. A missing key means the pair isn't evaluated.
+  `insufficient`, `no_data` or `pending`; every other field is `null` when there
+  is no stored result (`pending`, or `no_data` for an inactive monitor). A
+  missing key means the pair isn't evaluated.
 - `monitors/meta/` entries gain `alerts`: the alert run's `window`,
   `min_coverage`, `stage`, `processor` and `expected_interval` override, or
   `null` when the pair isn't evaluated.

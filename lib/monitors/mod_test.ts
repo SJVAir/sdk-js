@@ -1152,6 +1152,11 @@ Deno.test({
         evaluated_at: null,
       };
       assert(monitorAlertCurrentSchema.safeParse(pending).success);
+      // An inactive monitor with no stored result has the same shape.
+      assert(
+        monitorAlertCurrentSchema.safeParse({ ...pending, status: "no_data" })
+          .success,
+      );
     });
 
     await t.step("monitorAlertCurrentSchema rejects an unknown status", () => {
