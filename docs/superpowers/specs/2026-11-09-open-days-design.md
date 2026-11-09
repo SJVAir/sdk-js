@@ -145,7 +145,10 @@ type RegionSummaryBulkOpenRequestConfig = Omit<
   winning (my call). Pages 2..N are fetched at once and each is built at its own
   instant, so when the owner set shifts (an hourly rollup, midnight, yesterday's
   settle) an owner can appear on two pages; both copies are at most a minute
-  apart, so either is fine.
+  apart, so either is fine. When the owner set shrinks during the fetch (once a
+  day, as yesterday settles), a later page can 404; the open fetchers read a 404
+  on a page after the first as an empty page, so an owner can be missed until
+  the next request (final review, my call).
 - Doc comments on each say: which days are open (today, plus yesterday until its
   nightly row exists, capped at about 03:00 Pacific), that today reads as
   missing until its first hour is summarized (about 00:45), the reading rule,
@@ -232,10 +235,10 @@ cached for a day while open days refetch every minute).
   validated with `getSimpleValidationTest`; skipped with a note when the server
   has no open rows (local data gaps). The existing summary integration tests
   validate the new fields on stored rows.
-- **Local-only server bug (fixed):** the local stack's Django debug toolbar
-  used to answer a cache miss on an open-days endpoint with a 500. sjvair.com
-  #323 fixed it (develop 9cba7857), so the tests call the endpoints directly
-  and a 500 is a real failure. The SDK never worked around it.
+- **Local-only server bug (fixed):** the local stack's Django debug toolbar used
+  to answer a cache miss on an open-days endpoint with a 500. sjvair.com #323
+  fixed it (develop 9cba7857), so the tests call the endpoints directly and a
+  500 is a real failure. The SDK never worked around it.
 - Never run `lib/account/mod_test.ts` (it writes the shared database and sends a
   text); run the suite with it ignored.
 

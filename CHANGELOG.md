@@ -63,7 +63,7 @@ rows, the open-day fetchers and merges (#PR, for sjvair.com #320 and #321).
   (`"mean_24h"`, `"max_1h"`, `"max_8h"` or `null`: the daily summary row field
   that judges a day against the scale) and `daily_statistic_label` (its
   translated display text, or `null`). Required on every scale. New
-  `DailyStatistic` type and `dailyStatisticSchema`. (sjvair.com #320)
+  `DailyStatistic` type. (sjvair.com #320)
 - Summary rows (monitor and region, single and bulk, every resolution) gain
   `max_1h`, `max_8h` and `mean_24h` (`number | null`; set only on daily rows,
   and only the one the scale's `daily_statistic` names) and `is_final` (the row

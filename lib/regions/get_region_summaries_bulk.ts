@@ -273,7 +273,9 @@ export async function getRegionSummariesBulkYearly(
  * an hourly row since the first open day, so an owner can have
  * `summaries: []`. Pages are fetched at once and each is built at its own
  * moment, so an owner can appear on two pages; it's kept once, with no
- * repeated day.
+ * repeated day. When the owner set shrinks during the fetch (once a day, as
+ * yesterday settles), a page past the new last page reads as empty and an
+ * owner can be missed until the next request, a minute later at most.
  *
  * @param config An object containing the entry type and region filter
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -288,6 +290,6 @@ export async function getRegionSummariesBulkDailyOpen(
     url: `regions/${config.entryType}/summaries/daily/open`,
     searchParams: { region: config.region },
     options,
-  });
+  }, { laterPageMissingIsEmpty: true });
   return mergeBulkOpenDays([], pages.flat());
 }

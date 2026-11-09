@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertRejects } from "@std/assert";
 import { setOrigin } from "$http";
 import { jsonResponse, stubFetch } from "./http/fetch_stub_test_utils.ts";
 import { getMonitorSummariesDailyOpen } from "./monitors/get_monitor_summaries.ts";
@@ -174,6 +174,52 @@ Deno.test("bulk open: empty page 1", async () => {
     assertEquals(
       await getMonitorSummariesBulkDailyOpen({ entryType: "pm25" }),
       [],
+    );
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("bulk open: a 404 past the last page reads as empty", async () => {
+  // The owner set can shrink between page 1 and the later pages (yesterday
+  // settles), so the last page page 1 counted may no longer exist.
+  const notFound = () =>
+    new Response(JSON.stringify({ detail: "Not found" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json" },
+    });
+  const stub = stubFetch((url) =>
+    url.searchParams.get("page") === "2"
+      ? notFound()
+      : page([owner("a", [openRow(9, 1)])], 1, 2)
+  );
+  try {
+    assertEquals(
+      await getMonitorSummariesBulkDailyOpen({ entryType: "pm25" }) as unknown,
+      [owner("a", [openRow(9, 1)])],
+    );
+    assertEquals(
+      await getRegionSummariesBulkDailyOpen({
+        entryType: "pm25",
+        region: "r",
+      }) as unknown,
+      [owner("a", [openRow(9, 1)])],
+    );
+  } finally {
+    stub.restore();
+  }
+});
+
+Deno.test("bulk open: a 404 on page 1 still rejects", async () => {
+  const stub = stubFetch(() =>
+    new Response(JSON.stringify({ detail: "Not found" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json" },
+    })
+  );
+  try {
+    await assertRejects(() =>
+      getMonitorSummariesBulkDailyOpen({ entryType: "pm25" })
     );
   } finally {
     stub.restore();
