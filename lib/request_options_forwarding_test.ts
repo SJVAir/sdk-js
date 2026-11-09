@@ -39,6 +39,7 @@ import {
 } from "./monitors/get_monitor_summaries.ts";
 import {
   getMonitorSummariesBulkDaily,
+  getMonitorSummariesBulkDailyOpen,
   getMonitorSummariesBulkHourly,
   getMonitorSummariesBulkMonthly,
   getMonitorSummariesBulkQuarterly,
@@ -82,6 +83,7 @@ import {
 } from "./regions/get_region_summaries.ts";
 import {
   getRegionSummariesBulkDaily,
+  getRegionSummariesBulkDailyOpen,
   getRegionSummariesBulkHourly,
   getRegionSummariesBulkMonthly,
   getRegionSummariesBulkQuarterly,
@@ -171,6 +173,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
     (o) => getMonitorSummariesBulkDaily(bulk, o),
   ],
   [
+    "getMonitorSummariesBulkDailyOpen",
+    (o) => getMonitorSummariesBulkDailyOpen({ entryType: "pm25" }, o),
+  ],
+  [
     "getMonitorSummariesBulkMonthly",
     (o) => getMonitorSummariesBulkMonthly(bulk, o),
   ],
@@ -250,6 +256,11 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   [
     "getRegionSummariesBulkDaily",
     (o) => getRegionSummariesBulkDaily(regionBulk, o),
+  ],
+  [
+    "getRegionSummariesBulkDailyOpen",
+    (o) =>
+      getRegionSummariesBulkDailyOpen({ entryType: "pm25", region: "r" }, o),
   ],
   [
     "getRegionSummariesBulkMonthly",

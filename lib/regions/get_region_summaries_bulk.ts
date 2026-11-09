@@ -42,6 +42,7 @@
  * @module
  */
 import { fetchAllBulkPages, mergeBulkPages, type RequestOptions } from "$http";
+import { mergeBulkOpenDays } from "../open_days.ts";
 import type { RegionWithSummaries } from "./types.ts";
 
 /**
@@ -60,6 +61,15 @@ export interface RegionSummaryBulkRequestConfig {
   /** Restrict results to one or more regions, by region sqid */
   region: string | Array<string>;
 }
+
+/**
+ * The configuration options for the bulk region open-days endpoint: the bulk
+ * lists' region filter, without dates
+ */
+export type RegionSummaryBulkOpenRequestConfig = Omit<
+  RegionSummaryBulkRequestConfig,
+  "start" | "end"
+>;
 
 /**
  * Formats a Date or string as the "YYYY-MM-DD" format expected by the bulk
@@ -243,4 +253,41 @@ export async function getRegionSummariesBulkYearly(
       options,
     }),
   );
+}
+
+/**
+ * Fetches every page of bulk open-day region rows: daily rows for the days
+ * that have no stored daily row yet, for each region given.
+ *
+ * Open days are today (Pacific), plus yesterday until its nightly row exists
+ * (capped at about 03:00 Pacific). Today has no row until its first hour is
+ * summarized (about 00:45). Open rows are built on request from the hours so
+ * far, carry the same fields as stored daily rows, and always have
+ * `is_final: false`. Responses are cached for 60 seconds
+ * (`private, max-age=60`). Merge them into bulk daily results with
+ * `mergeBulkOpenDays`, and read the result like this: `is_final: false` on
+ * today means "so far", on an earlier day "not final yet"; a missing row
+ * means "no data".
+ *
+ * The server pages these by owner (100 per page) and lists only owners with
+ * an hourly row since the first open day, so an owner can have
+ * `summaries: []`. Pages are fetched at once and each is built at its own
+ * moment, so an owner can appear on two pages; it's kept once, with no
+ * repeated day.
+ *
+ * @param config An object containing the entry type and region filter
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
+ * @returns An array of regions, each with its open-day rows
+ */
+export async function getRegionSummariesBulkDailyOpen(
+  config: RegionSummaryBulkOpenRequestConfig,
+  options?: RequestOptions,
+): Promise<Array<RegionWithSummaries>> {
+  const pages = await fetchAllBulkPages<RegionWithSummaries>({
+    url: `regions/${config.entryType}/summaries/daily/open`,
+    searchParams: { region: config.region },
+    options,
+  });
+  return mergeBulkOpenDays([], pages.flat());
 }
