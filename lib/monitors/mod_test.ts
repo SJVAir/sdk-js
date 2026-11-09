@@ -53,6 +53,7 @@ import {
 } from "./get_monitor_archives.ts";
 import {
   getMonitorSummariesDaily,
+  getMonitorSummariesDailyOpen,
   getMonitorSummariesHourly,
   getMonitorSummariesMonthly,
   getMonitorSummariesQuarterly,
@@ -61,8 +62,10 @@ import {
 } from "./get_monitor_summaries.ts";
 import {
   getMonitorSummariesBulkDaily,
+  getMonitorSummariesBulkDailyOpen,
   mergeMonitorSummaryBulkPages,
 } from "./get_monitor_summaries_bulk.ts";
+import { warmOpenDays } from "../open_days_test_utils.ts";
 import {
   monitorDewPointEntrySchema,
   monitorEntryTypeSchema,
@@ -90,7 +93,10 @@ import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
 };
 
-if (!Deno.env.has("TEST_REMOTE")) {
+// Read here: the test blocks below only allow network access.
+const isRemote = Deno.env.has("TEST_REMOTE");
+
+if (!isRemote) {
   setOrigin("http://127.0.0.1:8000");
 }
 
@@ -478,6 +484,54 @@ Deno.test({
         );
       },
     );
+
+    // Open days are built from today's hours; a local stack can have none
+    // (it runs part of the day), so an empty answer is noted, not a failure.
+    await t.step({
+      name: "GET  monitors/{MONITOR_ID}/summaries/pm25/daily/open/",
+      ignore: isRemote,
+      fn: async () => {
+        await warmOpenDays(
+          `monitors/${EXISTING_MONITOR_ID}/summaries/pm25/daily/open`,
+        );
+        const rows = await getMonitorSummariesDailyOpen({
+          monitorId: EXISTING_MONITOR_ID,
+          entryType: "pm25",
+        });
+        if (!rows.length) {
+          console.warn("No open-day rows for TEST_MONITOR_ID (local data gap)");
+        }
+        validateMonitorSummary(rows);
+        for (const row of rows) {
+          assertEquals(row.resolution, "day");
+          assertEquals(row.is_final, false);
+        }
+      },
+    });
+
+    await t.step({
+      name: "GET  monitors/{entry_type}/summaries/daily/open/",
+      ignore: isRemote,
+      fn: async () => {
+        await warmOpenDays("monitors/pm25/summaries/daily/open");
+        const monitors = await getMonitorSummariesBulkDailyOpen({
+          entryType: "pm25",
+        });
+        if (!monitors.length) {
+          console.warn("No monitors with open-day rows (local data gap)");
+        }
+        validateMonitorWithSummaries(monitors);
+        const ids = monitors.map((m) => m.id);
+        assertEquals(new Set(ids).size, ids.length);
+        for (const monitor of monitors) {
+          const days = monitor.summaries.map((row) => row.timestamp);
+          assertEquals(new Set(days).size, days.length);
+          for (const row of monitor.summaries) {
+            assertEquals(row.is_final, false);
+          }
+        }
+      },
+    });
   },
 });
 
