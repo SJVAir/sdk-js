@@ -25,7 +25,7 @@ pesticide row fields, and catalog `aggregate` (#56, for sjvair.com #316, #317
 and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
 `monitors/meta/` `alerts` field (#58, for sjvair.com #319). **5.0.0-beta.8**
 (2026-11-09): scale averaging fields, daily figures and `is_final` on summary
-rows, the open-day fetchers and merges (#PR, for sjvair.com #320 and #321).
+rows, the open-day fetchers and merges (#59, for sjvair.com #320 and #321).
 
 ### Breaking
 
