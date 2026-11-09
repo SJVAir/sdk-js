@@ -73,7 +73,18 @@ import { getWeatherStationsForPlace } from "./get_weather_stations_for_place.ts"
 import weatherFixture from "./fixtures/weather_stations_for_place.json" with {
   type: "json",
 };
-import type { MonitorWithSummaries } from "./types.ts";
+import type {
+  MonitorAlertCurrentRecord,
+  MonitorWithSummaries,
+} from "./types.ts";
+import { getMonitorAlertCurrent } from "./get_monitor_alert_current.ts";
+import {
+  monitorAlertCurrentRecordSchema,
+  monitorAlertCurrentSchema,
+} from "./schemas/mod.ts";
+import alertCurrentFixture from "./fixtures/monitor_alert_current.json" with {
+  type: "json",
+};
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
 };
@@ -1066,4 +1077,59 @@ Deno.test("Module: Monitors dew point and soil temperature entries", () => {
   assert(someMonitorEntrySchema.safeParse(soil).success);
   const { soil_temperature_f: _g, ...noSoil } = soil;
   assert(!monitorSoilTemperatureEntrySchema.safeParse(noSoil).success);
+});
+
+Deno.test({
+  name: "Module: Monitor alert current (stubbed fetch)",
+  permissions: { net: false },
+  fn: async (t) => {
+    await t.step("monitorAlertCurrentRecordSchema parses the fixture", () => {
+      assert(
+        monitorAlertCurrentRecordSchema.safeParse(alertCurrentFixture).success,
+      );
+    });
+
+    await t.step("monitorAlertCurrentSchema accepts a pending row", () => {
+      const pending = {
+        status: "pending",
+        value: null,
+        level: null,
+        window: null,
+        latest_timestamp: null,
+        readings: null,
+        required: null,
+        previous: null,
+        evaluated_at: null,
+      };
+      assert(monitorAlertCurrentSchema.safeParse(pending).success);
+    });
+
+    await t.step("monitorAlertCurrentSchema rejects an unknown status", () => {
+      const row = { ...alertCurrentFixture.pm25, status: "stale" };
+      assert(!monitorAlertCurrentSchema.safeParse(row).success);
+    });
+
+    await t.step("getMonitorAlertCurrent calls alerts/current", async () => {
+      const stub = stubFetch(() => jsonResponse({ data: alertCurrentFixture }));
+      try {
+        const result = await getMonitorAlertCurrent("abc");
+        assertEquals(result, alertCurrentFixture as MonitorAlertCurrentRecord);
+        assertEquals(
+          stub.calls[0].url.pathname,
+          "/api/2.0/monitors/abc/alerts/current/",
+        );
+      } finally {
+        stub.restore();
+      }
+    });
+
+    await t.step("getMonitorAlertCurrent returns an empty record", async () => {
+      const stub = stubFetch(() => jsonResponse({ data: {} }));
+      try {
+        assertEquals(await getMonitorAlertCurrent("abc"), {});
+      } finally {
+        stub.restore();
+      }
+    });
+  },
 });

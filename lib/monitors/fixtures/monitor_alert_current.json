@@ -1,0 +1,34 @@
+{
+  "pm25": {
+    "status": "ok",
+    "value": 12.4,
+    "level": "moderate",
+    "window": {
+      "start": "2026-11-08T15:00:04-08:00",
+      "end": "2026-11-08T16:00:04-08:00"
+    },
+    "latest_timestamp": "2026-11-08T15:58:00-08:00",
+    "readings": 29,
+    "required": 15,
+    "previous": {
+      "status": "insufficient",
+      "value": null,
+      "level": null
+    },
+    "evaluated_at": "2026-11-08T16:00:04-08:00"
+  },
+  "o3": {
+    "status": "insufficient",
+    "value": null,
+    "level": null,
+    "window": {
+      "start": "2026-11-08T15:00:04-08:00",
+      "end": "2026-11-08T16:00:04-08:00"
+    },
+    "latest_timestamp": "2026-11-08T13:00:00-08:00",
+    "readings": 0,
+    "required": 1,
+    "previous": null,
+    "evaluated_at": "2026-11-08T16:00:04-08:00"
+  }
+}

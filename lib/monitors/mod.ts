@@ -48,6 +48,7 @@
  * @module
  */
 export * from "./get_closest_monitor.ts";
+export * from "./get_monitor_alert_current.ts";
 export * from "./get_monitor_archives.ts";
 export * from "./get_monitor_details.ts";
 export * from "./get_monitor_entries.ts";
