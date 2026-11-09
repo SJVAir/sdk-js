@@ -59,13 +59,24 @@ export function mergeOpenDays<T extends { timestamp: string }>(
     }
   }
 
-  // Offsets differ across daylight saving time, so sort by instant.
-  return merged.sort((a, b) =>
-    Date.parse(a.timestamp) - Date.parse(b.timestamp)
-  );
+  // Offsets differ across daylight saving time, so order by instant. Parse
+  // each timestamp once, and skip the sort when the rows are already in order
+  // (the usual case: stored days, then the open days after them).
+  const times = merged.map((row) => Date.parse(row.timestamp));
+  if (times.every((time, i) => i === 0 || times[i - 1] <= time)) {
+    return merged;
+  }
+  return merged
+    .map((row, i) => ({ row, time: times[i] }))
+    .sort((a, b) => a.time - b.time)
+    .map(({ row }) => row);
 }
 
-/** Folds entries with the same `id` into one: the first entry's fields, all their rows. */
+/**
+ * Folds entries with the same `id` into one: the first entry's fields, all
+ * their rows. A single entry's rows are copied, not sorted; the merge below
+ * sorts each owner's rows once.
+ */
 function foldOwners<
   T extends { id: string; summaries: Array<{ timestamp: string }> },
 >(owners: ReadonlyArray<T>): Map<string, T> {
@@ -80,7 +91,7 @@ function foldOwners<
           ...first,
           summaries: mergeOpenDays(first.summaries, owner.summaries),
         }
-        : { ...owner, summaries: mergeOpenDays([], owner.summaries) },
+        : { ...owner, summaries: [...owner.summaries] },
     );
   }
 
@@ -111,19 +122,15 @@ export function mergeBulkOpenDays<
 
   for (const [id, owner] of storedOwners) {
     const opened = openOwners.get(id);
-    merged.push(
-      opened
-        ? {
-          ...owner,
-          summaries: mergeOpenDays(owner.summaries, opened.summaries),
-        }
-        : owner,
-    );
+    merged.push({
+      ...owner,
+      summaries: mergeOpenDays(owner.summaries, opened?.summaries ?? []),
+    });
   }
 
   for (const [id, owner] of openOwners) {
     if (!storedOwners.has(id)) {
-      merged.push(owner);
+      merged.push({ ...owner, summaries: mergeOpenDays([], owner.summaries) });
     }
   }
 

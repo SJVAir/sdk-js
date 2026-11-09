@@ -135,3 +135,10 @@ Deno.test("bulk: stored summaries arrays not mutated", () => {
   merged[0].summaries.push(day(10, 4));
   assertEquals(stored, storedCopy);
 });
+
+Deno.test("bulk: a stored-only owner's rows come back sorted", () => {
+  assertEquals(
+    mergeBulkOpenDays([owner("a", [day(9, 2), day(8, 1)])], []),
+    [owner("a", [day(8, 1), day(9, 2)])],
+  );
+});

@@ -93,6 +93,9 @@ import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
 };
 
 // Read here: the test blocks below only allow network access.
+// The open-day steps skip under TEST_REMOTE because production doesn't serve
+// those endpoints yet. Once sjvair.com #320 and #321 reach production, drop
+// their `ignore: isRemote` so they run against the live API too.
 const isRemote = Deno.env.has("TEST_REMOTE");
 
 if (!isRemote) {

@@ -36,6 +36,9 @@ import {
 import { getRegionsMeta } from "./get_regions_meta.ts";
 
 // Read here: the test blocks below only allow network access.
+// The open-day steps skip under TEST_REMOTE because production doesn't serve
+// those endpoints yet. Once sjvair.com #320 and #321 reach production, drop
+// their `ignore: isRemote` so they run against the live API too.
 const isRemote = Deno.env.has("TEST_REMOTE");
 
 if (!isRemote) {
@@ -275,6 +278,9 @@ Deno.test({
           entryType: "pm25",
           region: county.id,
         });
+        if (!regions.length) {
+          console.warn("No open-day rows for the county (local data gap)");
+        }
         validateRegionWithSummaries(regions);
         assertEquals(regions.every((r) => r.id === county.id), true);
         for (const region of regions) {
