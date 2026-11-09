@@ -30,6 +30,8 @@
  * //         "timestamp": "2024-01-01T00:00:00-08:00",
  * //         "entry_type": "pm25",
  * //         "resolution": "day",
+ * //         "mean_24h": 5.5,
+ * //         "is_final": true,
  * //         ... (excerpted for brevity)
  * //       },
  * //       ... (more summaries)

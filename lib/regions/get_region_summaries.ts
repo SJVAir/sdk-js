@@ -25,7 +25,11 @@
  * //     "stddev": 1.2,
  * //     "p25": 4.5,
  * //     "p75": 6.7,
- * //     "station_count": 12
+ * //     "max_1h": null,
+ * //     "max_8h": null,
+ * //     "mean_24h": 5.5,
+ * //     "station_count": 12,
+ * //     "is_final": true
  * //   },
  * //   ... (more summaries)
  * // ]

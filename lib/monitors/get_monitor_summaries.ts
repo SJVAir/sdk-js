@@ -27,7 +27,11 @@
  * //     "stddev": 1.2,
  * //     "p25": 4.5,
  * //     "p75": 6.7,
- * //     "is_complete": true
+ * //     "max_1h": null,
+ * //     "max_8h": null,
+ * //     "mean_24h": 5.5,
+ * //     "is_complete": true,
+ * //     "is_final": true
  * //   },
  * //   ... (more summaries)
  * // ]

@@ -499,7 +499,11 @@ Deno.test({
       stddev: 0.7,
       p25: 0,
       p75: 0.8,
+      max_1h: null,
+      max_8h: null,
+      mean_24h: null,
       is_complete: true,
+      is_final: true,
     };
     assert(monitorSummarySchema.safeParse(row).success);
     const { sum: _sum, ...noSum } = row;
@@ -525,7 +529,11 @@ Deno.test({
       stddev: 1.2,
       p25: 4.5,
       p75: 6.7,
+      max_1h: null,
+      max_8h: null,
+      mean_24h: 5.4,
       is_complete: true,
+      is_final: true,
     });
 
     const monitor = (
