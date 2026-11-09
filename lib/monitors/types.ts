@@ -13,6 +13,7 @@ import type {
   monitorDetailsSchema,
   monitorDewPointEntrySchema,
   monitorEntriesArchiveSchema,
+  monitorEntryAlertsMetaSchema,
   monitorEntryMetaSchema,
   monitorEntrySchema,
   monitorEntryTypeSchema,
@@ -167,6 +168,11 @@ export interface MonitorClosestType<T extends keyof MonitorEntries>
 }
 /** The data structure for details on a monitor object */
 export type MonitorDetails = zinfer<typeof monitorDetailsSchema>;
+
+/** How the alert run evaluates an entry type on a monitor type */
+export type MonitorEntryAlertsMeta = zinfer<
+  typeof monitorEntryAlertsMetaSchema
+>;
 
 /** The metadata about the included entry types for a given monitor type  */
 export type SJVAirMonitorEntryMeta = zinfer<

@@ -44,6 +44,7 @@ import {
 import { getMonitorsMeta } from "./get_monitors_meta.ts";
 import {
   sjvairEntryMetaSchema,
+  sjvairMonitorEntryMetaSchema,
   sjvairMonitorsMetaSchema,
 } from "./schemas/monitors_meta.ts";
 import {
@@ -829,6 +830,55 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
     for (const entry of Object.values(monitorsMetaFixture.data.entries)) {
       assertEquals("levels" in entry, false);
     }
+  });
+});
+
+Deno.test("Module: Monitors meta alerts block", async (t) => {
+  const entryMeta = {
+    sensors: ["a", "b"],
+    allowed_stages: ["raw", "calibrated"],
+    default_stage: "calibrated",
+    default_calibration: "PM25_UnivariateLinearRegression",
+    processors: { raw: ["PM25_UnivariateLinearRegression"] },
+  };
+  const alerts = {
+    window: "60 min",
+    min_coverage: 0.5,
+    stage: "calibrated",
+    processor: "PM25_UnivariateLinearRegression",
+    expected_interval: null,
+  };
+
+  await t.step("entry meta parses an alerts block", () => {
+    const parsed = sjvairMonitorEntryMetaSchema.parse({ ...entryMeta, alerts });
+    assertEquals(parsed.alerts, alerts);
+  });
+
+  await t.step("entry meta parses alerts null", () => {
+    const parsed = sjvairMonitorEntryMetaSchema.parse({
+      ...entryMeta,
+      alerts: null,
+    });
+    assertEquals(parsed.alerts, null);
+  });
+
+  await t.step("entry meta requires alerts", () => {
+    assertEquals(
+      sjvairMonitorEntryMetaSchema.safeParse(entryMeta).success,
+      false,
+    );
+  });
+
+  await t.step("the fixture carries alerts on every entry", () => {
+    validateMonitorsMeta(
+      monitorsMetaFixture.data as unknown as SJVAirMonitorsMeta,
+    );
+    const monitors = sjvairMonitorsMetaSchema.parse(monitorsMetaFixture.data)
+      .monitors;
+    assertEquals(monitors.purpleair.entries.pm25.alerts, alerts);
+    assertEquals(monitors.purpleair.entries.pm100.alerts, null);
+    assertEquals(monitors.aqlite.entries.o3.alerts?.expected_interval, "1h");
+    assertEquals(monitors.airnow.entries.o3.alerts?.processor, null);
   });
 });
 

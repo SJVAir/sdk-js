@@ -33,6 +33,7 @@
  * //                "AirGradientHumidity",
  * //              ],
  * //            },
+ * //            "alerts": null,
  * //          },
  * //          ... (other entry types omitted for brevity)
  * //        },
