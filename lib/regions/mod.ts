@@ -38,3 +38,4 @@ export * from "./get_regions_meta.ts";
 export * from "./region_display_name.ts";
 export * from "./search_locations.ts";
 export * from "./types.ts";
+export { mergeBulkOpenDays, mergeOpenDays } from "../open_days.ts";

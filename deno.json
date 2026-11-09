@@ -97,6 +97,7 @@
     "./monitors/get_monitors_list": "./lib/monitors/get_monitors_list.ts",
     "./monitors/get_monitors_meta": "./lib/monitors/get_monitors_meta.ts",
     "./monitors/types": "./lib/monitors/types.ts",
+    "./open-days": "./lib/open_days.ts",
     "./pesticides": "./lib/pesticides/mod.ts",
     "./pesticides/get_chemical_details": "./lib/pesticides/get_chemical_details.ts",
     "./pesticides/get_chemicals_list": "./lib/pesticides/get_chemicals_list.ts",
