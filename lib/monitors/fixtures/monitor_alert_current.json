@@ -13,7 +13,8 @@
     "previous": {
       "status": "insufficient",
       "value": null,
-      "level": null
+      "level": null,
+      "latest_timestamp": "2026-11-08T14:42:00-08:00"
     },
     "evaluated_at": "2026-11-08T16:00:04-08:00"
   },
@@ -31,7 +32,8 @@
     "previous": {
       "status": "ok",
       "value": 0.041,
-      "level": "good"
+      "level": "good",
+      "latest_timestamp": "2026-11-08T14:00:00-08:00"
     },
     "evaluated_at": "2026-11-08T16:00:04-08:00"
   }

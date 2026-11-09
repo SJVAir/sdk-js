@@ -64,7 +64,10 @@ and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
   evaluation an hour earlier (`previous`), and `evaluated_at`. `status` is `ok`,
   `insufficient`, `no_data` or `pending`; every other field is `null` when there
   is no stored result (`pending`, or `no_data` for an inactive monitor). A
-  missing key means the pair isn't evaluated.
+  missing key means the pair isn't evaluated. `previous` carries `status`,
+  `value`, `level` and `latest_timestamp`; equal current and previous
+  `latest_timestamp`s mean both come from the same reading (a lagging hourly
+  feed), so there is no trend.
 - `monitors/meta/` entries gain `alerts`: the alert run's `window`,
   `min_coverage`, `stage`, `processor` and `expected_interval` override, or
   `null` when the pair isn't evaluated.

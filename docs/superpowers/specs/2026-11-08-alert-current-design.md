@@ -36,7 +36,12 @@ example, an entry in `lib/monitors/mod.ts`, and an export path in `deno.json`.
     latest_timestamp: string | null;
     readings: number | null;
     required: number | null;
-    previous: { status: ...; value: number | null; level: string | null } | null;
+    previous: {
+      status: ...;
+      value: number | null;
+      level: string | null;
+      latest_timestamp: string | null;  // same rule as the current one
+    } | null;
     evaluated_at: string | null;
   }
   ```
@@ -96,7 +101,9 @@ Account tests stay opt-in (`TEST_ACCOUNTS=1`). Don't run them.
 ## Out of scope
 
 - Any client-side averaging or trend logic. The dashboard compares `value` with
-  `previous.value`.
+  `previous.value`, and shows no trend when `previous.latest_timestamp` equals
+  `latest_timestamp` (the same reading, from a lagging hourly feed; the user's
+  decision, 2026-11-08).
 - A list variant.
 
 ## Left to the builder

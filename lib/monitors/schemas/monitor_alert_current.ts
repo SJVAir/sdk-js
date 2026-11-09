@@ -26,11 +26,19 @@ interface MonitorAlertPreviousSchema extends
     value: z.ZodNullable<z.ZodNumber>;
     /** The previous level key, null unless its status was "ok" */
     level: z.ZodNullable<z.ZodString>;
+    /**
+     * The timestamp of the latest reading in the previous window (ISO 8601
+     * with offset), null when that window has none. When it equals the
+     * current `latest_timestamp`, both values come from the same reading (an
+     * hourly feed that hasn't reported since), so there is no trend.
+     */
+    latest_timestamp: z.ZodNullable<z.ZodString>;
   }> {}
 const monitorAlertPreviousSchema: MonitorAlertPreviousSchema = z.object({
   status: monitorAlertStatusSchema,
   value: z.number().nullable(),
   level: z.string().nullable(),
+  latest_timestamp: z.string().nullable(),
 });
 
 interface MonitorAlertWindowSchema extends

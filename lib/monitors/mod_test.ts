@@ -1159,6 +1159,20 @@ Deno.test({
       );
     });
 
+    await t.step(
+      "monitorAlertCurrentSchema requires previous.latest_timestamp",
+      () => {
+        const { latest_timestamp: _, ...previous } = alertCurrentFixture.pm25
+          .previous;
+        assert(
+          !monitorAlertCurrentSchema.safeParse({
+            ...alertCurrentFixture.pm25,
+            previous,
+          }).success,
+        );
+      },
+    );
+
     await t.step("monitorAlertCurrentSchema rejects an unknown status", () => {
       const row = { ...alertCurrentFixture.pm25, status: "stale" };
       assert(!monitorAlertCurrentSchema.safeParse(row).success);
