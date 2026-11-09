@@ -9,14 +9,15 @@ This is a **Deno v2.x** project published to JSR as `@sjvair/sdk`. There is no
 build step — TypeScript is run directly.
 
 ```sh
-# Run all tests (requires a local SJVAir API at 127.0.0.1:8000)
-deno test --allow-net --allow-env
+# Run all tests (requires a local SJVAir API at 127.0.0.1:8000). `--env-file` loads `.env`:
+# `lib/testing.ts` exits when a TEST_* variable it needs isn't in the environment.
+deno test --allow-net --allow-env --env-file
 
 # Run a single test file
-deno test --allow-net --allow-env lib/monitors/mod_test.ts
+deno test --allow-net --allow-env --env-file lib/monitors/mod_test.ts
 
 # Run tests against the live API
-TEST_REMOTE=1 deno test --allow-net --allow-env
+TEST_REMOTE=1 deno test --allow-net --allow-env --env-file
 
 # Run tests that don't need network (e.g. datetime)
 deno test lib/datetime/mod_test.ts
