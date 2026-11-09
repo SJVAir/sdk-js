@@ -30,6 +30,7 @@ import { getMonitorEntries } from "./monitors/get_monitor_entries.ts";
 import { getMonitorEntriesExportJSON } from "./monitors/get_monitor_entries_export.ts";
 import {
   getMonitorSummariesDaily,
+  getMonitorSummariesDailyOpen,
   getMonitorSummariesHourly,
   getMonitorSummariesMonthly,
   getMonitorSummariesQuarterly,
@@ -72,6 +73,7 @@ import {
 } from "./regions/get_region_places.ts";
 import {
   getRegionSummariesDaily,
+  getRegionSummariesDailyOpen,
   getRegionSummariesHourly,
   getRegionSummariesMonthly,
   getRegionSummariesQuarterly,
@@ -146,6 +148,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ],
   ["getMonitorSummariesHourly", (o) => getMonitorSummariesHourly(summary, o)],
   ["getMonitorSummariesDaily", (o) => getMonitorSummariesDaily(summary, o)],
+  [
+    "getMonitorSummariesDailyOpen",
+    (o) => getMonitorSummariesDailyOpen(entry, o),
+  ],
   ["getMonitorSummariesMonthly", (o) => getMonitorSummariesMonthly(summary, o)],
   [
     "getMonitorSummariesQuarterly",
@@ -217,6 +223,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
     (o) => getRegionSummariesHourly(regionSummary, o),
   ],
   ["getRegionSummariesDaily", (o) => getRegionSummariesDaily(regionSummary, o)],
+  [
+    "getRegionSummariesDailyOpen",
+    (o) => getRegionSummariesDailyOpen({ regionId: "r", entryType: "pm25" }, o),
+  ],
   [
     "getRegionSummariesMonthly",
     (o) => getRegionSummariesMonthly(regionSummary, o),
