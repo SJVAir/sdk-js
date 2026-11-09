@@ -1,6 +1,6 @@
 {
   "name": "@sjvair/sdk",
-  "version": "5.0.0-beta.6",
+  "version": "5.0.0-beta.7",
   "license": "MIT",
   "exclude": [".worktrees/"],
   "tasks": {
@@ -85,6 +85,7 @@
     "./meta/types": "./lib/meta/types.ts",
     "./monitors": "./lib/monitors/mod.ts",
     "./monitors/get_closest_monitor": "./lib/monitors/get_closest_monitor.ts",
+    "./monitors/get_monitor_alert_current": "./lib/monitors/get_monitor_alert_current.ts",
     "./monitors/get_monitor_archives": "./lib/monitors/get_monitor_archives.ts",
     "./monitors/get_monitor_details": "./lib/monitors/get_monitor_details.ts",
     "./monitors/get_monitor_entries": "./lib/monitors/get_monitor_entries.ts",

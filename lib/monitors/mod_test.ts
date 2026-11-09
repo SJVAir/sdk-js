@@ -44,6 +44,7 @@ import {
 import { getMonitorsMeta } from "./get_monitors_meta.ts";
 import {
   sjvairEntryMetaSchema,
+  sjvairMonitorEntryMetaSchema,
   sjvairMonitorsMetaSchema,
 } from "./schemas/monitors_meta.ts";
 import {
@@ -73,7 +74,18 @@ import { getWeatherStationsForPlace } from "./get_weather_stations_for_place.ts"
 import weatherFixture from "./fixtures/weather_stations_for_place.json" with {
   type: "json",
 };
-import type { MonitorWithSummaries } from "./types.ts";
+import type {
+  MonitorAlertCurrentRecord,
+  MonitorWithSummaries,
+} from "./types.ts";
+import { getMonitorAlertCurrent } from "./get_monitor_alert_current.ts";
+import {
+  monitorAlertCurrentRecordSchema,
+  monitorAlertCurrentSchema,
+} from "./schemas/mod.ts";
+import alertCurrentFixture from "./fixtures/monitor_alert_current.json" with {
+  type: "json",
+};
 import monitorsMetaFixture from "./fixtures/monitors_meta.json" with {
   type: "json",
 };
@@ -821,6 +833,55 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
   });
 });
 
+Deno.test("Module: Monitors meta alerts block", async (t) => {
+  const entryMeta = {
+    sensors: ["a", "b"],
+    allowed_stages: ["raw", "calibrated"],
+    default_stage: "calibrated",
+    default_calibration: "PM25_UnivariateLinearRegression",
+    processors: { raw: ["PM25_UnivariateLinearRegression"] },
+  };
+  const alerts = {
+    window: "60 min",
+    min_coverage: 0.5,
+    stage: "calibrated",
+    processor: "PM25_UnivariateLinearRegression",
+    expected_interval: null,
+  };
+
+  await t.step("entry meta parses an alerts block", () => {
+    const parsed = sjvairMonitorEntryMetaSchema.parse({ ...entryMeta, alerts });
+    assertEquals(parsed.alerts, alerts);
+  });
+
+  await t.step("entry meta parses alerts null", () => {
+    const parsed = sjvairMonitorEntryMetaSchema.parse({
+      ...entryMeta,
+      alerts: null,
+    });
+    assertEquals(parsed.alerts, null);
+  });
+
+  await t.step("entry meta requires alerts", () => {
+    assertEquals(
+      sjvairMonitorEntryMetaSchema.safeParse(entryMeta).success,
+      false,
+    );
+  });
+
+  await t.step("the fixture carries alerts on every entry", () => {
+    validateMonitorsMeta(
+      monitorsMetaFixture.data as unknown as SJVAirMonitorsMeta,
+    );
+    const monitors = sjvairMonitorsMetaSchema.parse(monitorsMetaFixture.data)
+      .monitors;
+    assertEquals(monitors.purpleair.entries.pm25.alerts, alerts);
+    assertEquals(monitors.purpleair.entries.pm100.alerts, null);
+    assertEquals(monitors.aqlite.entries.o3.alerts?.expected_interval, "1h");
+    assertEquals(monitors.airnow.entries.o3.alerts?.processor, null);
+  });
+});
+
 Deno.test("getMonitorsList sends dataset as a query param, not fetch init", async () => {
   const stub = stubFetch(() => jsonResponse({ data: [] }));
   try {
@@ -1066,4 +1127,88 @@ Deno.test("Module: Monitors dew point and soil temperature entries", () => {
   assert(someMonitorEntrySchema.safeParse(soil).success);
   const { soil_temperature_f: _g, ...noSoil } = soil;
   assert(!monitorSoilTemperatureEntrySchema.safeParse(noSoil).success);
+});
+
+Deno.test({
+  name: "Module: Monitor alert current (stubbed fetch)",
+  permissions: { net: false },
+  fn: async (t) => {
+    await t.step("monitorAlertCurrentRecordSchema parses the fixture", () => {
+      assert(
+        monitorAlertCurrentRecordSchema.safeParse(alertCurrentFixture).success,
+      );
+    });
+
+    await t.step("monitorAlertCurrentSchema accepts a pending row", () => {
+      const pending = {
+        status: "pending",
+        value: null,
+        level: null,
+        window: null,
+        latest_timestamp: null,
+        readings: null,
+        required: null,
+        previous: null,
+        evaluated_at: null,
+      };
+      assert(monitorAlertCurrentSchema.safeParse(pending).success);
+      // An inactive monitor with no stored result has the same shape.
+      assert(
+        monitorAlertCurrentSchema.safeParse({ ...pending, status: "no_data" })
+          .success,
+      );
+    });
+
+    await t.step(
+      "monitorAlertCurrentSchema requires previous.latest_timestamp",
+      () => {
+        const { latest_timestamp: _, ...previous } = alertCurrentFixture.pm25
+          .previous;
+        assert(
+          !monitorAlertCurrentSchema.safeParse({
+            ...alertCurrentFixture.pm25,
+            previous,
+          }).success,
+        );
+      },
+    );
+
+    await t.step("monitorAlertCurrentSchema rejects an unknown status", () => {
+      const row = { ...alertCurrentFixture.pm25, status: "stale" };
+      assert(!monitorAlertCurrentSchema.safeParse(row).success);
+      const previous = {
+        ...alertCurrentFixture.pm25.previous,
+        status: "stale",
+      };
+      assert(
+        !monitorAlertCurrentSchema.safeParse({
+          ...alertCurrentFixture.pm25,
+          previous,
+        }).success,
+      );
+    });
+
+    await t.step("getMonitorAlertCurrent calls alerts/current", async () => {
+      const stub = stubFetch(() => jsonResponse({ data: alertCurrentFixture }));
+      try {
+        const result = await getMonitorAlertCurrent("abc");
+        assertEquals(result, alertCurrentFixture as MonitorAlertCurrentRecord);
+        assertEquals(
+          stub.calls[0].url.pathname,
+          "/api/2.0/monitors/abc/alerts/current/",
+        );
+      } finally {
+        stub.restore();
+      }
+    });
+
+    await t.step("getMonitorAlertCurrent returns an empty record", async () => {
+      const stub = stubFetch(() => jsonResponse({ data: {} }));
+      try {
+        assertEquals(await getMonitorAlertCurrent("abc"), {});
+      } finally {
+        stub.restore();
+      }
+    });
+  },
 });

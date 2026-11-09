@@ -6,6 +6,29 @@ import {
   scaleSourceSchema,
 } from "../../meta/schemas/scale.ts";
 
+interface MonitorEntryAlertsMetaSchema extends
+  z.ZodObject<{
+    /** The window the alert run averages over, in presentation form (e.g. "60 min") */
+    window: z.ZodString;
+    /** The share of the window's expected readings that must be present, from 0 to 1 */
+    min_coverage: z.ZodNumber;
+    /** The stage of the entries the alert run evaluates */
+    stage: z.ZodString;
+    /** The processor of the entries the alert run evaluates, or null when it doesn't filter on one */
+    processor: z.ZodNullable<z.ZodString>;
+    /** The interval between entries at this stage when it differs from the monitor's, or null */
+    expected_interval: z.ZodNullable<z.ZodString>;
+  }> {}
+/** How the alert run evaluates an entry type on a monitor type */
+export const monitorEntryAlertsMetaSchema: MonitorEntryAlertsMetaSchema = z
+  .object({
+    window: z.string(),
+    min_coverage: z.number(),
+    stage: z.string(),
+    processor: z.string().nullable(),
+    expected_interval: z.string().nullable(),
+  });
+
 interface SJVAirMonitorEntryMetaSchema extends
   z.ZodObject<{
     /** The labels for each sensor, if this monitor has more than one. */
@@ -18,6 +41,8 @@ interface SJVAirMonitorEntryMetaSchema extends
     default_calibration: z.ZodString;
     /** The processors used on this entry type's data */
     processors: z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString>>;
+    /** How the alert run evaluates this entry type, or null when it doesn't */
+    alerts: z.ZodNullable<MonitorEntryAlertsMetaSchema>;
   }> {}
 export const sjvairMonitorEntryMetaSchema: SJVAirMonitorEntryMetaSchema = z
   .object({
@@ -26,6 +51,7 @@ export const sjvairMonitorEntryMetaSchema: SJVAirMonitorEntryMetaSchema = z
     default_stage: z.string(),
     default_calibration: z.string(),
     processors: z.record(z.string(), z.array(z.string())),
+    alerts: monitorEntryAlertsMetaSchema.nullable(),
   });
 
 interface SJVAirMonitorDeviceMetaSchema extends

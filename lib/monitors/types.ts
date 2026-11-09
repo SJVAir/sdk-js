@@ -4,12 +4,16 @@
  */
 import type { infer as zinfer } from "zod";
 import type {
+  monitorAlertCurrentRecordSchema,
+  monitorAlertCurrentSchema,
+  monitorAlertStatusSchema,
   monitorClosestSchema,
   monitorDataSchema,
   monitorDataVendorSchema,
   monitorDetailsSchema,
   monitorDewPointEntrySchema,
   monitorEntriesArchiveSchema,
+  monitorEntryAlertsMetaSchema,
   monitorEntryMetaSchema,
   monitorEntrySchema,
   monitorEntryTypeSchema,
@@ -165,6 +169,11 @@ export interface MonitorClosestType<T extends keyof MonitorEntries>
 /** The data structure for details on a monitor object */
 export type MonitorDetails = zinfer<typeof monitorDetailsSchema>;
 
+/** How the alert run evaluates an entry type on a monitor type */
+export type MonitorEntryAlertsMeta = zinfer<
+  typeof monitorEntryAlertsMetaSchema
+>;
+
 /** The metadata about the included entry types for a given monitor type  */
 export type SJVAirMonitorEntryMeta = zinfer<
   typeof sjvairMonitorEntryMetaSchema
@@ -199,4 +208,15 @@ export type WeatherStation = zinfer<typeof weatherStationSchema>;
 /** The weather stations for a place, as returned from monitors/weather/place */
 export type WeatherStationsForPlace = zinfer<
   typeof weatherStationsForPlaceSchema
+>;
+
+/** The outcome of an alert evaluation: ok, insufficient, no_data or pending */
+export type MonitorAlertStatus = zinfer<typeof monitorAlertStatusSchema>;
+
+/** One entry type's current alert result for a monitor */
+export type MonitorAlertCurrent = zinfer<typeof monitorAlertCurrentSchema>;
+
+/** Current alert results keyed by entry type id */
+export type MonitorAlertCurrentRecord = zinfer<
+  typeof monitorAlertCurrentRecordSchema
 >;

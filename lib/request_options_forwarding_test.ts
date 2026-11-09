@@ -24,6 +24,7 @@ import {
   listAllMonitorArchives,
   listMonitorArchivesPage,
 } from "./monitors/get_monitor_archives.ts";
+import { getMonitorAlertCurrent } from "./monitors/get_monitor_alert_current.ts";
 import { getMonitorDetails } from "./monitors/get_monitor_details.ts";
 import { getMonitorEntries } from "./monitors/get_monitor_entries.ts";
 import { getMonitorEntriesExportJSON } from "./monitors/get_monitor_entries_export.ts";
@@ -132,6 +133,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["listMonitorArchivesPage", (o) => listMonitorArchivesPage("m", 1, o)],
   ["listAllMonitorArchives", (o) => listAllMonitorArchives("m", o)],
   ["getMonitorArchive", (o) => getMonitorArchive(archive, o)],
+  ["getMonitorAlertCurrent", (o) => getMonitorAlertCurrent("m", o)],
   ["getMonitorDetails", (o) => getMonitorDetails("m", o)],
   ["getMonitorEntries", (o) => getMonitorEntries(entry, o)],
   [
