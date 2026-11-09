@@ -23,7 +23,7 @@ product, narrowing, several categories and method `none`),
 `pesticidePlaceFilterErrors`, `getPesticidesMeta`, `searchPesticides`, the new
 pesticide row fields, and catalog `aggregate` (#56, for sjvair.com #316, #317
 and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
-`monitors/meta/` `alerts` field (for sjvair.com #319).
+`monitors/meta/` `alerts` field (#58, for sjvair.com #319).
 
 ### Breaking
 
