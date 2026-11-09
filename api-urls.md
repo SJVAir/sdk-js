@@ -118,6 +118,7 @@ archives
 - [x] `/api/2.0/monitors/<entry_type>/current/`
 - [x] `/api/2.0/monitors/<entry_type>/summaries/hourly/`
 - [x] `/api/2.0/monitors/<entry_type>/summaries/daily/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/open/`
 - [x] `/api/2.0/monitors/<entry_type>/summaries/monthly/`
 - [x] `/api/2.0/monitors/<entry_type>/summaries/quarterly/`
 - [x] `/api/2.0/monitors/<entry_type>/summaries/seasonal/`
@@ -140,6 +141,7 @@ archives
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/<int:day>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/<int:year>/<int:month>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/open/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/monthly/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/quarterly/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/seasonal/<int:year>/`
@@ -199,6 +201,7 @@ Region and place lookups, boundaries, and region-level entry summaries
       via POST)
 - [x] `/api/2.0/regions/<entry_type>/summaries/hourly/`
 - [x] `/api/2.0/regions/<entry_type>/summaries/daily/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/daily/open/`
 - [x] `/api/2.0/regions/<entry_type>/summaries/monthly/`
 - [x] `/api/2.0/regions/<entry_type>/summaries/quarterly/`
 - [x] `/api/2.0/regions/<entry_type>/summaries/seasonal/`
@@ -209,6 +212,7 @@ Region and place lookups, boundaries, and region-level entry summaries
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/<int:day>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/<int:year>/<int:month>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/open/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/monthly/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/quarterly/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/seasonal/<int:year>/`

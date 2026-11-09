@@ -57,8 +57,36 @@ export interface MonitorSummarySchema extends
     /** The 75th percentile value recorded during this summary's period */
     p75: z.ZodNumber;
 
+    /**
+     * The day's highest 1-hour average (O3, NO2, SO2): set only on daily rows
+     * of an entry type whose scale's `daily_statistic` is `max_1h`, and `null`
+     * on a day that fails EPA's completeness rule
+     */
+    max_1h: z.ZodNullable<z.ZodNumber>;
+
+    /**
+     * The day's highest 8-hour average (CO): set only on daily rows of an
+     * entry type whose scale's `daily_statistic` is `max_8h`, and `null` on a
+     * day that fails EPA's completeness rule
+     */
+    max_8h: z.ZodNullable<z.ZodNumber>;
+
+    /**
+     * The day's 24-hour average (PM2.5, PM10): set only on daily rows of an
+     * entry type whose scale's `daily_statistic` is `mean_24h`, and `null` on
+     * a day with fewer than 75% of its hours
+     */
+    mean_24h: z.ZodNullable<z.ZodNumber>;
+
     /** Indicates whether this summary's period had the expected number of entries */
     is_complete: z.ZodBoolean;
+
+    /**
+     * Whether this row can't change anymore. Yesterday's daily row settles
+     * about 03:00 Pacific (CO's about 28 hours after the day ends); open-day
+     * rows are always `false`
+     */
+    is_final: z.ZodBoolean;
   }> {}
 
 export const monitorSummarySchema: MonitorSummarySchema = z.object({
@@ -75,5 +103,9 @@ export const monitorSummarySchema: MonitorSummarySchema = z.object({
   stddev: z.number(),
   p25: z.number(),
   p75: z.number(),
+  max_1h: z.number().nullable(),
+  max_8h: z.number().nullable(),
+  mean_24h: z.number().nullable(),
   is_complete: z.boolean(),
+  is_final: z.boolean(),
 });

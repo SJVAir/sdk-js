@@ -30,6 +30,7 @@ import { getMonitorEntries } from "./monitors/get_monitor_entries.ts";
 import { getMonitorEntriesExportJSON } from "./monitors/get_monitor_entries_export.ts";
 import {
   getMonitorSummariesDaily,
+  getMonitorSummariesDailyOpen,
   getMonitorSummariesHourly,
   getMonitorSummariesMonthly,
   getMonitorSummariesQuarterly,
@@ -38,6 +39,7 @@ import {
 } from "./monitors/get_monitor_summaries.ts";
 import {
   getMonitorSummariesBulkDaily,
+  getMonitorSummariesBulkDailyOpen,
   getMonitorSummariesBulkHourly,
   getMonitorSummariesBulkMonthly,
   getMonitorSummariesBulkQuarterly,
@@ -72,6 +74,7 @@ import {
 } from "./regions/get_region_places.ts";
 import {
   getRegionSummariesDaily,
+  getRegionSummariesDailyOpen,
   getRegionSummariesHourly,
   getRegionSummariesMonthly,
   getRegionSummariesQuarterly,
@@ -80,6 +83,7 @@ import {
 } from "./regions/get_region_summaries.ts";
 import {
   getRegionSummariesBulkDaily,
+  getRegionSummariesBulkDailyOpen,
   getRegionSummariesBulkHourly,
   getRegionSummariesBulkMonthly,
   getRegionSummariesBulkQuarterly,
@@ -146,6 +150,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ],
   ["getMonitorSummariesHourly", (o) => getMonitorSummariesHourly(summary, o)],
   ["getMonitorSummariesDaily", (o) => getMonitorSummariesDaily(summary, o)],
+  [
+    "getMonitorSummariesDailyOpen",
+    (o) => getMonitorSummariesDailyOpen(entry, o),
+  ],
   ["getMonitorSummariesMonthly", (o) => getMonitorSummariesMonthly(summary, o)],
   [
     "getMonitorSummariesQuarterly",
@@ -163,6 +171,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   [
     "getMonitorSummariesBulkDaily",
     (o) => getMonitorSummariesBulkDaily(bulk, o),
+  ],
+  [
+    "getMonitorSummariesBulkDailyOpen",
+    (o) => getMonitorSummariesBulkDailyOpen({ entryType: "pm25" }, o),
   ],
   [
     "getMonitorSummariesBulkMonthly",
@@ -218,6 +230,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ],
   ["getRegionSummariesDaily", (o) => getRegionSummariesDaily(regionSummary, o)],
   [
+    "getRegionSummariesDailyOpen",
+    (o) => getRegionSummariesDailyOpen({ regionId: "r", entryType: "pm25" }, o),
+  ],
+  [
     "getRegionSummariesMonthly",
     (o) => getRegionSummariesMonthly(regionSummary, o),
   ],
@@ -240,6 +256,11 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   [
     "getRegionSummariesBulkDaily",
     (o) => getRegionSummariesBulkDaily(regionBulk, o),
+  ],
+  [
+    "getRegionSummariesBulkDailyOpen",
+    (o) =>
+      getRegionSummariesBulkDailyOpen({ entryType: "pm25", region: "r" }, o),
   ],
   [
     "getRegionSummariesBulkMonthly",

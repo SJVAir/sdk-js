@@ -27,7 +27,11 @@
  * //     "stddev": 1.2,
  * //     "p25": 4.5,
  * //     "p75": 6.7,
- * //     "is_complete": true
+ * //     "max_1h": null,
+ * //     "max_8h": null,
+ * //     "mean_24h": 5.5,
+ * //     "is_complete": true,
+ * //     "is_final": true
  * //   },
  * //   ... (more summaries)
  * // ]
@@ -35,7 +39,7 @@
  *
  * @module
  */
-import { paginatedApiCall, type RequestOptions } from "$http";
+import { jsonCall, paginatedApiCall, type RequestOptions } from "$http";
 import type { MonitorEntryType, MonitorSummary } from "./types.ts";
 
 /**
@@ -237,6 +241,54 @@ export async function getMonitorSummariesYearly(
   return await paginatedApiCall<MonitorSummary>({
     url: `monitors/${config.monitorId}/summaries/${config.entryType}/yearly`,
     searchParams: getSummarySearchParams(config),
+    options,
+  });
+}
+
+/**
+ * The configuration options for a monitor's open-days endpoint
+ */
+export interface MonitorSummaryDailyOpenRequestConfig {
+  /** The ID of the monitor for which open-day rows will be fetched */
+  monitorId: string;
+
+  /** The type of entry the rows are aggregated from */
+  entryType: MonitorEntryType;
+
+  /**
+   * The series to return, by processor
+   *
+   * @defaultValue The raw series (an empty processor), as in the daily list
+   */
+  processor?: string;
+}
+
+/**
+ * Fetches a monitor's open-day rows: daily rows for the days that have no
+ * stored daily row yet.
+ *
+ * Open days are today (Pacific), plus yesterday until its nightly row exists
+ * (capped at about 03:00 Pacific). Today has no row until its first hour is
+ * summarized (about 00:45). Open rows are built on request from the hours so
+ * far, carry the same fields as stored daily rows, and always have
+ * `is_final: false`. Responses are cached for 60 seconds
+ * (`private, max-age=60`). Merge them into a daily list with `mergeOpenDays`,
+ * and read the result like this: `is_final: false` on today means "so far",
+ * on an earlier day "not final yet"; a missing row means "no data".
+ *
+ * @param config An object containing the monitor ID, entry type, and optional processor
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
+ * @returns At most two daily rows, oldest first
+ */
+export async function getMonitorSummariesDailyOpen(
+  config: MonitorSummaryDailyOpenRequestConfig,
+  options?: RequestOptions,
+): Promise<Array<MonitorSummary>> {
+  return await jsonCall<Array<MonitorSummary>>({
+    url:
+      `monitors/${config.monitorId}/summaries/${config.entryType}/daily/open`,
+    searchParams: config.processor ? { processor: config.processor } : {},
     options,
   });
 }

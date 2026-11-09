@@ -31,6 +31,19 @@ import {
 } from "./schemas/mod.ts";
 import type { SJVAirMonitorsMeta } from "../monitors/types.ts";
 import type { Coverage, DatasetCatalog } from "./types.ts";
+import { scaleSchema } from "./schemas/mod.ts";
+import { calHeatScoreMetaSchema } from "../calheatscore/schemas/calheatscore_meta.ts";
+import { hmsMetaSchema } from "../hms/schemas/hms_meta.ts";
+import { forecastsMetaSchema } from "../forecasts/schemas/forecasts_meta.ts";
+import calHeatScoreMetaFixture from "../calheatscore/fixtures/calheatscore_meta.json" with {
+  type: "json",
+};
+import hmsMetaFixture from "../hms/fixtures/hms_meta.json" with {
+  type: "json",
+};
+import forecastsMetaFixture from "../forecasts/fixtures/forecasts_meta.json" with {
+  type: "json",
+};
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -343,4 +356,70 @@ Deno.test("Module: catalog entry aggregate", async (t) => {
     );
     assertEquals(datasetEntryTypeSchema.safeParse(pm25).success, true);
   });
+});
+
+Deno.test({
+  name: "Scale averaging fields",
+  async fn(t) {
+    const pm25Scale = (monitorsMetaFixture as {
+      data: { entries: { pm25: { scale: Record<string, unknown> } } };
+    }).data.entries.pm25.scale;
+    const withFields = (fields: Record<string, unknown>) => ({
+      ...pm25Scale,
+      averaging_hours: 24,
+      daily_statistic: "mean_24h",
+      daily_statistic_label: "24-hour average",
+      ...fields,
+    });
+
+    await t.step("scale parses the averaging fields", () => {
+      assertEquals(scaleSchema.safeParse(withFields({})).success, true);
+      assertEquals(
+        scaleSchema.safeParse(withFields({
+          averaging_hours: null,
+          daily_statistic: null,
+          daily_statistic_label: null,
+        })).success,
+        true,
+      );
+    });
+
+    await t.step("scale rejects a missing daily_statistic", () => {
+      const { daily_statistic: _, ...missing } = withFields({});
+      assertEquals(scaleSchema.safeParse(missing).success, false);
+      assertEquals(
+        scaleSchema.safeParse(withFields({ averaging_hours: 3 })).success,
+        false,
+      );
+      assertEquals(
+        scaleSchema.safeParse(withFields({ daily_statistic: "mean" })).success,
+        false,
+      );
+    });
+
+    await t.step("meta fixtures parse", () => {
+      const parses = (
+        schema: { safeParse(v: unknown): { success: boolean } },
+        v: unknown,
+      ) => assertEquals(schema.safeParse(v).success, true);
+      parses(sjvairMonitorsMetaSchema, monitorsMetaFixture.data);
+      parses(calHeatScoreMetaSchema, calHeatScoreMetaFixture.data);
+      parses(hmsMetaSchema, hmsMetaFixture.data);
+      parses(forecastsMetaSchema, forecastsMetaFixture.data);
+    });
+
+    await t.step("fixture scales carry the server's values", () => {
+      const entries = monitorsMetaFixture.data.entries as Record<
+        string,
+        { scale: Record<string, unknown> | null }
+      >;
+      assertEquals(entries.pm25.scale?.daily_statistic, "mean_24h");
+      assertEquals(entries.o3.scale?.daily_statistic, "max_1h");
+      assertEquals(entries.co.scale?.averaging_hours, 8);
+      assertEquals(
+        entries.co.scale?.daily_statistic_label,
+        "Highest 8-hour average",
+      );
+    });
+  },
 });

@@ -22,16 +22,26 @@ import { getRegionDetails } from "./get_region_details.ts";
 import { lookupRegionPlace, searchRegionPlaces } from "./get_region_places.ts";
 import {
   getRegionSummariesDaily,
+  getRegionSummariesDailyOpen,
   getRegionSummariesHourly,
   getRegionSummariesMonthly,
   getRegionSummariesQuarterly,
   getRegionSummariesSeasonal,
   getRegionSummariesYearly,
 } from "./get_region_summaries.ts";
-import { getRegionSummariesBulkDaily } from "./get_region_summaries_bulk.ts";
+import {
+  getRegionSummariesBulkDaily,
+  getRegionSummariesBulkDailyOpen,
+} from "./get_region_summaries_bulk.ts";
 import { getRegionsMeta } from "./get_regions_meta.ts";
 
-if (!Deno.env.has("TEST_REMOTE")) {
+// Read here: the test blocks below only allow network access.
+// The open-day steps skip under TEST_REMOTE because production doesn't serve
+// those endpoints yet. Once sjvair.com #320 and #321 reach production, drop
+// their `ignore: isRemote` so they run against the live API too.
+const isRemote = Deno.env.has("TEST_REMOTE");
+
+if (!isRemote) {
   setOrigin("http://127.0.0.1:8000");
 }
 
@@ -243,6 +253,42 @@ Deno.test({
           }),
         ),
     );
+
+    await t.step({
+      name: "GET  regions/{REGION_ID}/summaries/pm25/daily/open/",
+      ignore: isRemote,
+      fn: async () => {
+        const rows = await getRegionSummariesDailyOpen({
+          regionId: county.id,
+          entryType: "pm25",
+        });
+        if (!rows.length) {
+          console.warn("No open-day rows for the county (local data gap)");
+        }
+        validateRegionSummary(rows);
+        for (const row of rows) assertEquals(row.is_final, false);
+      },
+    });
+
+    await t.step({
+      name: "GET  regions/{entry_type}/summaries/daily/open/",
+      ignore: isRemote,
+      fn: async () => {
+        const regions = await getRegionSummariesBulkDailyOpen({
+          entryType: "pm25",
+          region: county.id,
+        });
+        if (!regions.length) {
+          console.warn("No open-day rows for the county (local data gap)");
+        }
+        validateRegionWithSummaries(regions);
+        assertEquals(regions.every((r) => r.id === county.id), true);
+        for (const region of regions) {
+          const days = region.summaries.map((row) => row.timestamp);
+          assertEquals(new Set(days).size, days.length);
+        }
+      },
+    });
 
     await t.step(
       "GET  regions/{REGION_ID}/summaries/pm25/monthly/{YEAR}/",

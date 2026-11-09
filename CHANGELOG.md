@@ -23,7 +23,9 @@ product, narrowing, several categories and method `none`),
 `pesticidePlaceFilterErrors`, `getPesticidesMeta`, `searchPesticides`, the new
 pesticide row fields, and catalog `aggregate` (#56, for sjvair.com #316, #317
 and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
-`monitors/meta/` `alerts` field (#58, for sjvair.com #319).
+`monitors/meta/` `alerts` field (#58, for sjvair.com #319). **5.0.0-beta.8**
+(2026-11-09): scale averaging fields, daily figures and `is_final` on summary
+rows, the open-day fetchers and merges (#59, for sjvair.com #320 and #321).
 
 ### Breaking
 
@@ -57,6 +59,25 @@ and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
 
 ### Added
 
+- Scales gain `averaging_hours` (`24`, `1`, `8` or `null`), `daily_statistic`
+  (`"mean_24h"`, `"max_1h"`, `"max_8h"` or `null`: the daily summary row field
+  that judges a day against the scale) and `daily_statistic_label` (its
+  translated display text, or `null`). Required on every scale. New
+  `DailyStatistic` type. (sjvair.com #320)
+- Summary rows (monitor and region, single and bulk, every resolution) gain
+  `max_1h`, `max_8h` and `mean_24h` (`number | null`; set only on daily rows,
+  and only the one the scale's `daily_statistic` names) and `is_final` (the row
+  can't change anymore). Required. `row[scale.daily_statistic]` types as
+  `number | null`. (sjvair.com #320, #321)
+- Open days: `getMonitorSummariesDailyOpen`, `getRegionSummariesDailyOpen`,
+  `getMonitorSummariesBulkDailyOpen` and `getRegionSummariesBulkDailyOpen` fetch
+  today's daily rows so far, plus yesterday's until its nightly row exists
+  (`.../daily/open/`; always `is_final: false`). `mergeOpenDays` and
+  `mergeBulkOpenDays` (new `@sjvair/sdk/open-days`, also exported from
+  `monitors` and `regions`) merge them into stored daily rows: the stored row
+  wins on a shared day. Read `is_final: false` on today as "so far", on an
+  earlier day as "not final yet", and a missing row as "no data". (sjvair.com
+  #321)
 - `getMonitorAlertCurrent(monitorId)`: the result of the server's latest
   10-minute alert run for a monitor, keyed by entry type
   (`monitors/<id>/alerts/current/`): the 60-minute average (or an hourly feed's
