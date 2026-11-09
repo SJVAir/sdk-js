@@ -1157,6 +1157,16 @@ Deno.test({
     await t.step("monitorAlertCurrentSchema rejects an unknown status", () => {
       const row = { ...alertCurrentFixture.pm25, status: "stale" };
       assert(!monitorAlertCurrentSchema.safeParse(row).success);
+      const previous = {
+        ...alertCurrentFixture.pm25.previous,
+        status: "stale",
+      };
+      assert(
+        !monitorAlertCurrentSchema.safeParse({
+          ...alertCurrentFixture.pm25,
+          previous,
+        }).success,
+      );
     });
 
     await t.step("getMonitorAlertCurrent calls alerts/current", async () => {

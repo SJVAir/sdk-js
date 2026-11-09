@@ -53,15 +53,15 @@ interface MonitorAlertCurrentSchema extends
     level: z.ZodNullable<z.ZodString>;
     /** The averaging window, null when pending */
     window: z.ZodNullable<MonitorAlertWindowSchema>;
-    /** The timestamp of the latest reading (ISO 8601 with offset) */
+    /** The timestamp of the latest reading (ISO 8601 with offset), null when pending */
     latest_timestamp: z.ZodNullable<z.ZodString>;
-    /** The number of readings in the window */
+    /** The number of readings in the window, null when pending */
     readings: z.ZodNullable<z.ZodNumber>;
-    /** The number of readings required for an "ok" result */
+    /** The number of readings required for an "ok" result, null when pending */
     required: z.ZodNullable<z.ZodNumber>;
     /** The previous evaluation, if any */
     previous: z.ZodNullable<MonitorAlertPreviousSchema>;
-    /** When this result was evaluated (ISO 8601 with offset) */
+    /** When this result was evaluated (ISO 8601 with offset), null when pending */
     evaluated_at: z.ZodNullable<z.ZodString>;
   }> {}
 /** One entry type's current alert result for a monitor */
