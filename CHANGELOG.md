@@ -22,7 +22,8 @@ data layers. **5.0.0-beta.6** (2026-11-07): pesticide place filters by id (with
 product, narrowing, several categories and method `none`),
 `pesticidePlaceFilterErrors`, `getPesticidesMeta`, `searchPesticides`, the new
 pesticide row fields, and catalog `aggregate` (#56, for sjvair.com #316, #317
-and #318).
+and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
+`monitors/meta/` `alerts` field (for sjvair.com #319).
 
 ### Breaking
 
@@ -56,6 +57,16 @@ and #318).
 
 ### Added
 
+- `getMonitorAlertCurrent(monitorId)`: the result of the server's latest
+  10-minute alert run for a monitor, keyed by entry type
+  (`monitors/<id>/alerts/current/`): the 60-minute average (or an hourly feed's
+  latest reading), its level, the window, the reading counts, the same
+  evaluation an hour earlier (`previous`), and `evaluated_at`. `status` is `ok`,
+  `insufficient`, `no_data` or `pending`; every other field is `null` when
+  `pending`. A missing key means the pair isn't evaluated.
+- `monitors/meta/` entries gain `alerts`: the alert run's `window`,
+  `min_coverage`, `stage`, `processor` and `expected_interval` override, or
+  `null` when the pair isn't evaluated.
 - `sum` on monitor summary rows (and bulk rows): the total of the period's
   values, e.g. precipitation, ETo and ETr. Region summary rows do not carry it.
 - `getSmokeForPlace`: the smoke over a region or monitor by day, with the
