@@ -7,6 +7,7 @@ import type { RegionType } from "../regions/types.ts";
 import type {
   choiceSchema,
   coverageSchema,
+  dailyStatisticSchema,
   datasetCatalogEntrySchema,
   datasetCatalogSchema,
   datasetEntryDisplaySchema,
@@ -47,6 +48,12 @@ export type DatasetEntryKind =
 
 /** Hints for presenting an entry type's values */
 export type DatasetEntryDisplay = zinfer<typeof datasetEntryDisplaySchema>;
+
+/**
+ * The name of a daily summary row field a scale judges a day by. Index a
+ * daily row with it: `row[scale.daily_statistic]` is `number | null`.
+ */
+export type DailyStatistic = zinfer<typeof dailyStatisticSchema>;
 
 /** A scale that turns a value into a named, colored level */
 export type Scale = zinfer<typeof scaleSchema>;

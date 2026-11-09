@@ -10,6 +10,9 @@
           "name": "US EPA AirNow, AQI Basics",
           "url": "https://www.airnow.gov/aqi/aqi-basics/"
         },
+        "averaging_hours": null,
+        "daily_statistic": null,
+        "daily_statistic_label": null,
         "levels": [
           {
             "key": "good",
@@ -94,6 +97,9 @@
           "name": "San Joaquin Valley APCD, Check Before You Burn",
           "url": "https://ww2.valleyair.org/"
         },
+        "averaging_hours": null,
+        "daily_statistic": null,
+        "daily_statistic_label": null,
         "levels": [
           {
             "key": "discouraged",

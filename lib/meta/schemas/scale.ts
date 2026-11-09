@@ -50,6 +50,23 @@ export const scaleLevelSchema: ScaleLevelSchema = z.object({
   value: z.union([z.string(), z.number()]).nullable(),
 });
 
+/** The name of a daily summary row field a scale judges a day by */
+export type DailyStatisticSchema = z.ZodEnum<{
+  mean_24h: "mean_24h";
+  max_1h: "max_1h";
+  max_8h: "max_8h";
+}>;
+/**
+ * The daily summary row fields a scale can judge a day by: `mean_24h` (the
+ * 24-hour average), `max_1h` (the highest 1-hour average) and `max_8h` (the
+ * highest 8-hour average)
+ */
+export const dailyStatisticSchema: DailyStatisticSchema = z.enum([
+  "mean_24h",
+  "max_1h",
+  "max_8h",
+]);
+
 interface ScaleSchema extends
   z.ZodObject<{
     /** The permanent id of this scale */
@@ -62,6 +79,24 @@ interface ScaleSchema extends
     kind: z.ZodEnum<{ range: "range"; category: "category" }>;
     /** Where the scale comes from, if stated */
     source: z.ZodNullable<ScaleSourceSchema>;
+    /**
+     * The standard's averaging window in hours: 24 for PM2.5 and PM10, 1 for
+     * O3, NO2 and SO2, 8 for CO; `null` for AQI, category scales and weather
+     */
+    averaging_hours: z.ZodNullable<
+      z.ZodUnion<readonly [z.ZodLiteral<24>, z.ZodLiteral<1>, z.ZodLiteral<8>]>
+    >;
+    /**
+     * The daily summary row field that judges a day against this scale
+     * (`mean_24h`, `max_1h` or `max_8h`), or `null` when none does
+     */
+    daily_statistic: z.ZodNullable<DailyStatisticSchema>;
+    /**
+     * The translated display text for `daily_statistic` ("24-hour average",
+     * "Highest 1-hour average", "Highest 8-hour average"), or `null` when
+     * `daily_statistic` is `null`
+     */
+    daily_statistic_label: z.ZodNullable<z.ZodString>;
     /** The levels, in order */
     levels: z.ZodArray<ScaleLevelSchema>;
   }> {}
@@ -72,6 +107,10 @@ export const scaleSchema: ScaleSchema = z.object({
   units: z.string(),
   kind: z.enum(["range", "category"]),
   source: scaleSourceSchema.nullable(),
+  averaging_hours: z.union([z.literal(24), z.literal(1), z.literal(8)])
+    .nullable(),
+  daily_statistic: dailyStatisticSchema.nullable(),
+  daily_statistic_label: z.string().nullable(),
   levels: z.array(scaleLevelSchema),
 });
 

@@ -56,6 +56,9 @@
  * //        "scale": {
  * //          "id": "pm25",
  * //          "label": "PM2.5",
+ * //          "averaging_hours": 24,
+ * //          "daily_statistic": "mean_24h",
+ * //          "daily_statistic_label": "24-hour average",
  * //          "levels": [
  * //            { "key": "good", "label": "Good", "color": "#00e400", "min": 0, ... },
  * //            ... (other levels omitted for brevity)
