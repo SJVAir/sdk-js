@@ -33,7 +33,6 @@ import {
   getRegionSummariesBulkDaily,
   getRegionSummariesBulkDailyOpen,
 } from "./get_region_summaries_bulk.ts";
-import { warmOpenDays } from "../open_days_test_utils.ts";
 import { getRegionsMeta } from "./get_regions_meta.ts";
 
 // Read here: the test blocks below only allow network access.
@@ -256,7 +255,6 @@ Deno.test({
       name: "GET  regions/{REGION_ID}/summaries/pm25/daily/open/",
       ignore: isRemote,
       fn: async () => {
-        await warmOpenDays(`regions/${county.id}/summaries/pm25/daily/open`);
         const rows = await getRegionSummariesDailyOpen({
           regionId: county.id,
           entryType: "pm25",
@@ -273,9 +271,6 @@ Deno.test({
       name: "GET  regions/{entry_type}/summaries/daily/open/",
       ignore: isRemote,
       fn: async () => {
-        await warmOpenDays("regions/pm25/summaries/daily/open", {
-          region: county.id,
-        });
         const regions = await getRegionSummariesBulkDailyOpen({
           entryType: "pm25",
           region: county.id,

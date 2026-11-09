@@ -2,11 +2,12 @@
 
 Date: 2026-11-09. The SDK side of sjvair.com #320 (scale averaging and EPA daily
 figures, `docs/superpowers/specs/2026-11-09-scale-averaging-design.md`) and #321
-(open days and `is_final`, `docs/superpowers/specs/2026-11-09-open-days-design.md`),
-for data-dashboard step 4, spec 5 (calendars). Both are merged into sjvair.com
-`develop` (47bc9441), not in production. Read those specs and sjvair.com
-`CLAUDE.md` ("Scale shape", "Daily peaks", "Open days", "Summary cache rule")
-for the server behaviour. This one covers only what `@sjvair/sdk` adds.
+(open days and `is_final`,
+`docs/superpowers/specs/2026-11-09-open-days-design.md`), for data-dashboard
+step 4, spec 5 (calendars). Both are merged into sjvair.com `develop`
+(47bc9441), not in production. Read those specs and sjvair.com `CLAUDE.md`
+("Scale shape", "Daily peaks", "Open days", "Summary cache rule") for the server
+behaviour. This one covers only what `@sjvair/sdk` adds.
 
 ## Why
 
@@ -15,8 +16,8 @@ the 24-hour average for PM, the highest 1-hour average for O3/NO2/SO2, the
 highest 8-hour average for CO. The server now says which figure applies (on
 every scale), sends the figures on daily summary rows, says whether a row can
 still change (`is_final`), and serves today's figures "so far" (plus yesterday's
-until its nightly row exists) from separate "open days" endpoints. The
-dashboard reads all of it through the SDK.
+until its nightly row exists) from separate "open days" endpoints. The dashboard
+reads all of it through the SDK.
 
 The dashboard's reading rule (the user's, from the server spec):
 
@@ -51,9 +52,9 @@ daily_statistic_label: string | null;
   average", "Highest 1-hour average", "Highest 8-hour average"), `null` when
   `daily_statistic` is.
 - **A `DailyStatistic` type** for `"mean_24h" | "max_1h" | "max_8h"`, with a
-  `dailyStatisticSchema` (z.enum) it derives from, exported from `lib/meta`
-  (my call). `averaging_hours` is a literal union (`z.union` of `z.literal`s),
-  not `number` (my call: the server's set is fixed and the dashboard branches on
+  `dailyStatisticSchema` (z.enum) it derives from, exported from `lib/meta` (my
+  call). `averaging_hours` is a literal union (`z.union` of `z.literal`s), not
+  `number` (my call: the server's set is fixed and the dashboard branches on
   nothing else).
 - Update the four meta fixtures (`monitors_meta.json`, `calheatscore_meta.json`,
   `hms_meta.json`, `forecasts_meta.json`) with the fields, using the values the
@@ -90,12 +91,12 @@ They go in the existing summary files, next to the daily fetchers they mirror,
 so they're reachable from the existing export paths and the module `mod.ts`
 files (my call).
 
-| Function | File | Calls |
-| --- | --- | --- |
-| `getMonitorSummariesDailyOpen(config, options?)` | `lib/monitors/get_monitor_summaries.ts` | `monitors/<monitorId>/summaries/<entryType>/daily/open/` |
-| `getRegionSummariesDailyOpen(config, options?)` | `lib/regions/get_region_summaries.ts` | `regions/<regionId>/summaries/<entryType>/daily/open/` |
-| `getMonitorSummariesBulkDailyOpen(config, options?)` | `lib/monitors/get_monitor_summaries_bulk.ts` | `monitors/<entryType>/summaries/daily/open/` |
-| `getRegionSummariesBulkDailyOpen(config, options?)` | `lib/regions/get_region_summaries_bulk.ts` | `regions/<entryType>/summaries/daily/open/` |
+| Function                                             | File                                         | Calls                                                    |
+| ---------------------------------------------------- | -------------------------------------------- | -------------------------------------------------------- |
+| `getMonitorSummariesDailyOpen(config, options?)`     | `lib/monitors/get_monitor_summaries.ts`      | `monitors/<monitorId>/summaries/<entryType>/daily/open/` |
+| `getRegionSummariesDailyOpen(config, options?)`      | `lib/regions/get_region_summaries.ts`        | `regions/<regionId>/summaries/<entryType>/daily/open/`   |
+| `getMonitorSummariesBulkDailyOpen(config, options?)` | `lib/monitors/get_monitor_summaries_bulk.ts` | `monitors/<entryType>/summaries/daily/open/`             |
+| `getRegionSummariesBulkDailyOpen(config, options?)`  | `lib/regions/get_region_summaries_bulk.ts`   | `regions/<entryType>/summaries/daily/open/`              |
 
 Configs (my call on names):
 
@@ -103,7 +104,7 @@ Configs (my call on names):
 interface MonitorSummaryDailyOpenRequestConfig {
   monitorId: string;
   entryType: MonitorEntryType;
-  processor?: string;          // sent only when non-empty, like the daily list; server default '' (raw)
+  processor?: string; // sent only when non-empty, like the daily list; server default '' (raw)
 }
 // returns Promise<Array<MonitorSummary>>
 
@@ -113,23 +114,27 @@ interface RegionSummaryDailyOpenRequestConfig {
 }
 // returns Promise<Array<RegionSummary>>
 
-type MonitorSummaryBulkOpenRequestConfig =
-  Omit<MonitorSummaryBulkRequestConfig, "start" | "end">;
-  // entryType, bbox?, region?, processor? (processor sent when !== undefined,
-  // like the bulk lists; default each monitor's published series)
+type MonitorSummaryBulkOpenRequestConfig = Omit<
+  MonitorSummaryBulkRequestConfig,
+  "start" | "end"
+>;
+// entryType, bbox?, region?, processor? (processor sent when !== undefined,
+// like the bulk lists; default each monitor's published series)
 // returns Promise<Array<MonitorWithSummaries>>
 
-type RegionSummaryBulkOpenRequestConfig =
-  Omit<RegionSummaryBulkRequestConfig, "start" | "end">;
-  // entryType, region (required)
+type RegionSummaryBulkOpenRequestConfig = Omit<
+  RegionSummaryBulkRequestConfig,
+  "start" | "end"
+>;
+// entryType, region (required)
 // returns Promise<Array<RegionWithSummaries>>
 ```
 
-- **Single-owner** endpoints aren't paginated (`{data: [rows]}`, at most 2 rows):
-  use `jsonCall`. They return the same row types as the stored lists. Open rows
-  carry the same stats as stored daily rows (the server rolls them up from the
-  hours so far with the nightly rollup's code), so no separate open-row type and
-  no extra nullability. Every open row has `is_final: false` and
+- **Single-owner** endpoints aren't paginated (`{data: [rows]}`, at most 2
+  rows): use `jsonCall`. They return the same row types as the stored lists.
+  Open rows carry the same stats as stored daily rows (the server rolls them up
+  from the hours so far with the nightly rollup's code), so no separate open-row
+  type and no extra nullability. Every open row has `is_final: false` and
   `resolution: "day"`.
 - **Bulk** endpoints page by owner, 100 per page (`page`, `pages`,
   `has_next_page`, like the bulk lists), and never split an owner's rows across
@@ -179,9 +184,9 @@ function mergeBulkOpenDays<
   ISO). A timestamp repeated within `open` is kept once, the first winning.
   Inputs aren't mutated.
 - **`mergeBulkOpenDays`**: matches owners by `id`. An owner in both gets its
-  `summaries` merged with `mergeOpenDays`; an owner only in `stored` is kept
-  as is; an owner only in `open` (for example a monitor whose first data is
-  today) is added. Order: stored owners in their order, then open-only owners in
+  `summaries` merged with `mergeOpenDays`; an owner only in `stored` is kept as
+  is; an owner only in `open` (for example a monitor whose first data is today)
+  is added. Order: stored owners in their order, then open-only owners in
   theirs. The owner's other fields come from the stored entry when both have it.
   Duplicate ids within one input are folded into one entry first (the first
   entry's fields, the union of rows with no repeated timestamp), so a caller
@@ -192,8 +197,8 @@ function mergeBulkOpenDays<
 - The JSDoc carries the reading rule and an example pairing a daily list call
   with its open-days call.
 
-The dashboard keeps its own range splitting, task pool and caching. The SDK
-adds no helper that splits a range (the user's decision, 2026-11-09: it would
+The dashboard keeps its own range splitting, task pool and caching. The SDK adds
+no helper that splits a range (the user's decision, 2026-11-09: it would
 duplicate `air-quality-fetch.ts`, and separate calls let settled months stay
 cached for a day while open days refetch every minute).
 
@@ -219,23 +224,20 @@ cached for a day while open days refetch every minute).
   duplicate ids folded.
 - **Fetchers, URLs:** each calls the right URL with the right params (processor
   sent or not, `region` repeated, `bbox` joined), using the stubbing pattern in
-  the existing tests; bulk folds pages, including an owner repeated on two
-  pages (kept once, no repeated day).
+  the existing tests; bulk folds pages, including an owner repeated on two pages
+  (kept once, no repeated day).
 - **Request-option forwarding:** add the four to
   `request_options_forwarding_test.ts`.
 - **Integration (local stack):** each fetcher against `127.0.0.1:8000`,
   validated with `getSimpleValidationTest`; skipped with a note when the server
   has no open rows (local data gaps). The existing summary integration tests
   validate the new fields on stored rows.
-- **Local-only server bug:** on the first request for an owner set in a 60 s
-  window, the local stack's Django debug toolbar can answer an open-days
-  endpoint with a 500 (production has no toolbar). Each page of a bulk endpoint
-  is its own owner set, so each page can 500 once. The SDK doesn't work around
-  it. The integration tests warm every page with plain `fetch`es before calling
-  the SDK (page 1, then pages 2..`pages`, retrying a 500 once), with a comment
-  saying why (my call).
-- Never run `lib/account/mod_test.ts` (it writes the shared database and sends
-  a text); run the suite with it ignored.
+- **Local-only server bug (fixed):** the local stack's Django debug toolbar
+  used to answer a cache miss on an open-days endpoint with a 500. sjvair.com
+  #323 fixed it (develop 9cba7857), so the tests call the endpoints directly
+  and a 500 is a real failure. The SDK never worked around it.
+- Never run `lib/account/mod_test.ts` (it writes the shared database and sends a
+  text); run the suite with it ignored.
 
 ## Out of scope
 
@@ -246,6 +248,6 @@ cached for a day while open days refetch every minute).
 
 ## Left to the builder
 
-- Exact internal helper names and how the bulk open fetchers share
-  search-param code with the bulk lists.
+- Exact internal helper names and how the bulk open fetchers share search-param
+  code with the bulk lists.
 - Fixture contents beyond what's listed above.

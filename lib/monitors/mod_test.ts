@@ -65,7 +65,6 @@ import {
   getMonitorSummariesBulkDailyOpen,
   mergeMonitorSummaryBulkPages,
 } from "./get_monitor_summaries_bulk.ts";
-import { warmOpenDays } from "../open_days_test_utils.ts";
 import {
   monitorDewPointEntrySchema,
   monitorEntryTypeSchema,
@@ -491,9 +490,6 @@ Deno.test({
       name: "GET  monitors/{MONITOR_ID}/summaries/pm25/daily/open/",
       ignore: isRemote,
       fn: async () => {
-        await warmOpenDays(
-          `monitors/${EXISTING_MONITOR_ID}/summaries/pm25/daily/open`,
-        );
         const rows = await getMonitorSummariesDailyOpen({
           monitorId: EXISTING_MONITOR_ID,
           entryType: "pm25",
@@ -513,7 +509,6 @@ Deno.test({
       name: "GET  monitors/{entry_type}/summaries/daily/open/",
       ignore: isRemote,
       fn: async () => {
-        await warmOpenDays("monitors/pm25/summaries/daily/open");
         const monitors = await getMonitorSummariesBulkDailyOpen({
           entryType: "pm25",
         });
