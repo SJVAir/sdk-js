@@ -7,25 +7,26 @@
 for older server responses. It was called 4.8.0 through 4.8.0-beta.6; the call
 changes below made it a major version.
 
-Betas: **5.0.0-beta.1** (2026-11-04): everything below except "Planned" and the
-entry-bounds change. **5.0.0-beta.2** (2026-11-04): adds the entry-bounds change
-(bounds sent as given, `wholeDays` replaces `exact`). (#44) **5.0.0-beta.3**
-(2026-11-04): adds the `monitors/meta/` change (`levels` removed,
-`school_guidelines` added), the forecast `color` / `aqi_category` change (#45),
-`label_plural`, the `searchRegionPlaces` rows and the `getMonitorsList` region
-filter (#46). **5.0.0-beta.4** (2026-11-05): adds `name_template` and
-`regionDisplayName` (#50), and leaves repo-only files out of the published
-package (#48). **5.0.0-beta.5** (2026-11-05): adds `getPesticidesForPlace`
-(#51), `getWeatherStationsForPlace` and the CIMIS weather entry types (#52),
-`getSmokeForPlace` (#53), and `sum` on monitor summary rows (#54), for the Get
-data layers. **5.0.0-beta.6** (2026-11-07): pesticide place filters by id (with
-product, narrowing, several categories and method `none`),
-`pesticidePlaceFilterErrors`, `getPesticidesMeta`, `searchPesticides`, the new
-pesticide row fields, and catalog `aggregate` (#56, for sjvair.com #316, #317
-and #318). **5.0.0-beta.7** (2026-11-08): `getMonitorAlertCurrent` and the
-`monitors/meta/` `alerts` field (#58, for sjvair.com #319). **5.0.0-beta.8**
-(2026-11-09): scale averaging fields, daily figures and `is_final` on summary
-rows, the open-day fetchers and merges (#59, for sjvair.com #320 and #321).
+Betas: **5.0.0-beta.1** (2026-11-04): everything below except the documents
+removal and the entry-bounds change. **5.0.0-beta.2** (2026-11-04): adds the
+entry-bounds change (bounds sent as given, `wholeDays` replaces `exact`). (#44)
+**5.0.0-beta.3** (2026-11-04): adds the `monitors/meta/` change (`levels`
+removed, `school_guidelines` added), the forecast `color` / `aqi_category`
+change (#45), `label_plural`, the `searchRegionPlaces` rows and the
+`getMonitorsList` region filter (#46). **5.0.0-beta.4** (2026-11-05): adds
+`name_template` and `regionDisplayName` (#50), and leaves repo-only files out of
+the published package (#48). **5.0.0-beta.5** (2026-11-05): adds
+`getPesticidesForPlace` (#51), `getWeatherStationsForPlace` and the CIMIS
+weather entry types (#52), `getSmokeForPlace` (#53), and `sum` on monitor
+summary rows (#54), for the Get data layers. **5.0.0-beta.6** (2026-11-07):
+pesticide place filters by id (with product, narrowing, several categories and
+method `none`), `pesticidePlaceFilterErrors`, `getPesticidesMeta`,
+`searchPesticides`, the new pesticide row fields, and catalog `aggregate` (#56,
+for sjvair.com #316, #317 and #318). **5.0.0-beta.7** (2026-11-08):
+`getMonitorAlertCurrent` and the `monitors/meta/` `alerts` field (#58, for
+sjvair.com #319). **5.0.0-beta.8** (2026-11-09): scale averaging fields, daily
+figures and `is_final` on summary rows, the open-day fetchers and merges (#59,
+for sjvair.com #320 and #321).
 
 ### Breaking
 
@@ -56,6 +57,10 @@ rows, the open-day fetchers and merges (#59, for sjvair.com #320 and #321).
   and `cdpr_fumigant`; commodities `display_name`; catalog entry types
   `aggregate`. Code that builds these objects by hand (mocks, fixtures) must add
   them. (#56)
+
+- `@sjvair/sdk/documents` is removed. It shipped only in prereleases
+  (4.8.0-beta.2 to 5.0.0-beta.8); the client moved into the data-dashboard repo
+  (decided 2026-11-11). See "What belongs in the SDK" in `CLAUDE.md`. (#60)
 
 ### Added
 
@@ -138,8 +143,6 @@ rows, the open-day fetchers and merges (#59, for sjvair.com #320 and #321).
   region and smoke density. (#40)
 - `@sjvair/sdk/calenviroscreen`: tract scores by region (`getCalEnviroScreen`)
   and for one tract (`getCalEnviroScreenTract`), for CES 4.0 and 5.0. (#40)
-- The documents module (private; moves out of the public SDK before 5.0.0, see
-  `DEFERRED.md`).
 - `monitors/meta/` entries gain `school_guidelines`
   (`EntriesMeta.school_guidelines`, types `SchoolGuidelines` and
   `SchoolActivity`): outdoor activity guidelines for schools, `null` except for
@@ -163,7 +166,3 @@ rows, the open-day fetchers and merges (#59, for sjvair.com #320 and #321).
 - The published package leaves out repo-only files: `docs/` (specs and plans),
   `CLAUDE.md`, `DEFERRED.md`, `api-urls.md`, `.env.template` and `.github/`.
   5.0.0-beta.1 to beta.3 include them.
-
-### Planned for 5.0.0
-
-- The documents module moves out of the public SDK.

@@ -27,18 +27,14 @@ deno test lib/datetime/mod_test.ts
 
 Copy `.env.template` to `.env` and fill in:
 
-| Variable                    | Purpose                                                                                         |
-| --------------------------- | ----------------------------------------------------------------------------------------------- |
-| `TEST_PHONE`                | Phone number for account tests                                                                  |
-| `TEST_ACCOUNTS`             | `1` to run the account integration test (`lib/account/mod_test.ts`); skipped otherwise          |
-| `TEST_MONITOR_ID`           | Monitor ID for entry tests                                                                      |
-| `TEST_LATITUDE`             | Latitude for closest-monitor tests                                                              |
-| `TEST_LONGITUDE`            | Longitude for closest-monitor tests                                                             |
-| `TEST_LOCATION_CCL_ID`      | Optional: a known cdss-ccl location code for the locations round-trip test (skipped when unset) |
-| `TEST_DOCUMENTS`            | `1` to run the documents integration test (`lib/documents/mod_test.ts`); skipped otherwise      |
-| `TEST_DOCUMENTS_ORIGIN`     | Server for the documents test (e.g. `http://127.0.0.1:8000`)                                    |
-| `TEST_DOCUMENTS_IDENTIFIER` | Sign-in for the documents test (sjvair.com's `.env` `WORKSPACE_E2E_IDENTIFIER` works)           |
-| `TEST_DOCUMENTS_PASSWORD`   | Password for that account (`WORKSPACE_E2E_PASSWORD`)                                            |
+| Variable               | Purpose                                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------------------- |
+| `TEST_PHONE`           | Phone number for account tests                                                                  |
+| `TEST_ACCOUNTS`        | `1` to run the account integration test (`lib/account/mod_test.ts`); skipped otherwise          |
+| `TEST_MONITOR_ID`      | Monitor ID for entry tests                                                                      |
+| `TEST_LATITUDE`        | Latitude for closest-monitor tests                                                              |
+| `TEST_LONGITUDE`       | Longitude for closest-monitor tests                                                             |
+| `TEST_LOCATION_CCL_ID` | Optional: a known cdss-ccl location code for the locations round-trip test (skipped when unset) |
 
 Tests default to `http://127.0.0.1:8000`; set `TEST_REMOTE=1` to use
 `https://www.sjvair.com`.
@@ -156,6 +152,15 @@ the request `body` replaced by `"[redacted]"`.
 
 ## Key Conventions
 
+- **What belongs in the SDK** _(decided by the user 2026-11-11)_. The public SDK
+  wraps SJVAir's shared API: public data, plus site-wide account features
+  (sign-in, profile, subscriptions, alerts) that any SJVAir app could use. An
+  endpoint that exists only to back one app's own feature, where that app
+  decides what the data looks like and is its only caller, lives in that app,
+  built on `@sjvair/sdk/http`. If a second app later needs it, it moves into the
+  SDK. Example: the documents client (the data dashboard's saved dashboards)
+  moved into the data-dashboard repo; `account` stays here (mobile, monitor-map
+  and data-dashboard all call it).
 - **Types are derived from Zod schemas** using `zinfer`
   (`import type { infer as zinfer } from "zod"`). Never define types manually
   when a Zod schema exists:
