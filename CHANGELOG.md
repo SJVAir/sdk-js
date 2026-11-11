@@ -60,7 +60,7 @@ for sjvair.com #320 and #321).
 
 - `@sjvair/sdk/documents` is removed. It shipped only in prereleases
   (4.8.0-beta.2 to 5.0.0-beta.8); the client moved into the data-dashboard repo
-  (decided 2026-11-11). See "What belongs in the SDK" in `CLAUDE.md`.
+  (decided 2026-11-11). See "What belongs in the SDK" in `CLAUDE.md`. (#60)
 
 ### Added
 
