@@ -1,5 +1,10 @@
 # The Official SJVAir SDK
 
+The SDK wraps SJVAir's shared API: public air and environmental data, and the
+site-wide account features (sign-in, profile, subscriptions, alerts). Endpoints
+that back a single app's own feature live in that app, built on
+`@sjvair/sdk/http`.
+
 ### Request options and defaults
 
 Every function that fetches takes a trailing `options?: RequestOptions`

@@ -156,6 +156,15 @@ the request `body` replaced by `"[redacted]"`.
 
 ## Key Conventions
 
+- **What belongs in the SDK** _(decided by the user 2026-11-11)_. The public SDK
+  wraps SJVAir's shared API: public data, plus site-wide account features
+  (sign-in, profile, subscriptions, alerts) that any SJVAir app could use. An
+  endpoint that exists only to back one app's own feature, where that app
+  decides what the data looks like and is its only caller, lives in that app,
+  built on `@sjvair/sdk/http`. If a second app later needs it, it moves into the
+  SDK. Example: the documents client (the data dashboard's saved dashboards)
+  moved into the data-dashboard repo; `account` stays here (mobile, monitor-map
+  and data-dashboard all call it).
 - **Types are derived from Zod schemas** using `zinfer`
   (`import type { infer as zinfer } from "zod"`). Never define types manually
   when a Zod schema exists:
