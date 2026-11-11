@@ -102,7 +102,6 @@ export * from "./lib/calenviroscreen/mod.ts";
 export * from "./lib/calheatscore/mod.ts";
 export * from "./lib/collocation_sites/mod.ts";
 export * from "$datetime";
-export * from "./lib/documents/mod.ts";
 export * from "./lib/forecasts/mod.ts";
 export * from "./lib/hms/get_hms_meta.ts";
 export * from "./lib/hms/types.ts";
