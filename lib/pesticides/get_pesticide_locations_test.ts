@@ -31,6 +31,24 @@ Deno.test("locations fixture matches the schema", () => {
   assertEquals(locationsFixture.type, "FeatureCollection");
 });
 
+Deno.test("locations carry their source and code", () => {
+  const [childCare, publicSchool] = locationsFixture.features;
+  assertEquals(childCare.properties.source, "cdss-ccl");
+  assertEquals(childCare.properties.external_id, "103801760");
+  assertEquals(publicSchool.properties.source, "cde-public");
+  assertEquals(publicSchool.properties.external_id, "10621666006068");
+});
+
+Deno.test("a location without a source fails the schema", () => {
+  const { source: _source, ...properties } =
+    locationsFixture.features[0].properties;
+  const feature = { ...locationsFixture.features[0], properties };
+  assertEquals(
+    pesticideLocationFeatureSchema.safeParse(feature).success,
+    false,
+  );
+});
+
 Deno.test("getPesticideLocations sends the bbox as w,s,e,n", async () => {
   const url = await paramsFor({ bbox: [-119.9, 36.7, -119.7, 36.85] });
   assertEquals(url.pathname.endsWith("/pesticides/locations/"), true);

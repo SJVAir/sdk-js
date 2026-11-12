@@ -64,6 +64,10 @@ for sjvair.com #320 and #321).
 
 ### Added
 
+- `getPesticideLocations` features gain `source` (`"cde-public"`,
+  `"cde-private"` or `"cdss-ccl"`) and `external_id` (the location's permanent
+  code within its source) in `properties`, as on `Location`. Required.
+  (sjvair.com #331)
 - Scales gain `averaging_hours` (`24`, `1`, `8` or `null`), `daily_statistic`
   (`"mean_24h"`, `"max_1h"`, `"max_8h"` or `null`: the daily summary row field
   that judges a day against the scale) and `daily_statistic_label` (its

@@ -1,12 +1,24 @@
 import * as z from "zod";
-import { locationTypeSchema } from "../../regions/schemas/location.ts";
-import type { LocationTypeSchema } from "../../regions/schemas/location.ts";
+import {
+  locationSourceSchema,
+  locationTypeSchema,
+} from "../../regions/schemas/location.ts";
+import type {
+  LocationSourceSchema,
+  LocationTypeSchema,
+} from "../../regions/schemas/location.ts";
 
 /** The properties of a school or child care site on the pesticides map */
 export interface PesticideLocationPropertiesSchema extends
   z.ZodObject<{
     /** The location's ID */
     id: z.ZodString;
+
+    /** Where the location's code comes from */
+    source: LocationSourceSchema;
+
+    /** The location's permanent code within its source */
+    external_id: z.ZodString;
 
     /** The location's name */
     name: z.ZodString;
@@ -45,6 +57,8 @@ export interface PesticideLocationPropertiesSchema extends
 export const pesticideLocationPropertiesSchema:
   PesticideLocationPropertiesSchema = z.object({
     id: z.string(),
+    source: locationSourceSchema,
+    external_id: z.string(),
     name: z.string(),
     type: locationTypeSchema,
     type_label: z.string(),
