@@ -13,6 +13,8 @@
       },
       "properties": {
         "id": "efddk",
+        "source": "cdss-ccl",
+        "external_id": "103801760",
         "name": "A BETTER CHOICE PRESCHOOL",
         "type": "child_care",
         "type_label": "Child care",
@@ -38,6 +40,8 @@
       },
       "properties": {
         "id": "8m5cc",
+        "source": "cde-public",
+        "external_id": "10621666006068",
         "name": "Addams Elementary",
         "type": "public_school",
         "type_label": "Public school",
@@ -63,6 +67,8 @@
       },
       "properties": {
         "id": "y4q95",
+        "source": "cde-private",
+        "external_id": "10621666973937",
         "name": "Carden School of Fresno",
         "type": "private_school",
         "type_label": "Private school",
@@ -88,6 +94,8 @@
       },
       "properties": {
         "id": "gf8bc",
+        "source": "cde-public",
+        "external_id": "10621666061188",
         "name": "Ahwahnee Middle",
         "type": "public_school",
         "type_label": "Public school",
