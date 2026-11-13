@@ -9,6 +9,7 @@
       "airgradient": {
         "label": "AirGradient",
         "type": "airgradient",
+        "group": "low-cost",
         "expected_interval": "1 min",
         "entries": {
           "humidity": {
@@ -131,6 +132,7 @@
       "airnow": {
         "label": "AirNow",
         "type": "airnow",
+        "group": "reference",
         "expected_interval": "1 hour",
         "entries": {
           "co": {
@@ -224,6 +226,7 @@
       "aqlite": {
         "label": "AQLite",
         "type": "aqlite",
+        "group": "reference",
         "expected_interval": "5 min",
         "entries": {
           "co2": {
@@ -298,6 +301,7 @@
       "aqview": {
         "label": "AQview",
         "type": "aqview",
+        "group": "reference",
         "expected_interval": "1 hour",
         "entries": {
           "pm25": {
@@ -327,6 +331,7 @@
       "bam1022": {
         "label": "BAM 1022",
         "type": "bam1022",
+        "group": "reference",
         "expected_interval": "1 hour",
         "entries": {
           "humidity": {
@@ -389,6 +394,7 @@
       "purpleair": {
         "label": "PurpleAir",
         "type": "purpleair",
+        "group": "low-cost",
         "expected_interval": "2 min",
         "entries": {
           "humidity": {
@@ -516,6 +522,7 @@
       "vozbox": {
         "label": "VOZbox",
         "type": "vozbox",
+        "group": "low-cost",
         "expected_interval": "10 min",
         "entries": {
           "humidity": {
@@ -607,10 +614,23 @@
         }
       }
     },
+    "monitor_groups": {
+      "reference": {
+        "key": "reference",
+        "label": "Reference-grade",
+        "order": 0
+      },
+      "low-cost": {
+        "key": "low-cost",
+        "label": "Low-cost sensors",
+        "order": 1
+      }
+    },
     "entries": {
       "co2": {
         "label": "Carbon Dioxide",
         "type": "co2",
+        "description": "Gas from breathing and burning fuel; high levels indoors mean a room needs fresh air.",
         "units": "ppm",
         "epa_aqs_code": 42102,
         "scale": null,
@@ -626,6 +646,7 @@
       "co": {
         "label": "Carbon Monoxide",
         "type": "co",
+        "description": "Colorless, odorless gas from vehicle exhaust and burning fuel.",
         "units": "ppm",
         "epa_aqs_code": 42101,
         "scale": {
@@ -739,6 +760,7 @@
       "so2": {
         "label": "Sulfur Dioxide",
         "type": "so2",
+        "description": "Gas from burning fuels that contain sulfur, mostly from industry.",
         "units": "ppb",
         "epa_aqs_code": 42401,
         "scale": {
@@ -828,6 +850,7 @@
       "particulates": {
         "label": "Particulates",
         "type": "particulates",
+        "description": null,
         "units": null,
         "epa_aqs_code": null,
         "scale": null,
@@ -848,6 +871,7 @@
       "eto": {
         "label": "Reference Evapotranspiration",
         "type": "eto",
+        "description": null,
         "units": "in",
         "epa_aqs_code": null,
         "scale": null,
@@ -863,6 +887,7 @@
       "no2": {
         "label": "Nitrogen Dioxide",
         "type": "no2",
+        "description": "Gas from vehicle and engine exhaust, highest near busy roads.",
         "units": "ppb",
         "epa_aqs_code": 42602,
         "scale": {
@@ -976,6 +1001,7 @@
       "o3": {
         "label": "Ozone",
         "type": "o3",
+        "description": "Ground-level gas that forms in sunlight on hot days.",
         "units": "ppb",
         "epa_aqs_code": 44201,
         "scale": {
@@ -1077,6 +1103,7 @@
       "solarradiation": {
         "label": "Solar Radiation",
         "type": "solarradiation",
+        "description": null,
         "units": "W/m²",
         "epa_aqs_code": null,
         "scale": null,
@@ -1092,6 +1119,7 @@
       "pm10": {
         "label": "PM1.0",
         "type": "pm10",
+        "description": "The smallest particles, mostly from smoke and vehicle exhaust.",
         "units": "µg/m³",
         "epa_aqs_code": null,
         "scale": null,
@@ -1107,6 +1135,7 @@
       "vaporpressure": {
         "label": "Vapor Pressure",
         "type": "vaporpressure",
+        "description": null,
         "units": "kPa",
         "epa_aqs_code": null,
         "scale": null,
@@ -1122,6 +1151,7 @@
       "pm25": {
         "label": "PM2.5",
         "type": "pm25",
+        "description": "Fine particles from smoke, dust, and vehicle exhaust.",
         "units": "µg/m³",
         "epa_aqs_code": 88101,
         "scale": {
@@ -1342,6 +1372,7 @@
       "windspeed": {
         "label": "Wind Speed",
         "type": "windspeed",
+        "description": null,
         "units": "mph",
         "epa_aqs_code": null,
         "scale": null,
@@ -1357,6 +1388,7 @@
       "precipitation": {
         "label": "Precipitation",
         "type": "precipitation",
+        "description": null,
         "units": "in",
         "epa_aqs_code": null,
         "scale": null,
@@ -1372,6 +1404,7 @@
       "netradiation": {
         "label": "Net Radiation",
         "type": "netradiation",
+        "description": null,
         "units": "W/m²",
         "epa_aqs_code": null,
         "scale": null,
@@ -1387,6 +1420,7 @@
       "dewpoint": {
         "label": "Dew Point",
         "type": "dewpoint",
+        "description": null,
         "units": "°F",
         "epa_aqs_code": null,
         "scale": null,
@@ -1402,6 +1436,7 @@
       "soiltemperature": {
         "label": "Soil Temperature",
         "type": "soiltemperature",
+        "description": null,
         "units": "°F",
         "epa_aqs_code": null,
         "scale": null,
@@ -1417,6 +1452,7 @@
       "temperature": {
         "label": "Temperature",
         "type": "temperature",
+        "description": null,
         "units": "°F",
         "epa_aqs_code": 62101,
         "scale": null,
@@ -1432,6 +1468,7 @@
       "humidity": {
         "label": "Humidity",
         "type": "humidity",
+        "description": null,
         "units": "%",
         "epa_aqs_code": 62201,
         "scale": null,
@@ -1447,6 +1484,7 @@
       "pm100": {
         "label": "PM10.0",
         "type": "pm100",
+        "description": "Coarser particles from dust, farming, and road traffic.",
         "units": "µg/m³",
         "epa_aqs_code": 81102,
         "scale": {
@@ -1560,6 +1598,7 @@
       "winddirection": {
         "label": "Wind Direction",
         "type": "winddirection",
+        "description": null,
         "units": "°",
         "epa_aqs_code": null,
         "scale": null,
@@ -1575,6 +1614,7 @@
       "etr": {
         "label": "Alfalfa Reference Evapotranspiration",
         "type": "etr",
+        "description": null,
         "units": "in",
         "epa_aqs_code": null,
         "scale": null,
@@ -1590,6 +1630,7 @@
       "pressure": {
         "label": "Atmospheric Pressure",
         "type": "pressure",
+        "description": null,
         "units": "mmHg",
         "epa_aqs_code": null,
         "scale": null,

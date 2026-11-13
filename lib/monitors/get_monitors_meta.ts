@@ -90,6 +90,7 @@ import type { Choice, Scale } from "../meta/types.ts";
 import { jsonCall, type RequestOptions } from "$http";
 import type {
   MonitorEntryType,
+  MonitorGroup,
   MonitorType,
   SchoolGuidelines,
   SJVAirEntryMeta,
@@ -102,6 +103,14 @@ class EntriesMeta implements SJVAirEntryMeta {
    * Creates an instance of EntriesMeta.
    */
   constructor(private meta: SJVAirEntryMeta) {}
+
+  /**
+   * Short plain help text for this entry type, or null when it has none
+   * (weather entry types and particulates).
+   */
+  get description(): string | null {
+    return this.meta.description;
+  }
 
   /**
    * The EPA AQS code associated with this entry type.
@@ -228,6 +237,16 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
    */
   get monitors(): Record<string, SJVAirMonitorDeviceMeta> {
     return this.meta.monitors;
+  }
+
+  /**
+   * Returns the groups monitor types are listed under, by id. Each monitor
+   * type's `group` is one of these keys, or null.
+   *
+   * @returns A record of monitor groups.
+   */
+  get monitor_groups(): Record<string, MonitorGroup> {
+    return this.meta.monitor_groups;
   }
 
   /**
