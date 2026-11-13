@@ -29,7 +29,7 @@ figures and `is_final` on summary rows, the open-day fetchers and merges (#59,
 for sjvair.com #320 and #321). **5.0.0-beta.9** (2026-11-11): the documents
 removal (#60) and `source` / `external_id` on `getPesticideLocations` features
 (#61, for sjvair.com #331). **5.0.0-beta.10** (unreleased): monitor groups,
-entry descriptions and `published` on `monitors/meta/` (#<PR>, for sjvair.com
+entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
 #332).
 
 ### Breaking
@@ -64,7 +64,7 @@ entry descriptions and `published` on `monitors/meta/` (#<PR>, for sjvair.com
 - `monitors/meta/` has new required fields: `monitor_groups`, `group` on each
   monitor type, `description` on each entry type, and `published` on each
   monitor type's entries. Code that builds these objects by hand (mocks,
-  fixtures) must add them. (#<PR>)
+  fixtures) must add them. (#62)
 
 - `@sjvair/sdk/documents` is removed. It shipped only in prereleases
   (4.8.0-beta.2 to 5.0.0-beta.8); the client moved into the data-dashboard repo
@@ -78,7 +78,7 @@ entry descriptions and `published` on `monitors/meta/` (#<PR>, for sjvair.com
   `group` on each monitor type (a `monitor_groups` key, or `null`);
   `description` on each entry type (`EntriesMeta.description`, `null` for
   weather and `particulates`); and `published` on each monitor type's entries
-  (whether the map endpoints show that pair). Required. (#<PR>, for sjvair.com
+  (whether the map endpoints show that pair). Required. (#62, for sjvair.com
   #332)
 - `getPesticideLocations` features gain `source` (`"cde-public"`,
   `"cde-private"` or `"cdss-ccl"`) and `external_id` (the location's permanent

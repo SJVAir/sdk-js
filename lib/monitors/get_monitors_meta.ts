@@ -11,6 +11,10 @@
  * //  {
  * //    "default_pollutant": "pm25",
  * //    "available_pollutants": ["o3", "pm25"],
+ * //    "monitor_groups": {
+ * //      "reference": { "key": "reference", "label": "Reference-grade", "order": 0 },
+ * //      "low-cost": { "key": "low-cost", "label": "Low-cost sensors", "order": 1 },
+ * //    },
  * //    "monitors": {
  * //      "airgradient": {
  * //        "label": "AirGradient",
@@ -41,10 +45,6 @@
  * //        },
  * //      },
  * //      ... (other monitor types omitted for brevity)
- * //    },
- * //    "monitor_groups": {
- * //      "reference": { "key": "reference", "label": "Reference-grade", "order": 0 },
- * //      "low-cost": { "key": "low-cost", "label": "Low-cost sensors", "order": 1 },
  * //    },
  * //    "entries": {
  * //      "pm25": {
