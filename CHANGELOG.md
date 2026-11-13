@@ -28,7 +28,7 @@ sjvair.com #319). **5.0.0-beta.8** (2026-11-09): scale averaging fields, daily
 figures and `is_final` on summary rows, the open-day fetchers and merges (#59,
 for sjvair.com #320 and #321). **5.0.0-beta.9** (2026-11-11): the documents
 removal (#60) and `source` / `external_id` on `getPesticideLocations` features
-(#61, for sjvair.com #331). **5.0.0-beta.10** (unreleased): monitor groups,
+(#61, for sjvair.com #331). **5.0.0-beta.10** (2026-11-12): monitor groups,
 entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
 #332).
 
