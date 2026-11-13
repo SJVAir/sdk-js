@@ -143,6 +143,19 @@ Deno.test({
       fn: async () => validateMonitorsMeta(await getMonitorsMeta()),
     });
 
+    await t.step("meta groups cover every grouped monitor type", async () => {
+      const meta = await getMonitorsMeta();
+      for (const monitor of meta.asIter.monitors) {
+        if (monitor.group !== null) {
+          assert(monitor.group in meta.monitor_groups, monitor.type);
+        }
+      }
+      assertEquals(
+        meta.asIter.monitor_groups.length,
+        Object.keys(meta.monitor_groups).length,
+      );
+    });
+
     await t.step(
       "GET   monitors/meta (vozbox single-sensor entries)",
       async () => {
@@ -914,6 +927,27 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
       Object.values(m.entries).map((e) => e.published)
     );
     assert(published.includes(true) && published.includes(false));
+  });
+
+  await t.step("exposes monitor groups and descriptions", async () => {
+    const data = structuredClone(
+      monitorsMetaFixture.data,
+    ) as unknown as SJVAirMonitorsMeta;
+    data.monitor_groups = {
+      "low-cost": data.monitor_groups["low-cost"],
+      reference: data.monitor_groups.reference,
+    };
+    data.monitors.purpleair.group = null;
+    const meta = await fetchMeta(data);
+    assertEquals(meta.monitor_groups.reference.label, "Reference-grade");
+    assertEquals(
+      meta.asIter.monitor_groups.map((g) => g.key),
+      ["reference", "low-cost"],
+    );
+    assertEquals(Object.keys(meta.monitor_groups), ["low-cost", "reference"]);
+    assertEquals(meta.monitors.purpleair.group, null);
+    assertEquals(typeof meta.entryType("pm25").description, "string");
+    assertEquals(meta.entryType("temperature").description, null);
   });
 
   await t.step("meta schema requires the new fields", () => {

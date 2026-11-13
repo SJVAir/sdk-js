@@ -15,6 +15,7 @@
  * //      "airgradient": {
  * //        "label": "AirGradient",
  * //        "type": "airgradient",
+ * //        "group": "low-cost",
  * //        "expected_interval": "1 min",
  * //        "entries": {
  * //          "humidity": {
@@ -22,6 +23,7 @@
  * //              "1",
  * //              "2",
  * //            ],
+ * //            "published": false,
  * //            "allowed_stages": [
  * //              "raw",
  * //              "calibrated",
@@ -40,10 +42,15 @@
  * //      },
  * //      ... (other monitor types omitted for brevity)
  * //    },
+ * //    "monitor_groups": {
+ * //      "reference": { "key": "reference", "label": "Reference-grade", "order": 0 },
+ * //      "low-cost": { "key": "low-cost", "label": "Low-cost sensors", "order": 1 },
+ * //    },
  * //    "entries": {
  * //      "pm25": {
  * //        "label": "PM2.5",
  * //        "type": "pm25",
+ * //        "description": "Fine particles from smoke, dust, and vehicle exhaust.",
  * //        "units": "µg/m³",
  * //        "epa_aqs_code": 88101,
  * //        "fields": [
@@ -181,6 +188,11 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
     monitors: Array<SJVAirMonitorDeviceMeta>;
 
     /**
+     * An array of the monitor groups, sorted by `order`.
+     */
+    monitor_groups: Array<MonitorGroup>;
+
+    /**
      * An array of the documented data stages.
      */
     stages: Array<Choice>;
@@ -198,6 +210,9 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
     this.asIter = {
       entries: Object.values(this.meta.entries),
       monitors: Object.values(this.meta.monitors),
+      monitor_groups: Object.values(this.meta.monitor_groups).sort((a, b) =>
+        a.order - b.order
+      ),
       stages: Object.values(this.meta.stages),
       processors: Object.values(this.meta.processors),
     };
