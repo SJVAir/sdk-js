@@ -28,7 +28,9 @@ sjvair.com #319). **5.0.0-beta.8** (2026-11-09): scale averaging fields, daily
 figures and `is_final` on summary rows, the open-day fetchers and merges (#59,
 for sjvair.com #320 and #321). **5.0.0-beta.9** (2026-11-11): the documents
 removal (#60) and `source` / `external_id` on `getPesticideLocations` features
-(#61, for sjvair.com #331).
+(#61, for sjvair.com #331). **5.0.0-beta.10** (unreleased): monitor groups,
+entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
+#332).
 
 ### Breaking
 
@@ -59,6 +61,10 @@ removal (#60) and `source` / `external_id` on `getPesticideLocations` features
   and `cdpr_fumigant`; commodities `display_name`; catalog entry types
   `aggregate`. Code that builds these objects by hand (mocks, fixtures) must add
   them. (#56)
+- `monitors/meta/` has new required fields: `monitor_groups`, `group` on each
+  monitor type, `description` on each entry type, and `published` on each
+  monitor type's entries. Code that builds these objects by hand (mocks,
+  fixtures) must add them. (#62)
 
 - `@sjvair/sdk/documents` is removed. It shipped only in prereleases
   (4.8.0-beta.2 to 5.0.0-beta.8); the client moved into the data-dashboard repo
@@ -66,6 +72,14 @@ removal (#60) and `source` / `external_id` on `getPesticideLocations` features
 
 ### Added
 
+- `monitors/meta/` gains `monitor_groups`, the groups monitor types are listed
+  under (`MonitorGroup`: `key`, `label`, `order`), read through
+  `MonitorsMeta.monitor_groups` and `asIter.monitor_groups` (sorted by `order`);
+  `group` on each monitor type (a `monitor_groups` key, or `null`);
+  `description` on each entry type (`EntriesMeta.description`, `null` for
+  weather and `particulates`); and `published` on each monitor type's entries
+  (whether the map endpoints show that pair). Required. (#62, for sjvair.com
+  #332)
 - `getPesticideLocations` features gain `source` (`"cde-public"`,
   `"cde-private"` or `"cdss-ccl"`) and `external_id` (the location's permanent
   code within its source) in `properties`, as on `Location`. Required. (#61, for

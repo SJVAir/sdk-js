@@ -143,6 +143,19 @@ Deno.test({
       fn: async () => validateMonitorsMeta(await getMonitorsMeta()),
     });
 
+    await t.step("meta groups cover every grouped monitor type", async () => {
+      const meta = await getMonitorsMeta();
+      for (const monitor of meta.asIter.monitors) {
+        if (monitor.group !== null) {
+          assert(monitor.group in meta.monitor_groups, monitor.type);
+        }
+      }
+      assertEquals(
+        meta.asIter.monitor_groups.length,
+        Object.keys(meta.monitor_groups).length,
+      );
+    });
+
     await t.step(
       "GET   monitors/meta (vozbox single-sensor entries)",
       async () => {
@@ -891,11 +904,81 @@ Deno.test("Module: Monitors meta scales (stubbed fetch)", async (t) => {
       assertEquals("levels" in entry, false);
     }
   });
+
+  await t.step("fixture has groups, descriptions and published", () => {
+    const data = monitorsMetaFixture.data as unknown as SJVAirMonitorsMeta;
+    assertEquals(sjvairMonitorsMetaSchema.safeParse(data).success, true);
+    assertEquals(data.monitor_groups.reference, {
+      key: "reference",
+      label: "Reference-grade",
+      order: 0,
+    });
+    assertEquals(data.monitor_groups["low-cost"].order, 1);
+    for (const monitor of Object.values(data.monitors)) {
+      if (monitor.group !== null) {
+        assert(monitor.group in data.monitor_groups, monitor.type);
+      }
+    }
+    assertEquals(data.monitors.purpleair.group, "low-cost");
+    assertEquals(data.monitors.airnow.group, "reference");
+    assertEquals(typeof data.entries.pm25.description, "string");
+    assertEquals(data.entries.temperature.description, null);
+    const published = Object.values(data.monitors).flatMap((m) =>
+      Object.values(m.entries).map((e) => e.published)
+    );
+    assert(published.includes(true) && published.includes(false));
+  });
+
+  await t.step("exposes monitor groups and descriptions", async () => {
+    const data = structuredClone(
+      monitorsMetaFixture.data,
+    ) as unknown as SJVAirMonitorsMeta;
+    data.monitor_groups = {
+      "low-cost": data.monitor_groups["low-cost"],
+      reference: data.monitor_groups.reference,
+    };
+    data.monitors.purpleair.group = null;
+    const meta = await fetchMeta(data);
+    assertEquals(meta.monitor_groups.reference.label, "Reference-grade");
+    assertEquals(
+      meta.asIter.monitor_groups.map((g) => g.key),
+      ["reference", "low-cost"],
+    );
+    assertEquals(Object.keys(meta.monitor_groups), ["low-cost", "reference"]);
+    assertEquals(meta.monitors.purpleair.group, null);
+    assertEquals(typeof meta.entryType("pm25").description, "string");
+    assertEquals(meta.entryType("temperature").description, null);
+  });
+
+  await t.step("meta schema requires the new fields", () => {
+    const removals: Array<(d: SJVAirMonitorsMeta) => void> = [
+      (d) => delete (d as Partial<SJVAirMonitorsMeta>).monitor_groups,
+      (d) => delete (d.monitors.purpleair as { group?: string | null }).group,
+      (d) =>
+        delete (d.entries.pm25 as { description?: string | null })
+          .description,
+      (d) =>
+        delete (d.monitors.purpleair.entries.pm25 as { published?: boolean })
+          .published,
+    ];
+    for (const remove of removals) {
+      const data = structuredClone(
+        monitorsMetaFixture.data,
+      ) as unknown as SJVAirMonitorsMeta;
+      remove(data);
+      assertEquals(
+        sjvairMonitorsMetaSchema.safeParse(data).success,
+        false,
+        remove.toString(),
+      );
+    }
+  });
 });
 
 Deno.test("Module: Monitors meta alerts block", async (t) => {
   const entryMeta = {
     sensors: ["a", "b"],
+    published: true,
     allowed_stages: ["raw", "calibrated"],
     default_stage: "calibrated",
     default_calibration: "PM25_UnivariateLinearRegression",

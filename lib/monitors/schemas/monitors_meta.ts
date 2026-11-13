@@ -33,6 +33,8 @@ interface SJVAirMonitorEntryMetaSchema extends
   z.ZodObject<{
     /** The labels for each sensor, if this monitor has more than one. */
     sensors: z.ZodNullable<z.ZodArray<z.ZodString>>;
+    /** Whether the map endpoints show this entry type for this monitor type */
+    published: z.ZodBoolean;
     /** The allowed stages for data of this entry type to  be in */
     allowed_stages: z.ZodArray<z.ZodString>;
     /** The default stage to present for this entry type */
@@ -47,6 +49,7 @@ interface SJVAirMonitorEntryMetaSchema extends
 export const sjvairMonitorEntryMetaSchema: SJVAirMonitorEntryMetaSchema = z
   .object({
     sensors: z.array(z.string()).nullable(),
+    published: z.boolean(),
     allowed_stages: z.array(z.string()),
     default_stage: z.string(),
     default_calibration: z.string(),
@@ -60,6 +63,8 @@ interface SJVAirMonitorDeviceMetaSchema extends
     label: z.ZodString;
     /** The type of this monitor in data form */
     type: z.ZodString;
+    /** The `monitor_groups` key of this monitor type, or null when it has no grade */
+    group: z.ZodNullable<z.ZodString>;
     /** The Expected duration between new entries from this monitor */
     expected_interval: z.ZodString;
     /** The types entries received from this monitor */
@@ -69,6 +74,7 @@ export const sjvairMonitorDeviceMetaSchema: SJVAirMonitorDeviceMetaSchema = z
   .object({
     label: z.string(),
     type: z.string(),
+    group: z.string().nullable(),
     expected_interval: z.string(),
     entries: z.record(z.string(), sjvairMonitorEntryMetaSchema),
   });
@@ -122,6 +128,8 @@ interface SJVAirEntryMetaSchema extends
     label: z.ZodString;
     /** The name of this entry type in data form */
     type: z.ZodString;
+    /** Short plain help text for this entry type, or null */
+    description: z.ZodNullable<z.ZodString>;
     /** The presentable unit of measurement for this entry type's value */
     units: z.ZodNullable<z.ZodString>;
     /** The code used to represent this entry type in the EPA's Air Quality System */
@@ -136,11 +144,28 @@ interface SJVAirEntryMetaSchema extends
 export const sjvairEntryMetaSchema: SJVAirEntryMetaSchema = z.object({
   label: z.string(),
   type: z.string(),
+  description: z.string().nullable(),
   units: z.string().nullable(),
   epa_aqs_code: z.number().nullable(),
   fields: z.array(z.string()),
   scale: scaleSchema.nullable(),
   school_guidelines: schoolGuidelinesSchema.nullable(),
+});
+
+interface MonitorGroupSchema extends
+  z.ZodObject<{
+    /** The permanent id of this group */
+    key: z.ZodString;
+    /** The group in presentation form */
+    label: z.ZodString;
+    /** Where this group sorts; lower first */
+    order: z.ZodNumber;
+  }> {}
+/** A group that monitor types are listed under, such as "Reference-grade" */
+export const monitorGroupSchema: MonitorGroupSchema = z.object({
+  key: z.string(),
+  label: z.string(),
+  order: z.number(),
 });
 
 interface SJVAirMonitorsMetaSchema extends
@@ -151,6 +176,8 @@ interface SJVAirMonitorsMetaSchema extends
     available_pollutants: z.ZodArray<z.ZodString>;
     /** The types of monitors used by SJVAir */
     monitors: z.ZodRecord<z.ZodString, SJVAirMonitorDeviceMetaSchema>;
+    /** The groups monitor types are listed under, by id; sort by `order` */
+    monitor_groups: z.ZodRecord<z.ZodString, MonitorGroupSchema>;
     /** The types of entries contained in SJVAir */
     entries: z.ZodRecord<z.ZodString, SJVAirEntryMetaSchema>;
     /** The data stages, by key */
@@ -163,6 +190,7 @@ export const sjvairMonitorsMetaSchema: SJVAirMonitorsMetaSchema = z.object({
   default_pollutant: z.enum(["pm25", "o3"]),
   available_pollutants: z.array(z.string()),
   monitors: z.record(z.string(), sjvairMonitorDeviceMetaSchema),
+  monitor_groups: z.record(z.string(), monitorGroupSchema),
   entries: z.record(z.string(), sjvairEntryMetaSchema),
   stages: z.record(z.string(), choiceSchema),
   processors: z.record(z.string(), choiceSchema),

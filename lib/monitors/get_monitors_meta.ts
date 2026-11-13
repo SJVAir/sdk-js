@@ -11,10 +11,15 @@
  * //  {
  * //    "default_pollutant": "pm25",
  * //    "available_pollutants": ["o3", "pm25"],
+ * //    "monitor_groups": {
+ * //      "reference": { "key": "reference", "label": "Reference-grade", "order": 0 },
+ * //      "low-cost": { "key": "low-cost", "label": "Low-cost sensors", "order": 1 },
+ * //    },
  * //    "monitors": {
  * //      "airgradient": {
  * //        "label": "AirGradient",
  * //        "type": "airgradient",
+ * //        "group": "low-cost",
  * //        "expected_interval": "1 min",
  * //        "entries": {
  * //          "humidity": {
@@ -22,6 +27,7 @@
  * //              "1",
  * //              "2",
  * //            ],
+ * //            "published": false,
  * //            "allowed_stages": [
  * //              "raw",
  * //              "calibrated",
@@ -44,6 +50,7 @@
  * //      "pm25": {
  * //        "label": "PM2.5",
  * //        "type": "pm25",
+ * //        "description": "Fine particles from smoke, dust, and vehicle exhaust.",
  * //        "units": "µg/m³",
  * //        "epa_aqs_code": 88101,
  * //        "fields": [
@@ -90,6 +97,7 @@ import type { Choice, Scale } from "../meta/types.ts";
 import { jsonCall, type RequestOptions } from "$http";
 import type {
   MonitorEntryType,
+  MonitorGroup,
   MonitorType,
   SchoolGuidelines,
   SJVAirEntryMeta,
@@ -102,6 +110,14 @@ class EntriesMeta implements SJVAirEntryMeta {
    * Creates an instance of EntriesMeta.
    */
   constructor(private meta: SJVAirEntryMeta) {}
+
+  /**
+   * Short plain help text for this entry type, or null when it has none
+   * (weather entry types and particulates).
+   */
+  get description(): string | null {
+    return this.meta.description;
+  }
 
   /**
    * The EPA AQS code associated with this entry type.
@@ -172,6 +188,11 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
     monitors: Array<SJVAirMonitorDeviceMeta>;
 
     /**
+     * An array of the monitor groups, sorted by `order`.
+     */
+    monitor_groups: Array<MonitorGroup>;
+
+    /**
      * An array of the documented data stages.
      */
     stages: Array<Choice>;
@@ -189,6 +210,9 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
     this.asIter = {
       entries: Object.values(this.meta.entries),
       monitors: Object.values(this.meta.monitors),
+      monitor_groups: Object.values(this.meta.monitor_groups).sort((a, b) =>
+        a.order - b.order
+      ),
       stages: Object.values(this.meta.stages),
       processors: Object.values(this.meta.processors),
     };
@@ -228,6 +252,16 @@ export class MonitorsMeta implements SJVAirMonitorsMeta {
    */
   get monitors(): Record<string, SJVAirMonitorDeviceMeta> {
     return this.meta.monitors;
+  }
+
+  /**
+   * Returns the groups monitor types are listed under, by id. Each monitor
+   * type's `group` is one of these keys, or null.
+   *
+   * @returns A record of monitor groups.
+   */
+  get monitor_groups(): Record<string, MonitorGroup> {
+    return this.meta.monitor_groups;
   }
 
   /**

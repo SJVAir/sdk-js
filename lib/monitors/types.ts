@@ -18,6 +18,7 @@ import type {
   monitorEntrySchema,
   monitorEntryTypeSchema,
   monitorGradeSchema,
+  monitorGroupSchema,
   monitorHealthSchema,
   monitorLatestSchema,
   monitorParticulatesEntrySchema,
@@ -189,6 +190,9 @@ export type SchoolActivity = zinfer<typeof schoolActivitySchema>;
 
 /** Outdoor activity guidelines for schools, from monitors/meta */
 export type SchoolGuidelines = zinfer<typeof schoolGuidelinesSchema>;
+
+/** A group that monitor types are listed under, from monitors/meta */
+export type MonitorGroup = zinfer<typeof monitorGroupSchema>;
 
 /** The metadata about the types of monitor entries */
 export type SJVAirEntryMeta = zinfer<typeof sjvairEntryMetaSchema>;
