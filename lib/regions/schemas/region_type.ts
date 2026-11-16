@@ -16,7 +16,6 @@ export type RegionTypeSchema = z.ZodEnum<{
   land_use: "land_use";
   protected: "protected";
   ab617: "ab617";
-  place: "place";
   mtrs: "mtrs";
   custom: "custom";
 }>;
@@ -37,7 +36,6 @@ export const regionTypeSchema: RegionTypeSchema = z.enum(
     "land_use",
     "protected",
     "ab617",
-    "place",
     "mtrs",
     "custom",
   ] as const,
