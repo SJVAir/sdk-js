@@ -609,6 +609,13 @@ Deno.test("Module: pesticides meta", async (t) => {
     assertExists(meta.notes.shades_valley);
   });
 
+  await t.step("scales has the spray-notice scale", () => {
+    const scale = meta.scales["spray-notice"];
+    assertExists(scale);
+    assertEquals(scale.kind, "category");
+    assertEquals(scale.levels.map((level) => level.key), ["notice"]);
+  });
+
   for (
     const field of [
       "notes",
@@ -617,6 +624,7 @@ Deno.test("Module: pesticides meta", async (t) => {
       "notice_filters",
       "years",
       "ramp",
+      "scales",
     ] as const
   ) {
     await t.step(`meta without ${field} is rejected`, () => {

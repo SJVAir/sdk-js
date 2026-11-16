@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { scaleSchema } from "../../meta/schemas/mod.ts";
 import {
   type PesticideBadgeSchema,
   pesticideBadgeSchema,
@@ -130,6 +131,11 @@ export interface PesticidesMetaSchema extends
       /** The color for no data (a value of 0) */
       no_data: z.ZodString;
     }>;
+    /**
+     * The scales the pesticide map's layers are drawn with, by id:
+     * `spray-notice` (one category level, the notice marker's color)
+     */
+    scales: z.ZodRecord<z.ZodString, typeof scaleSchema>;
   }> {}
 
 /**
@@ -148,4 +154,5 @@ export const pesticidesMetaSchema: PesticidesMetaSchema = z.object({
   notice_filters: z.array(z.string()),
   years: z.array(z.number()),
   ramp: z.object({ colors: z.array(z.string()), no_data: z.string() }),
+  scales: z.record(z.string(), scaleSchema),
 });

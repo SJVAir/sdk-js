@@ -341,6 +341,32 @@
         "#08306b"
       ],
       "no_data": "#f0f0f0"
+    },
+    "scales": {
+      "spray-notice": {
+        "id": "spray-notice",
+        "label": "Spray notice",
+        "units": "",
+        "kind": "category",
+        "source": null,
+        "averaging_hours": null,
+        "daily_statistic": null,
+        "daily_statistic_label": null,
+        "levels": [
+          {
+            "key": "notice",
+            "label": "Spray notice",
+            "color": "#7b3294",
+            "tier": null,
+            "description": "",
+            "guidance": "",
+            "min": null,
+            "max": null,
+            "value": "notice",
+            "opacity": null
+          }
+        ]
+      }
     }
   }
 }
