@@ -32,10 +32,9 @@ removal (#60) and `source` / `external_id` on `getPesticideLocations` features
 entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
 #332). **5.0.0-beta.11** (2026-11-15): the `type` scope on the bulk region
 summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
-**5.0.0-beta.12** (unreleased): `getActivePesticideNotices`, the
+**5.0.0-beta.12** (2026-11-16): `getActivePesticideNotices`, the
 `pesticides/meta/` `notes`, `badges`, `links` and `notice_filters`, and the
-open-ended location `source` / `type`. It needs sjvair.com `develop` with the
-pesticide notices change (server PR 1).
+open-ended location `source` / `type` (#65, for sjvair.com #335).
 
 ### Breaking
 
