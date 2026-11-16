@@ -579,6 +579,54 @@ Deno.test("Module: pesticides meta", async (t) => {
     assertEquals(parsed.success, false);
   });
 
+  await t.step("badges are in display order and resolve to notes", () => {
+    assertEquals(meta.badges.map((badge) => badge.key), [
+      "prop65",
+      "carb_tac",
+      "iarc_1",
+      "iarc_2a",
+      "iarc_2b",
+      "iarc_3",
+      "california_restricted",
+    ]);
+    for (const badge of meta.badges) assertExists(meta.notes[badge.note]);
+  });
+
+  await t.step("notes carry their key", () => {
+    for (const [key, note] of Object.entries(meta.notes)) {
+      assertEquals(note.key, key);
+    }
+  });
+
+  for (const field of ["notes", "badges", "links", "notice_filters"] as const) {
+    await t.step(`meta without ${field} is rejected`, () => {
+      const { [field]: _, ...rest } = meta;
+      assertEquals(pesticidesMetaSchema.safeParse(rest).success, false);
+    });
+  }
+
+  await t.step("an unknown badge key and note parse", () => {
+    const parsed = pesticidesMetaSchema.safeParse({
+      ...meta,
+      badges: [...meta.badges, {
+        key: "new_list",
+        label: "New",
+        note: "new_list",
+      }],
+      notes: {
+        ...meta.notes,
+        new_list: {
+          key: "new_list",
+          title: "New list",
+          summary: "A new list.",
+          detail: null,
+          source_url: "https://example.com/",
+        },
+      },
+    });
+    assertEquals(parsed.success, true);
+  });
+
   await t.step("fetches pesticides/meta/", async () => {
     const stub = stubFetch(() => jsonResponse(metaFixture));
     try {

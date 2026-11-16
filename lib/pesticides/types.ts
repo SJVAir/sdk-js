@@ -13,10 +13,13 @@ import type {
   commodityDetailSchema,
   commoditySchema,
   iarcGroupSchema,
+  pesticideBadgeKeySchema,
+  pesticideBadgeSchema,
   pesticideLocationCollectionSchema,
   pesticideLocationFeatureSchema,
   pesticideLocationPropertiesSchema,
   pesticideNarrowSchema,
+  pesticideNoteSchema,
   pesticideNoticeSchema,
   pesticideRegionSchema,
   pesticideSearchHitSchema,
@@ -148,3 +151,12 @@ export type PesticidesForPlaceFilters = {
   /** Last year to include (1900 to 2100) */
   year__lte?: number;
 };
+
+/** A chemical classification badge's key (known keys, or a newer one) */
+export type PesticideBadgeKey = zinfer<typeof pesticideBadgeKeySchema>;
+
+/** One classification badge from `getPesticidesMeta().badges` */
+export type PesticideBadge = zinfer<typeof pesticideBadgeSchema>;
+
+/** One explainer note from `getPesticidesMeta().notes` */
+export type PesticideNote = zinfer<typeof pesticideNoteSchema>;

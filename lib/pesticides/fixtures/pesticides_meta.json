@@ -137,6 +137,126 @@
         "id": "srqhc",
         "name": "UNKNOWN"
       }
+    ],
+    "notes": {
+      "noi_meaning": {
+        "key": "noi_meaning",
+        "title": "What a notice of intent means",
+        "summary": "Summary of what a notice of intent means.",
+        "detail": "Detail about what a notice of intent means.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "pur_lag": {
+        "key": "pur_lag",
+        "title": "When pesticide use data is released",
+        "summary": "Summary of when pesticide use data is released.",
+        "detail": "Detail about when pesticide use data is released.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "badges": {
+        "key": "badges",
+        "title": "What the badges mean",
+        "summary": "Summary of what the badges mean.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "prop65": {
+        "key": "prop65",
+        "title": "Prop 65",
+        "summary": "Summary of prop 65.",
+        "detail": "Detail about prop 65.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "carb_tac": {
+        "key": "carb_tac",
+        "title": "CARB toxic air contaminant",
+        "summary": "Summary of carb toxic air contaminant.",
+        "detail": "Detail about carb toxic air contaminant.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "iarc_1": {
+        "key": "iarc_1",
+        "title": "IARC Group 1",
+        "summary": "Summary of iarc group 1.",
+        "detail": "Detail about iarc group 1.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "iarc_2a": {
+        "key": "iarc_2a",
+        "title": "IARC Group 2A",
+        "summary": "Summary of iarc group 2a.",
+        "detail": "Detail about iarc group 2a.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "iarc_2b": {
+        "key": "iarc_2b",
+        "title": "IARC Group 2B",
+        "summary": "Summary of iarc group 2b.",
+        "detail": "Detail about iarc group 2b.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "iarc_3": {
+        "key": "iarc_3",
+        "title": "IARC Group 3",
+        "summary": "Summary of iarc group 3.",
+        "detail": "Detail about iarc group 3.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      },
+      "california_restricted": {
+        "key": "california_restricted",
+        "title": "California restricted material",
+        "summary": "Summary of california restricted material.",
+        "detail": "Detail about california restricted material.",
+        "source_url": "https://www.cdpr.ca.gov/"
+      }
+    },
+    "badges": [
+      {
+        "key": "prop65",
+        "label": "Prop 65",
+        "note": "prop65"
+      },
+      {
+        "key": "carb_tac",
+        "label": "CARB TAC",
+        "note": "carb_tac"
+      },
+      {
+        "key": "iarc_1",
+        "label": "IARC 1",
+        "note": "iarc_1"
+      },
+      {
+        "key": "iarc_2a",
+        "label": "IARC 2A",
+        "note": "iarc_2a"
+      },
+      {
+        "key": "iarc_2b",
+        "label": "IARC 2B",
+        "note": "iarc_2b"
+      },
+      {
+        "key": "iarc_3",
+        "label": "IARC 3",
+        "note": "iarc_3"
+      },
+      {
+        "key": "california_restricted",
+        "label": "Restricted",
+        "note": "california_restricted"
+      }
+    ],
+    "links": {
+      "spraydays_signup": "https://spraydays.cdpr.ca.gov/"
+    },
+    "notice_filters": [
+      "chemical_id",
+      "product_id",
+      "category",
+      "iarc_group",
+      "narrow",
+      "aerial_ground"
     ]
   }
 }

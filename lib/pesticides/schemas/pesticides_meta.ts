@@ -1,5 +1,11 @@
 import * as z from "zod";
 import {
+  type PesticideBadgeSchema,
+  pesticideBadgeSchema,
+  type PesticideNoteSchema,
+  pesticideNoteSchema,
+} from "./badge.ts";
+import {
   type AerialGroundFilterSchema,
   aerialGroundFilterSchema,
 } from "./aerial_ground.ts";
@@ -91,6 +97,25 @@ export interface PesticidesMetaSchema extends
     narrows: z.ZodArray<PesticideNarrowMetaSchema>;
     /** CDPR's stand-ins for an unnamed ingredient, which carry no pounds */
     placeholder_chemicals: z.ZodArray<PesticidePlaceholderChemicalSchema>;
+    /**
+     * Every explainer note, keyed by note key. The server guarantees
+     * `noi_meaning`, `pur_lag` (when use data is released), `badges`,
+     * `prop65`, `carb_tac`, `iarc_1`, `iarc_2a`, `iarc_2b`, `iarc_3` and
+     * `california_restricted`, and may serve more.
+     */
+    notes: z.ZodRecord<z.ZodString, PesticideNoteSchema>;
+    /** The chemical classification badges, in display order */
+    badges: z.ZodArray<PesticideBadgeSchema>;
+    /** Links the pages show */
+    links: z.ZodObject<{
+      /** Where to sign up for SprayDays notices */
+      spraydays_signup: z.ZodString;
+    }>;
+    /**
+     * The value filters the notice endpoints accept, e.g. `chemical_id`,
+     * `category` and `aerial_ground`
+     */
+    notice_filters: z.ZodArray<z.ZodString>;
   }> {}
 
 /**
@@ -103,4 +128,8 @@ export const pesticidesMetaSchema: PesticidesMetaSchema = z.object({
   methods: z.array(pesticideMethodMetaSchema),
   narrows: z.array(pesticideNarrowMetaSchema),
   placeholder_chemicals: z.array(pesticidePlaceholderChemicalSchema),
+  notes: z.record(z.string(), pesticideNoteSchema),
+  badges: z.array(pesticideBadgeSchema),
+  links: z.object({ spraydays_signup: z.string() }),
+  notice_filters: z.array(z.string()),
 });
