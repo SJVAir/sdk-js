@@ -85,9 +85,9 @@ summaries (#63).
   `region` or `type`: `RegionSummaryBulkRequestConfig` and
   `RegionSummaryBulkOpenRequestConfig` are now unions over the new
   `RegionSummaryBulkScope`, and `type` is a `RegionSummaryBulkType` (any
-  `RegionType` but `land_use` and `place`). Existing `region` calls compile and
-  behave unchanged. A `type` request needs sjvair.com `develop` with the type
-  scope. (#63)
+  `RegionType` but `land_use`). Existing `region` calls compile and behave
+  unchanged. A `type` request needs sjvair.com `develop` with the type scope.
+  (#63)
 - `monitors/meta/` gains `monitor_groups`, the groups monitor types are listed
   under (`MonitorGroup`: `key`, `label`, `order`), read through
   `MonitorsMeta.monitor_groups` and `asIter.monitor_groups` (sorted by `order`);

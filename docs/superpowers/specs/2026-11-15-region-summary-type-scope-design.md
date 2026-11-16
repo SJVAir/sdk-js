@@ -26,11 +26,11 @@ On `release/5.0.0`, as **`5.0.0-beta.11`**. Per the no-fallbacks convention, a
 
 ### Types (`lib/regions/get_region_summaries_bulk.ts`)
 
-- New `RegionSummaryBulkType = Exclude<RegionType, "land_use" | "place">`: the
-  types the server accepts. `RegionType` is the SDK's existing union, inferred
-  from `regionTypeSchema`. The server rejects `land_use`, and has had no `place`
-  regions since sjvair.com migration `regions/0009_delete_place_regions`
-  (`place` is still in `RegionType`; that is outside this change).
+- New `RegionSummaryBulkType = Exclude<RegionType, "land_use">`: the types the
+  server accepts. `RegionType` is the SDK's existing union, inferred from
+  `regionTypeSchema`. `place` was first excluded here too (the server has had no
+  place regions since sjvair.com migration `regions/0009_delete_place_regions`);
+  #64 then removed it from `RegionType` itself, so the exclusion was dropped.
 - New `RegionSummaryBulkScope`, a union that takes exactly one of the two:
 
   ```ts

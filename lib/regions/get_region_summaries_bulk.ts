@@ -4,7 +4,7 @@
  *
  * `start` and `end` are required, and so is exactly one scope: `region` (one
  * or more region sqids) or `type` (every current region of one type, such as
- * `"tract"`; not `"land_use"` or `"place"`). The server rejects an invalid or missing date
+ * `"tract"`; not `"land_use"`). The server rejects an invalid or missing date
  * range, or a missing or doubled scope, with a 400, which surfaces as a thrown
  * error. A `type` covers the regions `/regions/geojson/` draws: current ones
  * with a boundary (no retired regions, no old-vintage tracts). A type with
@@ -59,10 +59,9 @@ import type { RegionType, RegionWithSummaries } from "./types.ts";
 
 /**
  * The region types a bulk region summary request can be scoped to: every
- * `RegionType` but `land_use` (no summaries) and `place` (the server no longer
- * has place regions)
+ * `RegionType` but `land_use` (no summaries)
  */
-export type RegionSummaryBulkType = Exclude<RegionType, "land_use" | "place">;
+export type RegionSummaryBulkType = Exclude<RegionType, "land_use">;
 
 /**
  * The regions a bulk region summary request covers: exactly one of `region`

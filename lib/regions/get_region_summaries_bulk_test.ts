@@ -254,7 +254,7 @@ Deno.test("bulk region configs take exactly one of region or type", () => {
   };
   const place: RegionSummaryBulkRequestConfig = {
     ...dates,
-    // @ts-expect-error: the server has no place regions
+    // @ts-expect-error: place isn't a region type
     type: "place",
   };
   // @ts-expect-error: open days need a scope too
