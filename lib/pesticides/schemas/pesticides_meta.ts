@@ -121,7 +121,13 @@ export interface PesticidesMetaSchema extends
     years: z.ZodArray<z.ZodNumber>;
     /** The colors of the section and township maps */
     ramp: z.ZodObject<{
-      /** One color per class, lightest (class 0) first */
+      /**
+       * The ramp's 8 stops, lightest first. With 8 classes, class i is
+       * `colors[i]`. With fewer, the server's maps spread that many colors
+       * evenly across the ramp, interpolating between stops and always
+       * ending on the darkest, so the top class is `colors[7]` whatever the
+       * count (a single class is `colors[7]` alone).
+       */
       colors: z.ZodArray<z.ZodString>;
       /** The color for no data (a value of 0) */
       no_data: z.ZodString;

@@ -115,7 +115,9 @@ export type PesticideSectionsParams =
  * a section on the county line, counting only that county's use, can fall
  * below `min`. `breaks[i]` is
  * class i's inclusive upper bound, and a value of 0 is no data (draw it with
- * `getPesticidesMeta().ramp.no_data`).
+ * `getPesticidesMeta().ramp.no_data`). With fewer than 8 breaks, spread the
+ * ramp's colors across them rather than taking the first few (see
+ * `ramp.colors`).
  *
  * @param params The area, filters, plus an AbortSignal and extra fetch init.
  *
