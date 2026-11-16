@@ -35,10 +35,10 @@ summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
 **5.0.0-beta.12** (2026-11-16): `getActivePesticideNotices`, the
 `pesticides/meta/` `notes`, `badges`, `links` and `notice_filters`, and the
 open-ended location `source` / `type` (#65, for sjvair.com #335).
-**5.0.0-beta.13** (unreleased): `getPesticideSections`, `getPesticideTownships`,
-`getPesticideSectionDetails` and the `pesticides/meta/` `years`, `ramp` and
-`scales`. It needs sjvair.com `develop` with the pesticide map classes, class
-colors and spray-notice scale changes (#336, #337, #338).
+**5.0.0-beta.13** (2026-11-16): `getPesticideSections`, `getPesticideTownships`,
+`getPesticideSectionDetails`, the `pesticides/meta/` `years`, `ramp` and
+`scales`, and `aerial_ground` on spray notices (#66, for sjvair.com #336, #337
+and #338).
 
 ### Breaking
 
