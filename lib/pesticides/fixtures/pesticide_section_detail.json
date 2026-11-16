@@ -1,31 +1,81 @@
 {
-  "id": "k3x9a",
-  "mtrs": "M14S20E01",
+  "id": "nyh2u",
+  "mtrs": "MDM-T13S-R19E-25",
   "county": "Fresno County",
   "year": 2023,
   "geometry": {
-    "type": "Polygon",
+    "type": "MultiPolygon",
     "coordinates": [
       [
         [
-          -119.801234,
-          36.745101
-        ],
-        [
-          -119.783401,
-          36.745212
-        ],
-        [
-          -119.783312,
-          36.730744
-        ],
-        [
-          -119.801145,
-          36.730633
-        ],
-        [
-          -119.801234,
-          36.745101
+          [
+            -119.84449526016132,
+            36.779169018261264
+          ],
+          [
+            -119.84896348940777,
+            36.77915793201324
+          ],
+          [
+            -119.85343172045282,
+            36.77914684486592
+          ],
+          [
+            -119.85789995059856,
+            36.779136756865455
+          ],
+          [
+            -119.86236818164339,
+            36.77912566971806
+          ],
+          [
+            -119.86234611458993,
+            36.7754666553176
+          ],
+          [
+            -119.86232404573798,
+            36.77180764271575
+          ],
+          [
+            -119.86232297965977,
+            36.7681786279014
+          ],
+          [
+            -119.86232191268219,
+            36.76454861394019
+          ],
+          [
+            -119.85783767999327,
+            36.76451770364411
+          ],
+          [
+            -119.85335344730433,
+            36.76448779519293
+          ],
+          [
+            -119.8488882182049,
+            36.76457588589807
+          ],
+          [
+            -119.84442398915157,
+            36.76466297655691
+          ],
+          [
+            -119.8444420578147,
+            36.768288987634435
+          ],
+          [
+            -119.84446012467932,
+            36.77191599875811
+          ],
+          [
+            -119.84447719239711,
+            36.77554200803697
+          ],
+          [
+            -119.84449526016132,
+            36.779169018261264
+          ]
         ]
       ]
     ]
@@ -33,128 +83,205 @@
   "years": [
     {
       "year": 2023,
-      "lbs_chemical": 1523.42,
-      "lbs_product": 2210.8,
-      "acres_treated": 312.5,
-      "applications": 14
+      "lbs_chemical": 37.156103859999995,
+      "lbs_product": 172.53609999999998,
+      "acres_treated": 47.63544536271811,
+      "applications": 104
     },
     {
       "year": 2022,
-      "lbs_chemical": 980.1,
-      "lbs_product": 1402.33,
-      "acres_treated": 200.0,
-      "applications": 9
+      "lbs_chemical": 35.3896716,
+      "lbs_product": 118.0753,
+      "acres_treated": 33.976124885215775,
+      "applications": 71
+    },
+    {
+      "year": 2021,
+      "lbs_chemical": 21.94932459999999,
+      "lbs_product": 79.38889999999999,
+      "acres_treated": 47.089072543618016,
+      "applications": 61
+    },
+    {
+      "year": 2020,
+      "lbs_chemical": 31.2403189,
+      "lbs_product": 97.92169999999997,
+      "acres_treated": 31.095500459136815,
+      "applications": 57
+    },
+    {
+      "year": 2019,
+      "lbs_chemical": 18.678695720000004,
+      "lbs_product": 73.78179999999999,
+      "acres_treated": 28.968778696051427,
+      "applications": 50
+    },
+    {
+      "year": 2018,
+      "lbs_chemical": 36.909079510000005,
+      "lbs_product": 133.1057,
+      "acres_treated": 25.941230486685036,
+      "applications": 45
     }
   ],
   "months": [
     {
       "month": 1,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
-    },
-    {
-      "month": 2,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
-    },
-    {
-      "month": 3,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
-    },
-    {
-      "month": 4,
-      "lbs_chemical": 412.5,
-      "acres_treated": 80.0,
-      "applications": 3
-    },
-    {
-      "month": 5,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
-    },
-    {
-      "month": 6,
-      "lbs_chemical": 1110.92,
-      "acres_treated": 232.5,
+      "lbs_chemical": 6.3798941,
+      "acres_treated": 5.05050505050505,
       "applications": 11
     },
     {
+      "month": 2,
+      "lbs_chemical": 2.4432180999999997,
+      "acres_treated": 4.132231404958677,
+      "applications": 9
+    },
+    {
+      "month": 3,
+      "lbs_chemical": 2.9873246,
+      "acres_treated": 4.591368227731864,
+      "applications": 10
+    },
+    {
+      "month": 4,
+      "lbs_chemical": 2.35001205,
+      "acres_treated": 3.6730945821854912,
+      "applications": 8
+    },
+    {
+      "month": 5,
+      "lbs_chemical": 1.398226,
+      "acres_treated": 2.7548209366391183,
+      "applications": 6
+    },
+    {
+      "month": 6,
+      "lbs_chemical": 6.183803999999999,
+      "acres_treated": 2.640036730945822,
+      "applications": 6
+    },
+    {
       "month": 7,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
+      "lbs_chemical": 1.1487188,
+      "acres_treated": 3.2139577594123048,
+      "applications": 7
     },
     {
       "month": 8,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
+      "lbs_chemical": 2.6112078,
+      "acres_treated": 3.6730945821854912,
+      "applications": 8
     },
     {
       "month": 9,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
+      "lbs_chemical": 1.58277031,
+      "acres_treated": 3.2139577594123048,
+      "applications": 7
     },
     {
       "month": 10,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
+      "lbs_chemical": 2.5305023,
+      "acres_treated": 5.05050505050505,
+      "applications": 11
     },
     {
       "month": 11,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
+      "lbs_chemical": 2.9132515999999997,
+      "acres_treated": 4.591368227731864,
+      "applications": 10
     },
     {
       "month": 12,
-      "lbs_chemical": 0,
-      "acres_treated": 0,
-      "applications": 0
+      "lbs_chemical": 4.6271742,
+      "acres_treated": 5.05050505050505,
+      "applications": 11
     }
   ],
   "top_chemicals": [
     {
-      "id": "gs65e",
-      "name": "1,3-DICHLOROPROPENE",
-      "display_name": "1,3-Dichloropropene",
-      "lbs": 1100.0,
+      "id": "6vde4",
+      "name": "CLARIFIED HYDROPHOBIC EXTRACT OF NEEM OIL",
+      "display_name": "Clarified hydrophobic extract of neem oil",
+      "lbs": 5.32952,
+      "is_of_concern": false,
+      "badges": []
+    },
+    {
+      "id": "3avyg",
+      "name": "THIOPHANATE-METHYL",
+      "display_name": "Thiophanate-methyl",
+      "lbs": 5.0,
       "is_of_concern": true,
       "badges": [
-        "prop65",
-        "iarc_2b"
+        "prop65"
       ]
     },
     {
-      "id": "h2k4n",
-      "name": "SULFUR",
-      "display_name": "Sulfur",
-      "lbs": 423.42,
+      "id": "3qfg3",
+      "name": "BOSCALID",
+      "display_name": "Boscalid",
+      "lbs": 4.851000000000001,
+      "is_of_concern": false,
+      "badges": []
+    },
+    {
+      "id": "5egrq",
+      "name": "IPRODIONE",
+      "display_name": "Iprodione",
+      "lbs": 3.9991399999999997,
+      "is_of_concern": true,
+      "badges": [
+        "prop65"
+      ]
+    },
+    {
+      "id": "3myeg",
+      "name": "FENHEXAMID",
+      "display_name": "Fenhexamid",
+      "lbs": 2.5,
       "is_of_concern": false,
       "badges": []
     }
   ],
   "top_products": [
     {
-      "id": "p1x2y",
-      "name": "TELONE II",
-      "display_name": "Telone II",
-      "lbs": 1310.6
+      "id": "4c8hx",
+      "name": "TETRASAN 5 WDG",
+      "display_name": "TETRASAN 5 WDG",
+      "lbs": 20.0
+    },
+    {
+      "id": "htbj5",
+      "name": "PAGEANT INTRINSIC BRAND FUNGICIDE",
+      "display_name": "PAGEANT INTRINSIC BRAND FUNGICIDE",
+      "lbs": 19.25
+    },
+    {
+      "id": "qhscz",
+      "name": "TALSTAR SELECT INSECTICIDE",
+      "display_name": "TALSTAR SELECT INSECTICIDE",
+      "lbs": 18.5899
+    },
+    {
+      "id": "dxbz3",
+      "name": "AKARI 5SC MITICIDE/INSECTICIDE",
+      "display_name": "AKARI 5SC MITICIDE/INSECTICIDE",
+      "lbs": 17.0764
+    },
+    {
+      "id": "d2bqs",
+      "name": "SARISA",
+      "display_name": "SARISA",
+      "lbs": 12.4627
     }
   ],
   "top_commodities": [
     {
-      "id": "c9z8w",
-      "name": "ALMOND",
-      "display_name": "Almond",
-      "lbs": 1523.42
+      "id": "kn3rd",
+      "name": "N-GRNHS PLANTS IN CONTAINERS",
+      "display_name": "N-GRNHS plants in containers",
+      "lbs": 37.156103859999995
     }
   ]
 }

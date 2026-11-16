@@ -1,15 +1,19 @@
-import { getSimpleValidationTest } from "$testing";
-import { assertEquals, assertRejects } from "@std/assert";
+import { setOrigin } from "$http";
+import { getSimpleValidationTest, isUnavailable } from "$testing";
+import { assert, assertEquals, assertRejects } from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import detailFixture from "./fixtures/pesticide_section_detail.json" with {
   type: "json",
 };
 import { getPesticideSectionDetails } from "./get_pesticide_section_details.ts";
+import { getPesticideSections } from "./get_pesticide_sections.ts";
 import { pesticideSectionDetailSchema } from "./schemas/mod.ts";
 import type { PesticideSectionDetail } from "./types.ts";
 
-// Built by hand from sjvair.com feature/pesticide-map-classes (sections.py);
-// replaced by a captured response once server PR 2 is live locally.
+// Captured from sections/nyh2u/?year=2023 on the local stack.
+if (!Deno.env.has("TEST_REMOTE")) {
+  setOrigin("http://127.0.0.1:8000");
+}
 const validateDetail = getSimpleValidationTest(pesticideSectionDetailSchema);
 const detail = detailFixture as unknown as PesticideSectionDetail;
 
@@ -29,7 +33,7 @@ async function urlFor(
 Deno.test("section detail fixture matches the schema", () => {
   validateDetail(detail);
   assertEquals(detail.months.length, 12);
-  assertEquals(detail.top_chemicals[0].badges, ["prop65", "iarc_2b"]);
+  assert(detail.top_chemicals.some((chemical) => chemical.badges.length > 0));
 });
 
 Deno.test("null geometry, county and year parse", () => {
@@ -118,4 +122,40 @@ Deno.test("the signal is passed through", async () => {
   } finally {
     stub.restore();
   }
+});
+
+Deno.test("GET  pesticides/sections/<id>/", async () => {
+  try {
+    const sections = await getPesticideSections({
+      bbox: [-119.9, 36.7, -119.7, 36.85],
+      year: 2023,
+      geometry: false,
+    });
+    const used = sections.features.find((f) => f.properties.applications > 0);
+    if (!used) {
+      console.warn("no section with use on this server; skipping.");
+      return;
+    }
+    const result = await getPesticideSectionDetails(used.id, { year: 2023 });
+    validateDetail(result);
+    assertEquals(result.id, used.id);
+    assertEquals(result.months.length, 12);
+    const all = await getPesticideSectionDetails(used.id, { year: "all" });
+    validateDetail(all);
+    assertEquals(all.year, "all");
+  } catch (error) {
+    if (!isUnavailable(error)) throw error;
+    console.warn("pesticides/sections/<id>/ unavailable; skipping.");
+  }
+});
+
+Deno.test("GET  pesticides/sections/<id>/ for an unknown id is a 404", async () => {
+  const error = await assertRejects(() =>
+    getPesticideSectionDetails("zzzzzzzzz")
+  );
+  if (error instanceof TypeError) return;
+  assertEquals(
+    (error as { cause: { result: { status: number } } }).cause.result.status,
+    404,
+  );
 });

@@ -1,15 +1,22 @@
-import { getSimpleValidationTest } from "$testing";
-import { assertEquals, assertRejects } from "@std/assert";
+import { setOrigin } from "$http";
+import { getSimpleValidationTest, isUnavailable } from "$testing";
+import { assert, assertEquals, assertRejects } from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import sectionsFixture from "./fixtures/pesticide_sections.json" with {
   type: "json",
 };
 import { getPesticideSections } from "./get_pesticide_sections.ts";
-import { pesticideSectionCollectionSchema } from "./schemas/mod.ts";
+import {
+  pesticideSectionCollectionSchema,
+  pesticideUseClassesSchema,
+} from "./schemas/mod.ts";
 import type { PesticideSectionCollection } from "./types.ts";
 
-// Built by hand from sjvair.com feature/pesticide-map-classes (sections.py);
-// replaced by a captured response once server PR 2 is live locally.
+// Captured from sections/?bbox=-119.9,36.7,-119.7,36.85&year=2023&classes=1
+// on the local stack, trimmed to three features (the last has no use).
+if (!Deno.env.has("TEST_REMOTE")) {
+  setOrigin("http://127.0.0.1:8000");
+}
 const validateCollection = getSimpleValidationTest(
   pesticideSectionCollectionSchema,
 );
@@ -162,7 +169,6 @@ Deno.test("classes are typed present when asked for", async () => {
     const result = await getPesticideSections({ bbox, classes: true });
     const breaks: number[] = result.classes.lbs_chemical.breaks;
     assertEquals(breaks.length, 8);
-    assertEquals(result.classes.acres_treated.min, null);
 
     const plain = await getPesticideSections({ bbox });
     // @ts-expect-error: without classes: true the server leaves classes out
@@ -217,4 +223,52 @@ Deno.test("the signal is passed through", async () => {
   } finally {
     stub.restore();
   }
+});
+
+Deno.test("a class with no positive values parses", () => {
+  const parsed = pesticideUseClassesSchema.safeParse({
+    ...sectionsFixture.classes,
+    acres_treated: { breaks: [], min: null },
+  });
+  assertEquals(parsed.success, true);
+});
+
+Deno.test("GET  pesticides/sections/ for a Fresno bbox", async () => {
+  try {
+    const result = await getPesticideSections({
+      bbox,
+      year: 2023,
+      classes: true,
+    });
+    validateCollection(result);
+    assert(result.features.length > 0);
+    assertEquals(Object.keys(result.classes).sort(), [
+      "acres_treated",
+      "applications",
+      "lbs_chemical",
+    ]);
+    const values = await getPesticideSections({
+      bbox,
+      year: 2023,
+      geometry: false,
+    });
+    validateCollection(values);
+    assert(values.features.every((feature) => feature.geometry === null));
+    assertEquals(values.classes, undefined);
+  } catch (error) {
+    if (!isUnavailable(error)) throw error;
+    console.warn("pesticides/sections/ unavailable; skipping.");
+  }
+});
+
+Deno.test("GET  pesticides/sections/ with no area is a 400", async () => {
+  const error = await assertRejects(() =>
+    getPesticideSections({} as Parameters<typeof getPesticideSections>[0])
+  );
+  if (isUnavailable(error)) return;
+  const { result } = (error as {
+    cause: { result: { status: number; body: { error: unknown } } };
+  }).cause;
+  assertEquals(result.status, 400);
+  assertEquals(typeof result.body.error, "string");
 });

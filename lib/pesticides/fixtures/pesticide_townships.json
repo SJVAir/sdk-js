@@ -4,50 +4,40 @@
   "features": [
     {
       "type": "Feature",
-      "id": "MDM-T14S-R20E",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [-119.8190, 36.7450],
-            [-119.7120, 36.7458],
-            [-119.7113, 36.6587],
-            [-119.8184, 36.6580],
-            [-119.8190, 36.7450]
-          ]
-        ]
-      },
+      "id": "MDM-T01N-R04E",
+      "geometry": null,
       "properties": {
-        "id": "MDM-T14S-R20E",
-        "name": "MDM-T14S-R20E",
-        "sections": 36,
-        "lbs_chemical": 48211.7,
-        "lbs_product": 70120.4,
-        "acres_treated": 9120.25,
-        "applications": 403
+        "id": "MDM-T01N-R04E",
+        "name": "MDM-T01N-R04E",
+        "sections": 34,
+        "lbs_chemical": 51464.34317775,
+        "lbs_product": 101241.07059999999,
+        "acres_treated": 65157.86,
+        "applications": 1136
       }
     },
     {
       "type": "Feature",
-      "id": "MDM-T14S-R21E",
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [
-          [
-            [
-              [-119.7120, 36.7458],
-              [-119.6050, 36.7466],
-              [-119.6043, 36.6595],
-              [-119.7113, 36.6587],
-              [-119.7120, 36.7458]
-            ]
-          ]
-        ]
-      },
+      "id": "MDM-T01N-R05E",
+      "geometry": null,
       "properties": {
-        "id": "MDM-T14S-R21E",
-        "name": "MDM-T14S-R21E",
-        "sections": 31,
+        "id": "MDM-T01N-R05E",
+        "name": "MDM-T01N-R05E",
+        "sections": 36,
+        "lbs_chemical": 186780.62677552,
+        "lbs_product": 377835.52999999997,
+        "acres_treated": 224843.45000000004,
+        "applications": 4266
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "MDM-T01N-R11E",
+      "geometry": null,
+      "properties": {
+        "id": "MDM-T01N-R11E",
+        "name": "MDM-T01N-R11E",
+        "sections": 24,
         "lbs_chemical": 0,
         "lbs_product": 0,
         "acres_treated": 0,
@@ -58,30 +48,42 @@
   "classes": {
     "lbs_chemical": {
       "breaks": [
-        210.4,
-        1022.8,
-        3310.5,
-        7802.1,
-        14520.6,
-        26033.9,
-        48211.7,
-        190440.2
+        7094.7155283500015,
+        32199.887114539997,
+        74458.24616117,
+        130251.76083889301,
+        201330.61362518003,
+        292470.74894884,
+        463089.74091328005,
+        1081760.8564130398
       ],
-      "min": 3.1
+      "min": 0.0006000000000000001
     },
     "acres_treated": {
       "breaks": [
-        40.5,
-        210.75,
-        805.0,
-        1720.25,
-        3300.0,
-        5900.5,
-        9120.25,
-        41022.0
+        6215.88,
+        37953.149999999994,
+        87743.81615243346,
+        135399.68999999997,
+        179340.72,
+        219047.66999999993,
+        263065.3999999999,
+        743652.4600000001
       ],
-      "min": 0.5
+      "min": 1.0
     },
-    "applications": { "breaks": [], "min": null }
+    "applications": {
+      "breaks": [
+        186,
+        771,
+        1692,
+        2449,
+        3463,
+        4776,
+        6467,
+        23786
+      ],
+      "min": 1
+    }
   }
 }
