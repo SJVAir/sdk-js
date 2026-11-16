@@ -1,25 +1,22 @@
 import * as z from "zod";
+import { openEnum, type OpenEnumSchema } from "../../schema.ts";
 import { type RegionTypeSchema, regionTypeSchema } from "./region_type.ts";
 
-/** Where a location's code comes from */
-export type LocationSourceSchema = z.ZodEnum<{
-  "cde-public": "cde-public";
-  "cde-private": "cde-private";
-  "cdss-ccl": "cdss-ccl";
-}>;
+/** Where a location's code comes from: a known source, or any newer one */
+export type LocationSourceSchema = OpenEnumSchema<
+  readonly ["cde-public", "cde-private", "cdss-ccl"]
+>;
 
-export const locationSourceSchema: LocationSourceSchema = z.enum(
+export const locationSourceSchema: LocationSourceSchema = openEnum(
   ["cde-public", "cde-private", "cdss-ccl"] as const,
 );
 
-/** The kinds of location the API serves */
-export type LocationTypeSchema = z.ZodEnum<{
-  public_school: "public_school";
-  private_school: "private_school";
-  child_care: "child_care";
-}>;
+/** The kinds of location the API serves: a known kind, or any newer one */
+export type LocationTypeSchema = OpenEnumSchema<
+  readonly ["public_school", "private_school", "child_care"]
+>;
 
-export const locationTypeSchema: LocationTypeSchema = z.enum(
+export const locationTypeSchema: LocationTypeSchema = openEnum(
   ["public_school", "private_school", "child_care"] as const,
 );
 
