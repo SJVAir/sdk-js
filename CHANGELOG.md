@@ -35,6 +35,11 @@ summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
 
 ### Breaking
 
+- `LocationSource` and `LocationType` (and `locationSourceSchema` /
+  `locationTypeSchema`) accept any string as well as the known values, so a new
+  server value no longer fails `/regions/locations/` or `/pesticides/locations/`
+  (or `regions/meta/`'s `location_types`). Code that assigns them to the old
+  closed union stops compiling. The new `openEnum` helper builds these schemas.
 - `RegionType` (and `regionTypeSchema`) no longer includes `"place"`. The server
   has had no place regions since 2026-09-25 (sjvair.com migration
   `regions/0009_delete_place_regions`), so nothing it sends uses that type. Code
