@@ -4,10 +4,11 @@
  *
  * `start` and `end` are required, and so is exactly one scope: `region` (one
  * or more region sqids) or `type` (every current region of one type, such as
- * `"tract"`; not `"land_use"`). The server rejects an invalid or missing date
+ * `"tract"`; not `"land_use"` or `"place"`). The server rejects an invalid or missing date
  * range, or a missing or doubled scope, with a 400, which surfaces as a thrown
- * error. A `type` covers the type's current regions only (no retired regions,
- * no old-vintage tracts), and a type with nothing to show returns `[]`.
+ * error. A `type` covers the regions `/regions/geojson/` draws: current ones
+ * with a boundary (no retired regions, no old-vintage tracts). A type with
+ * nothing to show returns `[]`.
  *
  * @example Usage
  * ```ts
@@ -56,8 +57,12 @@ import { fetchAllBulkPages, mergeBulkPages, type RequestOptions } from "$http";
 import { mergeBulkOpenDays } from "../open_days.ts";
 import type { RegionType, RegionWithSummaries } from "./types.ts";
 
-/** The region types a bulk region summary request can be scoped to */
-export type RegionSummaryBulkType = Exclude<RegionType, "land_use">;
+/**
+ * The region types a bulk region summary request can be scoped to: every
+ * `RegionType` but `land_use` (no summaries) and `place` (the server no longer
+ * has place regions)
+ */
+export type RegionSummaryBulkType = Exclude<RegionType, "land_use" | "place">;
 
 /**
  * The regions a bulk region summary request covers: exactly one of `region`
@@ -71,8 +76,8 @@ export type RegionSummaryBulkScope =
   }
   | {
     /**
-     * Cover every current region of one type: no retired regions and no
-     * old-vintage tracts
+     * Cover every current region of one type that has a boundary (the set
+     * `/regions/geojson/` draws): no retired regions, no old-vintage tracts
      */
     type: RegionSummaryBulkType;
     region?: never;

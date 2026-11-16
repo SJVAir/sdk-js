@@ -15,9 +15,9 @@ limit and MTRS passes the URL limit. The server now takes the type itself:
 (every resolution) and `/api/2.0/regions/<entry_type>/summaries/daily/open/`. A
 request takes exactly one of `type` (a single value) or `region`; both or
 neither is a 400, as is `type=land_use` or an unknown type. `type` covers the
-type's current regions only (no retired regions, no old-vintage tracts). A type
-with nothing to show is an empty 200. Paging, the response shape and cache
-headers are unchanged.
+type's current regions that have a boundary, the set `/regions/geojson/` draws
+(no retired regions, no old-vintage tracts). A type with nothing to show is an
+empty 200. Paging, the response shape and cache headers are unchanged.
 
 ## Scope
 
@@ -26,9 +26,11 @@ On `release/5.0.0`, as **`5.0.0-beta.11`**. Per the no-fallbacks convention, a
 
 ### Types (`lib/regions/get_region_summaries_bulk.ts`)
 
-- New `RegionSummaryBulkType = Exclude<RegionType, "land_use">`: the types the
-  server accepts. `RegionType` is the SDK's existing union, inferred from
-  `regionTypeSchema`.
+- New `RegionSummaryBulkType = Exclude<RegionType, "land_use" | "place">`: the
+  types the server accepts. `RegionType` is the SDK's existing union, inferred
+  from `regionTypeSchema`. The server rejects `land_use`, and has had no `place`
+  regions since sjvair.com migration `regions/0009_delete_place_regions`
+  (`place` is still in `RegionType`; that is outside this change).
 - New `RegionSummaryBulkScope`, a union that takes exactly one of the two:
 
   ```ts
@@ -71,8 +73,8 @@ does.
 - A `type` request whose rows span two pages merges the split region.
 - `getRegionSummariesBulkDailyOpen` with `type` sends `type` and no `region`.
 - A `region` request still sends repeated `region` and no `type`.
-- Type-level checks (`// @ts-expect-error`): neither, both, and `land_use` don't
-  compile.
+- Type-level checks (`// @ts-expect-error`): neither, both, `land_use` and
+  `place` don't compile.
 
 ## Not in scope
 

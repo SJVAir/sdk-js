@@ -252,10 +252,16 @@ Deno.test("bulk region configs take exactly one of region or type", () => {
     // @ts-expect-error: land_use isn't a bulk scope
     type: "land_use",
   };
+  const place: RegionSummaryBulkRequestConfig = {
+    ...dates,
+    // @ts-expect-error: the server has no place regions
+    type: "place",
+  };
   // @ts-expect-error: open days need a scope too
   const openNeither: RegionSummaryBulkOpenRequestConfig = { entryType: "pm25" };
   assertEquals(
-    [byRegion, byType, openByType, neither, both, landUse, openNeither].length,
-    7,
+    [byRegion, byType, openByType, neither, both, landUse, place, openNeither]
+      .length,
+    8,
   );
 });
