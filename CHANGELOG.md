@@ -112,7 +112,9 @@ colors and spray-notice scale changes (#336, #337, #338).
   `getHMSMeta().scales`).
 - `getActivePesticideNotices` (`pesticides/notices/active/`): the map's spray
   notices as a GeoJSON FeatureCollection. `date` (a Pacific day) returns the
-  notices active that day, each with `past`. Filters take ids (`chemical_id`,
+  notices active that day, each with `past`. Each notice also has
+  `aerial_ground`, its method as the filter codes it (`G`, `A`, `F`, `O` or
+  `none`; from beta.13, sjvair.com #338). Filters take ids (`chemical_id`,
   `product_id`), `aerial_ground`, `category`, `iarc_group`, `narrow`, `county`,
   `bbox` and `region` / `buffer`.
 - `getPesticidesMeta` gains `notes` (explainer notes keyed by note key),

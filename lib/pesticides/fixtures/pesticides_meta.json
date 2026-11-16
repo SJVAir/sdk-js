@@ -345,10 +345,13 @@
     "scales": {
       "spray-notice": {
         "id": "spray-notice",
-        "label": "Spray notice",
+        "label": "Spray Notices",
         "units": "",
         "kind": "category",
-        "source": null,
+        "source": {
+          "name": "California Department of Pesticide Regulation, SprayDays",
+          "url": "https://spraydays.cdpr.ca.gov/"
+        },
         "averaging_hours": null,
         "daily_statistic": null,
         "daily_statistic_label": null,
@@ -356,7 +359,7 @@
           {
             "key": "notice",
             "label": "Spray notice",
-            "color": "#7b3294",
+            "color": "#e64980",
             "tier": null,
             "description": "",
             "guidance": "",

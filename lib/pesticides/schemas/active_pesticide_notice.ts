@@ -1,5 +1,9 @@
 import * as z from "zod";
 import { type GeoJSONPointSchema, geoJSONPointSchema } from "../../schema.ts";
+import {
+  type AerialGroundFilterSchema,
+  aerialGroundFilterSchema,
+} from "./aerial_ground.ts";
 
 interface ActivePesticideNoticeChemicalSchema extends
   z.ZodObject<{
@@ -45,6 +49,12 @@ export interface ActivePesticideNoticePropertiesSchema extends
     county: z.ZodNullable<z.ZodString>;
     /** SprayDays' wording for the method, e.g. "Ground"; may be empty */
     application_method: z.ZodString;
+    /**
+     * The method as the `aerial_ground` filter codes it: `G` (ground), `A`
+     * (aircraft), `F` (fumigation), `O` (any other wording) or `none` (no
+     * method given)
+     */
+    aerial_ground: AerialGroundFilterSchema;
     /** The amount treated, or null */
     treated_amount: z.ZodNullable<z.ZodNumber>;
     /** The units of the treated amount; may be empty */
@@ -71,6 +81,7 @@ export const activePesticideNoticePropertiesSchema:
     scheduled_end: z.string(),
     county: z.nullable(z.string()),
     application_method: z.string(),
+    aerial_ground: aerialGroundFilterSchema,
     treated_amount: z.nullable(z.number()),
     treated_units: z.string(),
     section: z.nullable(z.string()),
