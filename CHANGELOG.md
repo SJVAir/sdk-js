@@ -43,7 +43,9 @@ pesticide notices change (server PR 1).
   `locationTypeSchema`) accept any string as well as the known values, so a new
   server value no longer fails `/regions/locations/` or `/pesticides/locations/`
   (or `regions/meta/`'s `location_types`). Code that assigns them to the old
-  closed union stops compiling. The new `openEnum` helper builds these schemas.
+  closed union stops compiling, and a `switch` over them can no longer be
+  checked for exhaustiveness (`never`): keep a `default` branch for unknown
+  values.
 - `RegionType` (and `regionTypeSchema`) no longer includes `"place"`. The server
   has had no place regions since 2026-09-25 (sjvair.com migration
   `regions/0009_delete_place_regions`), so nothing it sends uses that type. Code

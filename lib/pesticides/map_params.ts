@@ -2,8 +2,9 @@
  * Turns the params of the pesticide map functions (notices, sections,
  * townships) into search params, the way those endpoints spell them: a bbox
  * as `w,s,e,n`, a list as repeated params, `classes: true` as `classes=1` and
- * `geometry: false` as `geometry=0`. Unset values and the request options
- * (`signal`, `init`) are left out.
+ * `geometry: false` as `geometry=0`. Unset values, empty strings (which the
+ * server treats as unset) and the request options (`signal`, `init`) are left
+ * out.
  */
 export function mapSearchParams(
   params: object,
@@ -12,7 +13,10 @@ export function mapSearchParams(
   for (
     const [key, value] of Object.entries(params as Record<string, unknown>)
   ) {
-    if (value === undefined || key === "signal" || key === "init") continue;
+    if (
+      value === undefined || value === "" || key === "signal" ||
+      key === "init"
+    ) continue;
     if (key === "bbox" && Array.isArray(value)) {
       searchParams.bbox = value.join(",");
     } else if (Array.isArray(value)) {

@@ -117,6 +117,11 @@ Deno.test("unset params are not sent", async () => {
   assertEquals(withUndefined.search, "?county=fresno");
 });
 
+Deno.test("empty strings are not sent", async () => {
+  const url = await urlFor({ date: "", county: "", category: "fumigant" });
+  assertEquals(url.search, "?category=fumigant");
+});
+
 Deno.test("a 400 carries the server's message", async () => {
   const stub = stubFetch(() =>
     new Response(JSON.stringify({ error: "date must be YYYY-MM-DD" }), {

@@ -42,6 +42,8 @@ export type ActivePesticideNoticesParams = {
    * (scheduled from 00:00 four days before it to the end of the day). Each
    * feature then has `past`. Without it, the notices scheduled from four days
    * ago onward, with no `past`.
+   * An empty string is not sent, so it also means no date (and no `past`,
+   * whatever the type says).
    */
   date?: string;
   /** A chemical, by its id (from `searchPesticides`), not its CDPR code */
