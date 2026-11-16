@@ -111,7 +111,9 @@ export type PesticideSectionsParams =
  *
  * With `classes: true` the collection has `classes`: for each figure, up to 8
  * quantile breaks over every section in the valley for the year, month and
- * value filters. The area and `county` never change them. `breaks[i]` is
+ * value filters. The area and `county` never change them, so with `county`
+ * a section on the county line, counting only that county's use, can fall
+ * below `min`. `breaks[i]` is
  * class i's inclusive upper bound, and a value of 0 is no data (draw it with
  * `getPesticidesMeta().ramp.no_data`).
  *

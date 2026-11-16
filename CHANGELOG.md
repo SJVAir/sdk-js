@@ -35,6 +35,9 @@ summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
 **5.0.0-beta.12** (2026-11-16): `getActivePesticideNotices`, the
 `pesticides/meta/` `notes`, `badges`, `links` and `notice_filters`, and the
 open-ended location `source` / `type` (#65, for sjvair.com #335).
+**5.0.0-beta.13** (unreleased): `getPesticideSections`, `getPesticideTownships`,
+`getPesticideSectionDetails` and the `pesticides/meta/` `years` and `ramp`. It
+needs sjvair.com `develop` with the pesticide map classes change (#336).
 
 ### Breaking
 
@@ -87,6 +90,23 @@ open-ended location `source` / `type` (#65, for sjvair.com #335).
 
 ### Added
 
+- `getPesticideSections` (`pesticides/sections/`) and `getPesticideTownships`
+  (`pesticides/townships/`): the pesticide-use map's MTRS sections and PLSS
+  townships as GeoJSON FeatureCollections, each feature with its year's totals
+  (and the `compare` year's as `*_prev`). Sections need an area: a `bbox`, a
+  `lat` / `lng` / `radius`, or a `region` / `buffer`; townships take an optional
+  `bbox` or `region`. Both take `PesticideUseFilters` (`year`, `month`,
+  `compare`, the id filters, `county`, `aerial_ground`, `narrow`, `category`,
+  `iarc_group`), `geometry: false` for values only, and `classes: true` for the
+  valley-wide color classes (`classes`, typed present when asked for). New types
+  include `PesticideUseFilters`, `PesticideSectionsArea`,
+  `PesticideSectionCollection`, `PesticideTownshipCollection` and
+  `PesticideUseClasses`.
+- `getPesticideSectionDetails` (`pesticides/sections/<id>/`): one section's
+  totals by year and month and its top chemicals (with their `badges` keys),
+  products and commodities. Type `PesticideSectionDetail`.
+- `getPesticidesMeta` gains `years` (years with use data, newest first) and
+  `ramp` (the maps' class `colors` and `no_data` color).
 - `getActivePesticideNotices` (`pesticides/notices/active/`): the map's spray
   notices as a GeoJSON FeatureCollection. `date` (a Pacific day) returns the
   notices active that day, each with `past`. Filters take ids (`chemical_id`,
