@@ -31,7 +31,7 @@ removal (#60) and `source` / `external_id` on `getPesticideLocations` features
 (#61, for sjvair.com #331). **5.0.0-beta.10** (2026-11-12): monitor groups,
 entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
 #332). **5.0.0-beta.11** (unreleased): the `type` scope on the bulk region
-summaries.
+summaries (#63).
 
 ### Breaking
 
@@ -82,6 +82,7 @@ summaries.
   `RegionSummaryBulkScope`, and `type` is a `RegionSummaryBulkType` (any
   `RegionType` but `land_use`). Existing `region` calls compile and behave
   unchanged. A `type` request needs sjvair.com `develop` with the type scope.
+  (#63)
 - `monitors/meta/` gains `monitor_groups`, the groups monitor types are listed
   under (`MonitorGroup`: `key`, `label`, `order`), read through
   `MonitorsMeta.monitor_groups` and `asIter.monitor_groups` (sorted by `order`);
