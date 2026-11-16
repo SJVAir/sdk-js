@@ -30,8 +30,8 @@ for sjvair.com #320 and #321). **5.0.0-beta.9** (2026-11-11): the documents
 removal (#60) and `source` / `external_id` on `getPesticideLocations` features
 (#61, for sjvair.com #331). **5.0.0-beta.10** (2026-11-12): monitor groups,
 entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
-#332). **5.0.0-beta.11** (unreleased): the `type` scope on the bulk region
-summaries (#63).
+#332). **5.0.0-beta.11** (2026-11-15): the `type` scope on the bulk region
+summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
 
 ### Breaking
 
