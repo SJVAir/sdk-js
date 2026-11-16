@@ -228,7 +228,7 @@ Deno.test("the signal is passed through", async () => {
 Deno.test("a class with no positive values parses", () => {
   const parsed = pesticideUseClassesSchema.safeParse({
     ...sectionsFixture.classes,
-    acres_treated: { breaks: [], min: null },
+    acres_treated: { breaks: [], min: null, colors: [] },
   });
   assertEquals(parsed.success, true);
 });
@@ -247,6 +247,9 @@ Deno.test("GET  pesticides/sections/ for a Fresno bbox", async () => {
       "applications",
       "lbs_chemical",
     ]);
+    for (const figure of Object.values(result.classes)) {
+      assertEquals(figure.colors.length, figure.breaks.length);
+    }
     const values = await getPesticideSections({
       bbox,
       year: 2023,
@@ -271,4 +274,19 @@ Deno.test("GET  pesticides/sections/ with no area is a 400", async () => {
   }).cause;
   assertEquals(result.status, 400);
   assertEquals(typeof result.body.error, "string");
+});
+
+Deno.test("each class has one color per break", () => {
+  for (const figure of Object.values(sectionsFixture.classes)) {
+    assertEquals(figure.colors.length, figure.breaks.length);
+  }
+});
+
+Deno.test("a class without colors fails the schema", () => {
+  const { colors: _, ...lbs } = sectionsFixture.classes.lbs_chemical;
+  const parsed = pesticideUseClassesSchema.safeParse({
+    ...sectionsFixture.classes,
+    lbs_chemical: lbs,
+  });
+  assertEquals(parsed.success, false);
 });

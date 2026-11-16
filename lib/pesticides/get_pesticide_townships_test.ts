@@ -150,7 +150,7 @@ Deno.test("a 400 carries the server's message", async () => {
 Deno.test("a class with no positive values parses", () => {
   const parsed = pesticideUseClassesSchema.safeParse({
     ...townshipsFixture.classes,
-    acres_treated: { breaks: [], min: null },
+    acres_treated: { breaks: [], min: null, colors: [] },
   });
   assertEquals(parsed.success, true);
 });

@@ -37,7 +37,8 @@ summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
 open-ended location `source` / `type` (#65, for sjvair.com #335).
 **5.0.0-beta.13** (unreleased): `getPesticideSections`, `getPesticideTownships`,
 `getPesticideSectionDetails` and the `pesticides/meta/` `years` and `ramp`. It
-needs sjvair.com `develop` with the pesticide map classes change (#336).
+needs sjvair.com `develop` with the pesticide map classes and class colors
+changes (#336, #337).
 
 ### Breaking
 
@@ -98,10 +99,10 @@ needs sjvair.com `develop` with the pesticide map classes change (#336).
   `bbox` or `region`. Both take `PesticideUseFilters` (`year`, `month`,
   `compare`, the id filters, `county`, `aerial_ground`, `narrow`, `category`,
   `iarc_group`), `geometry: false` for values only, and `classes: true` for the
-  valley-wide color classes (`classes`, typed present when asked for). New types
-  include `PesticideUseFilters`, `PesticideSectionsArea`,
-  `PesticideSectionCollection`, `PesticideTownshipCollection` and
-  `PesticideUseClasses`.
+  valley-wide color classes (`classes`, typed present when asked for: per
+  figure, `breaks`, `min` and one fill per class in `colors`). New types include
+  `PesticideUseFilters`, `PesticideSectionsArea`, `PesticideSectionCollection`,
+  `PesticideTownshipCollection` and `PesticideUseClasses`.
 - `getPesticideSectionDetails` (`pesticides/sections/<id>/`): one section's
   totals by year and month and its top chemicals (with their `badges` keys),
   products and commodities. Type `PesticideSectionDetail`.

@@ -46,8 +46,8 @@ export type PesticideTownshipsParams =
  *
  * With `classes: true` the collection has `classes`, ranking every township
  * in the valley as `getPesticideSections` ranks sections: the area and
- * `county` never change them, `breaks[i]` is class i's inclusive upper bound,
- * and 0 is no data. On a 400 the server's message is at
+ * `county` never change them, `breaks[i]` is class i's inclusive upper bound
+ * and `colors[i]` its fill, and 0 is no data. On a 400 the server's message is at
  * `error.cause.result.body.error`.
  *
  * @param params The area, filters, plus an AbortSignal and extra fetch init.

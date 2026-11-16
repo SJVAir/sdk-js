@@ -47,11 +47,17 @@ export interface PesticideUseClassSchema extends
     breaks: z.ZodArray<z.ZodNumber>;
     /** The smallest positive value, or null when there is none */
     min: z.ZodNullable<z.ZodNumber>;
+    /**
+     * Each class's fill, in break order: one per break, empty when `breaks`
+     * is. Draw a value of 0 (no data) with `getPesticidesMeta().ramp.no_data`.
+     */
+    colors: z.ZodArray<z.ZodString>;
   }> {}
 
 export const pesticideUseClassSchema: PesticideUseClassSchema = z.object({
   breaks: z.array(z.number()),
   min: z.nullable(z.number()),
+  colors: z.array(z.string()),
 });
 
 /**

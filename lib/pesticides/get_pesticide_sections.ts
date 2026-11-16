@@ -11,8 +11,9 @@
  *   year: 2023,
  *   classes: true,
  * });
- * console.log(sections.features.length, sections.classes.lbs_chemical.breaks);
- * // Prints: 212 [ 12.5, 48.1, 130.2, 310.7, 702.4, 1488.9, 3204.6, 18552.3 ]
+ * const { breaks, colors } = sections.classes.lbs_chemical;
+ * console.log(breaks.length === colors.length);
+ * // Prints: true
  * ```
  *
  * @module
@@ -114,10 +115,8 @@ export type PesticideSectionsParams =
  * value filters. The area and `county` never change them, so with `county`
  * a section on the county line, counting only that county's use, can fall
  * below `min`. `breaks[i]` is
- * class i's inclusive upper bound, and a value of 0 is no data (draw it with
- * `getPesticidesMeta().ramp.no_data`). With fewer than 8 breaks, spread the
- * ramp's colors across them rather than taking the first few (see
- * `ramp.colors`).
+ * class i's inclusive upper bound and `colors[i]` its fill. A value of 0 is no
+ * data: draw it with `getPesticidesMeta().ramp.no_data`.
  *
  * @param params The area, filters, plus an AbortSignal and extra fetch init.
  *

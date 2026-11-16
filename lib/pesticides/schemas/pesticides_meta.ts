@@ -119,14 +119,12 @@ export interface PesticidesMetaSchema extends
     notice_filters: z.ZodArray<z.ZodString>;
     /** The years with pesticide-use data, newest first */
     years: z.ZodArray<z.ZodNumber>;
-    /** The colors of the section and township maps */
+    /** The section and township maps' color ramp and no-data color */
     ramp: z.ZodObject<{
       /**
-       * The ramp's 8 stops, lightest first. With 8 classes, class i is
-       * `colors[i]`. With fewer, the server's maps spread that many colors
-       * evenly across the ramp, interpolating between stops and always
-       * ending on the darkest, so the top class is `colors[7]` whatever the
-       * count (a single class is `colors[7]` alone).
+       * The ramp's 8 stops, lightest first, for reference. Fill the map's
+       * classes from `classes.<figure>.colors`, which the server samples
+       * from this ramp for however many classes there are.
        */
       colors: z.ZodArray<z.ZodString>;
       /** The color for no data (a value of 0) */
