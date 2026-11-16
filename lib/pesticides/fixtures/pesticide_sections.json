@@ -1,0 +1,64 @@
+{
+  "type": "FeatureCollection",
+  "year": 2023,
+  "features": [
+    {
+      "type": "Feature",
+      "id": "k3x9a",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-119.8012, 36.7451],
+            [-119.7834, 36.7452],
+            [-119.7833, 36.7307],
+            [-119.8011, 36.7306],
+            [-119.8012, 36.7451]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "k3x9a",
+        "mtrs": "M14S20E01",
+        "county": "Fresno County",
+        "lbs_chemical": 1523.42,
+        "lbs_product": 2210.8,
+        "acres_treated": 312.5,
+        "applications": 14
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "p7q2m",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-119.8190, 36.7450],
+            [-119.8012, 36.7451],
+            [-119.8011, 36.7306],
+            [-119.8189, 36.7305],
+            [-119.8190, 36.7450]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "p7q2m",
+        "mtrs": "M14S20E02",
+        "county": null,
+        "lbs_chemical": 0,
+        "lbs_product": 0,
+        "acres_treated": 0,
+        "applications": 0
+      }
+    }
+  ],
+  "classes": {
+    "lbs_chemical": {
+      "breaks": [12.5, 48.1, 130.2, 310.7, 702.4, 1488.9, 3204.6, 18552.3],
+      "min": 0.02
+    },
+    "acres_treated": { "breaks": [], "min": null },
+    "applications": { "breaks": [1, 2, 3, 5, 8, 13, 24, 210], "min": 1 }
+  }
+}
