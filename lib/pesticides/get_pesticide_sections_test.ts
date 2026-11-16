@@ -12,8 +12,10 @@ import {
 } from "./schemas/mod.ts";
 import type { PesticideSectionCollection } from "./types.ts";
 
-// Captured from sections/?bbox=-119.9,36.7,-119.7,36.85&year=2023&classes=1
-// on the local stack, trimmed to three features (the last has no use).
+// Captured from
+// sections/?bbox=-119.9,36.7,-119.7,36.85&year=2023&month=6&category=fumigant&classes=1
+// on the local stack, trimmed to three features (the last has no use);
+// `applications` has 5 classes, so its colors are spread across the ramp.
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }

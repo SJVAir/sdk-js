@@ -12,8 +12,8 @@ import {
 } from "./schemas/mod.ts";
 import type { PesticideTownshipCollection } from "./types.ts";
 
-// Captured from townships/?year=2023&classes=1&geometry=0 on the local stack,
-// trimmed to three features (the last has no use).
+// Captured from townships/?year=2023&month=6&classes=1&geometry=0 on the local
+// stack, trimmed to three features (the last has no use).
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
 }
