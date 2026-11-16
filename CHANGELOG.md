@@ -34,6 +34,10 @@ entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
 
 ### Breaking
 
+- `RegionType` (and `regionTypeSchema`) no longer includes `"place"`. The server
+  has had no place regions since 2026-09-25 (sjvair.com migration
+  `regions/0009_delete_place_regions`), so nothing it sends uses that type. Code
+  that names `"place"` as a region type stops compiling. (#64)
 - `monitors/meta/` entries no longer have `levels`. `EntriesMeta.levels`,
   `EntriesMeta.asIter`, `SJVAirEntryLevel` and `sjvairEntryLevelMetaSchema` are
   removed. Use `scale` instead: a legacy level's `name` is the scale level's
