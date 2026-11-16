@@ -252,7 +252,10 @@ GeoJSON Polygon/MultiPolygon, or `null` with `geometry: false`. With
 `classes: true`, the collection has
 `classes: { lbs_chemical, acres_treated, applications }`, each
 `{ breaks: number[], min: number | null }`. Typed required by overload, like
-`past`.
+`past`. The classes rank every section (or township) in the valley for `year`,
+`month` and the value filters; the area and `county` never change them (the
+server drops `county` before ranking; confirmed against server PR 2's code,
+2026-11-16).
 
 ### `getPesticideTownships(params?)`
 
