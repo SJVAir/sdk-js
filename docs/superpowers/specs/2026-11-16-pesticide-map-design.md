@@ -102,19 +102,19 @@ with a 400 ("bbox too large; zoom in").
 The parameters, all optional, in one object with the `RequestOptions` `signal`
 and `init`:
 
-| Param        | Type                              | Sent as                                                                       |
-| ------------ | --------------------------------- | ----------------------------------------------------------------------------- |
-| `bbox`       | `[west, south, east, north]`      | `bbox=w,s,e,n`                                                                |
-| `region`     | `string` (sqid)                   | `region=`                                                                     |
-| `buffer`     | `0 \| 1 \| 3 \| 5`                | `buffer=` (with `region`)                                                     |
-| `date`       | `string`, `YYYY-MM-DD`            | `date=`. A Pacific date: notices whose 4-day window covers that day           |
-| `chemical`   | `number`                          | `chemical=`. A CDPR chem code, **not** an id (unlike `getPesticidesForPlace`) |
-| `product`    | `number`                          | `product=`. A CDPR product number, not an id                                  |
-| `county`     | `string`                          | `county=` (a county slug)                                                     |
-| `narrow`     | `PesticideNarrow`                 | `narrow=`                                                                     |
-| `method`     | `string`                          | `method=`. SprayDays' wording, any case                                       |
-| `category`   | `string \| ReadonlyArray<string>` | repeated `category=`, as on `getPesticidesForPlace`                           |
-| `iarc_group` | `IARCGroup`                       | `iarc_group=`                                                                 |
+| Param           | Type                              | Sent as                                                                                  |
+| --------------- | --------------------------------- | ---------------------------------------------------------------------------------------- |
+| `bbox`          | `[west, south, east, north]`      | `bbox=w,s,e,n`                                                                           |
+| `region`        | `string` (sqid)                   | `region=`                                                                                |
+| `buffer`        | `0 \| 1 \| 3 \| 5`                | `buffer=` (with `region`)                                                                |
+| `date`          | `string`, `YYYY-MM-DD`            | `date=`. A Pacific date: notices whose 4-day window covers that day                      |
+| `chemical_id`   | `string`                          | `chemical_id=`. A chemical id (sqid), as `getPesticidesForPlace`'s `chemical` takes      |
+| `product_id`    | `string`                          | `product_id=`. A product id (sqid)                                                       |
+| `county`        | `string`                          | `county=` (a county slug)                                                                |
+| `narrow`        | `PesticideNarrow`                 | `narrow=`                                                                                |
+| `aerial_ground` | `AerialGroundFilter`              | `aerial_ground=`. `G`, `A`, `F`, `O` or `none`; the server maps it to SprayDays' wording |
+| `category`      | `string \| ReadonlyArray<string>` | repeated `category=`, as on `getPesticidesForPlace`                                      |
+| `iarc_group`    | `IARCGroup`                       | `iarc_group=`                                                                            |
 
 `bbox` and `region` can be combined (the server applies both). This is unlike
 `getPesticideLocations`, whose area is one of several forms. Per the server
@@ -213,21 +213,21 @@ PR 2 may refine them).
 
 `UseFilters`, for sections and townships:
 
-| Param        | Type                              | Notes                                                   |
-| ------------ | --------------------------------- | ------------------------------------------------------- |
-| `year`       | `number \| "all"`                 | the server defaults to the latest year                  |
-| `month`      | `number` (1-12)                   | each month is ranked alone in `classes`                 |
-| `compare`    | `number`                          | adds the `*_prev` properties                            |
-| `chemical`   | `number`                          | CDPR chem code                                          |
-| `product`    | `number`                          | CDPR product number                                     |
-| `commodity`  | `string`                          | CDPR site code                                          |
-| `county`     | `string`                          | slug; narrows both geometry and numbers                 |
-| `method`     | `string`                          | a rollup method code, or `none`                         |
-| `narrow`     | `PesticideNarrow`                 |                                                         |
-| `category`   | `string \| ReadonlyArray<string>` | repeated                                                |
-| `iarc_group` | `IARCGroup`                       |                                                         |
-| `classes`    | `true`                            | sends `classes=1`                                       |
-| `geometry`   | `false`                           | sends `geometry=0`; features then have `geometry: null` |
+| Param           | Type                              | Notes                                                   |
+| --------------- | --------------------------------- | ------------------------------------------------------- |
+| `year`          | `number \| "all"`                 | the server defaults to the latest year                  |
+| `month`         | `number` (1-12)                   | each month is ranked alone in `classes`                 |
+| `compare`       | `number`                          | adds the `*_prev` properties                            |
+| `chemical_id`   | `string`                          | a chemical id (sqid)                                    |
+| `product_id`    | `string`                          | a product id (sqid)                                     |
+| `commodity_id`  | `string`                          | a commodity id (sqid)                                   |
+| `county`        | `string`                          | slug; narrows both geometry and numbers                 |
+| `aerial_ground` | `AerialGroundFilter`              | `G`, `A`, `F`, `O` or `none`                            |
+| `narrow`        | `PesticideNarrow`                 |                                                         |
+| `category`      | `string \| ReadonlyArray<string>` | repeated                                                |
+| `iarc_group`    | `IARCGroup`                       |                                                         |
+| `classes`       | `true`                            | sends `classes=1`                                       |
+| `geometry`      | `false`                           | sends `geometry=0`; features then have `geometry: null` |
 
 ### `getPesticideSections(params)`
 
@@ -304,16 +304,40 @@ stack, URL-building tests for each area form and filter, type checks for
   2026-11-16: no caller".
 - Each PR description says which sjvair.com PR the beta needs.
 
-## Open: entity filter values (held 2026-11-16)
+## Filter values (decided 2026-11-16)
 
-The coordinator has put a hold on the types of `chemical`, `product`,
-`commodity` and `method` on all three map functions. The dashboard needs them to
-take `pesticides/place/`'s values: id (sqid) strings from `searchPesticides`,
-and `place/`'s method values, not CDPR codes, product numbers or site codes.
-sjvair.com is settling this with the user, and `commodity` on `notices/active/`
-may become explicitly "not applicable". The tables above show today's server
-behaviour. Replace them with the decided shapes before building. Nothing that
-uses these four params is built until then.
+The server added `place/`'s filter values to the map endpoints in PR 1 (server
+spec, "The charts' filter values on the map endpoints"):
+
+- `chemical_id`, `product_id` and `commodity_id` take ids (sqids).
+- `aerial_ground` takes `G|A|F|O|none`.
+- The CDPR-code `chemical`, `product`, `commodity` and `method` params stay on
+  the server.
+- Sending both forms of one filter is a 400.
+- `commodity_id` on notices is a 400 ("notices don't record a commodity").
+- On notices, `chemical_id`, `category` and `iarc_group` must all hold on the
+  same chemical.
+
+**The user picked option 1:** the SDK exposes only the id forms and
+`aerial_ground`, under the server's names. Notices take `chemical_id`,
+`product_id` and `aerial_ground`, with no commodity filter. Sections and
+townships also take `commodity_id`. The CDPR-code forms and `method` aren't
+exposed, because nothing calls them. Adding them later would not break anything;
+removing them later would.
+
+Rejected:
+
+- Exposing both forms, with types that forbid sending both: more surface and
+  tests, for no caller.
+- `getPesticidesForPlace`'s names (`chemical` meaning an id): the SDK name would
+  no longer match the server's.
+
+The dashboard maps its `chemical` filter to `chemical_id` itself.
+
+`getPesticidesMeta()` also gains `notice_filters: string[]` (in PR 1). It lists
+the value filters the notice endpoints accept, today `chemical_id`,
+`product_id`, `category`, `iarc_group`, `narrow` and `aerial_ground`. The type
+is open-ended strings, so the server can add more.
 
 ## Left to the builder
 
