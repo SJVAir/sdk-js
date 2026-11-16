@@ -1,4 +1,5 @@
-import { getSimpleValidationTest } from "$testing";
+import { setOrigin } from "$http";
+import { getSimpleValidationTest, isUnavailable } from "$testing";
 import { assert, assertEquals, assertRejects } from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import noticesFixture from "./fixtures/active_pesticide_notices.json" with {
@@ -8,8 +9,12 @@ import { getActivePesticideNotices } from "./get_active_pesticide_notices.ts";
 import { activePesticideNoticeFeatureSchema } from "./schemas/mod.ts";
 import type { ActivePesticideNoticeFeature } from "./types.ts";
 
-// Built by hand from the server spec until server PR 1 is live; then a
-// captured notices/active/?date= response replaces it.
+// Captured from notices/active/?date=2026-09-20 on the local stack, trimmed to
+// three features.
+if (!Deno.env.has("TEST_REMOTE")) {
+  setOrigin("http://127.0.0.1:8000");
+}
+
 const validateFeature = getSimpleValidationTest(
   activePesticideNoticeFeatureSchema,
 );
@@ -170,5 +175,51 @@ Deno.test("past is a boolean when a date is given", async () => {
     assertEquals(typeof maybe, "boolean");
   } finally {
     stub.restore();
+  }
+});
+
+function pacificToday(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles",
+  }).format(new Date());
+}
+
+// Local notice data can end weeks back, so a dated day may be empty there;
+// every feature returned must still match the schema and carry `past`.
+for (const date of [pacificToday(), "2026-09-20"]) {
+  Deno.test(`GET  pesticides/notices/active/?date=${date}`, async () => {
+    try {
+      const result = await getActivePesticideNotices({ date });
+      validateFeature(result.features);
+      for (const feature of result.features) {
+        assertEquals(typeof feature.properties.past, "boolean");
+      }
+      if (result.features.length === 0) {
+        console.warn(`no notices for ${date} on this server.`);
+      }
+    } catch (error) {
+      if (!isUnavailable(error)) throw error;
+      console.warn("pesticides/notices/active/ unavailable; skipping.");
+    }
+  });
+}
+
+Deno.test("GET  pesticides/notices/active/ with a bad date is a 400", async () => {
+  try {
+    const error = await assertRejects(() =>
+      getActivePesticideNotices({ date: "2026-13-01" })
+    );
+    if (isUnavailable(error)) {
+      console.warn("pesticides/notices/active/ unavailable; skipping.");
+      return;
+    }
+    const result = (error as {
+      cause: { result: { status: number; body: { error: unknown } } };
+    }).cause.result;
+    assertEquals(result.status, 400);
+    assertEquals(typeof result.body.error, "string");
+  } catch (error) {
+    if (!isUnavailable(error)) throw error;
+    console.warn("pesticides/notices/active/ unavailable; skipping.");
   }
 });
