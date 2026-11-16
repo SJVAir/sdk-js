@@ -32,6 +32,10 @@ removal (#60) and `source` / `external_id` on `getPesticideLocations` features
 entry descriptions and `published` on `monitors/meta/` (#62, for sjvair.com
 #332). **5.0.0-beta.11** (2026-11-15): the `type` scope on the bulk region
 summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
+**5.0.0-beta.12** (unreleased): `getActivePesticideNotices`, the
+`pesticides/meta/` `notes`, `badges`, `links` and `notice_filters`, and the
+open-ended location `source` / `type`. It needs sjvair.com `develop` with the
+pesticide notices change (server PR 1).
 
 ### Breaking
 
@@ -82,6 +86,15 @@ summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
 
 ### Added
 
+- `getActivePesticideNotices` (`pesticides/notices/active/`): the map's spray
+  notices as a GeoJSON FeatureCollection. `date` (a Pacific day) returns the
+  notices active that day, each with `past`. Filters take ids (`chemical_id`,
+  `product_id`), `aerial_ground`, `category`, `iarc_group`, `narrow`, `county`,
+  `bbox` and `region` / `buffer`.
+- `getPesticidesMeta` gains `notes` (explainer notes keyed by note key),
+  `badges` (the classification badges in display order, each naming its note),
+  `links.spraydays_signup` and `notice_filters`. New types: `PesticideNote`,
+  `PesticideBadge`, `PesticideBadgeKey`.
 - The bulk region summaries (`getRegionSummariesBulkHourly` through
   `getRegionSummariesBulkYearly`, and `getRegionSummariesBulkDailyOpen`) can
   take `type` as their scope in place of `region`: every current region of one
