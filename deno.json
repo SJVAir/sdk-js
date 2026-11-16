@@ -92,6 +92,7 @@
     "./monitors/types": "./lib/monitors/types.ts",
     "./open-days": "./lib/open_days.ts",
     "./pesticides": "./lib/pesticides/mod.ts",
+    "./pesticides/get_active_pesticide_notices": "./lib/pesticides/get_active_pesticide_notices.ts",
     "./pesticides/get_chemical_details": "./lib/pesticides/get_chemical_details.ts",
     "./pesticides/get_chemicals_list": "./lib/pesticides/get_chemicals_list.ts",
     "./pesticides/get_commodities_list": "./lib/pesticides/get_commodities_list.ts",

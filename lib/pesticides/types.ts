@@ -5,6 +5,9 @@
  */
 import type { infer as zinfer } from "zod";
 import type {
+  activePesticideNoticeCollectionSchema,
+  activePesticideNoticeFeatureSchema,
+  activePesticideNoticePropertiesSchema,
   aerialGroundFilterSchema,
   aerialGroundSchema,
   chemicalDetailSchema,
@@ -160,3 +163,18 @@ export type PesticideBadge = zinfer<typeof pesticideBadgeSchema>;
 
 /** One explainer note from `getPesticidesMeta().notes` */
 export type PesticideNote = zinfer<typeof pesticideNoteSchema>;
+
+/** The properties of one spray notice on the map */
+export type ActivePesticideNoticeProperties = zinfer<
+  typeof activePesticideNoticePropertiesSchema
+>;
+
+/** One spray notice, as a GeoJSON Point feature */
+export type ActivePesticideNoticeFeature = zinfer<
+  typeof activePesticideNoticeFeatureSchema
+>;
+
+/** The FeatureCollection `getActivePesticideNotices` returns */
+export type ActivePesticideNoticeCollection = zinfer<
+  typeof activePesticideNoticeCollectionSchema
+>;

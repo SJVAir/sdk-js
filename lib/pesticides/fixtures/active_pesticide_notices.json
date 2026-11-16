@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "as_of": "2026-11-16T20:15:02.418311+00:00",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "n4k2p",
+      "geometry": { "type": "Point", "coordinates": [-119.7731, 36.7412] },
+      "properties": {
+        "id": "n4k2p",
+        "scheduled_application": "2026-11-14T07:00:00-08:00",
+        "scheduled_end": "2026-11-18T07:00:00-08:00",
+        "county": "Fresno County",
+        "application_method": "Ground",
+        "treated_amount": 40.0,
+        "treated_units": "A",
+        "section": "MDM-T14S-R20E-12",
+        "section_id": "s8f3k",
+        "products": [{ "id": "p1x2y", "name": "TELONE II" }],
+        "chemicals": [
+          {
+            "id": "gs65e",
+            "name": "1,3-DICHLOROPROPENE",
+            "display_name": "1,3-Dichloropropene",
+            "is_of_concern": true
+          }
+        ],
+        "past": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "n7w9q",
+      "geometry": null,
+      "properties": {
+        "id": "n7w9q",
+        "scheduled_application": "2026-11-13T22:30:00-08:00",
+        "scheduled_end": "2026-11-17T22:30:00-08:00",
+        "county": null,
+        "application_method": "Aircraft",
+        "treated_amount": null,
+        "treated_units": "",
+        "section": null,
+        "section_id": null,
+        "products": [],
+        "chemicals": [],
+        "past": false
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "n2c5d",
+      "geometry": { "type": "Point", "coordinates": [-119.6012, 36.5523] },
+      "properties": {
+        "id": "n2c5d",
+        "scheduled_application": "2026-11-10T08:00:00-08:00",
+        "scheduled_end": "2026-11-14T08:00:00-08:00",
+        "county": "Fresno County",
+        "application_method": "",
+        "treated_amount": 12.5,
+        "treated_units": "A",
+        "section": "MDM-T15S-R21E-03",
+        "section_id": "s2m9t",
+        "products": [{ "id": "p9q8r", "name": "VAPAM HL" }],
+        "chemicals": [
+          {
+            "id": "c3h7n",
+            "name": "METAM-SODIUM",
+            "display_name": "Metam-sodium",
+            "is_of_concern": true
+          }
+        ],
+        "past": true
+      }
+    }
+  ]
+}
