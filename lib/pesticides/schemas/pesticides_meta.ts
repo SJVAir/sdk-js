@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { scaleSchema } from "../../meta/schemas/mod.ts";
 import {
   type PesticideBadgeSchema,
   pesticideBadgeSchema,
@@ -100,8 +101,9 @@ export interface PesticidesMetaSchema extends
     /**
      * Every explainer note, keyed by note key. The server guarantees
      * `noi_meaning`, `pur_lag` (when use data is released), `badges`,
-     * `prop65`, `carb_tac`, `iarc_1`, `iarc_2a`, `iarc_2b`, `iarc_3` and
-     * `california_restricted`, and may serve more.
+     * `prop65`, `carb_tac`, `iarc_1`, `iarc_2a`, `iarc_2b`, `iarc_3`,
+     * `california_restricted` and `shades_valley` (the section and township
+     * maps' legend), and may serve more.
      */
     notes: z.ZodRecord<z.ZodString, PesticideNoteSchema>;
     /** The chemical classification badges, in display order */
@@ -116,6 +118,24 @@ export interface PesticidesMetaSchema extends
      * `category` and `aerial_ground`
      */
     notice_filters: z.ZodArray<z.ZodString>;
+    /** The years with pesticide-use data, newest first */
+    years: z.ZodArray<z.ZodNumber>;
+    /** The section and township maps' color ramp and no-data color */
+    ramp: z.ZodObject<{
+      /**
+       * The ramp's 8 stops, lightest first, for reference. Fill the map's
+       * classes from `classes.<figure>.colors`, which the server samples
+       * from this ramp for however many classes there are.
+       */
+      colors: z.ZodArray<z.ZodString>;
+      /** The color for no data (a value of 0) */
+      no_data: z.ZodString;
+    }>;
+    /**
+     * The scales the pesticide map's layers are drawn with, by id:
+     * `spray-notice` (one category level, the notice marker's color)
+     */
+    scales: z.ZodRecord<z.ZodString, typeof scaleSchema>;
   }> {}
 
 /**
@@ -132,4 +152,7 @@ export const pesticidesMetaSchema: PesticidesMetaSchema = z.object({
   badges: z.array(pesticideBadgeSchema),
   links: z.object({ spraydays_signup: z.string() }),
   notice_filters: z.array(z.string()),
+  years: z.array(z.number()),
+  ramp: z.object({ colors: z.array(z.string()), no_data: z.string() }),
+  scales: z.record(z.string(), scaleSchema),
 });

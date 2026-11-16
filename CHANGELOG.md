@@ -35,6 +35,10 @@ summaries (#63, for sjvair.com #334) and the `place` region type removal (#64).
 **5.0.0-beta.12** (2026-11-16): `getActivePesticideNotices`, the
 `pesticides/meta/` `notes`, `badges`, `links` and `notice_filters`, and the
 open-ended location `source` / `type` (#65, for sjvair.com #335).
+**5.0.0-beta.13** (unreleased): `getPesticideSections`, `getPesticideTownships`,
+`getPesticideSectionDetails` and the `pesticides/meta/` `years`, `ramp` and
+`scales`. It needs sjvair.com `develop` with the pesticide map classes, class
+colors and spray-notice scale changes (#336, #337, #338).
 
 ### Breaking
 
@@ -87,9 +91,30 @@ open-ended location `source` / `type` (#65, for sjvair.com #335).
 
 ### Added
 
+- `getPesticideSections` (`pesticides/sections/`) and `getPesticideTownships`
+  (`pesticides/townships/`): the pesticide-use map's MTRS sections and PLSS
+  townships as GeoJSON FeatureCollections, each feature with its year's totals
+  (and the `compare` year's as `*_prev`). Sections need an area: a `bbox`, a
+  `lat` / `lng` / `radius`, or a `region` / `buffer`; townships take an optional
+  `bbox` or `region`. Both take `PesticideUseFilters` (`year`, `month`,
+  `compare`, the id filters, `county`, `aerial_ground`, `narrow`, `category`,
+  `iarc_group`), `geometry: false` for values only, and `classes: true` for the
+  valley-wide color classes (`classes`, typed present when asked for: per
+  figure, `breaks`, `min` and one fill per class in `colors`). New types include
+  `PesticideUseFilters`, `PesticideSectionsArea`, `PesticideSectionCollection`,
+  `PesticideTownshipCollection` and `PesticideUseClasses`.
+- `getPesticideSectionDetails` (`pesticides/sections/<id>/`): one section's
+  totals by year and month and its top chemicals (with their `badges` keys),
+  products and commodities. Type `PesticideSectionDetail`.
+- `getPesticidesMeta` gains `years` (years with use data, newest first), `ramp`
+  (the maps' color ramp and `no_data` color) and `scales` (by id; the
+  `spray-notice` scale, one category level, in the same shape as
+  `getHMSMeta().scales`).
 - `getActivePesticideNotices` (`pesticides/notices/active/`): the map's spray
   notices as a GeoJSON FeatureCollection. `date` (a Pacific day) returns the
-  notices active that day, each with `past`. Filters take ids (`chemical_id`,
+  notices active that day, each with `past`. Each notice also has
+  `aerial_ground`, its method as the filter codes it (`G`, `A`, `F`, `O` or
+  `none`; from beta.13, sjvair.com #338). Filters take ids (`chemical_id`,
   `product_id`), `aerial_ground`, `category`, `iarc_group`, `narrow`, `county`,
   `bbox` and `region` / `buffer`.
 - `getPesticidesMeta` gains `notes` (explainer notes keyed by note key),

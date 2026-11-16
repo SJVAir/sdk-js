@@ -26,10 +26,17 @@ import type {
   pesticideNoticeSchema,
   pesticideRegionSchema,
   pesticideSearchHitSchema,
+  pesticideSectionCollectionSchema,
+  pesticideSectionDetailSchema,
+  pesticideSectionFeatureSchema,
   pesticidesForPlaceSchema,
   pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
   pesticideSummarySchema,
+  pesticideTownshipCollectionSchema,
+  pesticideTownshipFeatureSchema,
+  pesticideUseClassesSchema,
+  pesticideUseClassSchema,
   pesticideUseSchema,
   productDetailSchema,
   productSchema,
@@ -177,4 +184,35 @@ export type ActivePesticideNoticeFeature = zinfer<
 /** The FeatureCollection `getActivePesticideNotices` returns */
 export type ActivePesticideNoticeCollection = zinfer<
   typeof activePesticideNoticeCollectionSchema
+>;
+
+/** One figure's color classes on the pesticide-use map */
+export type PesticideUseClass = zinfer<typeof pesticideUseClassSchema>;
+
+/** The valley-wide color classes sent with `classes: true` */
+export type PesticideUseClasses = zinfer<typeof pesticideUseClassesSchema>;
+
+/** One MTRS section with its pesticide-use totals, as a GeoJSON feature */
+export type PesticideSectionFeature = zinfer<
+  typeof pesticideSectionFeatureSchema
+>;
+
+/** The FeatureCollection `getPesticideSections` returns */
+export type PesticideSectionCollection = zinfer<
+  typeof pesticideSectionCollectionSchema
+>;
+
+/** One PLSS township with its pesticide-use totals, as a GeoJSON feature */
+export type PesticideTownshipFeature = zinfer<
+  typeof pesticideTownshipFeatureSchema
+>;
+
+/** The FeatureCollection `getPesticideTownships` returns */
+export type PesticideTownshipCollection = zinfer<
+  typeof pesticideTownshipCollectionSchema
+>;
+
+/** One MTRS section's pesticide use, from `getPesticideSectionDetails` */
+export type PesticideSectionDetail = zinfer<
+  typeof pesticideSectionDetailSchema
 >;

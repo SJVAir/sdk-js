@@ -154,10 +154,9 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/notices/active/`
 - [ ] `/api/2.0/pesticides/notices/archive/` <- Not wrapped: deferred
       2026-11-16, no caller yet
-- [ ] `/api/2.0/pesticides/sections/` <- Not wrapped yet: comes with the
-      pesticide map use group
-- [ ] `/api/2.0/pesticides/sections/<section_id>/` <- Same
-- [ ] `/api/2.0/pesticides/townships/` <- Same
+- [x] `/api/2.0/pesticides/sections/`
+- [x] `/api/2.0/pesticides/sections/<section_id>/`
+- [x] `/api/2.0/pesticides/townships/`
 
 ## Regions
 

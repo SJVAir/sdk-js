@@ -1,0 +1,119 @@
+{
+  "type": "FeatureCollection",
+  "year": 2023,
+  "features": [
+    {
+      "type": "Feature",
+      "id": "MDM-T01N-R04E",
+      "geometry": null,
+      "properties": {
+        "id": "MDM-T01N-R04E",
+        "name": "MDM-T01N-R04E",
+        "sections": 34,
+        "lbs_chemical": 3410.01589263,
+        "lbs_product": 8388.300799999999,
+        "acres_treated": 7661.7,
+        "applications": 176
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "MDM-T01N-R05E",
+      "geometry": null,
+      "properties": {
+        "id": "MDM-T01N-R05E",
+        "name": "MDM-T01N-R05E",
+        "sections": 36,
+        "lbs_chemical": 48193.883405850014,
+        "lbs_product": 121776.4728,
+        "acres_treated": 63945.29999999999,
+        "applications": 695
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "MDM-T01N-R11E",
+      "geometry": null,
+      "properties": {
+        "id": "MDM-T01N-R11E",
+        "name": "MDM-T01N-R11E",
+        "sections": 24,
+        "lbs_chemical": 0,
+        "lbs_product": 0,
+        "acres_treated": 0,
+        "applications": 0
+      }
+    }
+  ],
+  "classes": {
+    "lbs_chemical": {
+      "breaks": [
+        950.1537869,
+        5508.528518720001,
+        11595.83416484,
+        17778.818196279997,
+        29853.908755479995,
+        53625.42165452999,
+        91652.48061793,
+        362337.89766414
+      ],
+      "min": 0.0001,
+      "colors": [
+        "#deebf7",
+        "#c6dbef",
+        "#9ecae1",
+        "#6baed6",
+        "#4292c6",
+        "#2171b5",
+        "#08519c",
+        "#08306b"
+      ]
+    },
+    "acres_treated": {
+      "breaks": [
+        1435.26,
+        6271.18,
+        11558.66,
+        17189.569999999992,
+        25602.96,
+        32352.159999999996,
+        41719.62000000001,
+        194726.84
+      ],
+      "min": 0.2160238751147842,
+      "colors": [
+        "#deebf7",
+        "#c6dbef",
+        "#9ecae1",
+        "#6baed6",
+        "#4292c6",
+        "#2171b5",
+        "#08519c",
+        "#08306b"
+      ]
+    },
+    "applications": {
+      "breaks": [
+        64,
+        165,
+        269,
+        383,
+        542,
+        723,
+        1096,
+        2554
+      ],
+      "min": 1,
+      "colors": [
+        "#deebf7",
+        "#c6dbef",
+        "#9ecae1",
+        "#6baed6",
+        "#4292c6",
+        "#2171b5",
+        "#08519c",
+        "#08306b"
+      ]
+    }
+  }
+}

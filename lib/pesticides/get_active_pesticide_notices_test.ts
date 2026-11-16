@@ -57,6 +57,29 @@ Deno.test("a notice without scheduled_end fails the schema", () => {
   assertEquals(parsed.success, false);
 });
 
+Deno.test("a notice carries its method code", () => {
+  for (const { properties } of features) {
+    assert(["G", "A", "F", "O", "none"].includes(properties.aerial_ground));
+  }
+});
+
+Deno.test("a notice without aerial_ground fails the schema", () => {
+  const { aerial_ground: _, ...properties } = features[0].properties;
+  const parsed = activePesticideNoticeFeatureSchema.safeParse({
+    ...features[0],
+    properties,
+  });
+  assertEquals(parsed.success, false);
+});
+
+Deno.test("an empty aerial_ground fails the schema", () => {
+  const parsed = activePesticideNoticeFeatureSchema.safeParse({
+    ...features[0],
+    properties: { ...features[0].properties, aerial_ground: "" },
+  });
+  assertEquals(parsed.success, false);
+});
+
 Deno.test("getActivePesticideNotices calls notices/active/", async () => {
   const stub = stubFetch(() => jsonResponse(noticesFixture));
   try {

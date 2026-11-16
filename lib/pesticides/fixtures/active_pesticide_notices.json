@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "as_of": "2026-11-16T21:51:39.746272+00:00",
+  "as_of": "2026-11-16T22:52:05.657073+00:00",
   "features": [
     {
       "type": "Feature",
@@ -18,6 +18,7 @@
         "scheduled_end": "2026-09-21T01:00:00+00:00",
         "county": "Fresno County",
         "application_method": "Aircraft",
+        "aerial_ground": "A",
         "treated_amount": 20.0,
         "treated_units": "Acres",
         "section": "MDM-T21S-R18E-08",
@@ -50,6 +51,7 @@
         "scheduled_end": "2026-09-21T13:15:00+00:00",
         "county": "Kern County",
         "application_method": "Fumigation",
+        "aerial_ground": "F",
         "treated_amount": 20.0,
         "treated_units": "Acres",
         "section": "MDM-T26S-R25E-31",
@@ -93,6 +95,7 @@
         "scheduled_end": "2026-09-21T13:30:00+00:00",
         "county": "San Joaquin County",
         "application_method": "Ground",
+        "aerial_ground": "G",
         "treated_amount": 23.1,
         "treated_units": "Acres",
         "section": "MDM-T02N-R05E-14",

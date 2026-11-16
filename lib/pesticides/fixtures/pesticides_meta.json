@@ -258,6 +258,13 @@
         "detail": null,
         "source_url": "https://www.cdpr.ca.gov/pesticide-use-in-california/pesticide-use-reporting/"
       },
+      "shades_valley": {
+        "key": "shades_valley",
+        "title": "What the shades mean",
+        "summary": "Darker squares had more of what the map shows (pounds, acres treated, or applications) in that year or month. Every section or township in the valley is ranked together, so a color means the same range anywhere on the map, but not from one month to the next. Gray means nothing was reported.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/pesticide-use-in-california/pesticide-use-reporting/"
+      },
       "badges": {
         "key": "badges",
         "title": "What the badges mean",
@@ -313,6 +320,56 @@
       "iarc_group",
       "narrow",
       "aerial_ground"
-    ]
+    ],
+    "years": [
+      2023,
+      2022,
+      2021,
+      2020,
+      2019,
+      2018
+    ],
+    "ramp": {
+      "colors": [
+        "#deebf7",
+        "#c6dbef",
+        "#9ecae1",
+        "#6baed6",
+        "#4292c6",
+        "#2171b5",
+        "#08519c",
+        "#08306b"
+      ],
+      "no_data": "#f0f0f0"
+    },
+    "scales": {
+      "spray-notice": {
+        "id": "spray-notice",
+        "label": "Spray Notices",
+        "units": "",
+        "kind": "category",
+        "source": {
+          "name": "California Department of Pesticide Regulation, SprayDays",
+          "url": "https://spraydays.cdpr.ca.gov/"
+        },
+        "averaging_hours": null,
+        "daily_statistic": null,
+        "daily_statistic_label": null,
+        "levels": [
+          {
+            "key": "notice",
+            "label": "Spray notice",
+            "color": "#e64980",
+            "tier": null,
+            "description": "",
+            "guidance": "",
+            "min": null,
+            "max": null,
+            "value": "notice",
+            "opacity": null
+          }
+        ]
+      }
+    }
   }
 }
