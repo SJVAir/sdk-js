@@ -32,6 +32,8 @@ import type {
   pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
   pesticideSummarySchema,
+  pesticideTownshipCollectionSchema,
+  pesticideTownshipFeatureSchema,
   pesticideUseClassesSchema,
   pesticideUseClassSchema,
   pesticideUseSchema,
@@ -197,4 +199,14 @@ export type PesticideSectionFeature = zinfer<
 /** The FeatureCollection `getPesticideSections` returns */
 export type PesticideSectionCollection = zinfer<
   typeof pesticideSectionCollectionSchema
+>;
+
+/** One PLSS township with its pesticide-use totals, as a GeoJSON feature */
+export type PesticideTownshipFeature = zinfer<
+  typeof pesticideTownshipFeatureSchema
+>;
+
+/** The FeatureCollection `getPesticideTownships` returns */
+export type PesticideTownshipCollection = zinfer<
+  typeof pesticideTownshipCollectionSchema
 >;

@@ -140,3 +140,66 @@ export const pesticideSectionCollectionSchema:
     classes: z.optional(pesticideUseClassesSchema),
     features: z.array(pesticideSectionFeatureSchema),
   });
+
+/** The properties of one PLSS township on the map */
+export interface PesticideTownshipPropertiesSchema extends
+  z.ZodObject<
+    {
+      /**
+       * The township's PLSS designation, e.g. `MDM-T14S-R20E`. It is
+       * permanent: it changes only if the MTRS sections are reimported under
+       * different names.
+       */
+      id: z.ZodString;
+      /** The same as `id` */
+      name: z.ZodString;
+      /** How many MTRS sections make up the township (up to 36) */
+      sections: z.ZodNumber;
+    } & PesticideUseTotalsShape
+  > {}
+
+export const pesticideTownshipPropertiesSchema:
+  PesticideTownshipPropertiesSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    sections: z.number(),
+    ...pesticideUseTotalsShape,
+  });
+
+/** One PLSS township (a 6x6 block of sections) as a GeoJSON feature */
+export interface PesticideTownshipFeatureSchema extends
+  z.ZodObject<{
+    type: z.ZodLiteral<"Feature">;
+    /** The township's PLSS designation, same as `properties.id` */
+    id: z.ZodString;
+    /** The township's outline, or null when fetched with `geometry: false` */
+    geometry: z.ZodNullable<RegionGeometrySchema>;
+    properties: PesticideTownshipPropertiesSchema;
+  }> {}
+
+export const pesticideTownshipFeatureSchema: PesticideTownshipFeatureSchema = z
+  .object({
+    type: z.literal("Feature"),
+    id: z.string(),
+    geometry: z.nullable(regionGeometrySchema),
+    properties: pesticideTownshipPropertiesSchema,
+  });
+
+/** The townships `getPesticideTownships` returns */
+export interface PesticideTownshipCollectionSchema extends
+  z.ZodObject<{
+    type: z.ZodLiteral<"FeatureCollection">;
+    /** The year the totals cover */
+    year: PesticideMapYearSchema;
+    /** The color classes; sent only with `classes: true` */
+    classes: z.ZodOptional<PesticideUseClassesSchema>;
+    features: z.ZodArray<PesticideTownshipFeatureSchema>;
+  }> {}
+
+export const pesticideTownshipCollectionSchema:
+  PesticideTownshipCollectionSchema = z.object({
+    type: z.literal("FeatureCollection"),
+    year: pesticideMapYearSchema,
+    classes: z.optional(pesticideUseClassesSchema),
+    features: z.array(pesticideTownshipFeatureSchema),
+  });

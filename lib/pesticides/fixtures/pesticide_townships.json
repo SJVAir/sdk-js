@@ -1,0 +1,87 @@
+{
+  "type": "FeatureCollection",
+  "year": 2023,
+  "features": [
+    {
+      "type": "Feature",
+      "id": "MDM-T14S-R20E",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-119.8190, 36.7450],
+            [-119.7120, 36.7458],
+            [-119.7113, 36.6587],
+            [-119.8184, 36.6580],
+            [-119.8190, 36.7450]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "MDM-T14S-R20E",
+        "name": "MDM-T14S-R20E",
+        "sections": 36,
+        "lbs_chemical": 48211.7,
+        "lbs_product": 70120.4,
+        "acres_treated": 9120.25,
+        "applications": 403
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "MDM-T14S-R21E",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [-119.7120, 36.7458],
+              [-119.6050, 36.7466],
+              [-119.6043, 36.6595],
+              [-119.7113, 36.6587],
+              [-119.7120, 36.7458]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "MDM-T14S-R21E",
+        "name": "MDM-T14S-R21E",
+        "sections": 31,
+        "lbs_chemical": 0,
+        "lbs_product": 0,
+        "acres_treated": 0,
+        "applications": 0
+      }
+    }
+  ],
+  "classes": {
+    "lbs_chemical": {
+      "breaks": [
+        210.4,
+        1022.8,
+        3310.5,
+        7802.1,
+        14520.6,
+        26033.9,
+        48211.7,
+        190440.2
+      ],
+      "min": 3.1
+    },
+    "acres_treated": {
+      "breaks": [
+        40.5,
+        210.75,
+        805.0,
+        1720.25,
+        3300.0,
+        5900.5,
+        9120.25,
+        41022.0
+      ],
+      "min": 0.5
+    },
+    "applications": { "breaks": [], "min": null }
+  }
+}
