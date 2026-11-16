@@ -598,7 +598,27 @@ Deno.test("Module: pesticides meta", async (t) => {
     }
   });
 
-  for (const field of ["notes", "badges", "links", "notice_filters"] as const) {
+  await t.step("years are newest first", () => {
+    assert(meta.years.length > 0);
+    assertEquals(meta.years, [...meta.years].sort((a, b) => b - a));
+  });
+
+  await t.step("ramp has colors and no_data", () => {
+    assertEquals(meta.ramp.colors.length, 8);
+    assertEquals(meta.ramp.no_data, "#f0f0f0");
+    assertExists(meta.notes.shades_valley);
+  });
+
+  for (
+    const field of [
+      "notes",
+      "badges",
+      "links",
+      "notice_filters",
+      "years",
+      "ramp",
+    ] as const
+  ) {
     await t.step(`meta without ${field} is rejected`, () => {
       const { [field]: _, ...rest } = meta;
       assertEquals(pesticidesMetaSchema.safeParse(rest).success, false);
