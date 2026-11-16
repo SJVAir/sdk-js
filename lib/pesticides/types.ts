@@ -27,6 +27,7 @@ import type {
   pesticideRegionSchema,
   pesticideSearchHitSchema,
   pesticideSectionCollectionSchema,
+  pesticideSectionDetailSchema,
   pesticideSectionFeatureSchema,
   pesticidesForPlaceSchema,
   pesticidesMetaSchema,
@@ -209,4 +210,9 @@ export type PesticideTownshipFeature = zinfer<
 /** The FeatureCollection `getPesticideTownships` returns */
 export type PesticideTownshipCollection = zinfer<
   typeof pesticideTownshipCollectionSchema
+>;
+
+/** One MTRS section's pesticide use, from `getPesticideSectionDetails` */
+export type PesticideSectionDetail = zinfer<
+  typeof pesticideSectionDetailSchema
 >;

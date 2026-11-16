@@ -18,3 +18,4 @@ export * from "./pesticides_meta.ts";
 export * from "./pesticide_search.ts";
 export * from "./active_pesticide_notice.ts";
 export * from "./pesticide_map_use.ts";
+export * from "./pesticide_section_detail.ts";

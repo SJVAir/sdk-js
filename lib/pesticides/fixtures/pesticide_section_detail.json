@@ -1,0 +1,160 @@
+{
+  "id": "k3x9a",
+  "mtrs": "M14S20E01",
+  "county": "Fresno County",
+  "year": 2023,
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -119.801234,
+          36.745101
+        ],
+        [
+          -119.783401,
+          36.745212
+        ],
+        [
+          -119.783312,
+          36.730744
+        ],
+        [
+          -119.801145,
+          36.730633
+        ],
+        [
+          -119.801234,
+          36.745101
+        ]
+      ]
+    ]
+  },
+  "years": [
+    {
+      "year": 2023,
+      "lbs_chemical": 1523.42,
+      "lbs_product": 2210.8,
+      "acres_treated": 312.5,
+      "applications": 14
+    },
+    {
+      "year": 2022,
+      "lbs_chemical": 980.1,
+      "lbs_product": 1402.33,
+      "acres_treated": 200.0,
+      "applications": 9
+    }
+  ],
+  "months": [
+    {
+      "month": 1,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 2,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 3,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 4,
+      "lbs_chemical": 412.5,
+      "acres_treated": 80.0,
+      "applications": 3
+    },
+    {
+      "month": 5,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 6,
+      "lbs_chemical": 1110.92,
+      "acres_treated": 232.5,
+      "applications": 11
+    },
+    {
+      "month": 7,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 8,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 9,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 10,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 11,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    },
+    {
+      "month": 12,
+      "lbs_chemical": 0,
+      "acres_treated": 0,
+      "applications": 0
+    }
+  ],
+  "top_chemicals": [
+    {
+      "id": "gs65e",
+      "name": "1,3-DICHLOROPROPENE",
+      "display_name": "1,3-Dichloropropene",
+      "lbs": 1100.0,
+      "is_of_concern": true,
+      "badges": [
+        "prop65",
+        "iarc_2b"
+      ]
+    },
+    {
+      "id": "h2k4n",
+      "name": "SULFUR",
+      "display_name": "Sulfur",
+      "lbs": 423.42,
+      "is_of_concern": false,
+      "badges": []
+    }
+  ],
+  "top_products": [
+    {
+      "id": "p1x2y",
+      "name": "TELONE II",
+      "display_name": "Telone II",
+      "lbs": 1310.6
+    }
+  ],
+  "top_commodities": [
+    {
+      "id": "c9z8w",
+      "name": "ALMOND",
+      "display_name": "Almond",
+      "lbs": 1523.42
+    }
+  ]
+}
