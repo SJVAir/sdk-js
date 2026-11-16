@@ -1,10 +1,13 @@
 /**
  * Utilities for fetching aggregated region summaries in bulk, across all
- * regions matching a date range and region filter.
+ * regions matching a date range and a region scope.
  *
- * `start`, `end`, and `region` are all required; the server rejects an
- * invalid or missing date range, or a missing `region` filter, with a 400,
- * which surfaces as a thrown error.
+ * `start` and `end` are required, and so is exactly one scope: `region` (one
+ * or more region sqids) or `type` (every current region of one type, such as
+ * `"tract"`; not `"land_use"`). The server rejects an invalid or missing date
+ * range, or a missing or doubled scope, with a 400, which surfaces as a thrown
+ * error. A `type` covers the type's current regions only (no retired regions,
+ * no old-vintage tracts), and a type with nothing to show returns `[]`.
  *
  * @example Usage
  * ```ts
@@ -37,39 +40,71 @@
  * //   },
  * //   ... (more regions)
  * // ]
+ *
+ * // Or scope it to every current census tract:
+ * const tracts = await getRegionSummariesBulkDaily({
+ *   entryType: "pm25",
+ *   start: "2024-01-01",
+ *   end: "2024-01-31",
+ *   type: "tract",
+ * });
  * ```
  *
  * @module
  */
 import { fetchAllBulkPages, mergeBulkPages, type RequestOptions } from "$http";
 import { mergeBulkOpenDays } from "../open_days.ts";
-import type { RegionWithSummaries } from "./types.ts";
+import type { RegionType, RegionWithSummaries } from "./types.ts";
+
+/** The region types a bulk region summary request can be scoped to */
+export type RegionSummaryBulkType = Exclude<RegionType, "land_use">;
 
 /**
- * The configuration options shared by all bulk region summary endpoints
+ * The regions a bulk region summary request covers: exactly one of `region`
+ * or `type`
  */
-export interface RegionSummaryBulkRequestConfig {
-  /** The type of entry the summaries were aggregated from */
-  entryType: string;
-
-  /** The (inclusive) start of the requested date range */
-  start: Date | string;
-
-  /** The (inclusive) end of the requested date range */
-  end: Date | string;
-
-  /** Restrict results to one or more regions, by region sqid */
-  region: string | Array<string>;
-}
+export type RegionSummaryBulkScope =
+  | {
+    /** Restrict results to one or more regions, by region sqid */
+    region: string | Array<string>;
+    type?: never;
+  }
+  | {
+    /**
+     * Cover every current region of one type: no retired regions and no
+     * old-vintage tracts
+     */
+    type: RegionSummaryBulkType;
+    region?: never;
+  };
 
 /**
- * The configuration options for the bulk region open-days endpoint: the bulk
- * lists' region filter, without dates
+ * The configuration options shared by all bulk region summary endpoints: the
+ * entry type, the date range, and exactly one of `region` or `type`
  */
-export type RegionSummaryBulkOpenRequestConfig = Omit<
-  RegionSummaryBulkRequestConfig,
-  "start" | "end"
->;
+export type RegionSummaryBulkRequestConfig =
+  & {
+    /** The type of entry the summaries were aggregated from */
+    entryType: string;
+
+    /** The (inclusive) start of the requested date range */
+    start: Date | string;
+
+    /** The (inclusive) end of the requested date range */
+    end: Date | string;
+  }
+  & RegionSummaryBulkScope;
+
+/**
+ * The configuration options for the bulk region open-days endpoint: the entry
+ * type and the bulk lists' region scope, without dates
+ */
+export type RegionSummaryBulkOpenRequestConfig =
+  & {
+    /** The type of entry the summaries were aggregated from */
+    entryType: string;
+  }
+  & RegionSummaryBulkScope;
 
 /**
  * Formats a Date or string as the "YYYY-MM-DD" format expected by the bulk
@@ -92,9 +127,24 @@ function toApiDate(date: Date | string): string {
 }
 
 /**
+ * Builds the scope search param: `type` or `region`, never both.
+ *
+ * @param scope An object containing either a region filter or a region type
+ *
+ * @returns A Record holding the one scope search param
+ */
+function getBulkScopeSearchParams(
+  scope: RegionSummaryBulkScope,
+): Record<string, string | Array<string>> {
+  return scope.type !== undefined
+    ? { type: scope.type }
+    : { region: scope.region };
+}
+
+/**
  * Builds the search params shared by the bulk region summary endpoints.
  *
- * @param config An object containing the requested date range and region filter
+ * @param config An object containing the requested date range and region scope
  *
  * @returns A Record of search params for the bulk region summary endpoints
  */
@@ -104,7 +154,7 @@ function getBulkSummarySearchParams(
   return {
     start: toApiDate(config.start),
     end: toApiDate(config.end),
-    region: config.region,
+    ...getBulkScopeSearchParams(config),
   };
 }
 
@@ -132,7 +182,7 @@ export function mergeRegionSummaryBulkPages(
 /**
  * Fetches all pages of bulk hourly region summaries, merged into a complete list.
  *
- * @param config An object containing the entry type, date range, and region filter
+ * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
@@ -153,7 +203,7 @@ export async function getRegionSummariesBulkHourly(
 /**
  * Fetches all pages of bulk daily region summaries, merged into a complete list.
  *
- * @param config An object containing the entry type, date range, and region filter
+ * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
@@ -174,7 +224,7 @@ export async function getRegionSummariesBulkDaily(
 /**
  * Fetches all pages of bulk monthly region summaries, merged into a complete list.
  *
- * @param config An object containing the entry type, date range, and region filter
+ * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
@@ -195,7 +245,7 @@ export async function getRegionSummariesBulkMonthly(
 /**
  * Fetches all pages of bulk quarterly region summaries, merged into a complete list.
  *
- * @param config An object containing the entry type, date range, and region filter
+ * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
@@ -216,7 +266,7 @@ export async function getRegionSummariesBulkQuarterly(
 /**
  * Fetches all pages of bulk seasonal region summaries, merged into a complete list.
  *
- * @param config An object containing the entry type, date range, and region filter
+ * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
@@ -237,7 +287,7 @@ export async function getRegionSummariesBulkSeasonal(
 /**
  * Fetches all pages of bulk yearly region summaries, merged into a complete list.
  *
- * @param config An object containing the entry type, date range, and region filter
+ * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with their matching summaries
@@ -257,7 +307,8 @@ export async function getRegionSummariesBulkYearly(
 
 /**
  * Fetches every page of bulk open-day region rows: daily rows for the days
- * that have no stored daily row yet, for each region given.
+ * that have no stored daily row yet, for each region in the scope (`region`
+ * or `type`).
  *
  * Open days are today (Pacific), plus yesterday until its nightly row exists
  * (capped at about 03:00 Pacific). Today has no row until its first hour is
@@ -277,7 +328,7 @@ export async function getRegionSummariesBulkYearly(
  * yesterday settles), a page past the new last page reads as empty and an
  * owner can be missed until the next request, a minute later at most.
  *
- * @param config An object containing the entry type and region filter
+ * @param config An object containing the entry type and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
  * @returns An array of regions, each with its open-day rows
@@ -288,7 +339,7 @@ export async function getRegionSummariesBulkDailyOpen(
 ): Promise<Array<RegionWithSummaries>> {
   const pages = await fetchAllBulkPages<RegionWithSummaries>({
     url: `regions/${config.entryType}/summaries/daily/open`,
-    searchParams: { region: config.region },
+    searchParams: getBulkScopeSearchParams(config),
     options,
   }, { laterPageMissingIsEmpty: true });
   return mergeBulkOpenDays([], pages.flat());

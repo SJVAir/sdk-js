@@ -172,13 +172,17 @@ Region and place lookups, boundaries, and region-level entry summaries
 - [x] `/api/2.0/regions/places/search/`
 - [x] `/api/2.0/regions/places/lookup/` (name `?q=`; monitor `?monitor=`; point
       via POST)
-- [x] `/api/2.0/regions/<entry_type>/summaries/hourly/`
-- [x] `/api/2.0/regions/<entry_type>/summaries/daily/`
-- [x] `/api/2.0/regions/<entry_type>/summaries/daily/open/`
-- [x] `/api/2.0/regions/<entry_type>/summaries/monthly/`
-- [x] `/api/2.0/regions/<entry_type>/summaries/quarterly/`
-- [x] `/api/2.0/regions/<entry_type>/summaries/seasonal/`
-- [x] `/api/2.0/regions/<entry_type>/summaries/yearly/`
+- [x] `/api/2.0/regions/<entry_type>/summaries/hourly/` (`?region=` or `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/daily/` (`?region=` or `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/daily/open/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/monthly/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/quarterly/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/seasonal/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/yearly/` (`?region=` or `?type=`)
 - [x] `/api/2.0/regions/<region_id>/` (`?buffer=`)
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/`
