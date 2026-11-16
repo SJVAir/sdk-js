@@ -14,10 +14,41 @@ None open.
 None open. (Exact entry bounds by default shipped in 5.0.0-beta.2; see
 `docs/superpowers/specs/2026-11-04-exact-entry-bounds-design.md`.)
 
+## Not wrapped yet
+
+- **`pesticides/notices/archive/`.** _Deferred 2026-11-16 by the user (pesticide
+  map spec, `docs/superpowers/specs/2026-11-16-pesticide-map-design.md`)._ The
+  server serves archived spray notices (past the grace period, by `year`,
+  `month` or `date`, with the same features as `notices/active/`), but nothing
+  calls it yet. Wrapping it now would guess at a caller's needs.
+
+  **Revisit when** an app needs past spray notices (e.g. a map or chart of
+  notices older than the active window).
+
 ## Small follow-ups
 
 Minor findings from reviews, left for later. Each is small and safe to pick up
 any time.
+
+- **Small follow-ups from the pesticide map reviews.** _Deferred 2026-11-16
+  (final reviews of sdk-js #65 and #66, graded minor)._
+  - `CHANGELOG.md`'s Added entry for `getActivePesticideNotices` doesn't list
+    every new type (`DatedPesticideNoticeCollection`, the notice property
+    types).
+  - `regions/meta/`'s `location_types` is typed with the three known keys
+    required, while the schema accepts a meta that lacks one (the user chose to
+    keep it, 2026-11-16).
+  - `getPesticideSections`' `compare` doc doesn't say the `*_prev` fields are
+    absent when `compare` equals the year or with `year: "all"`.
+  - No township fixture carries an outline (the captured one uses `geometry=0`),
+    so the township geometry is never schema-checked.
+  - The meta test asserts the exact ramp (8 colors, `#f0f0f0`), which the server
+    calls provisional; its `shades_valley` check sits in the ramp step.
+  - `pesticideSectionDetailSchema` writes the year union inline instead of
+    reusing `PesticideMapYearSchema`.
+
+  **Revisit when** someone next works on the pesticide map wrappers, or the
+  server's ramp or township geometry changes.
 
 - **Small follow-ups from the SDK quick batch review.** _Deferred 2026-11-04
   (final review of sdk-js #40, graded minor)._
