@@ -38,9 +38,10 @@ open-ended location `source` / `type` (#65, for sjvair.com #335).
 **5.0.0-beta.13** (2026-11-16): `getPesticideSections`, `getPesticideTownships`,
 `getPesticideSectionDetails`, the `pesticides/meta/` `years`, `ramp` and
 `scales`, and `aerial_ground` on spray notices (#66, for sjvair.com #336, #337
-and #338). **5.0.0-beta.14** (unreleased): the `pesticides/meta/` explorer
+and #338). **5.0.0-beta.14** (2026-11-17): the `pesticides/meta/` explorer
 `links` and `link_params`, `pesticideLinkUrl`, and the
-`getPesticideSectionDetails` value filters and `month` (#68).
+`getPesticideSectionDetails` value filters and `month` (#68, for sjvair.com
+#339).
 
 ### Breaking
 
