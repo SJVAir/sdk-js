@@ -40,7 +40,7 @@ open-ended location `source` / `type` (#65, for sjvair.com #335).
 `scales`, and `aerial_ground` on spray notices (#66, for sjvair.com #336, #337
 and #338). **5.0.0-beta.14** (unreleased): the `pesticides/meta/` explorer
 `links` and `link_params`, `pesticideLinkUrl`, and the
-`getPesticideSectionDetails` value filters and `month` (#PR).
+`getPesticideSectionDetails` value filters and `month` (#68).
 
 ### Breaking
 
@@ -99,10 +99,10 @@ and #338). **5.0.0-beta.14** (unreleased): the `pesticides/meta/` explorer
   `link_params`, the query parameters each takes and the value (`from`) that
   fills each one. `pesticideLinkUrl(meta, link, id, values?)` fills one by the
   server's rule. New types: `PesticideLinkKey`, `PesticideLinkSource`,
-  `PesticideLinkParam`, `PesticideLinkValues`. (from beta.14, #PR)
+  `PesticideLinkParam`, `PesticideLinkValues`. (from beta.14, #68)
 - `getPesticideSectionDetails` takes the map's value filters (`chemical_id`,
   `product_id`, `commodity_id`, `aerial_ground`, `category`, `iarc_group`) and
-  `month`, which narrows only the top lists. (from beta.14, #PR)
+  `month`, which narrows only the top lists. (from beta.14, #68)
 - `getPesticideSections` (`pesticides/sections/`) and `getPesticideTownships`
   (`pesticides/townships/`): the pesticide-use map's MTRS sections and PLSS
   townships as GeoJSON FeatureCollections, each feature with its year's totals
