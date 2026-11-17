@@ -105,7 +105,10 @@ export interface PesticideSectionDetailSchema extends
     id: z.ZodString;
     /** The section's MTRS code */
     mtrs: z.ZodString;
-    /** The name of the county its use is filed under, or null */
+    /**
+     * The name of the county its use is filed under, or null. The value
+     * filters don't change it, even when they match nothing.
+     */
     county: z.ZodNullable<z.ZodString>;
     /** The year `months` and the top lists cover, `"all"`, or null with no data loaded */
     year: z.ZodNullable<
