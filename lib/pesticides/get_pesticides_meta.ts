@@ -22,7 +22,9 @@ import type { PesticidesMeta } from "./types.ts";
  * groups, use-record application methods (not spray-notice methods), the
  * narrowings, CDPR's placeholder chemicals, the explainer `notes` (keyed by
  * note key), the classification `badges` in display order, `links` (the
- * SprayDays sign-up), the `notice_filters` the notice endpoints accept, the
+ * SprayDays sign-up and the explorer link templates), `link_params` (the
+ * query parameters each explorer link takes; fill a link with
+ * `pesticideLinkUrl`), the `notice_filters` the notice endpoints accept, the
  * `years` with use data (newest first), the maps' color `ramp` and the
  * layers' `scales` (`spray-notice`). Keys are
  * permanent; labels may change. This is the catalog `meta_url` for `pesticide-use` and
@@ -30,7 +32,8 @@ import type { PesticidesMeta } from "./types.ts";
  *
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
- * @returns The lists, notes, badges, links, years, ramp and scales.
+ * @returns The lists, notes, badges, links, link params, years, ramp and
+ * scales.
  */
 export async function getPesticidesMeta(
   options?: RequestOptions,
