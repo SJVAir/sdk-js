@@ -18,6 +18,8 @@ import type {
   iarcGroupSchema,
   pesticideBadgeKeySchema,
   pesticideBadgeSchema,
+  pesticideLinkParamSchema,
+  pesticideLinkSourceSchema,
   pesticideLocationCollectionSchema,
   pesticideLocationFeatureSchema,
   pesticideLocationPropertiesSchema,
@@ -131,6 +133,15 @@ export type PesticideSearchResult<T extends PesticideSearchType> = {
 
 /** Labels and descriptions for the pesticide filters, from pesticides/meta */
 export type PesticidesMeta = zinfer<typeof pesticidesMetaSchema>;
+
+/** An explorer link in `getPesticidesMeta().links` that `link_params` covers */
+export type PesticideLinkKey = keyof PesticidesMeta["link_params"];
+
+/** The value that fills an explorer link's query parameter */
+export type PesticideLinkSource = zinfer<typeof pesticideLinkSourceSchema>;
+
+/** One query parameter an explorer link takes, and the value that fills it */
+export type PesticideLinkParam = zinfer<typeof pesticideLinkParamSchema>;
 
 /**
  * Filters for pesticide use in a place; unset filters are not sent. The

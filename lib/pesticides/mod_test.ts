@@ -621,6 +621,7 @@ Deno.test("Module: pesticides meta", async (t) => {
       "notes",
       "badges",
       "links",
+      "link_params",
       "notice_filters",
       "years",
       "ramp",
@@ -632,6 +633,46 @@ Deno.test("Module: pesticides meta", async (t) => {
       assertEquals(pesticidesMetaSchema.safeParse(rest).success, false);
     });
   }
+
+  await t.step("every explorer link has its params", () => {
+    const keys = [
+      "section_page",
+      "section_records",
+      "section_notices",
+      "section_notices_past",
+      "chemical_page",
+    ];
+    assertEquals(Object.keys(meta.link_params).sort(), [...keys].sort());
+    for (const key of keys) {
+      const template = meta.links[key as keyof typeof meta.links];
+      assert(template.includes("{id}"), `${key} has no {id}`);
+      assert(new URL(template).pathname.startsWith("/tools/pesticides/"));
+    }
+  });
+
+  for (const link of ["section_page", "chemical_page"] as const) {
+    await t.step(`meta without links.${link} is rejected`, () => {
+      const { [link]: _, ...links } = meta.links;
+      assertEquals(
+        pesticidesMetaSchema.safeParse({ ...meta, links }).success,
+        false,
+      );
+    });
+  }
+
+  await t.step("an unknown link param source parses", () => {
+    const parsed = pesticidesMetaSchema.safeParse({
+      ...meta,
+      link_params: {
+        ...meta.link_params,
+        section_page: [
+          ...meta.link_params.section_page,
+          { param: "week", from: "week" },
+        ],
+      },
+    });
+    assertEquals(parsed.success, true);
+  });
 
   await t.step("an unknown badge key and note parse", () => {
     const parsed = pesticidesMetaSchema.safeParse({

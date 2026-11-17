@@ -91,6 +91,30 @@ Deno.test("year and narrow are sent", async () => {
   });
 });
 
+Deno.test("the value filters and month are sent", async () => {
+  const { searchParams } = await urlFor("abc12", {
+    year: 2023,
+    month: 6,
+    chemical_id: "bca8f",
+    product_id: "p1",
+    commodity_id: "6cxb7",
+    aerial_ground: "none",
+    iarc_group: "2A",
+    category: ["fumigant", "carcinogen"],
+  });
+  assertEquals(searchParams.getAll("category"), ["fumigant", "carcinogen"]);
+  searchParams.delete("category");
+  assertEquals(Object.fromEntries(searchParams), {
+    year: "2023",
+    month: "6",
+    chemical_id: "bca8f",
+    product_id: "p1",
+    commodity_id: "6cxb7",
+    aerial_ground: "none",
+    iarc_group: "2A",
+  });
+});
+
 Deno.test("a 404 rejects", async () => {
   const stub = stubFetch(() =>
     new Response(JSON.stringify({ detail: "Not found." }), {
@@ -143,6 +167,30 @@ Deno.test("GET  pesticides/sections/<id>/", async () => {
     const all = await getPesticideSectionDetails(used.id, { year: "all" });
     validateDetail(all);
     assertEquals(all.year, "all");
+    const [chemical] = result.top_chemicals;
+    if (!chemical) {
+      console.warn("no top chemical in this section; skipping the filters.");
+      return;
+    }
+    const filtered = await getPesticideSectionDetails(used.id, {
+      year: 2023,
+      month: 6,
+      chemical_id: chemical.id,
+      aerial_ground: "G",
+      narrow: "concern",
+      category: ["fumigant"],
+      iarc_group: "2B",
+    });
+    validateDetail(filtered);
+    assertEquals(filtered.months.length, 12);
+    const byChemical = await getPesticideSectionDetails(used.id, {
+      year: 2023,
+      chemical_id: chemical.id,
+    });
+    validateDetail(byChemical);
+    if (byChemical.top_chemicals.length === 0) {
+      console.warn("the chemical filter matched nothing here.");
+    }
   } catch (error) {
     if (!isUnavailable(error)) throw error;
     console.warn("pesticides/sections/<id>/ unavailable; skipping.");

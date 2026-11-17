@@ -261,7 +261,7 @@
       "shades_valley": {
         "key": "shades_valley",
         "title": "What the shades mean",
-        "summary": "Darker squares had more of what the map shows (pounds, acres treated, or applications) in that year or month. Every section or township in the valley is ranked together, so a color means the same range anywhere on the map, but not from one month to the next. Gray means nothing was reported.",
+        "summary": "Darker squares had more of what the map shows (pounds, acres treated, or applications) in that year or month. Every section or township in the valley is ranked together, so a color means the same range anywhere on the map, but not from one month to the next. An outline with no shading means nothing was reported.",
         "detail": null,
         "source_url": "https://www.cdpr.ca.gov/pesticide-use-in-california/pesticide-use-reporting/"
       },
@@ -311,7 +311,104 @@
       }
     ],
     "links": {
-      "spraydays_signup": "https://spraydays.cdpr.ca.gov/"
+      "spraydays_signup": "https://spraydays.cdpr.ca.gov/",
+      "section_page": "http://127.0.0.1:8000/tools/pesticides/sections/{id}/",
+      "section_records": "http://127.0.0.1:8000/tools/pesticides/records/?section={id}",
+      "section_notices": "http://127.0.0.1:8000/tools/pesticides/notices/?section={id}",
+      "section_notices_past": "http://127.0.0.1:8000/tools/pesticides/notices/?section={id}&past=1",
+      "chemical_page": "http://127.0.0.1:8000/tools/pesticides/chemicals/{id}/"
+    },
+    "link_params": {
+      "section_page": [
+        {
+          "param": "year",
+          "from": "year"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "section_records": [
+        {
+          "param": "year",
+          "from": "year"
+        },
+        {
+          "param": "start",
+          "from": "month_start"
+        },
+        {
+          "param": "end",
+          "from": "month_end"
+        },
+        {
+          "param": "chemical",
+          "from": "chemical_id"
+        },
+        {
+          "param": "product",
+          "from": "product_id"
+        },
+        {
+          "param": "commodity",
+          "from": "commodity_id"
+        },
+        {
+          "param": "method",
+          "from": "aerial_ground"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "section_notices": [
+        {
+          "param": "chemical",
+          "from": "chemical_id"
+        },
+        {
+          "param": "product",
+          "from": "product_id"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "section_notices_past": [
+        {
+          "param": "archive_year",
+          "from": "notices_year"
+        },
+        {
+          "param": "month",
+          "from": "notices_month"
+        },
+        {
+          "param": "chemical",
+          "from": "chemical_id"
+        },
+        {
+          "param": "product",
+          "from": "product_id"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "chemical_page": [
+        {
+          "param": "year",
+          "from": "year"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ]
     },
     "notice_filters": [
       "chemical_id",
