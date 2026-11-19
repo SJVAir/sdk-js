@@ -41,7 +41,7 @@ open-ended location `source` / `type` (#65, for sjvair.com #335).
 and #338). **5.0.0-beta.14** (2026-11-17): the `pesticides/meta/` explorer
 `links` and `link_params`, `pesticideLinkUrl`, and the
 `getPesticideSectionDetails` value filters and `month` (#68, for sjvair.com
-#339). **5.0.0-beta.15** (unreleased): the period daily statistic (#69, for
+#339). **5.0.0-beta.15** (2026-11-18): the period daily statistic (#69, for
 sjvair.com #342).
 
 ### Breaking
