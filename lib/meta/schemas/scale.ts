@@ -67,6 +67,18 @@ export const dailyStatisticSchema: DailyStatisticSchema = z.enum([
   "max_8h",
 ]);
 
+/** The name of a coarse summary row field a scale judges a period by */
+export type PeriodStatisticSchema = z.ZodEnum<{
+  daily_statistic_mean: "daily_statistic_mean";
+}>;
+/**
+ * The coarse summary row field holding the average of a period's daily
+ * figures: `daily_statistic_mean`
+ */
+export const periodStatisticSchema: PeriodStatisticSchema = z.enum([
+  "daily_statistic_mean",
+]);
+
 interface ScaleSchema extends
   z.ZodObject<{
     /** The permanent id of this scale */
@@ -97,6 +109,18 @@ interface ScaleSchema extends
      * `daily_statistic` is `null`
      */
     daily_statistic_label: z.ZodNullable<z.ZodString>;
+    /**
+     * The monthly and coarser summary row field to judge a period by against
+     * this scale (`daily_statistic_mean`), or `null` when `daily_statistic` is
+     * `null`
+     */
+    period_statistic: z.ZodNullable<PeriodStatisticSchema>;
+    /**
+     * The translated display text for `period_statistic` ("Average of 24-hour
+     * averages", "Average of daily highest 1-hour averages", "Average of daily
+     * highest 8-hour averages"), or `null` when `period_statistic` is `null`
+     */
+    period_statistic_label: z.ZodNullable<z.ZodString>;
     /** The levels, in order */
     levels: z.ZodArray<ScaleLevelSchema>;
   }> {}
@@ -111,6 +135,8 @@ export const scaleSchema: ScaleSchema = z.object({
     .nullable(),
   daily_statistic: dailyStatisticSchema.nullable(),
   daily_statistic_label: z.string().nullable(),
+  period_statistic: periodStatisticSchema.nullable(),
+  period_statistic_label: z.string().nullable(),
   levels: z.array(scaleLevelSchema),
 });
 

@@ -44,6 +44,9 @@ import hmsMetaFixture from "../hms/fixtures/hms_meta.json" with {
 import forecastsMetaFixture from "../forecasts/fixtures/forecasts_meta.json" with {
   type: "json",
 };
+import pesticidesMetaFixture from "../pesticides/fixtures/pesticides_meta.json" with {
+  type: "json",
+};
 
 if (!Deno.env.has("TEST_REMOTE")) {
   setOrigin("http://127.0.0.1:8000");
@@ -369,6 +372,8 @@ Deno.test({
       averaging_hours: 24,
       daily_statistic: "mean_24h",
       daily_statistic_label: "24-hour average",
+      period_statistic: "daily_statistic_mean",
+      period_statistic_label: "Average of 24-hour averages",
       ...fields,
     });
 
@@ -379,8 +384,22 @@ Deno.test({
           averaging_hours: null,
           daily_statistic: null,
           daily_statistic_label: null,
+          period_statistic: null,
+          period_statistic_label: null,
         })).success,
         true,
+      );
+    });
+
+    await t.step("scale rejects a missing or unknown period_statistic", () => {
+      const { period_statistic: _, ...noStat } = withFields({});
+      assertEquals(scaleSchema.safeParse(noStat).success, false);
+      const { period_statistic_label: _l, ...noLabel } = withFields({});
+      assertEquals(scaleSchema.safeParse(noLabel).success, false);
+      assertEquals(
+        scaleSchema.safeParse(withFields({ period_statistic: "mean_24h" }))
+          .success,
+        false,
       );
     });
 
@@ -420,6 +439,66 @@ Deno.test({
         entries.co.scale?.daily_statistic_label,
         "Highest 8-hour average",
       );
+      assertEquals(
+        entries.pm25.scale?.period_statistic,
+        "daily_statistic_mean",
+      );
+      assertEquals(
+        entries.o3.scale?.period_statistic_label,
+        "Average of daily highest 1-hour averages",
+      );
+      assertEquals(
+        entries.co.scale?.period_statistic_label,
+        "Average of daily highest 8-hour averages",
+      );
     });
+
+    await t.step(
+      "period statistic follows daily_statistic in every fixture",
+      () => {
+        const labels: Record<string, string> = {
+          max_1h: "Average of daily highest 1-hour averages",
+          max_8h: "Average of daily highest 8-hour averages",
+          mean_24h: "Average of 24-hour averages",
+        };
+        const scales: Record<string, unknown>[] = [];
+        const walk = (node: unknown) => {
+          if (Array.isArray(node)) return node.forEach(walk);
+          if (node === null || typeof node !== "object") return;
+          const obj = node as Record<string, unknown>;
+          if ("daily_statistic" in obj && Array.isArray(obj.levels)) {
+            scales.push(obj);
+          }
+          Object.values(obj).forEach(walk);
+        };
+        for (
+          const fixture of [
+            monitorsMetaFixture,
+            hmsMetaFixture,
+            forecastsMetaFixture,
+            pesticidesMetaFixture,
+            calHeatScoreMetaFixture,
+          ]
+        ) {
+          walk(fixture);
+        }
+        let sawNull = false;
+        let sawNonNull = false;
+        for (const scale of scales) {
+          const stat = scale.daily_statistic as string | null;
+          if (stat === null) {
+            sawNull = true;
+            assertEquals(scale.period_statistic, null);
+            assertEquals(scale.period_statistic_label, null);
+          } else {
+            sawNonNull = true;
+            assertEquals(scale.period_statistic, "daily_statistic_mean");
+            assertEquals(scale.period_statistic_label, labels[stat]);
+          }
+        }
+        assertEquals(sawNull, true);
+        assertEquals(sawNonNull, true);
+      },
+    );
   },
 });
