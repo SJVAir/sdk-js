@@ -77,6 +77,9 @@ const owner = (id: string, summaries: Array<Record<string, unknown>>) => ({
 const openRow = (d: number, mean_24h: number) => ({
   timestamp: `2026-11-0${d}T00:00:00-08:00`,
   mean_24h,
+  daily_statistic_mean: null,
+  daily_statistic_days: null,
+  daily_statistic_expected_days: null,
   is_final: false,
 });
 

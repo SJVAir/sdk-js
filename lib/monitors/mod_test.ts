@@ -567,6 +567,9 @@ Deno.test({
       max_1h: null,
       max_8h: null,
       mean_24h: null,
+      daily_statistic_mean: null,
+      daily_statistic_days: null,
+      daily_statistic_expected_days: null,
       is_complete: true,
       is_final: true,
     };
@@ -597,6 +600,9 @@ Deno.test({
       max_1h: null,
       max_8h: null,
       mean_24h: 5.4,
+      daily_statistic_mean: null,
+      daily_statistic_days: null,
+      daily_statistic_expected_days: null,
       is_complete: true,
       is_final: true,
     });
