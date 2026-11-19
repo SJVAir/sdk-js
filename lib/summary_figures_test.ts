@@ -47,6 +47,14 @@ const coarseRow = {
   daily_statistic_expected_days: 17,
 } as const;
 
+const {
+  processor: _cp,
+  sum: _cs,
+  is_complete: _cc,
+  ...coarseRegionBase
+} = coarseRow;
+const coarseRegionRow = { ...coarseRegionBase, station_count: 3 };
+
 Deno.test("rows require the period daily statistic fields", () => {
   for (
     const key of [
@@ -68,6 +76,7 @@ Deno.test("rows require the period daily statistic fields", () => {
 
 Deno.test("a coarse row with no qualifying days parses", () => {
   assertEquals(monitorSummarySchema.safeParse(coarseRow).success, true);
+  assertEquals(regionSummarySchema.safeParse(coarseRegionRow).success, true);
   assertEquals(
     monitorSummarySchema.safeParse({
       ...coarseRow,

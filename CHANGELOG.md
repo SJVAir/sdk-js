@@ -104,7 +104,7 @@ sjvair.com #342).
   `daily_statistic_mean`, `daily_statistic_days` and
   `daily_statistic_expected_days` (`number | null`). (from beta.15)
 - `Scale.period_statistic` and `Scale.period_statistic_label`, the
-  `PeriodStatistic` type and `periodStatisticSchema`. (from beta.15)
+  `PeriodStatistic` type. (from beta.15)
 - The monthly, quarterly, seasonal and yearly summary lists now include the
   current period's row (through yesterday, `is_final: false`). (from beta.15)
 - `getPesticidesMeta` gains the Pesticides Explorer link templates:
