@@ -33,6 +33,9 @@
  * //         "entry_type": "pm25",
  * //         "resolution": "day",
  * //         "mean_24h": 5.5,
+ * //         "daily_statistic_mean": null,
+ * //         "daily_statistic_days": null,
+ * //         "daily_statistic_expected_days": null,
  * //         "is_final": true,
  * //         ... (excerpted for brevity)
  * //       },
@@ -228,6 +231,12 @@ export async function getRegionSummariesBulkDaily(
 /**
  * Fetches all pages of bulk monthly region summaries, merged into a complete list.
  *
+ * The list includes the current period's row, written nightly through yesterday,
+ * with `is_final: false` ("so far"). An ended period's row stays
+ * `is_final: false` until it settles (for CO, about 28 hours after the period
+ * ends). A period that starts today has no row yet; today's figures come from
+ * the matching `...DailyOpen` call.
+ *
  * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -248,6 +257,12 @@ export async function getRegionSummariesBulkMonthly(
 
 /**
  * Fetches all pages of bulk quarterly region summaries, merged into a complete list.
+ *
+ * The list includes the current period's row, written nightly through yesterday,
+ * with `is_final: false` ("so far"). An ended period's row stays
+ * `is_final: false` until it settles (for CO, about 28 hours after the period
+ * ends). A period that starts today has no row yet; today's figures come from
+ * the matching `...DailyOpen` call.
  *
  * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -270,6 +285,12 @@ export async function getRegionSummariesBulkQuarterly(
 /**
  * Fetches all pages of bulk seasonal region summaries, merged into a complete list.
  *
+ * The list includes the current period's row, written nightly through yesterday,
+ * with `is_final: false` ("so far"). An ended period's row stays
+ * `is_final: false` until it settles (for CO, about 28 hours after the period
+ * ends). A period that starts today has no row yet; today's figures come from
+ * the matching `...DailyOpen` call.
+ *
  * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -290,6 +311,12 @@ export async function getRegionSummariesBulkSeasonal(
 
 /**
  * Fetches all pages of bulk yearly region summaries, merged into a complete list.
+ *
+ * The list includes the current period's row, written nightly through yesterday,
+ * with `is_final: false` ("so far"). An ended period's row stays
+ * `is_final: false` until it settles (for CO, about 28 hours after the period
+ * ends). A period that starts today has no row yet; today's figures come from
+ * the matching `...DailyOpen` call.
  *
  * @param config An object containing the entry type, date range, and region scope (`region` or `type`)
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
