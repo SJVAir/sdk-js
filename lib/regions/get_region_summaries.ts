@@ -163,11 +163,10 @@ export async function getRegionSummariesDaily(
  * Fetches all pages of monthly summaries for a given region.
  *
  * When the requested year includes the current period, the list includes its
- * row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
- * `is_final: false` until it settles (for CO, about 28 hours after the period
- * ends). A period that starts today has no row yet; today's figures come from
- * the `getRegionSummariesDailyOpen` call.
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getRegionSummariesDailyOpen` call.
  *
  * @param config An object containing the region ID, entry type, and year
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -190,11 +189,10 @@ export async function getRegionSummariesMonthly(
  * Fetches all pages of quarterly summaries for a given region.
  *
  * When the requested year includes the current period, the list includes its
- * row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
- * `is_final: false` until it settles (for CO, about 28 hours after the period
- * ends). A period that starts today has no row yet; today's figures come from
- * the `getRegionSummariesDailyOpen` call.
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getRegionSummariesDailyOpen` call.
  *
  * @param config An object containing the region ID, entry type, and year
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -217,11 +215,10 @@ export async function getRegionSummariesQuarterly(
  * Fetches all pages of seasonal summaries for a given region.
  *
  * When the requested year includes the current period, the list includes its
- * row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
- * `is_final: false` until it settles (for CO, about 28 hours after the period
- * ends). A period that starts today has no row yet; today's figures come from
- * the `getRegionSummariesDailyOpen` call.
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getRegionSummariesDailyOpen` call.
  *
  * @param config An object containing the region ID, entry type, and year
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -243,8 +240,8 @@ export async function getRegionSummariesSeasonal(
 /**
  * Fetches all pages of yearly summaries for a given region.
  *
- * The list includes the current period's row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
+ * The list includes the current period's row, written nightly through
+ * yesterday, with `is_final: false` ("so far"). An ended period's row stays
  * `is_final: false` until it settles (for CO, about 28 hours after the period
  * ends). A period that starts today has no row yet; today's figures come from
  * the `getRegionSummariesDailyOpen` call.

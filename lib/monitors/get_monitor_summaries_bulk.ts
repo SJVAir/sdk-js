@@ -222,11 +222,10 @@ export async function getMonitorSummariesBulkDaily(
  * Fetches all pages of bulk monthly monitor summaries, merged into a complete list.
  *
  * When the requested range reaches the current period, the list includes its
- * row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
- * `is_final: false` until it settles (for CO, about 28 hours after the period
- * ends). A period that starts today has no row yet; today's figures come from
- * the `getMonitorSummariesBulkDailyOpen` call.
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -250,11 +249,10 @@ export async function getMonitorSummariesBulkMonthly(
  * Fetches all pages of bulk quarterly monitor summaries, merged into a complete list.
  *
  * When the requested range reaches the current period, the list includes its
- * row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
- * `is_final: false` until it settles (for CO, about 28 hours after the period
- * ends). A period that starts today has no row yet; today's figures come from
- * the `getMonitorSummariesBulkDailyOpen` call.
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -278,11 +276,10 @@ export async function getMonitorSummariesBulkQuarterly(
  * Fetches all pages of bulk seasonal monitor summaries, merged into a complete list.
  *
  * When the requested range reaches the current period, the list includes its
- * row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
- * `is_final: false` until it settles (for CO, about 28 hours after the period
- * ends). A period that starts today has no row yet; today's figures come from
- * the `getMonitorSummariesBulkDailyOpen` call.
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -305,11 +302,11 @@ export async function getMonitorSummariesBulkSeasonal(
 /**
  * Fetches all pages of bulk yearly monitor summaries, merged into a complete list.
  *
- * The list includes the current period's row, written nightly through yesterday,
- * with `is_final: false` ("so far"). An ended period's row stays
- * `is_final: false` until it settles (for CO, about 28 hours after the period
- * ends). A period that starts today has no row yet; today's figures come from
- * the `getMonitorSummariesBulkDailyOpen` call.
+ * When the requested range reaches the current period, the list includes its
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
