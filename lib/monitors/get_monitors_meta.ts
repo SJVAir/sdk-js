@@ -66,6 +66,8 @@
  * //          "averaging_hours": 24,
  * //          "daily_statistic": "mean_24h",
  * //          "daily_statistic_label": "24-hour average",
+ * //          "period_statistic": "daily_statistic_mean",
+ * //          "period_statistic_label": "Average of 24-hour averages",
  * //          "levels": [
  * //            { "key": "good", "label": "Good", "color": "#00e400", "min": 0, ... },
  * //            ... (other levels omitted for brevity)

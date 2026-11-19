@@ -369,6 +369,8 @@ Deno.test({
       averaging_hours: 24,
       daily_statistic: "mean_24h",
       daily_statistic_label: "24-hour average",
+      period_statistic: "daily_statistic_mean",
+      period_statistic_label: "Average of 24-hour averages",
       ...fields,
     });
 
@@ -379,8 +381,22 @@ Deno.test({
           averaging_hours: null,
           daily_statistic: null,
           daily_statistic_label: null,
+          period_statistic: null,
+          period_statistic_label: null,
         })).success,
         true,
+      );
+    });
+
+    await t.step("scale rejects a missing or unknown period_statistic", () => {
+      const { period_statistic: _, ...noStat } = withFields({});
+      assertEquals(scaleSchema.safeParse(noStat).success, false);
+      const { period_statistic_label: _l, ...noLabel } = withFields({});
+      assertEquals(scaleSchema.safeParse(noLabel).success, false);
+      assertEquals(
+        scaleSchema.safeParse(withFields({ period_statistic: "mean_24h" }))
+          .success,
+        false,
       );
     });
 
@@ -420,6 +436,26 @@ Deno.test({
         entries.co.scale?.daily_statistic_label,
         "Highest 8-hour average",
       );
+      assertEquals(
+        entries.pm25.scale?.period_statistic,
+        "daily_statistic_mean",
+      );
+      assertEquals(
+        entries.o3.scale?.period_statistic_label,
+        "Average of daily highest 1-hour averages",
+      );
+      assertEquals(
+        entries.co.scale?.period_statistic_label,
+        "Average of daily highest 8-hour averages",
+      );
+      // A scale with no daily_statistic carries no period statistic either.
+      const hmsScales = Object.values(hmsMetaFixture.data.scales) as Record<
+        string,
+        unknown
+      >[];
+      assertEquals(hmsScales[0].daily_statistic, null);
+      assertEquals(hmsScales[0].period_statistic, null);
+      assertEquals(hmsScales[0].period_statistic_label, null);
     });
   },
 });

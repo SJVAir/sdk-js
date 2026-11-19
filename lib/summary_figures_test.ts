@@ -3,7 +3,7 @@ import { monitorSummarySchema } from "./monitors/schemas/monitor_summary.ts";
 import { regionSummarySchema } from "./regions/schemas/region_summary.ts";
 import type { MonitorSummary } from "./monitors/types.ts";
 import type { RegionSummary } from "./regions/types.ts";
-import type { DailyStatistic } from "./meta/types.ts";
+import type { DailyStatistic, PeriodStatistic } from "./meta/types.ts";
 
 const monitorRow = {
   timestamp: "2026-11-09T00:00:00-08:00",
@@ -116,4 +116,26 @@ Deno.test("rows index by DailyStatistic", () => {
     4.29,
   );
   assertEquals(figure(regionSummarySchema.parse(regionRow), "max_1h"), null);
+});
+
+// Compile-time check: a row indexed by a PeriodStatistic is number | null.
+function periodFigure(
+  row: MonitorSummary | RegionSummary,
+  s: PeriodStatistic,
+): number | null {
+  return row[s];
+}
+
+Deno.test("rows index by PeriodStatistic", () => {
+  assertEquals(
+    periodFigure(
+      monitorSummarySchema.parse({
+        ...coarseRow,
+        daily_statistic_mean: 41.2,
+        daily_statistic_days: 15,
+      }),
+      "daily_statistic_mean",
+    ),
+    41.2,
+  );
 });

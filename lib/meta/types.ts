@@ -12,6 +12,7 @@ import type {
   datasetCatalogSchema,
   datasetEntryDisplaySchema,
   datasetEntryTypeSchema,
+  periodStatisticSchema,
   placeSchema,
   resolutionSchema,
   retiredSchema,
@@ -54,6 +55,13 @@ export type DatasetEntryDisplay = zinfer<typeof datasetEntryDisplaySchema>;
  * daily row with it: `row[scale.daily_statistic]` is `number | null`.
  */
 export type DailyStatistic = zinfer<typeof dailyStatisticSchema>;
+
+/**
+ * The name of a monthly-and-coarser summary row field a scale judges a period
+ * by. Index a coarse row with it: `row[scale.period_statistic]` is
+ * `number | null`.
+ */
+export type PeriodStatistic = zinfer<typeof periodStatisticSchema>;
 
 /** A scale that turns a value into a named, colored level */
 export type Scale = zinfer<typeof scaleSchema>;
