@@ -41,7 +41,7 @@ open-ended location `source` / `type` (#65, for sjvair.com #335).
 and #338). **5.0.0-beta.14** (2026-11-17): the `pesticides/meta/` explorer
 `links` and `link_params`, `pesticideLinkUrl`, and the
 `getPesticideSectionDetails` value filters and `month` (#68, for sjvair.com
-#339). **5.0.0-beta.15** (unreleased): the period daily statistic (for
+#339). **5.0.0-beta.15** (unreleased): the period daily statistic (#69, for
 sjvair.com #342).
 
 ### Breaking
@@ -50,7 +50,7 @@ sjvair.com #342).
   `MonitorSummary` / `RegionSummary` require `daily_statistic_mean`,
   `daily_statistic_days` and `daily_statistic_expected_days`: code that builds
   these as literals must list them. Needs a server running sjvair.com #342.
-  (from beta.15)
+  (from beta.15, #69)
 - `LocationSource` and `LocationType` (and `locationSourceSchema` /
   `locationTypeSchema`) accept any string as well as the known values, so a new
   server value no longer fails `/regions/locations/` or `/pesticides/locations/`
@@ -102,11 +102,12 @@ sjvair.com #342).
 
 - `MonitorSummary` / `RegionSummary` (single and bulk) rows have
   `daily_statistic_mean`, `daily_statistic_days` and
-  `daily_statistic_expected_days` (`number | null`). (from beta.15)
+  `daily_statistic_expected_days` (`number | null`). (from beta.15, #69)
 - `Scale.period_statistic` and `Scale.period_statistic_label`, the
-  `PeriodStatistic` type. (from beta.15)
+  `PeriodStatistic` type. (from beta.15, #69)
 - The monthly, quarterly, seasonal and yearly summary lists now include the
-  current period's row (through yesterday, `is_final: false`). (from beta.15)
+  current period's row (through yesterday, `is_final: false`). (from beta.15,
+  #69)
 - `getPesticidesMeta` gains the Pesticides Explorer link templates:
   `links.section_page`, `section_records`, `section_notices`,
   `section_notices_past` and `chemical_page` (absolute URLs with `{id}`), and
