@@ -13,6 +13,15 @@
         ],
         "meta_url": "/api/2.0/monitors/meta/",
         "places_url": "/api/2.0/monitors/?dataset=air-quality",
+        "monitor_types": [
+          "airgradient",
+          "airnow",
+          "aqlite",
+          "aqview",
+          "bam1022",
+          "purpleair",
+          "vozbox"
+        ],
         "entry_types": [
           {
             "id": "co",
@@ -258,6 +267,7 @@
         ],
         "meta_url": "/api/2.0/monitors/meta/",
         "places_url": "/api/2.0/monitors/?dataset=weather",
+        "monitor_types": ["cimis"],
         "entry_types": [
           {
             "id": "dewpoint",
@@ -531,6 +541,7 @@
         ],
         "meta_url": "/api/2.0/hms/meta/",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "smoke-density",
@@ -562,6 +573,7 @@
         ],
         "meta_url": "/api/2.0/hms/meta/",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "fire-frp",
@@ -593,6 +605,7 @@
         ],
         "meta_url": "/api/2.0/pesticides/meta/",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "pounds-applied",
@@ -659,6 +672,7 @@
         ],
         "meta_url": "/api/2.0/pesticides/meta/",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "spray-notice",
@@ -690,6 +704,7 @@
         ],
         "meta_url": "/api/2.0/forecasts/meta/",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "aqi-forecast",
@@ -737,6 +752,7 @@
         ],
         "meta_url": "/api/2.0/calheatscore/meta/",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "heat-score",
@@ -768,6 +784,7 @@
         ],
         "meta_url": "",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "ces-score",
@@ -798,6 +815,7 @@
         ],
         "meta_url": "",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "facility-nox",
@@ -958,6 +976,7 @@
         ],
         "meta_url": "",
         "places_url": "",
+        "monitor_types": null,
         "entry_types": [
           {
             "id": "no2",
