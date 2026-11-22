@@ -42,7 +42,7 @@ and #338). **5.0.0-beta.14** (2026-11-17): the `pesticides/meta/` explorer
 `links` and `link_params`, `pesticideLinkUrl`, and the
 `getPesticideSectionDetails` value filters and `month` (#68, for sjvair.com
 #339). **5.0.0-beta.15** (2026-11-18): the period daily statistic (#69, for
-sjvair.com #342). **5.0.0-beta.16** (unreleased): the bulk monitor `type`
+sjvair.com #342). **5.0.0-beta.16** (2026-11-21): the bulk monitor `type`
 option, catalog `monitor_types` and valley-wide pesticide use (#70, for
 sjvair.com #350).
 
