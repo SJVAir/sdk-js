@@ -500,6 +500,79 @@ Deno.test({
       },
     );
 
+    // `type` narrows: an old server would ignore it and return every type,
+    // so these check what comes back, not just that the call succeeds.
+    await t.step(
+      "GET  monitors/{entry_type}/summaries/daily/ (type)",
+      async () => {
+        const end = new Date();
+        const start = new Date(end);
+        start.setDate(start.getDate() - 7);
+
+        const purpleair = await getMonitorSummariesBulkDaily({
+          entryType: "pm25",
+          start,
+          end,
+          type: "purpleair",
+        });
+        if (!purpleair.length) {
+          console.warn("No PurpleAir pm25 summaries this week (data gap)");
+        }
+        validateMonitorWithSummaries(purpleair);
+        for (const monitor of purpleair) {
+          assertEquals(monitor.type, "purpleair");
+        }
+
+        // CIMIS is opt-in: reachable only when named, for weather types.
+        const cimis = await getMonitorSummariesBulkDaily({
+          entryType: "temperature",
+          start,
+          end,
+          type: "cimis",
+        });
+        if (!cimis.length) {
+          console.warn("No CIMIS temperature summaries this week (data gap)");
+        }
+        validateMonitorWithSummaries(cimis);
+        for (const monitor of cimis) {
+          assertEquals(monitor.type, "cimis");
+        }
+
+        const error = await assertRejects(() =>
+          getMonitorSummariesBulkDaily({
+            entryType: "pm25",
+            start,
+            end,
+            type: "nope",
+          })
+        );
+        const cause = (error as Error).cause as {
+          result: { status: number };
+          details: { type: Array<{ code: string }> };
+        };
+        assertEquals(cause.result.status, 400);
+        assertEquals(cause.details.type[0].code, "invalid_choice");
+      },
+    );
+
+    await t.step({
+      name: "GET  monitors/{entry_type}/summaries/daily/open/ (type)",
+      ignore: isRemote,
+      fn: async () => {
+        const monitors = await getMonitorSummariesBulkDailyOpen({
+          entryType: "pm25",
+          type: "purpleair",
+        });
+        if (!monitors.length) {
+          console.warn("No PurpleAir open-day rows (local data gap)");
+        }
+        validateMonitorWithSummaries(monitors);
+        for (const monitor of monitors) {
+          assertEquals(monitor.type, "purpleair");
+        }
+      },
+    });
+
     // Open days are built from today's hours; a local stack can have none
     // (it runs part of the day), so an empty answer is noted, not a failure.
     await t.step({
@@ -817,6 +890,75 @@ Deno.test("Module: Monitors request params (stubbed fetch)", async (t) => {
       stub.calls[0].url.searchParams.get("timestamp"),
       "2026-10-22T07:00:00.000Z",
     );
+  });
+
+  const bulkDay = {
+    entryType: "pm25",
+    start: "2026-01-01",
+    end: "2026-01-02",
+  } as const;
+
+  await t.step("bulk summaries send one type", async () => {
+    const stub = stubFetch(emptyPage);
+    try {
+      await getMonitorSummariesBulkDaily({ ...bulkDay, type: "purpleair" });
+    } finally {
+      stub.restore();
+    }
+    assertEquals(stub.calls[0].url.searchParams.getAll("type"), ["purpleair"]);
+  });
+
+  await t.step("bulk summaries send several types with regions", async () => {
+    const stub = stubFetch(emptyPage);
+    try {
+      await getMonitorSummariesBulkDaily({
+        ...bulkDay,
+        type: ["purpleair", "airnow"],
+        region: ["a", "b"],
+      });
+    } finally {
+      stub.restore();
+    }
+    const params = stub.calls[0].url.searchParams;
+    assertEquals(params.getAll("type"), ["purpleair", "airnow"]);
+    assertEquals(params.getAll("region"), ["a", "b"]);
+  });
+
+  await t.step("bulk open days send type", async () => {
+    const stub = stubFetch(emptyPage);
+    try {
+      await getMonitorSummariesBulkDailyOpen({
+        entryType: "temperature",
+        type: "cimis",
+      });
+    } finally {
+      stub.restore();
+    }
+    assertEquals(stub.calls[0].url.searchParams.getAll("type"), ["cimis"]);
+  });
+
+  await t.step("bulk summaries omit an empty type", async () => {
+    for (const type of [[], ""]) {
+      const stub = stubFetch(emptyPage);
+      try {
+        await getMonitorSummariesBulkDaily({ ...bulkDay, type });
+      } finally {
+        stub.restore();
+      }
+      assertEquals(stub.calls[0].url.searchParams.has("type"), false);
+    }
+  });
+
+  await t.step("bulk type takes a monitors/meta/ string, no cast", async () => {
+    // `monitors/meta/` types are plain strings; they pass as they are.
+    const id: string = "purpleair";
+    const stub = stubFetch(emptyPage);
+    try {
+      await getMonitorSummariesBulkDaily({ ...bulkDay, type: [id] });
+    } finally {
+      stub.restore();
+    }
+    assertEquals(stub.calls[0].url.searchParams.getAll("type"), ["purpleair"]);
   });
 
   await t.step("getMonitorEntriesCSVUrl sends Z bounds", () => {
