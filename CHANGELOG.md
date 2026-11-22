@@ -43,8 +43,8 @@ and #338). **5.0.0-beta.14** (2026-11-17): the `pesticides/meta/` explorer
 `getPesticideSectionDetails` value filters and `month` (#68, for sjvair.com
 #339). **5.0.0-beta.15** (2026-11-18): the period daily statistic (#69, for
 sjvair.com #342). **5.0.0-beta.16** (unreleased): the bulk monitor `type`
-option, catalog `monitor_types` and valley-wide pesticide use (for sjvair.com
-#350).
+option, catalog `monitor_types` and valley-wide pesticide use (#70, for
+sjvair.com #350).
 
 ### Breaking
 
@@ -52,10 +52,10 @@ option, catalog `monitor_types` and valley-wide pesticide use (for sjvair.com
   `Place | null`: `null` for the whole valley. `getPesticidesForPlace` called
   with a place still types `place` as `Place`, but code that takes a
   `PesticidesForPlace` and reads `.place` must handle `null`. Needs a server
-  running sjvair.com #350. (from beta.16)
+  running sjvair.com #350. (from beta.16, #70)
 - `DatasetCatalogEntry` (and `datasetCatalogEntrySchema`) requires
   `monitor_types`: code that builds catalog entries as literals must list it.
-  Needs a server running sjvair.com #350. (from beta.16)
+  Needs a server running sjvair.com #350. (from beta.16, #70)
 - `Scale` requires `period_statistic` and `period_statistic_label`, and
   `MonitorSummary` / `RegionSummary` require `daily_statistic_mean`,
   `daily_statistic_days` and `daily_statistic_expected_days`: code that builds
@@ -117,14 +117,14 @@ option, catalog `monitor_types` and valley-wide pesticide use (for sjvair.com
   for the weather entry types). An unknown type is a 400 with code
   `invalid_choice`. The new `MonitorTypeId` type suggests the known ids and
   accepts any string, so the `monitors/meta/` `type` values pass without a cast.
-  (from beta.16)
+  (from beta.16, #70)
 - `DatasetCatalogEntry.monitor_types`: the sorted monitor type ids that make a
   dataset (weather: `["cimis"]`), or `null` for datasets not made by monitors.
-  Its values are what the bulk `type` takes. (from beta.16)
+  Its values are what the bulk `type` takes. (from beta.16, #70)
 - `getPesticidesForPlace(null, filters)` returns the whole valley's monthly and
   yearly use, with the same filters and counting, and `place: null`. A
   `PlaceRef | null` value is accepted as it is (the result's `place` is then
-  `Place | null`). (from beta.16)
+  `Place | null`). (from beta.16, #70)
 - `MonitorSummary` / `RegionSummary` (single and bulk) rows have
   `daily_statistic_mean`, `daily_statistic_days` and
   `daily_statistic_expected_days` (`number | null`). (from beta.15, #69)
