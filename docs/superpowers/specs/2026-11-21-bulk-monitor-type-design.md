@@ -32,15 +32,15 @@ adds both in #350; this beta wraps them.
    `monitor_types` (#350 commit f611cd84, `camp/api/v2/meta/catalog.py`
    `_monitor_types`): a sorted array of monitor type ids, or `null` for data
    sets not made by monitors. Weather is `["cimis"]`; air-quality is every
-   enabled non-opt-in type. Its values are exactly what the bulk `type` takes
-   (a server test pins that), so a client builds type checkboxes from it and
-   never hardcodes `cimis`.
+   enabled non-opt-in type. Its values are exactly what the bulk `type` takes (a
+   server test pins that), so a client builds type checkboxes from it and never
+   hardcodes `cimis`.
    - Schema: `monitor_types: z.array(z.string()).nullable()`, required (the
      server always sends it). Its `string[]` passes straight to the bulk `type`
      option, since `MonitorTypeId` accepts any string.
-3. **Valley-wide pesticide use.** `getPesticidesForPlace` accepts `null` for
-   the place: no place params are sent and the server returns the whole
-   valley's monthly and yearly use, same filters and counting, `place: null`.
+3. **Valley-wide pesticide use.** `getPesticidesForPlace` accepts `null` for the
+   place: no place params are sent and the server returns the whole valley's
+   monthly and yearly use, same filters and counting, `place: null`.
    - Overloads: a `PlaceRef` returns `PesticidesForPlace & { place: Place }`
      (non-null), `null` returns `PesticidesForPlace & { place: null }`.
    - `pesticidesForPlaceSchema.place` becomes `placeSchema.nullable()`, so the
@@ -77,20 +77,20 @@ adds both in #350; this beta wraps them.
 - Unit: `type` single and array produce repeated params; unset/empty sends
   nothing; `getPesticidesForPlace(null)` sends no place params; schema accepts
   `place: null`; overload types (`@ts-expect-error` / type assertions).
-- Live: `type` narrows (every returned monitor has a named type; warn on
-  empty); unknown type is a 400 `invalid_choice`; `type=cimis` on a weather
-  entry type returns only CIMIS (warn on empty); valley pesticides validate
-  with `place === null`; a half-given region is still a 400.
+- Live: `type` narrows (every returned monitor has a named type; warn on empty);
+  unknown type is a 400 `invalid_choice`; `type=cimis` on a weather entry type
+  returns only CIMIS (warn on empty); valley pesticides validate with
+  `place === null`; a half-given region is still a 400.
 - Fixtures: re-capture `pesticides/place` (valley) and the catalog once the
   local stack runs #350.
 
 ## Docs
 
-Module JSDoc examples, CLAUDE.md untouched, `api-urls.md`, CHANGELOG under
-5.0.0 (Added: `type`, valley pesticides, catalog field; Breaking:
+Module JSDoc examples, CLAUDE.md untouched, `api-urls.md`, CHANGELOG under 5.0.0
+(Added: `type`, valley pesticides, catalog field; Breaking:
 `PesticidesForPlace.place` nullable).
 
 ## Left to the builder
 
-Exact export location of `MonitorTypeId` (likely `lib/monitors/types.ts`),
-test file layout, fixture names.
+Exact export location of `MonitorTypeId` (likely `lib/monitors/types.ts`), test
+file layout, fixture names.

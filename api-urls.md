@@ -89,13 +89,13 @@ archives
 - [x] `/api/2.0/monitors/<entry_type>/at/`
 - [x] `/api/2.0/monitors/<entry_type>/closest/`
 - [x] `/api/2.0/monitors/<entry_type>/current/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/hourly/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/open/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/monthly/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/quarterly/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/seasonal/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/yearly/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/hourly/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/open/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/monthly/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/quarterly/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/seasonal/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/yearly/` (`?type=`)
 - [x] `/api/2.0/monitors/<monitor_id>/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/current/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
@@ -148,7 +148,7 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/use/`
 - [x] `/api/2.0/pesticides/use/<use_id>/`
 - [x] `/api/2.0/pesticides/locations/`
-- [x] `/api/2.0/pesticides/place/`
+- [x] `/api/2.0/pesticides/place/` (no place: the whole valley)
 - [x] `/api/2.0/pesticides/meta/`
 - [x] `/api/2.0/pesticides/search/`
 - [x] `/api/2.0/pesticides/notices/active/`
