@@ -122,8 +122,9 @@ option, catalog `monitor_types` and valley-wide pesticide use (for sjvair.com
   dataset (weather: `["cimis"]`), or `null` for datasets not made by monitors.
   Its values are what the bulk `type` takes. (from beta.16)
 - `getPesticidesForPlace(null, filters)` returns the whole valley's monthly and
-  yearly use, with the same filters and counting, and `place: null`. (from
-  beta.16)
+  yearly use, with the same filters and counting, and `place: null`. A
+  `PlaceRef | null` value is accepted as it is (the result's `place` is then
+  `Place | null`). (from beta.16)
 - `MonitorSummary` / `RegionSummary` (single and bulk) rows have
   `daily_statistic_mean`, `daily_statistic_days` and
   `daily_statistic_expected_days` (`number | null`). (from beta.15, #69)

@@ -77,6 +77,11 @@ export function getPesticidesForPlace(
   filters?: PesticidesForPlaceFilters,
   options?: RequestOptions,
 ): Promise<PesticidesForPlace & { place: null }>;
+export function getPesticidesForPlace(
+  place: PlaceRef | null,
+  filters?: PesticidesForPlaceFilters,
+  options?: RequestOptions,
+): Promise<PesticidesForPlace>;
 export async function getPesticidesForPlace(
   place: PlaceRef | null,
   filters: PesticidesForPlaceFilters = {},

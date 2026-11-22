@@ -13,6 +13,7 @@ import valleyFixture from "./fixtures/pesticides_for_place_valley.json" with {
   type: "json",
 };
 import type { Place } from "../meta/types.ts";
+import type { PlaceRef } from "../meta/place.ts";
 import {
   getPesticidesForPlace,
   pesticidePlaceFilterErrors,
@@ -268,6 +269,23 @@ Deno.test({
           // @ts-expect-error The valley's `place` is null, not a Place.
           const valley: Place = (await getPesticidesForPlace(null)).place;
           assertExists(valley); // the stub answers with the county fixture
+        } finally {
+          stub.restore();
+        }
+      },
+    );
+
+    await t.step(
+      "a place that may be null (no Where) needs no branch",
+      async () => {
+        // UI state is often "a place, or none for everywhere".
+        const where = null as PlaceRef | null;
+        const stub = stubFetch(() => jsonResponse(valleyFixture));
+        try {
+          const result = await getPesticidesForPlace(where);
+          const place: Place | null = result.place;
+          assertEquals(place, null);
+          assertEquals([...stub.calls[0].url.searchParams.keys()], []);
         } finally {
           stub.restore();
         }
