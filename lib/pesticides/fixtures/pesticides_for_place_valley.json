@@ -1,0 +1,59 @@
+{
+  "data": {
+    "place": null,
+    "months": [
+      {
+        "year": 2022,
+        "month": 1,
+        "pounds": 11638135.667867936,
+        "acres": 3582389.7873966913,
+        "applications": 110309
+      },
+      {
+        "year": 2022,
+        "month": 2,
+        "pounds": 6469365.153532765,
+        "acres": 3360579.3027387448,
+        "applications": 99712
+      },
+      {
+        "year": 2022,
+        "month": 3,
+        "pounds": 5651624.543872383,
+        "acres": 4214178.750463733,
+        "applications": 119007
+      },
+      {
+        "year": 2022,
+        "month": 4,
+        "pounds": 11409129.74046834,
+        "acres": 7075819.20491048,
+        "applications": 176992
+      }
+    ],
+    "years": [
+      {
+        "year": 2022,
+        "pounds": 96338306.13182186,
+        "acres": 57925521.123673044,
+        "applications": 1439788,
+        "undated": {
+          "pounds": 0.0,
+          "acres": 0.0,
+          "applications": 0
+        }
+      },
+      {
+        "year": 2023,
+        "pounds": 88508098.15842879,
+        "acres": 60348979.85602902,
+        "applications": 1494329,
+        "undated": {
+          "pounds": 0.0,
+          "acres": 0.0,
+          "applications": 0
+        }
+      }
+    ]
+  }
+}

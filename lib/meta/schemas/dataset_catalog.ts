@@ -150,6 +150,11 @@ interface DatasetCatalogEntrySchema extends
     meta_url: z.ZodString;
     /** A URL listing the dataset's places (e.g. its monitors), or an empty string */
     places_url: z.ZodString;
+    /**
+     * The monitor type ids that make this dataset, sorted (the values the bulk
+     * monitor summaries' `type` takes), or null when it isn't made by monitors
+     */
+    monitor_types: z.ZodNullable<z.ZodArray<z.ZodString>>;
     /** The entry types the dataset holds */
     entry_types: z.ZodArray<DatasetEntryTypeSchema>;
     /** Null while current; the retirement marker once retired */
@@ -164,6 +169,7 @@ export const datasetCatalogEntrySchema: DatasetCatalogEntrySchema = z.object({
   geographies: z.array(geographySchema),
   meta_url: z.string(),
   places_url: z.string(),
+  monitor_types: z.array(z.string()).nullable(),
   entry_types: z.array(datasetEntryTypeSchema),
   retired: retiredSchema.nullable(),
 });

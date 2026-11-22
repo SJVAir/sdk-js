@@ -48,6 +48,15 @@ export type MonitorData = zinfer<typeof monitorDataSchema>;
  */
 export type MonitorType = zinfer<typeof monitorTypeSchema>;
 
+/**
+ * A monitor type id, as an option takes it. The known ids are suggested, but
+ * any string is accepted: the `monitors/meta/` `type` values and the catalog's
+ * `monitor_types` pass as they are, and a type the server adds later works
+ * without an SDK release.
+ */
+// deno-lint-ignore ban-types
+export type MonitorTypeId = MonitorType | (string & {});
+
 /** A data source or provider */
 export type MonitorDataVendor = zinfer<typeof monitorDataVendorSchema>;
 

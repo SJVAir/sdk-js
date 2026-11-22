@@ -109,7 +109,10 @@ export type PesticideLocationCollection = zinfer<
   typeof pesticideLocationCollectionSchema
 >;
 
-/** Monthly and yearly pesticide use for a place, as returned from pesticides/place */
+/**
+ * Monthly and yearly pesticide use for a place, or the whole valley (`place`
+ * null), as returned from pesticides/place
+ */
 export type PesticidesForPlace = zinfer<typeof pesticidesForPlaceSchema>;
 
 /** What `searchPesticides` can search */

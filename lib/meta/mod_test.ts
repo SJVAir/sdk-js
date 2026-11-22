@@ -73,6 +73,16 @@ function assertCatalogContents(catalog: DatasetCatalog) {
   assertEquals(entry("pm10")?.resolutions, ["raw"]);
   // Only pollutants carry `available`.
   assertEquals(entry("temperature")?.available, undefined);
+
+  // `monitor_types` names the types that make each monitor dataset (the
+  // values the bulk summaries' `type` takes); other datasets have null.
+  const weather = catalog.datasets.find((d) => d.id === "weather");
+  assertExists(weather, "No weather dataset in the catalog");
+  assertEquals(weather.monitor_types, ["cimis"]);
+  assertEquals(airQuality.monitor_types?.includes("purpleair"), true);
+  assertEquals(airQuality.monitor_types?.includes("cimis"), false);
+  const smoke = catalog.datasets.find((d) => d.id === "hms-smoke");
+  assertEquals(smoke?.monitor_types, null);
 }
 
 Deno.test({

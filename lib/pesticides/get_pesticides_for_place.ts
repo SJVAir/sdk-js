@@ -1,5 +1,6 @@
 /**
- * A utility function for fetching pesticide use for a region or monitor.
+ * A utility function for fetching pesticide use for a region, a monitor or
+ * the whole valley.
  *
  * @example Usage
  * ```ts
@@ -12,6 +13,14 @@
  * console.log(use.years[0]);
  * // Prints: { year: 2022, pounds: 23490784.8, acres: 13379845.9, applications: 318894,
  * //   undated: { pounds: 0, acres: 0, applications: 0 } }
+ * ```
+ *
+ * @example The whole valley
+ * ```ts
+ * import { getPesticidesForPlace } from "@sjvair/sdk/pesticides/get_pesticides_for_place";
+ *
+ * const valley = await getPesticidesForPlace(null, { year__gte: 2022 });
+ * console.log(valley.place); // Prints: null
  * ```
  *
  * @example A saved filter whose chemical is gone
@@ -39,13 +48,17 @@
  */
 import { jsonCall, type RequestOptions } from "$http";
 import { type PlaceRef, placeSearchParams } from "../meta/place.ts";
+import type { Place } from "../meta/types.ts";
 import type { PesticidesForPlace, PesticidesForPlaceFilters } from "./types.ts";
 
 /**
- * Fetches monthly and yearly pesticide use for a place.
+ * Fetches monthly and yearly pesticide use for a place, or for the whole
+ * valley.
  *
  * @param place A region by type and official code, or a monitor by id.
- * Land-use regions can't be looked up by code.
+ * Land-use regions can't be looked up by code. `null` asks for the whole
+ * valley (every county the import keeps), with the same filters and counting,
+ * and the result's `place` is `null`.
  * @param filters Narrow by chemical, commodity or product (by id, not CDPR
  * code), categories, a narrowing, IARC group, application method, or a year
  * range (1900 to 2100). Unset filters are not sent.
@@ -54,13 +67,30 @@ import type { PesticidesForPlace, PesticidesForPlaceFilters } from "./types.ts";
  * @returns The place, use by month (only months with use) and use by year
  * (totals include records with no application date, shown in `undated`).
  */
-export async function getPesticidesForPlace(
+export function getPesticidesForPlace(
   place: PlaceRef,
+  filters?: PesticidesForPlaceFilters,
+  options?: RequestOptions,
+): Promise<PesticidesForPlace & { place: Place }>;
+export function getPesticidesForPlace(
+  place: null,
+  filters?: PesticidesForPlaceFilters,
+  options?: RequestOptions,
+): Promise<PesticidesForPlace & { place: null }>;
+export function getPesticidesForPlace(
+  place: PlaceRef | null,
+  filters?: PesticidesForPlaceFilters,
+  options?: RequestOptions,
+): Promise<PesticidesForPlace>;
+export async function getPesticidesForPlace(
+  place: PlaceRef | null,
   filters: PesticidesForPlaceFilters = {},
   options?: RequestOptions,
 ): Promise<PesticidesForPlace> {
-  const searchParams: Record<string, string | Array<string>> =
-    placeSearchParams(place);
+  // No place params is the whole valley.
+  const searchParams: Record<string, string | Array<string>> = place === null
+    ? {}
+    : placeSearchParams(place);
   for (const [key, value] of Object.entries(filters)) {
     if (value === undefined) continue;
     searchParams[key] = Array.isArray(value) ? [...value] : String(value);

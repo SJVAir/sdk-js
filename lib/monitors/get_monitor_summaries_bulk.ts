@@ -17,6 +17,9 @@
  *   start: "2024-01-01",
  *   end: "2024-01-31",
  *   region: "abc123",
+ *   // Only these monitor types (`monitors/meta/` keys, or a catalog
+ *   // dataset's `monitor_types`).
+ *   type: ["purpleair", "airnow"],
  * });
  * console.log(monitors);
  * // Prints:
@@ -48,7 +51,11 @@
  */
 import { fetchAllBulkPages, mergeBulkPages, type RequestOptions } from "$http";
 import { mergeBulkOpenDays } from "../open_days.ts";
-import type { MonitorEntryType, MonitorWithSummaries } from "./types.ts";
+import type {
+  MonitorEntryType,
+  MonitorTypeId,
+  MonitorWithSummaries,
+} from "./types.ts";
 
 /**
  * The configuration options shared by all bulk monitor summary endpoints
@@ -68,6 +75,18 @@ export interface MonitorSummaryBulkRequestConfig {
 
   /** Restrict results to monitors within one or more regions, by region sqid */
   region?: string | Array<string>;
+
+  /**
+   * Restrict results to one or more monitor types: the `monitors/meta/`
+   * `monitors[*].type` keys, or a dataset's `monitor_types` from the catalog.
+   * The opt-in `cimis` is returned only when named, as its raw series, for the
+   * weather entry types it summarizes. An unknown type is a 400 (the error's
+   * `cause.details.type[0].code` is `"invalid_choice"`). Combines with
+   * `region`, `bbox` and `processor`; an empty string or array sends nothing.
+   *
+   * @defaultValue Every public monitor type (never `cimis`).
+   */
+  type?: MonitorTypeId | Array<MonitorTypeId>;
 
   /**
    * The exact summary processor to return (an empty string selects raw) across
@@ -129,6 +148,12 @@ function getBulkScopeSearchParams(
 
   if (config.region) {
     searchParams.region = config.region;
+  }
+
+  if (config.type !== undefined && config.type.length > 0) {
+    searchParams.type = Array.isArray(config.type)
+      ? [...config.type]
+      : config.type;
   }
 
   if (config.processor !== undefined) {

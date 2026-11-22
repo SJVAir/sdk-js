@@ -66,8 +66,8 @@ export const pesticideYearSchema: PesticideYearSchema = z.object({
 
 interface PesticidesForPlaceSchema extends
   z.ZodObject<{
-    /** The place asked about */
-    place: typeof placeSchema;
+    /** The place asked about, or null for the whole valley */
+    place: z.ZodNullable<typeof placeSchema>;
     /** Use by month; only months with use appear */
     months: z.ZodArray<PesticideMonthSchema>;
     /** Use by year; each year's totals include its undated records */
@@ -75,7 +75,7 @@ interface PesticidesForPlaceSchema extends
   }> {}
 /** Monthly and yearly pesticide use for a place, as returned from pesticides/place */
 export const pesticidesForPlaceSchema: PesticidesForPlaceSchema = z.object({
-  place: placeSchema,
+  place: placeSchema.nullable(),
   months: z.array(pesticideMonthSchema),
   years: z.array(pesticideYearSchema),
 });
