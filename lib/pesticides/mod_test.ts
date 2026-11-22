@@ -1,6 +1,6 @@
 import { apiCall, setOrigin } from "$http";
 import { getSimpleValidationTest, isUnavailable } from "$testing";
-import { assert, assertEquals, assertExists } from "@std/assert";
+import { assert, assertEquals, assertExists, assertRejects } from "@std/assert";
 import { jsonResponse, stubFetch } from "../http/fetch_stub_test_utils.ts";
 import metaFixture from "./fixtures/pesticides_meta.json" with {
   type: "json",
@@ -9,6 +9,10 @@ import { getPesticidesMeta } from "./get_pesticides_meta.ts";
 import placeFixture from "./fixtures/pesticides_for_place.json" with {
   type: "json",
 };
+import valleyFixture from "./fixtures/pesticides_for_place_valley.json" with {
+  type: "json",
+};
+import type { Place } from "../meta/types.ts";
 import {
   getPesticidesForPlace,
   pesticidePlaceFilterErrors,
@@ -236,6 +240,40 @@ Deno.test({
       validatePlace(placeData);
     });
 
+    await t.step("the valley fixture matches the schema", () => {
+      validatePlace(valleyFixture.data as unknown as PesticidesForPlace);
+    });
+
+    await t.step("null asks for the valley: no place params", async () => {
+      const stub = stubFetch(() => jsonResponse(valleyFixture));
+      try {
+        const result = await getPesticidesForPlace(null, { year__gte: 2022 });
+        assertEquals(
+          [...stub.calls[0].url.searchParams.keys()],
+          ["year__gte"],
+        );
+        assertEquals(result.place, null);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    await t.step(
+      "a place types `place` as non-null; null as null",
+      async () => {
+        const stub = stubFetch(() => jsonResponse(placeFixture));
+        try {
+          const named: Place = (await getPesticidesForPlace(county)).place;
+          assertExists(named);
+          // @ts-expect-error The valley's `place` is null, not a Place.
+          const valley: Place = (await getPesticidesForPlace(null)).place;
+          assertExists(valley); // the stub answers with the county fixture
+        } finally {
+          stub.restore();
+        }
+      },
+    );
+
     await t.step("sends the place and only the filters given", async () => {
       const stub = stubFetch(() => jsonResponse(placeFixture));
       try {
@@ -329,6 +367,37 @@ Deno.test({
         } finally {
           stub.restore();
         }
+      },
+    );
+
+    await t.step("GET  pesticides/place/ for the valley", async () => {
+      try {
+        const result = await getPesticidesForPlace(null, { year__gte: 2022 });
+        validatePlace(result);
+        assertEquals(result.place, null);
+        if (!result.years.length) {
+          console.warn("No valley pesticide use since 2022 (local data gap)");
+        }
+      } catch (error) {
+        if (!isUnavailable(error)) throw error;
+        console.warn("pesticides/place/ unavailable; skipping.");
+      }
+    });
+
+    // The SDK can't build half a region; the server still refuses one.
+    await t.step(
+      "GET  pesticides/place/ with half a region is a 400",
+      async () => {
+        const error = await assertRejects(() =>
+          apiCall({
+            url: "pesticides/place",
+            searchParams: { region_type: "county" },
+          })
+        );
+        const cause = (error as Error).cause as {
+          result?: { status?: number };
+        };
+        assertEquals(cause.result?.status, 400);
       },
     );
 
