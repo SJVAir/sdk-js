@@ -262,18 +262,41 @@ Deno.test({
     await t.step(
       "a place types `place` as non-null; null as null",
       async () => {
-        const stub = stubFetch(() => jsonResponse(placeFixture));
+        let stub = stubFetch(() => jsonResponse(placeFixture));
         try {
           const named: Place = (await getPesticidesForPlace(county)).place;
           assertExists(named);
+        } finally {
+          stub.restore();
+        }
+        stub = stubFetch(() => jsonResponse(valleyFixture));
+        try {
           // @ts-expect-error The valley's `place` is null, not a Place.
           const valley: Place = (await getPesticidesForPlace(null)).place;
-          assertExists(valley); // the stub answers with the county fixture
+          assertEquals(valley, null);
         } finally {
           stub.restore();
         }
       },
     );
+
+    await t.step("a land-use region throws before any request", async () => {
+      const stub = stubFetch(() => jsonResponse(placeFixture));
+      try {
+        await assertRejects(
+          () =>
+            getPesticidesForPlace({
+              // deno-lint-ignore no-explicit-any
+              region: { type: "land_use", external_id: "x" } as any,
+            }),
+          Error,
+          "Land-use",
+        );
+        assertEquals(stub.calls.length, 0);
+      } finally {
+        stub.restore();
+      }
+    });
 
     await t.step(
       "a place that may be null (no Where) needs no branch",
