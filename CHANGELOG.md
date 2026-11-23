@@ -115,6 +115,10 @@ sjvair.com #350).
   `"school"` or `"child_care"`, or any newer key), and
   `RegionsMeta.location_groups` and `asIter.locationGroups` (sorted by `order`).
   Needs a server running sjvair.com #351. (from beta.17, #71)
+- `getPesticideLocations` with no area (`getPesticideLocations()`, or with only
+  `type` / `county`) returns every location in the valley. `radius` and `buffer`
+  without their area no longer compile (the server answers 400). Needs a server
+  running sjvair.com #351. (from beta.17, #71)
 - `type` on the bulk monitor summaries (`getMonitorSummariesBulkHourly` through
   `getMonitorSummariesBulkYearly`, and `getMonitorSummariesBulkDailyOpen`): one
   monitor type id or several, sent as repeated `type` params. Only those types
@@ -295,6 +299,9 @@ sjvair.com #350).
 
 ### Changed
 
+- `PesticideLocationsArea`'s forms each name the other forms' keys as `never`,
+  so passing two areas at once (e.g. `bbox` and `region`) no longer compiles.
+  The SDK sent only the first of them before. (from beta.17, #71)
 - Entry date ranges send zone-aware bounds and snap days in Pacific time.
 - By-code lookups return only the codes asked for.
 - Forecast `color` is the AQI scale level's color for `aqi_value` (it was a
