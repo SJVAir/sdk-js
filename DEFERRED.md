@@ -30,21 +30,6 @@ None open. (Exact entry bounds by default shipped in 5.0.0-beta.2; see
 Minor findings from reviews, left for later. Each is small and safe to pick up
 any time.
 
-- **Small follow-ups from the location groups review.** _Deferred 2026-11-22
-  (final review of sdk-js #71, graded minor)._
-  - `PesticideLocationsArea` references the private `NoArea` type
-    (`deno doc --lint` reports `private-type-ref`). Export it under a better
-    name, or accept the warning.
-  - The JSDoc on `PesticideLocationsArea`'s union members (and the field docs
-    inside its `Omit<…> & {…}` forms) doesn't render in `deno doc`, and a type
-    error on a bad area prints the whole `Omit<NoArea, …>` union.
-  - The live `regions/meta (location groups)` step asserts that
-    `asIter.locationGroups` is sorted, which can't fail because `asIter` sorts
-    it. Compare against the raw record, or drop the check.
-
-  **Revisit when** someone next works on `getPesticideLocations` or the regions
-  meta wrapper.
-
 - **Small follow-ups from the pesticide map reviews.** _Deferred 2026-11-16
   (final reviews of sdk-js #65 and #66, graded minor)._
   - `CHANGELOG.md`'s Added entry for `getActivePesticideNotices` doesn't list

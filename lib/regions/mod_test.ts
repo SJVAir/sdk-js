@@ -409,8 +409,11 @@ Deno.test({
             `${locationType.type}'s group ${locationType.group} isn't in location_groups`,
           );
         }
-        const orders = meta.asIter.locationGroups.map((group) => group.order);
-        assertEquals(orders, [...orders].sort((a, b) => a - b));
+        // The sort itself is covered by the stubbed test with reversed keys.
+        assertEquals(
+          meta.asIter.locationGroups.map((group) => group.key).sort(),
+          Object.keys(meta.location_groups).sort(),
+        );
       },
     );
   },

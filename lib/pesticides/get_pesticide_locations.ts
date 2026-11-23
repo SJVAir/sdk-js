@@ -23,42 +23,51 @@ import { apiCall, type RequestOptions } from "$http";
 import type { LocationType } from "../regions/types.ts";
 import type { PesticideLocationCollection } from "./types.ts";
 
-/** Every area key, none of them set: the base each area form overrides */
-type NoArea = {
-  bbox?: never;
-  region?: never;
-  buffer?: never;
-  lat?: never;
-  lng?: never;
-  radius?: never;
-};
-
 /**
  * The area to list locations in: a bounding box (at most 12 degrees a side),
  * a region, a point and radius, or no area at all (the whole valley). Each
  * form rules out the others' keys, so only one area is sent.
  */
 export type PesticideLocationsArea =
-  /** No area: every location in the valley */
-  | NoArea
-  | (Omit<NoArea, "bbox"> & {
+  | {
+    /** No area: every location in the valley */
+    bbox?: never;
+    region?: never;
+    buffer?: never;
+    lat?: never;
+    lng?: never;
+    radius?: never;
+  }
+  | {
     /** The box to list, as `[west, south, east, north]` degrees */
     bbox: [west: number, south: number, east: number, north: number];
-  })
-  | (Omit<NoArea, "region" | "buffer"> & {
+    region?: never;
+    buffer?: never;
+    lat?: never;
+    lng?: never;
+    radius?: never;
+  }
+  | {
+    bbox?: never;
     /** The ID (sqid) of a region; every location inside it is returned */
     region: string;
     /** Widens the region by this many miles */
     buffer?: 0 | 1 | 3 | 5;
-  })
-  | (Omit<NoArea, "lat" | "lng" | "radius"> & {
+    lat?: never;
+    lng?: never;
+    radius?: never;
+  }
+  | {
+    bbox?: never;
+    region?: never;
+    buffer?: never;
     /** Latitude of the center point */
     lat: number;
     /** Longitude of the center point */
     lng: number;
     /** The radius in miles, above 0 and up to 10 (the server defaults to 1) */
     radius?: number;
-  });
+  };
 
 /** The parameters of a locations request, plus the usual request options */
 export type PesticideLocationsParams =
