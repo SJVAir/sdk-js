@@ -44,7 +44,9 @@ and #338). **5.0.0-beta.14** (2026-11-17): the `pesticides/meta/` explorer
 #339). **5.0.0-beta.15** (2026-11-18): the period daily statistic (#69, for
 sjvair.com #342). **5.0.0-beta.16** (2026-11-21): the bulk monitor `type`
 option, catalog `monitor_types` and valley-wide pesticide use (#70, for
-sjvair.com #350).
+sjvair.com #350). **5.0.0-beta.17** (unreleased): location groups on
+`regions/meta/` and valley-wide `getPesticideLocations` (#71, for sjvair.com
+#351).
 
 ### Breaking
 
