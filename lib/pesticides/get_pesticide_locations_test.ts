@@ -163,3 +163,13 @@ Deno.test("radius or buffer without their area doesn't compile", () => {
   // @ts-expect-error: one area at a time
   const _both: PesticideLocationsParams = { bbox: [0, 0, 1, 1], region: "x" };
 });
+
+Deno.test("a partial point still goes to the server, not the valley", async () => {
+  // Untyped callers can drop `lat`; the server answers that with a 400
+  // instead of the SDK quietly asking for every location.
+  const { searchParams } = await paramsFor(
+    { lng: -119.79 } as unknown as PesticideLocationsParams,
+  );
+  assertEquals(searchParams.get("lng"), "-119.79");
+  assertEquals(searchParams.has("lat"), true);
+});

@@ -82,12 +82,16 @@ params), `type`/`county` with no area, and `@ts-expect-error` cases for
 `radius`/`buffer` alone; a union-typed variable case. Live tests validate what
 comes back and warn on empty, never require counts.
 
-**Docs:** CHANGELOG under 5.0.0-beta.17 (Added; not breaking), `api-urls.md`
-wording for `pesticides/locations/`.
+**Docs:** CHANGELOG under 5.0.0-beta.17 (Added, plus Breaking for the stricter
+types), `api-urls.md` wording for `pesticides/locations/`.
 
-## Not breaking
+## Breaking (corrected after the final review)
 
-Additive response fields and a widened parameter. A beta needs a server running
+The response fields are additive, but the types are stricter. `LocationTypeMeta`
+now requires `group` and `RegionsMetaData` requires `location_groups`, so
+literals that build them must list both (the same kind of change beta.16 listed
+as Breaking). The `never` keys also stop two areas being passed at once. Both
+are listed under Breaking in the CHANGELOG. A beta needs a server running
 sjvair.com `develop` at or after #351.
 
 ## Left to the builder

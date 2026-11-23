@@ -50,6 +50,14 @@ sjvair.com #350). **5.0.0-beta.17** (unreleased): location groups on
 
 ### Breaking
 
+- `LocationTypeMeta` (and `locationTypeMetaSchema`) requires `group`, and
+  `RegionsMetaData` (and `regionsMetaSchema`) requires `location_groups`: code
+  that builds these as literals must list them. Needs a server running
+  sjvair.com #351. (from beta.17, #71)
+- `PesticideLocationsArea`'s forms each name the other forms' keys as `never`,
+  so passing two areas at once (e.g. `bbox` and `region`, even through a
+  variable) no longer compiles. The SDK sent only the first of them before,
+  while the server would have used the region or point. (from beta.17, #71)
 - `PesticidesForPlace.place` (and `pesticidesForPlaceSchema`'s `place`) is
   `Place | null`: `null` for the whole valley. `getPesticidesForPlace` called
   with a place still types `place` as `Place`, but code that takes a
@@ -301,9 +309,6 @@ sjvair.com #350). **5.0.0-beta.17** (unreleased): location groups on
 
 ### Changed
 
-- `PesticideLocationsArea`'s forms each name the other forms' keys as `never`,
-  so passing two areas at once (e.g. `bbox` and `region`) no longer compiles.
-  The SDK sent only the first of them before. (from beta.17, #71)
 - Entry date ranges send zone-aware bounds and snap days in Pacific time.
 - By-code lookups return only the codes asked for.
 - Forecast `color` is the AQI scale level's color for `aqi_value` (it was a

@@ -98,7 +98,7 @@ export async function getPesticideLocations(
     if (params.buffer !== undefined) {
       searchParams.buffer = String(params.buffer);
     }
-  } else if (params.lat !== undefined) {
+  } else if (params.lat !== undefined || params.lng !== undefined) {
     searchParams.lat = String(params.lat);
     searchParams.lng = String(params.lng);
     if (params.radius !== undefined) {
