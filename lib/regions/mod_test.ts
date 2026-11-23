@@ -398,6 +398,24 @@ Deno.test({
         assertEquals(countyMeta.category, "administrative");
       },
     );
+
+    await t.step(
+      "GET  regions/meta (location groups)",
+      async () => {
+        const meta = await getRegionsMeta();
+        for (const locationType of meta.asIter.locationTypes) {
+          assertExists(
+            meta.location_groups[locationType.group],
+            `${locationType.type}'s group ${locationType.group} isn't in location_groups`,
+          );
+        }
+        // The sort itself is covered by the stubbed test with reversed keys.
+        assertEquals(
+          meta.asIter.locationGroups.map((group) => group.key).sort(),
+          Object.keys(meta.location_groups).sort(),
+        );
+      },
+    );
   },
 });
 

@@ -44,10 +44,20 @@ and #338). **5.0.0-beta.14** (2026-11-17): the `pesticides/meta/` explorer
 #339). **5.0.0-beta.15** (2026-11-18): the period daily statistic (#69, for
 sjvair.com #342). **5.0.0-beta.16** (2026-11-21): the bulk monitor `type`
 option, catalog `monitor_types` and valley-wide pesticide use (#70, for
-sjvair.com #350).
+sjvair.com #350). **5.0.0-beta.17** (unreleased): location groups on
+`regions/meta/` and valley-wide `getPesticideLocations` (#71, for sjvair.com
+#351).
 
 ### Breaking
 
+- `LocationTypeMeta` (and `locationTypeMetaSchema`) requires `group`, and
+  `RegionsMetaData` (and `regionsMetaSchema`) requires `location_groups`: code
+  that builds these as literals must list them. Needs a server running
+  sjvair.com #351. (from beta.17, #71)
+- `PesticideLocationsArea`'s forms each name the other forms' keys as `never`,
+  so passing two areas at once (e.g. `bbox` and `region`, even through a
+  variable) no longer compiles. The SDK sent only the first of them before,
+  while the server would have used the region or point. (from beta.17, #71)
 - `PesticidesForPlace.place` (and `pesticidesForPlaceSchema`'s `place`) is
   `Place | null`: `null` for the whole valley. `getPesticidesForPlace` called
   with a place still types `place` as `Place`, but code that takes a
@@ -110,6 +120,15 @@ sjvair.com #350).
 
 ### Added
 
+- `regions/meta/` location groups: `location_groups` (`LocationGroup`: `key`,
+  `label`, `order`), each location type's `group` (`LocationGroupKey`:
+  `"school"` or `"child_care"`, or any newer key), and
+  `RegionsMeta.location_groups` and `asIter.locationGroups` (sorted by `order`).
+  Needs a server running sjvair.com #351. (from beta.17, #71)
+- `getPesticideLocations` with no area (`getPesticideLocations()`, or with only
+  `type` / `county`) returns every location in the valley. `radius` and `buffer`
+  without their area no longer compile (the server answers 400). Needs a server
+  running sjvair.com #351. (from beta.17, #71)
 - `type` on the bulk monitor summaries (`getMonitorSummariesBulkHourly` through
   `getMonitorSummariesBulkYearly`, and `getMonitorSummariesBulkDailyOpen`): one
   monitor type id or several, sent as repeated `type` params. Only those types

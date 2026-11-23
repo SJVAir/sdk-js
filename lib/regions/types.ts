@@ -6,6 +6,8 @@ import type { infer as zinfer } from "zod";
 import type {
   boundaryListSchema,
   boundarySchema,
+  locationGroupKeySchema,
+  locationGroupSchema,
   locationSchema,
   locationSourceSchema,
   locationTypeMetaSchema,
@@ -109,6 +111,12 @@ export type LocationType = zinfer<typeof locationTypeSchema>;
 
 /** The metadata about a given location type */
 export type LocationTypeMeta = zinfer<typeof locationTypeMetaSchema>;
+
+/** The key of a group that location types are listed under */
+export type LocationGroupKey = zinfer<typeof locationGroupKeySchema>;
+
+/** A group that location types are listed under, such as "Schools" */
+export type LocationGroup = zinfer<typeof locationGroupSchema>;
 
 /** What `searchLocations` returns: the matches, and whether more were left out */
 export type LocationSearchResult = { results: Array<Location>; more: boolean };

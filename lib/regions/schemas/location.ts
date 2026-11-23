@@ -20,6 +20,15 @@ export const locationTypeSchema: LocationTypeSchema = openEnum(
   ["public_school", "private_school", "child_care"] as const,
 );
 
+/** The groups location types are listed under: a known key, or any newer one */
+export type LocationGroupKeySchema = OpenEnumSchema<
+  readonly ["school", "child_care"]
+>;
+
+export const locationGroupKeySchema: LocationGroupKeySchema = openEnum(
+  ["school", "child_care"] as const,
+);
+
 interface LocationRegionRefSchema extends
   z.ZodObject<{
     type: RegionTypeSchema;

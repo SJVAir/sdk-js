@@ -147,7 +147,7 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/region/<region_id>/use/`
 - [x] `/api/2.0/pesticides/use/`
 - [x] `/api/2.0/pesticides/use/<use_id>/`
-- [x] `/api/2.0/pesticides/locations/`
+- [x] `/api/2.0/pesticides/locations/` (no area: the whole valley)
 - [x] `/api/2.0/pesticides/place/` (no place: the whole valley, `place` null)
 - [x] `/api/2.0/pesticides/meta/`
 - [x] `/api/2.0/pesticides/search/`

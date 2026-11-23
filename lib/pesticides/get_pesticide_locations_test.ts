@@ -4,7 +4,11 @@ import { assertEquals } from "@std/assert";
 import locationsFixture from "./fixtures/pesticide_locations.json" with {
   type: "json",
 };
-import { getPesticideLocations } from "./get_pesticide_locations.ts";
+import {
+  getPesticideLocations,
+  type PesticideLocationsArea,
+  type PesticideLocationsParams,
+} from "./get_pesticide_locations.ts";
 import { pesticideLocationFeatureSchema } from "./schemas/mod.ts";
 import type { PesticideLocationFeature } from "./types.ts";
 
@@ -112,4 +116,60 @@ Deno.test("getPesticideLocations sends a single type as is", async () => {
   });
   assertEquals(searchParams.get("type"), "private_school");
   assertEquals(searchParams.has("county"), false);
+});
+
+Deno.test("getPesticideLocations with no area asks for the valley", async () => {
+  const url = await paramsFor({});
+  assertEquals(url.pathname.endsWith("/pesticides/locations/"), true);
+  assertEquals([...url.searchParams.keys()], []);
+});
+
+Deno.test("getPesticideLocations with no argument sends no params", async () => {
+  const url = await paramsFor(undefined);
+  assertEquals([...url.searchParams.keys()], []);
+});
+
+Deno.test("the valley form still filters by type and county", async () => {
+  const { searchParams } = await paramsFor({
+    type: "child_care",
+    county: "fresno",
+  });
+  assertEquals(searchParams.get("type"), "child_care");
+  assertEquals(searchParams.get("county"), "fresno");
+  for (const key of ["bbox", "region", "buffer", "lat", "lng", "radius"]) {
+    assertEquals(searchParams.has(key), false, key);
+  }
+});
+
+Deno.test("a union-typed area sends the member it holds", async () => {
+  const areas: Array<PesticideLocationsArea> = [
+    {},
+    { region: "abc12", buffer: 1 },
+    { lat: 36.74, lng: -119.79 },
+    { bbox: [0, 0, 1, 1] },
+  ];
+  const sent = [];
+  for (const area of areas) {
+    sent.push([...(await paramsFor(area)).searchParams.keys()].sort());
+  }
+  assertEquals(sent, [[], ["buffer", "region"], ["lat", "lng"], ["bbox"]]);
+});
+
+Deno.test("radius or buffer without their area doesn't compile", () => {
+  // @ts-expect-error: radius needs lat and lng (the server answers 400)
+  const _radius: PesticideLocationsParams = { radius: 2 };
+  // @ts-expect-error: buffer needs a region (the server answers 400)
+  const _buffer: PesticideLocationsParams = { buffer: 1 };
+  // @ts-expect-error: one area at a time
+  const _both: PesticideLocationsParams = { bbox: [0, 0, 1, 1], region: "x" };
+});
+
+Deno.test("a partial point still goes to the server, not the valley", async () => {
+  // Untyped callers can drop `lat`; the server answers that with a 400
+  // instead of the SDK quietly asking for every location.
+  const { searchParams } = await paramsFor(
+    { lng: -119.79 } as unknown as PesticideLocationsParams,
+  );
+  assertEquals(searchParams.get("lng"), "-119.79");
+  assertEquals(searchParams.has("lat"), true);
 });

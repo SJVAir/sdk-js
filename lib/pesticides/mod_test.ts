@@ -23,6 +23,7 @@ import {
   chemicalSchema,
   commodityDetailSchema,
   commoditySchema,
+  pesticideLocationFeatureSchema,
   pesticideNoticeSchema,
   pesticidesForPlaceSchema,
   pesticidesMetaSchema,
@@ -44,6 +45,7 @@ import { getPesticideNoticeDetails } from "./get_pesticide_notice_details.ts";
 import { getRegionPesticideSummary } from "./get_region_pesticide_summary.ts";
 import { getRegionPesticideNotices } from "./get_region_pesticide_notices.ts";
 import { getRegionPesticideUse } from "./get_region_pesticide_use.ts";
+import { getPesticideLocations } from "./get_pesticide_locations.ts";
 import type {
   PesticidesForPlace,
   PesticidesMeta,
@@ -223,6 +225,24 @@ Deno.test({
         const notices = await getRegionPesticideNotices(county.id);
         assertEquals(Array.isArray(notices), true);
         validatePesticideNotice(notices);
+      },
+    );
+
+    await t.step(
+      "GET  pesticides/locations/ for the valley (child care)",
+      async () => {
+        const { features } = await getPesticideLocations({
+          type: "child_care",
+        });
+        if (features.length === 0) {
+          console.warn("No child care locations found locally.");
+          return;
+        }
+        getSimpleValidationTest(pesticideLocationFeatureSchema)(features);
+        assertEquals(
+          features.every((feature) => feature.properties.type === "child_care"),
+          true,
+        );
       },
     );
   },

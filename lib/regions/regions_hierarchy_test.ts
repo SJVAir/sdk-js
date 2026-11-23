@@ -47,6 +47,56 @@ Deno.test("regions meta fixture carries the hierarchy fields", () => {
   assertEquals(typeof metaData.types.county.count, "number");
 });
 
+Deno.test("regions meta fixture carries the location groups", () => {
+  getSimpleValidationTest(regionsMetaSchema)(metaData);
+  assertEquals(metaData.location_types.public_school.group, "school");
+  assertEquals(metaData.location_types.private_school.group, "school");
+  assertEquals(metaData.location_types.child_care.group, "child_care");
+  assertEquals(metaData.location_groups.school, {
+    key: "school",
+    label: "Schools",
+    order: 0,
+  });
+  assertEquals(metaData.location_groups.child_care.order, 1);
+});
+
+Deno.test("a location type without a group fails the schema", () => {
+  const { group: _group, ...row } = metaData.location_types.child_care;
+  const data = {
+    ...metaData,
+    location_types: { ...metaData.location_types, child_care: row },
+  };
+  assertEquals(regionsMetaSchema.safeParse(data).success, false);
+});
+
+Deno.test("a newer location group still parses", () => {
+  const data = {
+    ...metaData,
+    location_groups: {
+      ...metaData.location_groups,
+      preschool: { key: "preschool", label: "Preschools", order: 2 },
+    },
+  };
+  assertEquals(regionsMetaSchema.safeParse(data).success, true);
+});
+
+Deno.test("RegionsMeta lists location groups by order", async () => {
+  // Keys reversed, so record order disagrees with `order`.
+  const { school, child_care } = metaData.location_groups;
+  const reversed = { ...metaData, location_groups: { child_care, school } };
+  const stub = stubFetch(() => jsonResponse({ data: reversed }));
+  try {
+    const meta = await getRegionsMeta();
+    assertEquals(
+      meta.asIter.locationGroups.map((g) => g.key),
+      ["school", "child_care"],
+    );
+    assertEquals(meta.location_groups.child_care.label, "Child care");
+  } finally {
+    stub.restore();
+  }
+});
+
 Deno.test("overlap list fixture carries also_in", () => {
   getSimpleValidationTest(regionListItemSchema)(overlaps);
   const [first] = overlaps;
