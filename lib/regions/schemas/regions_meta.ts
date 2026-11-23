@@ -1,5 +1,7 @@
 import * as z from "zod";
 import {
+  type LocationGroupKeySchema,
+  locationGroupKeySchema,
   type LocationSourceSchema,
   locationSourceSchema,
   type LocationTypeSchema,
@@ -52,11 +54,30 @@ interface LocationTypeMetaSchema extends
     label: z.ZodString;
     /** Where locations of this type get their codes */
     source: LocationSourceSchema;
+    /** The `location_groups` key this type is listed under */
+    group: LocationGroupKeySchema;
   }> {}
 export const locationTypeMetaSchema: LocationTypeMetaSchema = z.object({
   type: locationTypeSchema,
   label: z.string(),
   source: locationSourceSchema,
+  group: locationGroupKeySchema,
+});
+
+interface LocationGroupSchema extends
+  z.ZodObject<{
+    /** The permanent key of this group */
+    key: LocationGroupKeySchema;
+    /** The group in presentation form, e.g. "Schools" */
+    label: z.ZodString;
+    /** Where this group sorts; lower first */
+    order: z.ZodNumber;
+  }> {}
+/** A group that location types are listed under, such as "Schools" */
+export const locationGroupSchema: LocationGroupSchema = z.object({
+  key: locationGroupKeySchema,
+  label: z.string(),
+  order: z.number(),
 });
 
 interface RegionBufferSchema extends
@@ -77,11 +98,14 @@ interface RegionsMetaSchema extends
     types: z.ZodRecord<z.ZodString, RegionTypeMetaSchema>;
     /** The types of locations (schools, child care), keyed by type */
     location_types: z.ZodRecord<LocationTypeSchema, LocationTypeMetaSchema>;
+    /** The groups location types are listed under, by key; sort by `order` */
+    location_groups: z.ZodRecord<z.ZodString, LocationGroupSchema>;
     /** The distances every `?buffer=` parameter accepts */
     buffers: z.ZodArray<RegionBufferSchema>;
   }> {}
 export const regionsMetaSchema: RegionsMetaSchema = z.object({
   types: z.record(z.string(), regionTypeMetaSchema),
   location_types: z.record(locationTypeSchema, locationTypeMetaSchema),
+  location_groups: z.record(z.string(), locationGroupSchema),
   buffers: z.array(regionBufferSchema),
 });

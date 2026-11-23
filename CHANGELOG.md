@@ -110,6 +110,11 @@ sjvair.com #350).
 
 ### Added
 
+- `regions/meta/` location groups: `location_groups` (`LocationGroup`: `key`,
+  `label`, `order`), each location type's `group` (`LocationGroupKey`:
+  `"school"` or `"child_care"`, or any newer key), and
+  `RegionsMeta.location_groups` and `asIter.locationGroups` (sorted by `order`).
+  Needs a server running sjvair.com #351. (from beta.17, #71)
 - `type` on the bulk monitor summaries (`getMonitorSummariesBulkHourly` through
   `getMonitorSummariesBulkYearly`, and `getMonitorSummariesBulkDailyOpen`): one
   monitor type id or several, sent as repeated `type` params. Only those types

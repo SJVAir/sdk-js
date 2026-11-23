@@ -17,6 +17,10 @@
  * //      },
  * //      ... (other region types omitted for brevity)
  * //    },
+ * //    "location_groups": {
+ * //      "school": { "key": "school", "label": "Schools", "order": 0 },
+ * //      "child_care": { "key": "child_care", "label": "Child care", "order": 1 },
+ * //    },
  * //  }
  * ```
  *
@@ -24,6 +28,7 @@
  */
 import { jsonCall, type RequestOptions } from "$http";
 import type {
+  LocationGroup,
   LocationType,
   LocationTypeMeta,
   RegionBuffer,
@@ -46,6 +51,11 @@ export class RegionsMeta implements RegionsMetaData {
      * An array of location type metadata.
      */
     locationTypes: Array<LocationTypeMeta>;
+
+    /**
+     * An array of the location groups, sorted by `order`.
+     */
+    locationGroups: Array<LocationGroup>;
   };
 
   /**
@@ -55,6 +65,9 @@ export class RegionsMeta implements RegionsMetaData {
     this.asIter = {
       types: Object.values(this.meta.types),
       locationTypes: Object.values(this.meta.location_types),
+      locationGroups: Object.values(this.meta.location_groups).sort((a, b) =>
+        a.order - b.order
+      ),
     };
   }
 
@@ -74,6 +87,16 @@ export class RegionsMeta implements RegionsMetaData {
    */
   get location_types(): Record<LocationType, LocationTypeMeta> {
     return this.meta.location_types;
+  }
+
+  /**
+   * Returns a record of the groups location types are listed under, keyed
+   * by group. Sort them by `order` (or use `asIter.locationGroups`).
+   *
+   * @returns A record of all location groups.
+   */
+  get location_groups(): Record<string, LocationGroup> {
+    return this.meta.location_groups;
   }
 
   /**

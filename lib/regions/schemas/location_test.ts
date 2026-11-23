@@ -35,7 +35,12 @@ Deno.test("location_types may omit a known type or add a new one", () => {
     ...metaFixture.data,
     location_types: {
       ...metaFixture.data.location_types,
-      preschool: { type: "preschool", label: "Preschool", source: "cde-pre" },
+      preschool: {
+        type: "preschool",
+        label: "Preschool",
+        source: "cde-pre",
+        group: "preschool",
+      },
     },
   };
   assertEquals(regionsMetaSchema.safeParse(added).success, true);

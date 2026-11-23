@@ -398,6 +398,21 @@ Deno.test({
         assertEquals(countyMeta.category, "administrative");
       },
     );
+
+    await t.step(
+      "GET  regions/meta (location groups)",
+      async () => {
+        const meta = await getRegionsMeta();
+        for (const locationType of meta.asIter.locationTypes) {
+          assertExists(
+            meta.location_groups[locationType.group],
+            `${locationType.type}'s group ${locationType.group} isn't in location_groups`,
+          );
+        }
+        const orders = meta.asIter.locationGroups.map((group) => group.order);
+        assertEquals(orders, [...orders].sort((a, b) => a - b));
+      },
+    );
   },
 });
 
