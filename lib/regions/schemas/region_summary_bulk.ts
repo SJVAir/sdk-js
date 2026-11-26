@@ -7,7 +7,11 @@ import {
 
 export interface RegionWithSummariesSchema extends
   z.ZodObject<
-    Omit<(typeof regionSchema)["shape"], "boundary"> & {
+    & Omit<
+      (typeof regionSchema)["shape"],
+      "boundary" | "external_id" | "retired"
+    >
+    & {
       /** The summary rows for this region within the requested range/page */
       summaries: z.ZodArray<RegionSummarySchema>;
     }
@@ -15,11 +19,12 @@ export interface RegionWithSummariesSchema extends
 
 /**
  * A region with its bulk summary rows attached. The bulk endpoints leave out
- * the region's `boundary` (it would repeat on every page a region spans);
- * fetch it from the regions list or the region's details.
+ * the region's `external_id`, `retired` and `boundary` (the boundary would
+ * repeat on every page a region spans); fetch them from the regions list or
+ * the region's details.
  */
 export const regionWithSummariesSchema: RegionWithSummariesSchema = regionSchema
-  .omit({ boundary: true })
+  .omit({ boundary: true, external_id: true, retired: true })
   .extend({
     summaries: z.array(regionSummarySchema),
   });

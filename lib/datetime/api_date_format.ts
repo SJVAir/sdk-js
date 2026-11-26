@@ -19,6 +19,10 @@
  * @param date A Date object or string;
  *
  * @returns A date string formatted as "YYYY-MM-DD HH:MM:SS"
+ *
+ * @deprecated Use `toApiTimestamp`, which sends an exact UTC instant. This
+ * formats in the device's local zone without an offset, which the API reads as
+ * Pacific time, so it is off by hours outside Pacific time.
  */
 export function apiDateFormat(date: Date | number | string): string {
   date = (date instanceof Date) ? date : new Date(date);

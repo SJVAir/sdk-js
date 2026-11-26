@@ -44,6 +44,48 @@ export const monitorTemperatureEntrySchema: MonitorTemperatureEntrySchema =
     temperature_c: z.string(),
   });
 
+export interface MonitorDewPointEntrySchema extends
+  z.ZodObject<
+    BaseMonitorEntryMetaSchema["shape"] & {
+      /** The type of data this entry represents */
+      entry_type: z.ZodLiteral<"dewpoint">;
+
+      /** The value in fahrenheit */
+      dew_point_f: z.ZodString;
+
+      /** The value in celsius */
+      dew_point_c: z.ZodString;
+    }
+  > {}
+
+export const monitorDewPointEntrySchema: MonitorDewPointEntrySchema =
+  monitorEntryMetaSchema.extend({
+    entry_type: z.literal("dewpoint"),
+    dew_point_f: z.string(),
+    dew_point_c: z.string(),
+  });
+
+export interface MonitorSoilTemperatureEntrySchema extends
+  z.ZodObject<
+    BaseMonitorEntryMetaSchema["shape"] & {
+      /** The type of data this entry represents */
+      entry_type: z.ZodLiteral<"soiltemperature">;
+
+      /** The value in fahrenheit */
+      soil_temperature_f: z.ZodString;
+
+      /** The value in celsius */
+      soil_temperature_c: z.ZodString;
+    }
+  > {}
+
+export const monitorSoilTemperatureEntrySchema:
+  MonitorSoilTemperatureEntrySchema = monitorEntryMetaSchema.extend({
+    entry_type: z.literal("soiltemperature"),
+    soil_temperature_f: z.string(),
+    soil_temperature_c: z.string(),
+  });
+
 export interface MonitorPressureEntrySchema extends
   z.ZodObject<
     BaseMonitorEntryMetaSchema["shape"] & {
@@ -105,6 +147,8 @@ export const monitorParticulatesEntrySchema: MonitorParticulatesEntrySchema =
 export type SomeMonitorEntrySchema = z.ZodUnion<[
   MonitorEntrySchema,
   MonitorTemperatureEntrySchema,
+  MonitorDewPointEntrySchema,
+  MonitorSoilTemperatureEntrySchema,
   MonitorPressureEntrySchema,
   MonitorParticulatesEntrySchema,
 ]>;
@@ -113,6 +157,8 @@ export type SomeMonitorEntrySchema = z.ZodUnion<[
 export const someMonitorEntrySchema: SomeMonitorEntrySchema = z.union([
   monitorEntrySchema,
   monitorTemperatureEntrySchema,
+  monitorDewPointEntrySchema,
+  monitorSoilTemperatureEntrySchema,
   monitorPressureEntrySchema,
   monitorParticulatesEntrySchema,
 ]);

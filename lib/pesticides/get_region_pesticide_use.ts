@@ -26,7 +26,10 @@ import type { PesticideUseData } from "./types.ts";
 import type { PesticideUseListFilters } from "./get_pesticide_use_list.ts";
 import { toSearchParams } from "./search_params.ts";
 
-/** The filters available when listing a region's pesticide use records */
+/**
+ * The filters available when listing a region's pesticide use records. The
+ * chemical, commodity and product filters take CDPR codes, not ids.
+ */
 export type RegionPesticideUseFilters = Omit<
   PesticideUseListFilters,
   "region_id"

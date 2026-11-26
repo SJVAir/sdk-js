@@ -1,5 +1,12 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { apiDateFormat } from "./api_date_format.ts";
+import { getValidDateRange } from "./get_valid_date_range.ts";
+import {
+  addPacificDays,
+  endOfPacificDay,
+  startOfPacificDay,
+} from "./pacific.ts";
+import { toApiTimestamp } from "./to_api_timestamp.ts";
 
 Deno.test(
   "Module: API Date Format",
@@ -30,3 +37,268 @@ Deno.test(
     );
   },
 );
+
+Deno.test("endOfPacificDay is 23:59:59.999 Pacific in any device zone", () => {
+  assertEquals(
+    endOfPacificDay(new Date("2026-10-22T12:00:00Z")).toISOString(),
+    "2026-10-23T06:59:59.999Z",
+  );
+  // Late evening Pacific is already the next day in UTC.
+  assertEquals(
+    endOfPacificDay(new Date("2026-10-23T06:30:00Z")).toISOString(),
+    "2026-10-23T06:59:59.999Z",
+  );
+});
+
+Deno.test("startOfPacificDay across DST end (2026-11-01)", () => {
+  assertEquals(
+    startOfPacificDay(new Date("2026-11-01T20:00:00Z")).toISOString(),
+    "2026-11-01T07:00:00.000Z",
+  );
+  assertEquals(
+    startOfPacificDay(new Date("2026-11-02T20:00:00Z")).toISOString(),
+    "2026-11-02T08:00:00.000Z",
+  );
+});
+
+Deno.test("endOfPacificDay on DST end and start days", () => {
+  // 2026-11-01 is 25 hours long; it ends in PST.
+  assertEquals(
+    endOfPacificDay(new Date("2026-11-01T20:00:00Z")).toISOString(),
+    "2026-11-02T07:59:59.999Z",
+  );
+  // 2026-03-08 is 23 hours long; it starts in PST and ends in PDT.
+  assertEquals(
+    startOfPacificDay(new Date("2026-03-08T20:00:00Z")).toISOString(),
+    "2026-03-08T08:00:00.000Z",
+  );
+  assertEquals(
+    endOfPacificDay(new Date("2026-03-08T20:00:00Z")).toISOString(),
+    "2026-03-09T06:59:59.999Z",
+  );
+});
+
+Deno.test("addPacificDays keeps the Pacific wall-clock time across DST", () => {
+  // Noon PDT on Oct 31 -> noon PST on Nov 2.
+  assertEquals(
+    addPacificDays(new Date("2026-10-31T19:00:00Z"), 2).toISOString(),
+    "2026-11-02T20:00:00.000Z",
+  );
+  // Midnight PST on Nov 2 -> midnight PDT on Oct 30.
+  assertEquals(
+    addPacificDays(new Date("2026-11-02T08:00:00Z"), -3).toISOString(),
+    "2026-10-30T07:00:00.000Z",
+  );
+  // Month and year rollover.
+  assertEquals(
+    addPacificDays(new Date("2026-12-31T20:00:00Z"), 1).toISOString(),
+    "2027-01-01T20:00:00.000Z",
+  );
+});
+
+Deno.test("toApiTimestamp sends UTC with Z", () => {
+  assertEquals(
+    toApiTimestamp(new Date("2026-10-22T07:00:00Z")),
+    "2026-10-22T07:00:00.000Z",
+  );
+  assertEquals(
+    toApiTimestamp(Date.UTC(2026, 9, 22, 7)),
+    "2026-10-22T07:00:00.000Z",
+  );
+  assertEquals(
+    toApiTimestamp("2026-10-22T00:00:00-07:00"),
+    "2026-10-22T07:00:00.000Z",
+  );
+  assertThrows(
+    () => toApiTimestamp("not a date"),
+    Error,
+    "Invalid date provided",
+  );
+});
+
+Deno.test("getValidDateRange accepts an end later than now", () => {
+  const end = new Date(Date.now() + 6 * 3600_000);
+  assertEquals(
+    getValidDateRange(undefined, end).lte.getTime() >= end.getTime() - 1,
+    true,
+  );
+});
+
+Deno.test("getValidDateRange snaps days in Pacific time", async (t) => {
+  await t.step("default: three Pacific days back to the end of today", () => {
+    const now = new Date();
+    const range = getValidDateRange();
+    assertEquals(range.lte.getTime(), endOfPacificDay(now).getTime());
+    assertEquals(
+      range.gte.getTime(),
+      startOfPacificDay(addPacificDays(range.lte, -3)).getTime(),
+    );
+  });
+
+  await t.step("start only: ends three Pacific days later", () => {
+    const range = getValidDateRange(new Date("2026-10-30T19:00:00Z"));
+    assertEquals(range.gte.toISOString(), "2026-10-30T19:00:00.000Z");
+    assertEquals(range.lte.toISOString(), "2026-11-03T07:59:59.999Z");
+  });
+
+  await t.step(
+    "end only: starts at Pacific midnight three days earlier",
+    () => {
+      const range = getValidDateRange(undefined, "2026-11-02T20:00:00Z");
+      assertEquals(range.gte.toISOString(), "2026-10-30T07:00:00.000Z");
+      assertEquals(range.lte.toISOString(), "2026-11-02T20:00:00.000Z");
+    },
+  );
+
+  await t.step("reversed bounds are sorted", () => {
+    const range = getValidDateRange(
+      "2026-10-23T00:00:00Z",
+      "2026-10-20T00:00:00Z",
+    );
+    assertEquals(range.gte.toISOString(), "2026-10-20T00:00:00.000Z");
+    assertEquals(range.lte.toISOString(), "2026-10-23T00:00:00.000Z");
+  });
+
+  await t.step("does not mutate Date arguments", () => {
+    const start = new Date("2026-10-23T05:00:00Z");
+    const end = new Date("2026-10-23T05:03:00Z");
+    getValidDateRange(start, end);
+    assertEquals(start.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(end.toISOString(), "2026-10-23T05:03:00.000Z");
+  });
+
+  await t.step("rejects an unparseable bound", () => {
+    assertThrows(() => getValidDateRange("nope"), Error, "cannot be used");
+  });
+});
+
+Deno.test("getValidDateRange sends given bounds unchanged", async (t) => {
+  await t.step("two bounds 2 minutes apart", () => {
+    const r = getValidDateRange("2026-10-23T05:00:00Z", "2026-10-23T05:02:00Z");
+    assertEquals(r.gte.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(r.lte.toISOString(), "2026-10-23T05:02:00.000Z");
+  });
+  await t.step("identical bounds give a zero-width range", () => {
+    const r = getValidDateRange("2026-10-23T05:00:00Z", "2026-10-23T05:00:00Z");
+    assertEquals(r.gte.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(r.lte.toISOString(), "2026-10-23T05:00:00.000Z");
+  });
+  await t.step("wholeDays: false and {} match the default", () => {
+    for (const options of [undefined, {}, { wholeDays: false }]) {
+      const r = getValidDateRange(
+        "2026-10-23T05:00:00Z",
+        "2026-10-23T05:02:00Z",
+        options,
+      );
+      assertEquals(r.gte.toISOString(), "2026-10-23T05:00:00.000Z");
+      assertEquals(r.lte.toISOString(), "2026-10-23T05:02:00.000Z");
+    }
+  });
+});
+
+Deno.test("getValidDateRange wholeDays", async (t) => {
+  const whole = { wholeDays: true };
+  const check = (
+    gte: string | undefined,
+    lte: string | undefined,
+    want: [string, string],
+  ) => {
+    const r = getValidDateRange(gte, lte, whole);
+    assertEquals([r.gte.toISOString(), r.lte.toISOString()], want);
+  };
+
+  await t.step(
+    "9:00 Mon to 3:00 Wed becomes midnight Mon to end of Wed",
+    () =>
+      check("2026-11-02T17:00:00Z", "2026-11-04T11:00:00Z", [
+        "2026-11-02T08:00:00.000Z",
+        "2026-11-05T07:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "a 2-minute window becomes its Pacific day",
+    () =>
+      check("2026-10-23T05:00:00Z", "2026-10-23T05:02:00Z", [
+        "2026-10-22T07:00:00.000Z",
+        "2026-10-23T06:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "a window straddling Pacific midnight covers both days",
+    () =>
+      check("2026-10-23T06:59:00Z", "2026-10-23T07:01:00Z", [
+        "2026-10-22T07:00:00.000Z",
+        "2026-10-24T06:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "reversed bounds snap after ordering",
+    () =>
+      check("2026-11-04T11:00:00Z", "2026-11-02T17:00:00Z", [
+        "2026-11-02T08:00:00.000Z",
+        "2026-11-05T07:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "DST start day 2026-03-08 is 23 hours",
+    () =>
+      check("2026-03-08T20:00:00Z", "2026-03-08T20:00:00Z", [
+        "2026-03-08T08:00:00.000Z",
+        "2026-03-09T06:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "DST end day 2026-11-01 is 25 hours",
+    () =>
+      check("2026-11-01T20:00:00Z", "2026-11-01T20:00:00Z", [
+        "2026-11-01T07:00:00.000Z",
+        "2026-11-02T07:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "a range across the March change",
+    () =>
+      check("2026-03-07T20:00:00Z", "2026-03-10T20:00:00Z", [
+        "2026-03-07T08:00:00.000Z",
+        "2026-03-11T06:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "start only snaps the start",
+    () =>
+      check("2026-10-30T19:00:00Z", undefined, [
+        "2026-10-30T07:00:00.000Z",
+        "2026-11-03T07:59:59.999Z",
+      ]),
+  );
+  await t.step(
+    "end only snaps the end",
+    () =>
+      check(undefined, "2026-11-02T20:00:00Z", [
+        "2026-10-30T07:00:00.000Z",
+        "2026-11-03T07:59:59.999Z",
+      ]),
+  );
+  await t.step("neither bound matches the default", () => {
+    const r = getValidDateRange(undefined, undefined, whole);
+    assertEquals(r.lte.getTime(), endOfPacificDay(new Date()).getTime());
+    assertEquals(
+      r.gte.getTime(),
+      startOfPacificDay(addPacificDays(r.lte, -3)).getTime(),
+    );
+  });
+  await t.step("does not mutate Date arguments", () => {
+    const start = new Date("2026-10-23T05:00:00Z");
+    const end = new Date("2026-10-23T05:02:00Z");
+    getValidDateRange(start, end, whole);
+    assertEquals(start.toISOString(), "2026-10-23T05:00:00.000Z");
+    assertEquals(end.toISOString(), "2026-10-23T05:02:00.000Z");
+  });
+  await t.step("an unparseable bound is still rejected", () => {
+    assertThrows(
+      () => getValidDateRange("nope", "2026-10-23T05:00:00Z", whole),
+      Error,
+      "cannot be used",
+    );
+  });
+});

@@ -16,8 +16,9 @@
  *
  * const subscribedMonitors = subscriptions.map((sub) => ({
  *   monitor: monitors.find((m) => m.id === sub.monitor),
- *   level: meta.entryType("pm25").asIter.levels.find((lvl) =>
- *     lvl.name === sub.level
+ *   // undefined when the scale has no level with this key
+ *   level: meta.entryType("pm25").scale?.levels.find((lvl) =>
+ *     lvl.key === sub.level
  *   ),
  * }));
  *
@@ -97,10 +98,17 @@
  * @module
  */
 export * from "./lib/account/mod.ts";
+export * from "./lib/calenviroscreen/mod.ts";
+export * from "./lib/calheatscore/mod.ts";
 export * from "./lib/collocation_sites/mod.ts";
 export * from "$datetime";
+export * from "./lib/forecasts/mod.ts";
+export * from "./lib/hms/get_hms_meta.ts";
+export * from "./lib/hms/types.ts";
+export type { HMSBaseQuery, HMSDateQuery } from "./lib/hms/query.ts";
 export * from "./lib/hms/smoke/mod.ts";
 export * from "./lib/hms/fire/mod.ts";
+export * from "./lib/meta/mod.ts";
 export * from "./lib/monitors/mod.ts";
 export * from "./lib/pesticides/mod.ts";
 export * from "./lib/regions/mod.ts";

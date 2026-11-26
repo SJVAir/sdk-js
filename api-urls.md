@@ -32,30 +32,72 @@ Collocation site info
 
 - [x] `/api/2.0/calibrations/`
 
-## HMS Smoke
+## HMS Smoke and Fire
 
-HMS Smoke GeoJSON
+HMS smoke and fire GeoJSON, and the smoke-density and fire-FRP scale metadata
 
-- [x] `/api/2.0/hms-smoke/`
-- [x] `/api/2.0/hms-smoke/<smoke_id>/`
-- [x] `/api/2.0/hms-smoke/ongoing/`
+- [x] `/api/2.0/hms/meta/`
+- [x] `/api/2.0/hms/smoke/` (`?date=`, or `?date__gte=&date__lte=`;
+      `?region_id=`, `?density=`)
+- [x] `/api/2.0/hms/smoke/place/` (`?date__gte=&date__lte=`)
+- [x] `/api/2.0/hms/smoke/<smoke_id>/`
+- [x] `/api/2.0/hms/fire/` (`?date=`, or `?date__gte=&date__lte=`;
+      `?region_id=`)
+- [x] `/api/2.0/hms/fire/<fire_id>/`
+
+## CalHeatScore
+
+Heat scores by ZIP code, and by place
+
+- [x] `/api/2.0/calheatscore/`
+- [x] `/api/2.0/calheatscore/meta/`
+- [x] `/api/2.0/calheatscore/place/`
+- [ ] `/api/2.0/calheatscore/<zipcode>/` <- Covered by the `zipcode` filter on
+      the list
+
+## CalEnviroScreen
+
+Tract scores by version, for the tracts in a region or one tract
+
+- [x] `/api/2.0/calenviroscreen/4.0/` (`?region_id=&within_mode=`, `?year=`)
+- [x] `/api/2.0/calenviroscreen/4.0/<tract>/` (`?year=`)
+- [x] `/api/2.0/calenviroscreen/5.0/` (`?region_id=&within_mode=`)
+- [x] `/api/2.0/calenviroscreen/5.0/<tract>/`
+
+## Emissions
+
+- [ ] `/api/2.0/emissions/` (and everything under it: facilities, dairies,
+      wells, schools, methane, places, districts, areas, years) <- Not wrapped
+      yet: no client uses it; comes with the widget or map layer that needs it
+
+## Forecasts
+
+Air quality forecasts, and by place
+
+- [x] `/api/2.0/forecasts/`
+- [x] `/api/2.0/forecasts/meta/`
+- [x] `/api/2.0/forecasts/place/`
+- [ ] `/api/2.0/forecasts/<forecast_id>/` <- Not wrapped yet: forecasts are read
+      by list or by place, never by id
 
 ## Monitors and Entries
 
 Air monitors, current and historical data, monitor subscriptions, and entry
 archives
 
-- [x] `/api/2.0/monitors/`
+- [x] `/api/2.0/monitors/` (`?dataset=`, `?region=`)
 - [x] `/api/2.0/monitors/<entry_type>/at/`
 - [x] `/api/2.0/monitors/<entry_type>/closest/`
 - [x] `/api/2.0/monitors/<entry_type>/current/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/hourly/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/monthly/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/quarterly/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/seasonal/`
-- [x] `/api/2.0/monitors/<entry_type>/summaries/yearly/`
+- [x] `/api/2.0/monitors/<entry_type>/summaries/hourly/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/daily/open/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/monthly/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/quarterly/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/seasonal/` (`?type=`)
+- [x] `/api/2.0/monitors/<entry_type>/summaries/yearly/` (`?type=`)
 - [x] `/api/2.0/monitors/<monitor_id>/`
+- [x] `/api/2.0/monitors/<monitor_id>/alerts/current/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/subscribe/`
 - [x] `/api/2.0/monitors/<monitor_id>/alerts/unsubscribe/`
 - [x] `/api/2.0/monitors/<monitor_id>/archive/`
@@ -72,11 +114,20 @@ archives
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/<int:day>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/<int:year>/<int:month>/`
+- [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/daily/open/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/monthly/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/quarterly/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/seasonal/<int:year>/`
 - [x] `/api/2.0/monitors/<monitor_id>/summaries/<entry_type>/yearly/`
 - [x] `/api/2.0/monitors/meta/`
+- [x] `/api/2.0/monitors/weather/place/`
+
+## Meta
+
+The catalog of datasets the API serves
+
+- [x] `/api/2.0/meta/datasets/`
+- [x] `/api/2.0/meta/coverage/`
 
 ## Pesticides
 
@@ -96,20 +147,49 @@ and region-level use summaries
 - [x] `/api/2.0/pesticides/region/<region_id>/use/`
 - [x] `/api/2.0/pesticides/use/`
 - [x] `/api/2.0/pesticides/use/<use_id>/`
+- [x] `/api/2.0/pesticides/locations/` (no area: the whole valley)
+- [x] `/api/2.0/pesticides/place/` (no place: the whole valley, `place` null)
+- [x] `/api/2.0/pesticides/meta/`
+- [x] `/api/2.0/pesticides/search/`
+- [x] `/api/2.0/pesticides/notices/active/`
+- [ ] `/api/2.0/pesticides/notices/archive/` <- Not wrapped: deferred
+      2026-11-16, no caller yet
+- [x] `/api/2.0/pesticides/sections/`
+- [x] `/api/2.0/pesticides/sections/<section_id>/`
+- [x] `/api/2.0/pesticides/townships/`
 
 ## Regions
 
 Region and place lookups, boundaries, and region-level entry summaries
 
 - [x] `/api/2.0/regions/`
+- [x] `/api/2.0/regions/?type=<type>&external_id=<code>,<code>`
+- [x] `/api/2.0/regions/?type=<type>&within=<region_id>&within_mode=overlaps`
+- [x] `/api/2.0/regions/geojson/`
+- [x] `/api/2.0/regions/meta/` (includes the allowed `buffers`)
+- [x] `/api/2.0/regions/locations/?source=<source>&external_id=<code>,<code>`
+- [x] `/api/2.0/regions/locations/search/?q=<name>&type=<type>,<type>&region_type=<type>&region=<code>`
 - [x] `/api/2.0/regions/places/search/`
-- [x] `/api/2.0/regions/places/lookup/`
-- [x] `/api/2.0/regions/<region_id>/`
+- [x] `/api/2.0/regions/places/lookup/` (name `?q=`; monitor `?monitor=`; point
+      via POST)
+- [x] `/api/2.0/regions/<entry_type>/summaries/hourly/` (`?region=` or `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/daily/` (`?region=` or `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/daily/open/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/monthly/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/quarterly/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/seasonal/` (`?region=` or
+      `?type=`)
+- [x] `/api/2.0/regions/<entry_type>/summaries/yearly/` (`?region=` or `?type=`)
+- [x] `/api/2.0/regions/<region_id>/` (`?buffer=`)
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/hourly/<int:year>/<int:month>/<int:day>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/<int:year>/<int:month>/`
+- [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/daily/open/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/monthly/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/quarterly/<int:year>/`
 - [x] `/api/2.0/regions/<region_id>/summaries/<entry_type>/seasonal/<int:year>/`
@@ -119,10 +199,17 @@ Region and place lookups, boundaries, and region-level entry summaries
 
 Task status
 
-- [ ] `/api/2.0/task/<task_id>/`
+- [ ] `/api/2.0/task/<task_id>/` <- Not wrapped yet: no SDK call starts a
+      background task
+
+## TEMPO
+
+- [ ] `/api/2.0/tempo/` (and everything under it: granules, point, region) <-
+      Not wrapped yet: comes with the TEMPO map layer (it needs a raster plugin
+      first)
 
 ## Time
 
 Current time as a Unix time stamp
 
-- [ ] `/api/2.0/time/`
+- [ ] `/api/2.0/time/` <- Not wrapped: clients use their own clock

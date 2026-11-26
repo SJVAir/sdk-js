@@ -9,14 +9,15 @@ This is a **Deno v2.x** project published to JSR as `@sjvair/sdk`. There is no
 build step — TypeScript is run directly.
 
 ```sh
-# Run all tests (requires a local SJVAir API at 127.0.0.1:8000)
-deno test --allow-net --allow-env
+# Run all tests (requires a local SJVAir API at 127.0.0.1:8000). `--env-file` loads `.env`:
+# `lib/testing.ts` exits when a TEST_* variable it needs isn't in the environment.
+deno test --allow-net --allow-env --env-file
 
 # Run a single test file
-deno test --allow-net --allow-env lib/monitors/mod_test.ts
+deno test --allow-net --allow-env --env-file lib/monitors/mod_test.ts
 
 # Run tests against the live API
-TEST_REMOTE=1 deno test --allow-net --allow-env
+TEST_REMOTE=1 deno test --allow-net --allow-env --env-file
 
 # Run tests that don't need network (e.g. datetime)
 deno test lib/datetime/mod_test.ts
@@ -26,15 +27,23 @@ deno test lib/datetime/mod_test.ts
 
 Copy `.env.template` to `.env` and fill in:
 
-| Variable          | Purpose                             |
-| ----------------- | ----------------------------------- |
-| `TEST_PHONE`      | Phone number for account tests      |
-| `TEST_MONITOR_ID` | Monitor ID for entry tests          |
-| `TEST_LATITUDE`   | Latitude for closest-monitor tests  |
-| `TEST_LONGITUDE`  | Longitude for closest-monitor tests |
+| Variable               | Purpose                                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------------------- |
+| `TEST_PHONE`           | Phone number for account tests                                                                  |
+| `TEST_ACCOUNTS`        | `1` to run the account integration test (`lib/account/mod_test.ts`); skipped otherwise          |
+| `TEST_MONITOR_ID`      | Monitor ID for entry tests                                                                      |
+| `TEST_LATITUDE`        | Latitude for closest-monitor tests                                                              |
+| `TEST_LONGITUDE`       | Longitude for closest-monitor tests                                                             |
+| `TEST_LOCATION_CCL_ID` | Optional: a known cdss-ccl location code for the locations round-trip test (skipped when unset) |
 
 Tests default to `http://127.0.0.1:8000`; set `TEST_REMOTE=1` to use
 `https://www.sjvair.com`.
+
+The account test writes to the server you test against: it registers a user with
+`TEST_PHONE`, which sends a real verification text, asks for the code at a
+prompt, and deletes the user. Run it only on purpose, never against a shared
+stack without asking. `deno.json` excludes `.worktrees/`, so a run from the repo
+root doesn't also run every worktree's tests.
 
 `TEST_MONITOR_ID` must be a monitor that exists on the server you test against
 (local and production IDs differ). Steps that need data a local copy may lack
@@ -143,6 +152,15 @@ the request `body` replaced by `"[redacted]"`.
 
 ## Key Conventions
 
+- **What belongs in the SDK** _(decided by the user 2026-11-11)_. The public SDK
+  wraps SJVAir's shared API: public data, plus site-wide account features
+  (sign-in, profile, subscriptions, alerts) that any SJVAir app could use. An
+  endpoint that exists only to back one app's own feature, where that app
+  decides what the data looks like and is its only caller, lives in that app,
+  built on `@sjvair/sdk/http`. If a second app later needs it, it moves into the
+  SDK. Example: the documents client (the data dashboard's saved dashboards)
+  moved into the data-dashboard repo; `account` stays here (mobile, monitor-map
+  and data-dashboard all call it).
 - **Types are derived from Zod schemas** using `zinfer`
   (`import type { infer as zinfer } from "zod"`). Never define types manually
   when a Zod schema exists:
@@ -168,17 +186,45 @@ the request `body` replaced by `"[redacted]"`.
 - **Wrapper classes with `.asIter`**: when an API response is a record keyed by
   string (e.g. `monitors/meta`), expose an `asIter` property that converts
   record values to arrays for easy iteration. Wrapper classes like
-  `MonitorsMeta`/`EntriesMeta` follow this pattern — always add `.asIter` when
+  `MonitorsMeta`/`RegionsMeta` follow this pattern — always add `.asIter` when
   wrapping a record-shaped API response.
 - **Each module file** should include a JSDoc block with `@example Usage` and
   `@module` tag.
 - **`api-urls.md`** tracks which API endpoints are implemented — update it when
   adding new endpoints.
+- **No fallbacks for older server responses.** An SDK release goes live together
+  with the sjvair.com change it wraps (`release/*` tracks sjvair.com `develop`,
+  and both reach production together). So a field the server now always sends is
+  required in its schema: no `.optional()`, `.default()` or `?? {}` just in case
+  an older server lacks it, and no tests that strip new fields to check old
+  responses still parse. Use `.optional()` or `.nullable()` only when the
+  current server really omits a field or sends `null` (e.g. `available` exists
+  only on air-quality pollutants). A beta therefore needs a server running the
+  matching sjvair.com branch; say so in the PR.
+- **Specs and plans** for SDK work live in this repo: `docs/superpowers/specs/`
+  (designs) and `docs/superpowers/plans/` (implementation plans), named
+  `YYYY-MM-DD-<topic>`. SDK work done for the data dashboard is tracked in
+  data-dashboard's `TODO.md`, but its spec and plan still go here.
+- **`CHANGELOG.md`** records what each release adds, changes and breaks. Add a
+  line under the upcoming version in the PR that makes the change.
+- **`DEFERRED.md`** is the register of deferred SDK work, including breaking
+  changes waiting for the next major version. Add an entry (with why and a
+  revisit trigger) whenever something is deferred, and check it when planning a
+  major release.
 
 ## Publishing
 
 Pushing a `v*` git tag triggers the GitHub Actions workflow which runs
-`deno publish` to JSR. Update `"version"` in `deno.json` before tagging.
+`deno publish` to JSR. Update `"version"` in `deno.json` before tagging (a
+`chore: Release <version>` commit), and note the release in `CHANGELOG.md`.
+
+**Branches (decided 2026-10-25):** `main` matches the latest published release.
+Work for an upcoming version goes through a `release/<version>` branch (e.g.
+`release/5.0.0`), created from `main`. Feature and fix branches open their PRs
+into that release branch, and pre-releases (`<version>-beta.N`) are tagged from
+it. At the final release, the release branch merges into `main` and `v<version>`
+is tagged there. Only urgent fixes to the current release go straight to `main`
+(as a patch version), and they are then merged into the open release branch.
 
 **Standing restriction:** NEVER push a `v*` tag, run `deno publish`, or
 otherwise trigger this workflow without the user's explicit permission for that

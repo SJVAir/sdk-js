@@ -1,0 +1,474 @@
+{
+  "data": {
+    "categories": [
+      {
+        "key": "biopesticide",
+        "label": "Biopesticide",
+        "description": "A biopesticide comes from natural materials such as bacteria, minerals, or plant extracts. They are generally lower-toxicity to people than conventional pesticides, though not always harmless.",
+        "in_use": false
+      },
+      {
+        "key": "california_restricted",
+        "label": "California Restricted Material",
+        "description": "An active ingredient California restricts because of its hazard to people or the environment. Applying one needs a permit from the county agricultural commissioner and a notice of intent before each application, which is why these show up in SprayDays.",
+        "in_use": true
+      },
+      {
+        "key": "carcinogen",
+        "label": "Carcinogen",
+        "description": "California lists this chemical as known to cause cancer, birth defects, or other reproductive harm. Being on the list means the state has evidence of a hazard, not that any particular exposure will hurt you.",
+        "in_use": true
+      },
+      {
+        "key": "cholinesterase_inhibitor",
+        "label": "Cholinesterase Inhibitor",
+        "description": "This chemical works by blocking an enzyme the nervous system needs, in insects and in people. Farmworkers who handle it are required to have regular blood tests.",
+        "in_use": false
+      },
+      {
+        "key": "developmental_toxin",
+        "label": "Developmental Toxin",
+        "description": "California lists this chemical as known to cause cancer, birth defects, or other reproductive harm. Being on the list means the state has evidence of a hazard, not that any particular exposure will hurt you.",
+        "in_use": true
+      },
+      {
+        "key": "fumigant",
+        "label": "Fumigant",
+        "description": "A fumigant is applied to soil or stored crops and becomes a gas that can drift beyond the field. Fumigant applications need extra setbacks and buffer zones, and they are the notices SprayDays publishes 48 hours ahead.",
+        "in_use": true
+      },
+      {
+        "key": "groundwater_contaminant",
+        "label": "Groundwater Contaminant",
+        "description": "This chemical has been found in California groundwater or can reach it, so the state restricts where and how it is used to protect drinking-water wells.",
+        "in_use": false
+      },
+      {
+        "key": "oil",
+        "label": "Oil",
+        "description": "Petroleum or plant oils used to smother insects and mites. They are low in toxicity to people, but they are counted by weight, so they often top the pounds-applied lists.",
+        "in_use": false
+      },
+      {
+        "key": "reproductive_toxin",
+        "label": "Reproductive Toxin",
+        "description": "California lists this chemical as known to cause cancer, birth defects, or other reproductive harm. Being on the list means the state has evidence of a hazard, not that any particular exposure will hurt you.",
+        "in_use": true
+      },
+      {
+        "key": "toxic_air_contaminant",
+        "label": "Toxic Air Contaminant",
+        "description": "The California Air Resources Board lists this chemical as an air pollutant that may cause serious illness. Pesticides on the list get extra monitoring and rules when they are sprayed.",
+        "in_use": true
+      }
+    ],
+    "iarc_groups": [
+      {
+        "key": "1",
+        "label": "Group 1",
+        "description": "Carcinogenic to humans"
+      },
+      {
+        "key": "2A",
+        "label": "Group 2A",
+        "description": "Probably carcinogenic to humans"
+      },
+      {
+        "key": "2B",
+        "label": "Group 2B",
+        "description": "Possibly carcinogenic to humans"
+      },
+      {
+        "key": "3",
+        "label": "Group 3",
+        "description": "Not classifiable as to carcinogenicity"
+      }
+    ],
+    "methods": [
+      {
+        "key": "G",
+        "label": "Ground"
+      },
+      {
+        "key": "A",
+        "label": "Air"
+      },
+      {
+        "key": "F",
+        "label": "Field fumigation"
+      },
+      {
+        "key": "O",
+        "label": "Other"
+      },
+      {
+        "key": "none",
+        "label": "Not reported"
+      }
+    ],
+    "narrows": [
+      {
+        "key": "concern",
+        "label": "Flagged chemicals",
+        "description": "Chemicals on a Prop 65 list (carcinogen, reproductive or developmental toxin), CARB's Toxic Air Contaminants, California's restricted materials, or IARC groups 1, 2A and 2B."
+      },
+      {
+        "key": "restricted",
+        "label": "Restricted materials",
+        "description": "Products California restricts (CDPR's per-product restricted-material flag, or a restricted ingredient when CDPR does not list the product). A property of the product, unlike category=california_restricted."
+      },
+      {
+        "key": "fumigant",
+        "label": "Fumigants",
+        "description": "Products classified as fumigants. A property of the product, unlike category=fumigant."
+      },
+      {
+        "key": "aerial",
+        "label": "Applied by air",
+        "description": "Applications reported as made by aircraft (CDPR's application method A)"
+      }
+    ],
+    "placeholder_chemicals": [
+      {
+        "id": "8vagt",
+        "name": "AI IS CONFIDENTIAL"
+      },
+      {
+        "id": "srqhc",
+        "name": "UNKNOWN"
+      }
+    ],
+    "notes": {
+      "prop65": {
+        "key": "prop65",
+        "title": "Proposition 65",
+        "summary": "California lists this chemical as known to cause cancer, birth defects, or other reproductive harm. Being on the list means the state has evidence of a hazard, not that any particular exposure will hurt you.",
+        "detail": "Proposition 65 (the Safe Drinking Water and Toxic Enforcement Act of 1986) requires the state to keep a public list of chemicals with evidence of causing cancer or reproductive harm. Here the badge appears when the chemical is on OEHHA's list, by its CAS number or under a group listing such as cadmium compounds.",
+        "source_url": "https://oehha.ca.gov/proposition-65/proposition-65-list"
+      },
+      "iarc_1": {
+        "key": "iarc_1",
+        "title": "IARC Group 1",
+        "summary": "The World Health Organization's cancer agency has found that this chemical causes cancer in people. The rating describes the strength of the evidence, not how risky a given amount is.",
+        "detail": null,
+        "source_url": "https://monographs.iarc.who.int/agents-classified-by-the-iarc/"
+      },
+      "iarc_2a": {
+        "key": "iarc_2a",
+        "title": "IARC Group 2A",
+        "summary": "The World Health Organization's cancer agency rates this chemical as probably causing cancer in people. The rating describes the strength of the evidence, not how risky a given amount is.",
+        "detail": null,
+        "source_url": "https://monographs.iarc.who.int/agents-classified-by-the-iarc/"
+      },
+      "iarc_2b": {
+        "key": "iarc_2b",
+        "title": "IARC Group 2B",
+        "summary": "The World Health Organization's cancer agency rates this chemical as possibly causing cancer in people. The evidence is limited, and the rating says nothing about how risky a given amount is.",
+        "detail": null,
+        "source_url": "https://monographs.iarc.who.int/agents-classified-by-the-iarc/"
+      },
+      "iarc_3": {
+        "key": "iarc_3",
+        "title": "IARC Group 3",
+        "summary": "The World Health Organization's cancer agency looked at this chemical and could not classify it either way. That is not the same as being found safe.",
+        "detail": null,
+        "source_url": "https://monographs.iarc.who.int/agents-classified-by-the-iarc/"
+      },
+      "carb_tac": {
+        "key": "carb_tac",
+        "title": "Toxic Air Contaminant",
+        "summary": "The California Air Resources Board lists this chemical as an air pollutant that may cause serious illness. Pesticides on the list get extra monitoring and rules when they are sprayed.",
+        "detail": null,
+        "source_url": "https://ww2.arb.ca.gov/resources/documents/carb-identified-toxic-air-contaminants"
+      },
+      "fumigant": {
+        "key": "fumigant",
+        "title": "Fumigant",
+        "summary": "A fumigant is applied to soil or stored crops and becomes a gas that can drift beyond the field. Fumigant applications need extra setbacks and buffer zones, and they are the notices SprayDays publishes 48 hours ahead.",
+        "detail": null,
+        "source_url": "https://spraydays.cdpr.ca.gov/Home/About"
+      },
+      "cholinesterase_inhibitor": {
+        "key": "cholinesterase_inhibitor",
+        "title": "Cholinesterase inhibitor",
+        "summary": "This chemical works by blocking an enzyme the nervous system needs, in insects and in people. Farmworkers who handle it are required to have regular blood tests.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/worker-health-and-safety/medical-supervision/"
+      },
+      "groundwater_contaminant": {
+        "key": "groundwater_contaminant",
+        "title": "Groundwater contaminant",
+        "summary": "This chemical has been found in California groundwater or can reach it, so the state restricts where and how it is used to protect drinking-water wells.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/environmental-monitoring/groundwater-protection/"
+      },
+      "biopesticide": {
+        "key": "biopesticide",
+        "title": "Biopesticide",
+        "summary": "A biopesticide comes from natural materials such as bacteria, minerals, or plant extracts. They are generally lower-toxicity to people than conventional pesticides, though not always harmless.",
+        "detail": null,
+        "source_url": "https://www.epa.gov/ingredients-used-pesticide-products/what-are-biopesticides"
+      },
+      "oil": {
+        "key": "oil",
+        "title": "Oil",
+        "summary": "Petroleum or plant oils used to smother insects and mites. They are low in toxicity to people, but they are counted by weight, so they often top the pounds-applied lists.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/pesticide-use-in-california/pesticide-use-reporting/"
+      },
+      "california_restricted": {
+        "key": "california_restricted",
+        "title": "California restricted material",
+        "summary": "An active ingredient California restricts because of its hazard to people or the environment. Applying one needs a permit from the county agricultural commissioner and a notice of intent before each application, which is why these show up in SprayDays.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/enforcement/restricted-materials/"
+      },
+      "restricted_material": {
+        "key": "restricted_material",
+        "title": "California restricted material",
+        "summary": "This product can only be used with a permit from the county agricultural commissioner, and a notice of intent must be filed before each application. That is why it shows up in SprayDays.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/enforcement/restricted-materials/"
+      },
+      "noi_meaning": {
+        "key": "noi_meaning",
+        "title": "Notice of intent",
+        "summary": "A notice of intent is a grower telling the county they plan to apply a restricted pesticide. It is a plan, not proof that spraying happened, and the grower may begin any time up to four days after the scheduled date.",
+        "detail": "SprayDays publishes notices 48 hours ahead for fumigants and 24 hours ahead for other restricted materials. Notices list the product and chemical but not the crop. To be told about notices near an address, sign up with SprayDays.",
+        "source_url": "https://spraydays.cdpr.ca.gov/Home/About"
+      },
+      "ab617": {
+        "key": "ab617",
+        "title": "AB 617 communities",
+        "summary": "Neighborhoods the California Air Resources Board has selected under AB 617 (2017) for their heavy, combined exposure to air pollution. In each, the air district and a community steering committee monitor the air and plan emission reductions.",
+        "detail": "The boundaries are CARB's. This explorer sums the pesticide use reported inside each one, the same way it does for a city or a ZIP code.",
+        "source_url": "https://ww2.arb.ca.gov/capp"
+      },
+      "pur_lag": {
+        "key": "pur_lag",
+        "title": "Why the newest data is a year or more old",
+        "summary": "Growers report applications to the county, which sends them to the state, which checks and publishes them a year or two later, sometimes longer. The most recent full year here is the newest the state has released, so the newest records are always more than a year old.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/pesticide-use-in-california/pesticide-use-reporting/"
+      },
+      "shades": {
+        "key": "shades",
+        "title": "What the shades mean",
+        "summary": "Darker squares and counties had more pounds applied that year. Shades rank the areas shown against each other, so the same color can mean different amounts on different maps; read the legend for the actual range.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/pesticide-use-in-california/pesticide-use-reporting/"
+      },
+      "shades_valley": {
+        "key": "shades_valley",
+        "title": "What the shades mean",
+        "summary": "Darker squares had more of what the map shows (pounds, acres treated, or applications) in that year or month. Every section or township in the valley is ranked together, so a color means the same range anywhere on the map, but not from one month to the next. An outline with no shading means nothing was reported.",
+        "detail": null,
+        "source_url": "https://www.cdpr.ca.gov/pesticide-use-in-california/pesticide-use-reporting/"
+      },
+      "badges": {
+        "key": "badges",
+        "title": "What the badges mean",
+        "summary": "Badges mark chemicals that an official list flags for cancer, reproductive harm, or air toxicity. A badge says the chemical is on a list, not how much of it reached anyone.",
+        "detail": null,
+        "source_url": "https://oehha.ca.gov/proposition-65"
+      }
+    },
+    "badges": [
+      {
+        "key": "prop65",
+        "label": "Prop 65",
+        "note": "prop65"
+      },
+      {
+        "key": "carb_tac",
+        "label": "CARB TAC",
+        "note": "carb_tac"
+      },
+      {
+        "key": "iarc_1",
+        "label": "IARC 1",
+        "note": "iarc_1"
+      },
+      {
+        "key": "iarc_2a",
+        "label": "IARC 2A",
+        "note": "iarc_2a"
+      },
+      {
+        "key": "iarc_2b",
+        "label": "IARC 2B",
+        "note": "iarc_2b"
+      },
+      {
+        "key": "iarc_3",
+        "label": "IARC 3",
+        "note": "iarc_3"
+      },
+      {
+        "key": "california_restricted",
+        "label": "Restricted",
+        "note": "california_restricted"
+      }
+    ],
+    "links": {
+      "spraydays_signup": "https://spraydays.cdpr.ca.gov/",
+      "section_page": "http://127.0.0.1:8000/tools/pesticides/sections/{id}/",
+      "section_records": "http://127.0.0.1:8000/tools/pesticides/records/?section={id}",
+      "section_notices": "http://127.0.0.1:8000/tools/pesticides/notices/?section={id}",
+      "section_notices_past": "http://127.0.0.1:8000/tools/pesticides/notices/?section={id}&past=1",
+      "chemical_page": "http://127.0.0.1:8000/tools/pesticides/chemicals/{id}/"
+    },
+    "link_params": {
+      "section_page": [
+        {
+          "param": "year",
+          "from": "year"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "section_records": [
+        {
+          "param": "year",
+          "from": "year"
+        },
+        {
+          "param": "start",
+          "from": "month_start"
+        },
+        {
+          "param": "end",
+          "from": "month_end"
+        },
+        {
+          "param": "chemical",
+          "from": "chemical_id"
+        },
+        {
+          "param": "product",
+          "from": "product_id"
+        },
+        {
+          "param": "commodity",
+          "from": "commodity_id"
+        },
+        {
+          "param": "method",
+          "from": "aerial_ground"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "section_notices": [
+        {
+          "param": "chemical",
+          "from": "chemical_id"
+        },
+        {
+          "param": "product",
+          "from": "product_id"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "section_notices_past": [
+        {
+          "param": "archive_year",
+          "from": "notices_year"
+        },
+        {
+          "param": "month",
+          "from": "notices_month"
+        },
+        {
+          "param": "chemical",
+          "from": "chemical_id"
+        },
+        {
+          "param": "product",
+          "from": "product_id"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ],
+      "chemical_page": [
+        {
+          "param": "year",
+          "from": "year"
+        },
+        {
+          "param": "narrow",
+          "from": "narrow"
+        }
+      ]
+    },
+    "notice_filters": [
+      "chemical_id",
+      "product_id",
+      "category",
+      "iarc_group",
+      "narrow",
+      "aerial_ground"
+    ],
+    "years": [
+      2023,
+      2022,
+      2021,
+      2020,
+      2019,
+      2018
+    ],
+    "ramp": {
+      "colors": [
+        "#deebf7",
+        "#c6dbef",
+        "#9ecae1",
+        "#6baed6",
+        "#4292c6",
+        "#2171b5",
+        "#08519c",
+        "#08306b"
+      ],
+      "no_data": "#f0f0f0"
+    },
+    "scales": {
+      "spray-notice": {
+        "id": "spray-notice",
+        "label": "Spray Notices",
+        "units": "",
+        "kind": "category",
+        "source": {
+          "name": "California Department of Pesticide Regulation, SprayDays",
+          "url": "https://spraydays.cdpr.ca.gov/"
+        },
+        "averaging_hours": null,
+        "daily_statistic": null,
+        "daily_statistic_label": null,
+        "period_statistic": null,
+        "period_statistic_label": null,
+        "levels": [
+          {
+            "key": "notice",
+            "label": "Spray notice",
+            "color": "#e64980",
+            "tier": null,
+            "description": "",
+            "guidance": "",
+            "min": null,
+            "max": null,
+            "value": "notice",
+            "opacity": null
+          }
+        ]
+      }
+    }
+  }
+}

@@ -26,7 +26,10 @@ import type { PesticideNoticeData } from "./types.ts";
 import type { PesticideNoticeListFilters } from "./get_pesticide_notice_list.ts";
 import { toSearchParams } from "./search_params.ts";
 
-/** The filters available when listing a region's pesticide application notices */
+/**
+ * The filters available when listing a region's pesticide application notices. The
+ * chemical, commodity and product filters take CDPR codes, not ids.
+ */
 export type RegionPesticideNoticeFilters = Omit<
   PesticideNoticeListFilters,
   "region_id"

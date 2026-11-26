@@ -2,6 +2,15 @@ import { assert, assertEquals, assertRejects } from "@std/assert";
 import type { RequestOptions } from "$http";
 import { stubFetch } from "./http/fetch_stub_test_utils.ts";
 import { getCollocationSites } from "./collocation_sites/get_collocation_sites.ts";
+import { getCalEnviroScreen } from "./calenviroscreen/get_calenviroscreen.ts";
+import { getCalEnviroScreenTract } from "./calenviroscreen/get_calenviroscreen_tract.ts";
+import { getCalHeatScoreMeta } from "./calheatscore/get_calheatscore_meta.ts";
+import { getCalHeatScores } from "./calheatscore/get_calheatscores.ts";
+import { getHeatForPlace } from "./calheatscore/get_heat_for_place.ts";
+import { getForecastForPlace } from "./forecasts/get_forecast_for_place.ts";
+import { getForecasts } from "./forecasts/get_forecasts.ts";
+import { getForecastsMeta } from "./forecasts/get_forecasts_meta.ts";
+import { getHMSMeta } from "./hms/get_hms_meta.ts";
 import { getHMSFire } from "./hms/fire/get_fire.ts";
 import { getHMSFireById } from "./hms/fire/get_fire_by_id.ts";
 import { getHMSSmoke } from "./hms/smoke/get_smoke.ts";
@@ -15,11 +24,13 @@ import {
   listAllMonitorArchives,
   listMonitorArchivesPage,
 } from "./monitors/get_monitor_archives.ts";
+import { getMonitorAlertCurrent } from "./monitors/get_monitor_alert_current.ts";
 import { getMonitorDetails } from "./monitors/get_monitor_details.ts";
 import { getMonitorEntries } from "./monitors/get_monitor_entries.ts";
 import { getMonitorEntriesExportJSON } from "./monitors/get_monitor_entries_export.ts";
 import {
   getMonitorSummariesDaily,
+  getMonitorSummariesDailyOpen,
   getMonitorSummariesHourly,
   getMonitorSummariesMonthly,
   getMonitorSummariesQuarterly,
@@ -28,6 +39,7 @@ import {
 } from "./monitors/get_monitor_summaries.ts";
 import {
   getMonitorSummariesBulkDaily,
+  getMonitorSummariesBulkDailyOpen,
   getMonitorSummariesBulkHourly,
   getMonitorSummariesBulkMonthly,
   getMonitorSummariesBulkQuarterly,
@@ -51,6 +63,10 @@ import { getProductsList } from "./pesticides/get_products_list.ts";
 import { getRegionPesticideNotices } from "./pesticides/get_region_pesticide_notices.ts";
 import { getRegionPesticideSummary } from "./pesticides/get_region_pesticide_summary.ts";
 import { getRegionPesticideUse } from "./pesticides/get_region_pesticide_use.ts";
+import { searchLocations } from "./regions/search_locations.ts";
+import { getPesticideLocations } from "./pesticides/get_pesticide_locations.ts";
+import { getPesticidesMeta } from "./pesticides/get_pesticides_meta.ts";
+import { searchPesticides } from "./pesticides/search_pesticides.ts";
 import { getRegionDetails } from "./regions/get_region_details.ts";
 import {
   lookupRegionPlace,
@@ -58,6 +74,7 @@ import {
 } from "./regions/get_region_places.ts";
 import {
   getRegionSummariesDaily,
+  getRegionSummariesDailyOpen,
   getRegionSummariesHourly,
   getRegionSummariesMonthly,
   getRegionSummariesQuarterly,
@@ -66,12 +83,14 @@ import {
 } from "./regions/get_region_summaries.ts";
 import {
   getRegionSummariesBulkDaily,
+  getRegionSummariesBulkDailyOpen,
   getRegionSummariesBulkHourly,
   getRegionSummariesBulkMonthly,
   getRegionSummariesBulkQuarterly,
   getRegionSummariesBulkSeasonal,
   getRegionSummariesBulkYearly,
 } from "./regions/get_region_summaries_bulk.ts";
+import { getRegionsGeoJSON } from "./regions/get_regions_geojson.ts";
 import { getRegionsList } from "./regions/get_regions_list.ts";
 import { getRegionsMeta } from "./regions/get_regions_meta.ts";
 
@@ -90,15 +109,35 @@ const archive = {
 
 const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getCollocationSites", (o) => getCollocationSites(o)],
-  ["getHMSFire", (o) => getHMSFire(o)],
+  ["getHMSFire", (o) => getHMSFire(undefined, o)],
   ["getHMSFireById", (o) => getHMSFireById("x", o)],
-  ["getHMSSmoke", (o) => getHMSSmoke(o)],
+  ["getHMSSmoke", (o) => getHMSSmoke(undefined, o)],
   ["getHMSSmokeById", (o) => getHMSSmokeById("x", o)],
+  ["getHMSMeta", (o) => getHMSMeta(o)],
+  ["getCalEnviroScreen", (o) => getCalEnviroScreen("5.0", undefined, o)],
+  [
+    "getCalEnviroScreenTract",
+    (o) => getCalEnviroScreenTract("5.0", "t", undefined, o),
+  ],
+  ["getCalHeatScoreMeta", (o) => getCalHeatScoreMeta(o)],
+  ["getPesticidesMeta", (o) => getPesticidesMeta(o)],
+  ["getForecastsMeta", (o) => getForecastsMeta(o)],
+  ["getCalHeatScores", (o) => getCalHeatScores({}, o)],
+  [
+    "getHeatForPlace",
+    (o) => getHeatForPlace({ monitor: "m" }, {}, o),
+  ],
+  ["getForecasts", (o) => getForecasts({}, o)],
+  [
+    "getForecastForPlace",
+    (o) => getForecastForPlace({ monitor: "m" }, {}, o),
+  ],
   ["getClosestMonitors", (o) => getClosestMonitors("pm25", 1, 2, o)],
   ["getClosestMonitor", (o) => getClosestMonitor("pm25", 1, 2, o)],
   ["listMonitorArchivesPage", (o) => listMonitorArchivesPage("m", 1, o)],
   ["listAllMonitorArchives", (o) => listAllMonitorArchives("m", o)],
   ["getMonitorArchive", (o) => getMonitorArchive(archive, o)],
+  ["getMonitorAlertCurrent", (o) => getMonitorAlertCurrent("m", o)],
   ["getMonitorDetails", (o) => getMonitorDetails("m", o)],
   ["getMonitorEntries", (o) => getMonitorEntries(entry, o)],
   [
@@ -111,6 +150,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ],
   ["getMonitorSummariesHourly", (o) => getMonitorSummariesHourly(summary, o)],
   ["getMonitorSummariesDaily", (o) => getMonitorSummariesDaily(summary, o)],
+  [
+    "getMonitorSummariesDailyOpen",
+    (o) => getMonitorSummariesDailyOpen(entry, o),
+  ],
   ["getMonitorSummariesMonthly", (o) => getMonitorSummariesMonthly(summary, o)],
   [
     "getMonitorSummariesQuarterly",
@@ -128,6 +171,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   [
     "getMonitorSummariesBulkDaily",
     (o) => getMonitorSummariesBulkDaily(bulk, o),
+  ],
+  [
+    "getMonitorSummariesBulkDailyOpen",
+    (o) => getMonitorSummariesBulkDailyOpen({ entryType: "pm25" }, o),
   ],
   [
     "getMonitorSummariesBulkMonthly",
@@ -165,7 +212,16 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ["getRegionPesticideNotices", (o) => getRegionPesticideNotices("r", {}, o)],
   ["getRegionPesticideSummary", (o) => getRegionPesticideSummary("r", {}, o)],
   ["getRegionPesticideUse", (o) => getRegionPesticideUse("r", {}, o)],
-  ["getRegionDetails", (o) => getRegionDetails("r", o)],
+  ["getRegionDetails", (o) => getRegionDetails("r", undefined, o)],
+  ["searchLocations", (o) => searchLocations({ q: "lincoln", ...o })],
+  [
+    "searchPesticides",
+    (o) => searchPesticides({ type: "chemical", q: "sulf", ...o }),
+  ],
+  [
+    "getPesticideLocations",
+    (o) => getPesticideLocations({ bbox: [0, 0, 1, 1], ...o }),
+  ],
   ["searchRegionPlaces", (o) => searchRegionPlaces("x", undefined, o)],
   ["lookupRegionPlace", (o) => lookupRegionPlace("x", undefined, o)],
   [
@@ -173,6 +229,10 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
     (o) => getRegionSummariesHourly(regionSummary, o),
   ],
   ["getRegionSummariesDaily", (o) => getRegionSummariesDaily(regionSummary, o)],
+  [
+    "getRegionSummariesDailyOpen",
+    (o) => getRegionSummariesDailyOpen({ regionId: "r", entryType: "pm25" }, o),
+  ],
   [
     "getRegionSummariesMonthly",
     (o) => getRegionSummariesMonthly(regionSummary, o),
@@ -198,6 +258,11 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
     (o) => getRegionSummariesBulkDaily(regionBulk, o),
   ],
   [
+    "getRegionSummariesBulkDailyOpen",
+    (o) =>
+      getRegionSummariesBulkDailyOpen({ entryType: "pm25", region: "r" }, o),
+  ],
+  [
     "getRegionSummariesBulkMonthly",
     (o) => getRegionSummariesBulkMonthly(regionBulk, o),
   ],
@@ -215,6 +280,7 @@ const rows: Array<[string, (options: RequestOptions) => Promise<unknown>]> = [
   ],
   ["getRegionsList", (o) => getRegionsList({ name: "x" }, o)],
   ["getRegionsMeta", (o) => getRegionsMeta(o)],
+  ["getRegionsGeoJSON", (o) => getRegionsGeoJSON({ type: "county" }, o)],
 ];
 
 for (const [name, call] of rows) {

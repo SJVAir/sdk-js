@@ -1,0 +1,57 @@
+{
+  "data": {
+    "place": {
+      "region": {
+        "type": "county",
+        "external_id": "06019",
+        "name": "Fresno County"
+      }
+    },
+    "months": [
+      {
+        "year": 2023,
+        "month": 1,
+        "pounds": 1762595.435965313,
+        "acres": 509265.05767676793,
+        "applications": 21147
+      },
+      {
+        "year": 2023,
+        "month": 2,
+        "pounds": 2355059.406611625,
+        "acres": 896992.9713774114,
+        "applications": 29148
+      },
+      {
+        "year": 2023,
+        "month": 3,
+        "pounds": 974944.303352643,
+        "acres": 994458.1185215795,
+        "applications": 26980
+      },
+      {
+        "year": 2023,
+        "month": 4,
+        "pounds": 1825845.317536644,
+        "acres": 1426767.445165289,
+        "applications": 32585
+      }
+    ],
+    "years": [
+      {
+        "year": 2022,
+        "pounds": 23490784.810565617,
+        "acres": 13379845.965525707,
+        "applications": 318894,
+        "undated": { "pounds": 0.0, "acres": 0.0, "applications": 0 }
+      },
+      {
+        "year": 2023,
+        "pounds": 22994237.720863845,
+        "acres": 15018923.074666666,
+        "applications": 348990,
+        "undated": { "pounds": 0.0, "acres": 0.0, "applications": 0 }
+      }
+    ]
+  }
+}

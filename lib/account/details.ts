@@ -25,21 +25,47 @@
 import { jsonCall } from "$http";
 import type { RequestOptions } from "$http";
 import { authHeaders } from "./auth_headers.ts";
-import type { UserDetails } from "./types.ts";
+import type { SessionUserDetails, UserDetails } from "./types.ts";
 
 /**
  * Get details of a user from their given api token.
  *
- * @param token Optional. Without it, the call relies on the session
- *   cookie; a missing sign-in surfaces as the server's 401/403.
+ * @param token The user's api token.
  * @param options Request options.
  * @returns The raw GET "/account" endpoint response
  */
+export function getUserDetails(
+  token: string,
+  options?: RequestOptions,
+): Promise<UserDetails>;
+/**
+ * Get details of the signed-in user from the session cookie. The response has
+ * no `api_token`; a signed-out call rejects with the server's 401.
+ *
+ * @param token Omitted, so the call relies on the session cookie.
+ * @param options Request options.
+ * @returns The GET "/account" endpoint response, without `api_token`
+ */
+export function getUserDetails(
+  token?: undefined,
+  options?: RequestOptions,
+): Promise<SessionUserDetails>;
+/**
+ * Get details of a user with a token that may be absent.
+ *
+ * @param token The user's api token, or none to use the session cookie.
+ * @param options Request options.
+ * @returns The response, with `api_token` only when a token was passed
+ */
+export function getUserDetails(
+  token?: string,
+  options?: RequestOptions,
+): Promise<UserDetails | SessionUserDetails>;
 export async function getUserDetails(
   token?: string,
   options?: RequestOptions,
-): Promise<UserDetails> {
-  return await jsonCall<UserDetails>({
+): Promise<UserDetails | SessionUserDetails> {
+  return await jsonCall<UserDetails | SessionUserDetails>({
     url: "account",
     init: {
       headers: authHeaders(token, {

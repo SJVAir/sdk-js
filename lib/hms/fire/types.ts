@@ -4,6 +4,7 @@
  */
 import type { infer as zinfer } from "zod";
 import type { APIRequestResponse, PaginatedResponse } from "$http";
+import type { HMSBaseQuery } from "../query.ts";
 import type { hmsFireSchema } from "./schema.ts";
 
 export type HMSFireGeoJSON = zinfer<typeof hmsFireSchema>;
@@ -22,3 +23,6 @@ export interface HMSFireRequestConfig {
 export type FetchHMSFireResponse = APIRequestResponse<
   PaginatedResponse<HMSFireGeoJSON>
 >;
+
+/** The filters for an HMS fire list: a day or range, and a region */
+export type HMSFireQuery = HMSBaseQuery;

@@ -17,6 +17,9 @@
  *   start: "2024-01-01",
  *   end: "2024-01-31",
  *   region: "abc123",
+ *   // Only these monitor types (`monitors/meta/` keys, or a catalog
+ *   // dataset's `monitor_types`).
+ *   type: ["purpleair", "airnow"],
  * });
  * console.log(monitors);
  * // Prints:
@@ -30,6 +33,11 @@
  * //         "timestamp": "2024-01-01T00:00:00-08:00",
  * //         "entry_type": "pm25",
  * //         "resolution": "day",
+ * //         "mean_24h": 5.5,
+ * //         "daily_statistic_mean": null,
+ * //         "daily_statistic_days": null,
+ * //         "daily_statistic_expected_days": null,
+ * //         "is_final": true,
  * //         ... (excerpted for brevity)
  * //       },
  * //       ... (more summaries)
@@ -42,7 +50,12 @@
  * @module
  */
 import { fetchAllBulkPages, mergeBulkPages, type RequestOptions } from "$http";
-import type { MonitorEntryType, MonitorWithSummaries } from "./types.ts";
+import { mergeBulkOpenDays } from "../open_days.ts";
+import type {
+  MonitorEntryType,
+  MonitorTypeId,
+  MonitorWithSummaries,
+} from "./types.ts";
 
 /**
  * The configuration options shared by all bulk monitor summary endpoints
@@ -62,6 +75,18 @@ export interface MonitorSummaryBulkRequestConfig {
 
   /** Restrict results to monitors within one or more regions, by region sqid */
   region?: string | Array<string>;
+
+  /**
+   * Restrict results to one or more monitor types: the `monitors/meta/`
+   * `monitors[*].type` keys, or a dataset's `monitor_types` from the catalog.
+   * The opt-in `cimis` is returned only when named, as its raw series, for the
+   * weather entry types it summarizes. An unknown type is a 400 (the error's
+   * `cause.details.type[0].code` is `"invalid_choice"`). Combines with
+   * `region`, `bbox` and `processor`; an empty string or array sends nothing.
+   *
+   * @defaultValue Every public monitor type (never `cimis`).
+   */
+  type?: MonitorTypeId | Array<MonitorTypeId>;
 
   /**
    * The exact summary processor to return (an empty string selects raw) across
@@ -96,19 +121,26 @@ function toApiDate(date: Date | string): string {
 }
 
 /**
- * Builds the search params shared by the bulk monitor summary endpoints.
- *
- * @param config An object containing the requested date range and optional geographic filters
- *
- * @returns A Record of search params for the bulk monitor summary endpoints
+ * The configuration options for the bulk monitor open-days endpoint: the bulk
+ * lists' scoping, without dates
  */
-function getBulkSummarySearchParams(
-  config: MonitorSummaryBulkRequestConfig,
+export type MonitorSummaryBulkOpenRequestConfig = Omit<
+  MonitorSummaryBulkRequestConfig,
+  "start" | "end"
+>;
+
+/**
+ * Builds the scoping search params shared by the bulk monitor summary and
+ * open-days endpoints.
+ *
+ * @param config An object containing the optional geographic filters and processor
+ *
+ * @returns A Record of search params
+ */
+function getBulkScopeSearchParams(
+  config: MonitorSummaryBulkOpenRequestConfig,
 ): Record<string, string | Array<string>> {
-  const searchParams: Record<string, string | Array<string>> = {
-    start: toApiDate(config.start),
-    end: toApiDate(config.end),
-  };
+  const searchParams: Record<string, string | Array<string>> = {};
 
   if (config.bbox) {
     searchParams.bbox = config.bbox.join(",");
@@ -118,11 +150,34 @@ function getBulkSummarySearchParams(
     searchParams.region = config.region;
   }
 
+  if (config.type !== undefined && config.type.length > 0) {
+    searchParams.type = Array.isArray(config.type)
+      ? [...config.type]
+      : config.type;
+  }
+
   if (config.processor !== undefined) {
     searchParams.processor = config.processor;
   }
 
   return searchParams;
+}
+
+/**
+ * Builds the search params shared by the bulk monitor summary endpoints.
+ *
+ * @param config An object containing the requested date range and optional geographic filters
+ *
+ * @returns A Record of search params for the bulk monitor summary endpoints
+ */
+function getBulkSummarySearchParams(
+  config: MonitorSummaryBulkRequestConfig,
+): Record<string, string | Array<string>> {
+  return {
+    start: toApiDate(config.start),
+    end: toApiDate(config.end),
+    ...getBulkScopeSearchParams(config),
+  };
 }
 
 /**
@@ -191,6 +246,12 @@ export async function getMonitorSummariesBulkDaily(
 /**
  * Fetches all pages of bulk monthly monitor summaries, merged into a complete list.
  *
+ * When the requested range reaches the current period, the list includes its
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
+ *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -211,6 +272,12 @@ export async function getMonitorSummariesBulkMonthly(
 
 /**
  * Fetches all pages of bulk quarterly monitor summaries, merged into a complete list.
+ *
+ * When the requested range reaches the current period, the list includes its
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
  *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
@@ -233,6 +300,12 @@ export async function getMonitorSummariesBulkQuarterly(
 /**
  * Fetches all pages of bulk seasonal monitor summaries, merged into a complete list.
  *
+ * When the requested range reaches the current period, the list includes its
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
+ *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -254,6 +327,12 @@ export async function getMonitorSummariesBulkSeasonal(
 /**
  * Fetches all pages of bulk yearly monitor summaries, merged into a complete list.
  *
+ * When the requested range reaches the current period, the list includes its
+ * row, written nightly through yesterday, with `is_final: false` ("so far"). An
+ * ended period's row stays `is_final: false` until it settles (for CO, about 28
+ * hours after the period ends). A period that starts today has no row yet;
+ * today's figures come from the `getMonitorSummariesBulkDailyOpen` call.
+ *
  * @param config An object containing the entry type, date range, and optional geographic filters
  * @param options Optional per-request options: an AbortSignal and extra fetch init.
  *
@@ -270,4 +349,43 @@ export async function getMonitorSummariesBulkYearly(
       options,
     }),
   );
+}
+
+/**
+ * Fetches every page of bulk open-day monitor rows: daily rows for the days
+ * that have no stored daily row yet, for every monitor in scope.
+ *
+ * Open days are today (Pacific), plus yesterday until its nightly row exists
+ * (capped at about 03:00 Pacific). Today has no row until its first hour is
+ * summarized (about 00:45). Open rows are built on request from the hours so
+ * far, carry the same fields as stored daily rows, and always have
+ * `is_final: false`. Responses are cached for 60 seconds
+ * (`private, max-age=60`). Merge them into bulk daily results with
+ * `mergeBulkOpenDays`, and read the result like this: `is_final: false` on
+ * today means "so far", on an earlier day "not final yet"; a missing row
+ * means "no data".
+ *
+ * The server pages these by owner (100 per page) and lists only owners with
+ * an hourly row since the first open day, so an owner can have
+ * `summaries: []`. Pages are fetched at once and each is built at its own
+ * moment, so an owner can appear on two pages; it's kept once, with no
+ * repeated day. When the owner set shrinks during the fetch (once a day, as
+ * yesterday settles), a page past the new last page reads as empty and an
+ * owner can be missed until the next request, a minute later at most.
+ *
+ * @param config An object containing the entry type and optional geographic filters and processor
+ * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ *
+ * @returns An array of monitors, each with its open-day rows
+ */
+export async function getMonitorSummariesBulkDailyOpen(
+  config: MonitorSummaryBulkOpenRequestConfig,
+  options?: RequestOptions,
+): Promise<Array<MonitorWithSummaries>> {
+  const pages = await fetchAllBulkPages<MonitorWithSummaries>({
+    url: `monitors/${config.entryType}/summaries/daily/open`,
+    searchParams: getBulkScopeSearchParams(config),
+    options,
+  }, { laterPageMissingIsEmpty: true });
+  return mergeBulkOpenDays([], pages.flat());
 }

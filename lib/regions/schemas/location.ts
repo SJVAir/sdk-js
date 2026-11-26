@@ -1,0 +1,123 @@
+import * as z from "zod";
+import { openEnum, type OpenEnumSchema } from "../../schema.ts";
+import { type RegionTypeSchema, regionTypeSchema } from "./region_type.ts";
+
+/** Where a location's code comes from: a known source, or any newer one */
+export type LocationSourceSchema = OpenEnumSchema<
+  readonly ["cde-public", "cde-private", "cdss-ccl"]
+>;
+
+export const locationSourceSchema: LocationSourceSchema = openEnum(
+  ["cde-public", "cde-private", "cdss-ccl"] as const,
+);
+
+/** The kinds of location the API serves: a known kind, or any newer one */
+export type LocationTypeSchema = OpenEnumSchema<
+  readonly ["public_school", "private_school", "child_care"]
+>;
+
+export const locationTypeSchema: LocationTypeSchema = openEnum(
+  ["public_school", "private_school", "child_care"] as const,
+);
+
+/** The groups location types are listed under: a known key, or any newer one */
+export type LocationGroupKeySchema = OpenEnumSchema<
+  readonly ["school", "child_care"]
+>;
+
+export const locationGroupKeySchema: LocationGroupKeySchema = openEnum(
+  ["school", "child_care"] as const,
+);
+
+interface LocationRegionRefSchema extends
+  z.ZodObject<{
+    type: RegionTypeSchema;
+    external_id: z.ZodString;
+    /** The region's name */
+    name: z.ZodString;
+  }> {}
+
+const locationRegionRefSchema: LocationRegionRefSchema = z.object({
+  type: regionTypeSchema,
+  external_id: z.string(),
+  name: z.string(),
+});
+
+export interface LocationRetiredSchema extends
+  z.ZodObject<{
+    /** The date the location was retired */
+    since: z.ZodString;
+
+    /** The location that replaced this one, named by its code; null if none */
+    replaced_by: z.ZodNullable<
+      z.ZodObject<{
+        source: LocationSourceSchema;
+        external_id: z.ZodString;
+      }>
+    >;
+  }> {}
+
+/** The marker a retired location carries (a current location has `null`) */
+export const retiredLocationSchema: LocationRetiredSchema = z.object({
+  since: z.string(),
+  replaced_by: z.nullable(z.object({
+    source: locationSourceSchema,
+    external_id: z.string(),
+  })),
+});
+
+export interface LocationSchema extends
+  z.ZodObject<{
+    /** The ID of the location */
+    id: z.ZodString;
+
+    /** Where the location's code comes from */
+    source: LocationSourceSchema;
+
+    /** The location's permanent code within its source */
+    external_id: z.ZodString;
+
+    /** Other codes (e.g. license numbers) that also resolve to this location */
+    aliases: z.ZodArray<z.ZodString>;
+
+    /** The kind of location (e.g. "public_school", "child_care") */
+    type: LocationTypeSchema;
+
+    name: z.ZodString;
+    address: z.ZodString;
+    city_name: z.ZodString;
+    zip: z.ZodString;
+
+    point: z.ZodObject<{ lat: z.ZodNumber; lng: z.ZodNumber }>;
+
+    /** The regions containing the location, named by code and name; null if none */
+    regions: z.ZodObject<{
+      county: z.ZodNullable<LocationRegionRefSchema>;
+      city: z.ZodNullable<LocationRegionRefSchema>;
+      zipcode: z.ZodNullable<LocationRegionRefSchema>;
+      school_district: z.ZodNullable<LocationRegionRefSchema>;
+    }>;
+
+    /** Set when the location has been retired; its code still resolves */
+    retired: z.ZodNullable<LocationRetiredSchema>;
+  }> {}
+
+export const locationSchema: LocationSchema = z.object({
+  id: z.string(),
+  source: locationSourceSchema,
+  external_id: z.string(),
+  aliases: z.array(z.string()),
+  type: locationTypeSchema,
+  name: z.string(),
+  address: z.string(),
+  city_name: z.string(),
+  zip: z.string(),
+  point: z.object({ lat: z.number(), lng: z.number() }),
+  regions: z.object({
+    county: z.nullable(locationRegionRefSchema),
+    city: z.nullable(locationRegionRefSchema),
+    zipcode: z.nullable(locationRegionRefSchema),
+    school_district: z.nullable(locationRegionRefSchema),
+  }),
+  retired: z.nullable(retiredLocationSchema),
+});

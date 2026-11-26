@@ -36,8 +36,59 @@ export interface RegionSummarySchema extends
     /** The 75th percentile value recorded during this summary's period */
     p75: z.ZodNumber;
 
+    /**
+     * The day's highest 1-hour average (O3, NO2, SO2): set only on daily rows
+     * of an entry type whose scale's `daily_statistic` is `max_1h`, and `null`
+     * on a day that fails EPA's completeness rule
+     */
+    max_1h: z.ZodNullable<z.ZodNumber>;
+
+    /**
+     * The day's highest 8-hour average (CO): set only on daily rows of an
+     * entry type whose scale's `daily_statistic` is `max_8h`, and `null` on a
+     * day that fails EPA's completeness rule
+     */
+    max_8h: z.ZodNullable<z.ZodNumber>;
+
+    /**
+     * The day's 24-hour average (PM2.5, PM10): set only on daily rows of an
+     * entry type whose scale's `daily_statistic` is `mean_24h`, and `null` on
+     * a day with fewer than 75% of its hours
+     */
+    mean_24h: z.ZodNullable<z.ZodNumber>;
+
+    /**
+     * The mean of the period's daily figures (the field the scale's
+     * `daily_statistic` names; read it through `scale.period_statistic`): set
+     * only on monthly and coarser rows of an entry type with a
+     * `daily_statistic`, and `null` when fewer than 75% (rounded up) of
+     * `daily_statistic_expected_days` have a figure
+     */
+    daily_statistic_mean: z.ZodNullable<z.ZodNumber>;
+
+    /**
+     * Days in the period with a daily figure (0 is possible); `null` on hourly
+     * and daily rows and on entry types without a `daily_statistic`
+     */
+    daily_statistic_days: z.ZodNullable<z.ZodNumber>;
+
+    /**
+     * Pacific days in the period; on the current period's row, the days from
+     * its start through yesterday; `null` as for `daily_statistic_days`
+     */
+    daily_statistic_expected_days: z.ZodNullable<z.ZodNumber>;
+
     /** The number of monitor stations included in this summary's period */
     station_count: z.ZodNumber;
+
+    /**
+     * Whether this row can't change anymore. Yesterday's daily row settles
+     * about 03:00 Pacific (CO's about 28 hours after the day ends); open-day
+     * rows are always `false`. The current month's, quarter's, season's and
+     * year's row (written nightly through yesterday) is `false` until its
+     * period ends and settles
+     */
+    is_final: z.ZodBoolean;
   }> {}
 
 export const regionSummarySchema: RegionSummarySchema = z.object({
@@ -52,5 +103,12 @@ export const regionSummarySchema: RegionSummarySchema = z.object({
   stddev: z.number(),
   p25: z.number(),
   p75: z.number(),
+  max_1h: z.number().nullable(),
+  max_8h: z.number().nullable(),
+  mean_24h: z.number().nullable(),
+  daily_statistic_mean: z.number().nullable(),
+  daily_statistic_days: z.number().nullable(),
+  daily_statistic_expected_days: z.number().nullable(),
   station_count: z.number(),
+  is_final: z.boolean(),
 });

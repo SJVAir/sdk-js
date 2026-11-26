@@ -5,16 +5,40 @@
  */
 import type { infer as zinfer } from "zod";
 import type {
+  activePesticideNoticeCollectionSchema,
+  activePesticideNoticeFeatureSchema,
+  activePesticideNoticePropertiesSchema,
+  aerialGroundFilterSchema,
   aerialGroundSchema,
   chemicalDetailSchema,
   chemicalSchema,
+  chemicalSearchHitSchema,
   commodityDetailSchema,
   commoditySchema,
   iarcGroupSchema,
+  pesticideBadgeKeySchema,
+  pesticideBadgeSchema,
+  pesticideLinkParamSchema,
+  pesticideLinkSourceSchema,
+  pesticideLocationCollectionSchema,
+  pesticideLocationFeatureSchema,
+  pesticideLocationPropertiesSchema,
+  pesticideNarrowSchema,
+  pesticideNoteSchema,
   pesticideNoticeSchema,
   pesticideRegionSchema,
+  pesticideSearchHitSchema,
+  pesticideSectionCollectionSchema,
+  pesticideSectionDetailSchema,
+  pesticideSectionFeatureSchema,
+  pesticidesForPlaceSchema,
+  pesticidesMetaSchema,
   pesticideSummaryResponseSchema,
   pesticideSummarySchema,
+  pesticideTownshipCollectionSchema,
+  pesticideTownshipFeatureSchema,
+  pesticideUseClassesSchema,
+  pesticideUseClassSchema,
   pesticideUseSchema,
   productDetailSchema,
   productSchema,
@@ -22,6 +46,15 @@ import type {
 
 /** The application method of a pesticide use or notice record */
 export type AerialGround = zinfer<typeof aerialGroundSchema>;
+
+/**
+ * An application method a filter can ask for: a record's method, or `none` for
+ * records with no reported method
+ */
+export type AerialGroundFilter = zinfer<typeof aerialGroundFilterSchema>;
+
+/** A pesticide narrowing: concern, restricted, fumigant or aerial */
+export type PesticideNarrow = zinfer<typeof pesticideNarrowSchema>;
 
 /** The IARC carcinogenicity classification group of a chemical */
 export type IARCGroup = zinfer<typeof iarcGroupSchema>;
@@ -59,4 +92,141 @@ export type PesticideSummaryData = zinfer<typeof pesticideSummarySchema>;
 /** The aggregated pesticide use summary for a region */
 export type PesticideSummaryResponseData = zinfer<
   typeof pesticideSummaryResponseSchema
+>;
+
+/** The properties of a school or child care site on the pesticides map */
+export type PesticideLocationProperties = zinfer<
+  typeof pesticideLocationPropertiesSchema
+>;
+
+/** A GeoJSON Point feature for a school or child care site */
+export type PesticideLocationFeature = zinfer<
+  typeof pesticideLocationFeatureSchema
+>;
+
+/** Schools and child care sites as a GeoJSON FeatureCollection of points */
+export type PesticideLocationCollection = zinfer<
+  typeof pesticideLocationCollectionSchema
+>;
+
+/**
+ * Monthly and yearly pesticide use for a place, or the whole valley (`place`
+ * null), as returned from pesticides/place
+ */
+export type PesticidesForPlace = zinfer<typeof pesticidesForPlaceSchema>;
+
+/** What `searchPesticides` can search */
+export type PesticideSearchType = "chemical" | "product" | "commodity";
+
+/** One product or commodity match from pesticides/search */
+export type PesticideSearchHitData = zinfer<typeof pesticideSearchHitSchema>;
+
+/** One chemical match from pesticides/search; only chemicals carry `placeholder` */
+export type ChemicalSearchHitData = zinfer<typeof chemicalSearchHitSchema>;
+
+/** A match of the given search type */
+export type PesticideSearchHit<T extends PesticideSearchType> = T extends
+  "chemical" ? ChemicalSearchHitData : PesticideSearchHitData;
+
+/** One page of pesticide search matches, and whether more were left out */
+export type PesticideSearchResult<T extends PesticideSearchType> = {
+  results: Array<PesticideSearchHit<T>>;
+  more: boolean;
+};
+
+/** Labels and descriptions for the pesticide filters, from pesticides/meta */
+export type PesticidesMeta = zinfer<typeof pesticidesMetaSchema>;
+
+/** An explorer link in `getPesticidesMeta().links` that `link_params` covers */
+export type PesticideLinkKey = keyof PesticidesMeta["link_params"];
+
+/** The value that fills an explorer link's query parameter */
+export type PesticideLinkSource = zinfer<typeof pesticideLinkSourceSchema>;
+
+/** One query parameter an explorer link takes, and the value that fills it */
+export type PesticideLinkParam = zinfer<typeof pesticideLinkParamSchema>;
+
+/**
+ * Filters for pesticide use in a place; unset filters are not sent. The
+ * chemical, commodity and product are our ids (the `id` the list endpoints
+ * and `searchPesticides` return), not CDPR codes, which the server refuses.
+ */
+export type PesticidesForPlaceFilters = {
+  /** The chemical, by its id (not its CDPR chem code) */
+  chemical?: string;
+  /** The commodity, by its id (not its CDPR site code) */
+  commodity?: string;
+  /** The product, by its id (not its CDPR product number) */
+  product?: string;
+  /**
+   * Chemical categories; records with a chemical in any of them count. Valid
+   * keys are in `getPesticidesMeta().categories`. A list is sent as repeated
+   * params.
+   */
+  category?: string | ReadonlyArray<string>;
+  /** Keep only what this narrowing keeps (see `getPesticidesMeta().narrows`) */
+  narrow?: PesticideNarrow;
+  /** The chemical's IARC group */
+  iarc_group?: IARCGroup;
+  /** The application method; `none` keeps records with no reported method */
+  aerial_ground?: AerialGroundFilter;
+  /** First year to include (1900 to 2100) */
+  year__gte?: number;
+  /** Last year to include (1900 to 2100) */
+  year__lte?: number;
+};
+
+/** A chemical classification badge's key (known keys, or a newer one) */
+export type PesticideBadgeKey = zinfer<typeof pesticideBadgeKeySchema>;
+
+/** One classification badge from `getPesticidesMeta().badges` */
+export type PesticideBadge = zinfer<typeof pesticideBadgeSchema>;
+
+/** One explainer note from `getPesticidesMeta().notes` */
+export type PesticideNote = zinfer<typeof pesticideNoteSchema>;
+
+/** The properties of one spray notice on the map */
+export type ActivePesticideNoticeProperties = zinfer<
+  typeof activePesticideNoticePropertiesSchema
+>;
+
+/** One spray notice, as a GeoJSON Point feature */
+export type ActivePesticideNoticeFeature = zinfer<
+  typeof activePesticideNoticeFeatureSchema
+>;
+
+/** The FeatureCollection `getActivePesticideNotices` returns */
+export type ActivePesticideNoticeCollection = zinfer<
+  typeof activePesticideNoticeCollectionSchema
+>;
+
+/** One figure's color classes on the pesticide-use map */
+export type PesticideUseClass = zinfer<typeof pesticideUseClassSchema>;
+
+/** The valley-wide color classes sent with `classes: true` */
+export type PesticideUseClasses = zinfer<typeof pesticideUseClassesSchema>;
+
+/** One MTRS section with its pesticide-use totals, as a GeoJSON feature */
+export type PesticideSectionFeature = zinfer<
+  typeof pesticideSectionFeatureSchema
+>;
+
+/** The FeatureCollection `getPesticideSections` returns */
+export type PesticideSectionCollection = zinfer<
+  typeof pesticideSectionCollectionSchema
+>;
+
+/** One PLSS township with its pesticide-use totals, as a GeoJSON feature */
+export type PesticideTownshipFeature = zinfer<
+  typeof pesticideTownshipFeatureSchema
+>;
+
+/** The FeatureCollection `getPesticideTownships` returns */
+export type PesticideTownshipCollection = zinfer<
+  typeof pesticideTownshipCollectionSchema
+>;
+
+/** One MTRS section's pesticide use, from `getPesticideSectionDetails` */
+export type PesticideSectionDetail = zinfer<
+  typeof pesticideSectionDetailSchema
 >;

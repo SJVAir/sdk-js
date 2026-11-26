@@ -1,5 +1,10 @@
 # The Official SJVAir SDK
 
+The SDK wraps SJVAir's shared API: public air and environmental data, and the
+site-wide account features (sign-in, profile, subscriptions, alerts). Endpoints
+that back a single app's own feature live in that app, built on
+`@sjvair/sdk/http`.
+
 ### Request options and defaults
 
 Every function that fetches takes a trailing `options?: RequestOptions`
@@ -61,3 +66,10 @@ the session cookie, and a missing sign-in surfaces as the server's 401/403.
 On a failed request, `error.cause.init` holds the merged `init`, with `headers`
 as a `Headers` instance and the values of `Authorization`, the CSRF header, and
 the request `body` replaced by `"[redacted]"`.
+
+### Documents
+
+The documents client (`@sjvair/sdk/documents`, the data dashboard's saved
+dashboards) moved into the public
+[data-dashboard](https://github.com/SJVAir/data-dashboard) repo, built on
+`@sjvair/sdk/http`. 5.0.0-beta.8 is the last SDK version with it.

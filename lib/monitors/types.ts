@@ -4,28 +4,38 @@
  */
 import type { infer as zinfer } from "zod";
 import type {
+  monitorAlertCurrentRecordSchema,
+  monitorAlertCurrentSchema,
+  monitorAlertStatusSchema,
   monitorClosestSchema,
   monitorDataSchema,
   monitorDataVendorSchema,
   monitorDetailsSchema,
+  monitorDewPointEntrySchema,
   monitorEntriesArchiveSchema,
+  monitorEntryAlertsMetaSchema,
   monitorEntryMetaSchema,
   monitorEntrySchema,
   monitorEntryTypeSchema,
   monitorGradeSchema,
+  monitorGroupSchema,
   monitorHealthSchema,
   monitorLatestSchema,
   monitorParticulatesEntrySchema,
   monitorPressureEntrySchema,
+  monitorSoilTemperatureEntrySchema,
   monitorSummarySchema,
   monitorTemperatureEntrySchema,
   monitorTypeSchema,
   monitorWithSummariesSchema,
-  sjvairEntryLevelMetaSchema,
+  schoolActivitySchema,
+  schoolGuidelinesSchema,
   sjvairEntryMetaSchema,
   sjvairMonitorDeviceMetaSchema,
   sjvairMonitorEntryMetaSchema,
   sjvairMonitorsMetaSchema,
+  weatherStationSchema,
+  weatherStationsForPlaceSchema,
 } from "./schemas/mod.ts";
 
 export type MonitorEntriesArchive = zinfer<typeof monitorEntriesArchiveSchema>;
@@ -37,6 +47,15 @@ export type MonitorData = zinfer<typeof monitorDataSchema>;
  * The specific type of a monitor.
  */
 export type MonitorType = zinfer<typeof monitorTypeSchema>;
+
+/**
+ * A monitor type id, as an option takes it. The known ids are suggested, but
+ * any string is accepted: the `monitors/meta/` `type` values and the catalog's
+ * `monitor_types` pass as they are, and a type the server adds later works
+ * without an SDK release.
+ */
+// deno-lint-ignore ban-types
+export type MonitorTypeId = MonitorType | (string & {});
 
 /** A data source or provider */
 export type MonitorDataVendor = zinfer<typeof monitorDataVendorSchema>;
@@ -70,6 +89,18 @@ export type MonitorTemperatureEntry = zinfer<
 >;
 
 /**
+ * The Entry type for dew point values
+ */
+export type MonitorDewPointEntry = zinfer<typeof monitorDewPointEntrySchema>;
+
+/**
+ * The Entry type for soil temperature values
+ */
+export type MonitorSoilTemperatureEntry = zinfer<
+  typeof monitorSoilTemperatureEntrySchema
+>;
+
+/**
  * The Entry type for pressure values
  */
 export type MonitorPressureEntry = zinfer<typeof monitorPressureEntrySchema>;
@@ -99,6 +130,16 @@ export interface MonitorEntries {
   pressure: MonitorPressureEntry;
   temperature: MonitorTemperatureEntry;
   particulates: MonitorParticulatesEntry;
+  dewpoint: MonitorDewPointEntry;
+  soiltemperature: MonitorSoilTemperatureEntry;
+  windspeed: ExplicitMonitorEntry<"windspeed">;
+  winddirection: ExplicitMonitorEntry<"winddirection">;
+  precipitation: ExplicitMonitorEntry<"precipitation">;
+  solarradiation: ExplicitMonitorEntry<"solarradiation">;
+  netradiation: ExplicitMonitorEntry<"netradiation">;
+  vaporpressure: ExplicitMonitorEntry<"vaporpressure">;
+  eto: ExplicitMonitorEntry<"eto">;
+  etr: ExplicitMonitorEntry<"etr">;
 }
 
 /**
@@ -138,6 +179,11 @@ export interface MonitorClosestType<T extends keyof MonitorEntries>
 /** The data structure for details on a monitor object */
 export type MonitorDetails = zinfer<typeof monitorDetailsSchema>;
 
+/** How the alert run evaluates an entry type on a monitor type */
+export type MonitorEntryAlertsMeta = zinfer<
+  typeof monitorEntryAlertsMetaSchema
+>;
+
 /** The metadata about the included entry types for a given monitor type  */
 export type SJVAirMonitorEntryMeta = zinfer<
   typeof sjvairMonitorEntryMetaSchema
@@ -148,11 +194,14 @@ export type SJVAirMonitorDeviceMeta = zinfer<
   typeof sjvairMonitorDeviceMetaSchema
 >;
 
-/**
- * The metadata about the breakpoints used to determine the severity of a
- * specific entry type of a given monitor type
- */
-export type SJVAirEntryLevel = zinfer<typeof sjvairEntryLevelMetaSchema>;
+/** One school activity and its guidance at each level */
+export type SchoolActivity = zinfer<typeof schoolActivitySchema>;
+
+/** Outdoor activity guidelines for schools, from monitors/meta */
+export type SchoolGuidelines = zinfer<typeof schoolGuidelinesSchema>;
+
+/** A group that monitor types are listed under, from monitors/meta */
+export type MonitorGroup = zinfer<typeof monitorGroupSchema>;
 
 /** The metadata about the types of monitor entries */
 export type SJVAirEntryMeta = zinfer<typeof sjvairEntryMetaSchema>;
@@ -165,3 +214,22 @@ export type MonitorSummary = zinfer<typeof monitorSummarySchema>;
 
 /** A monitor with its matching summary rows nested under `summaries` */
 export type MonitorWithSummaries = zinfer<typeof monitorWithSummariesSchema>;
+
+/** A weather station near a place: a monitor row plus `distance` and `inside` */
+export type WeatherStation = zinfer<typeof weatherStationSchema>;
+
+/** The weather stations for a place, as returned from monitors/weather/place */
+export type WeatherStationsForPlace = zinfer<
+  typeof weatherStationsForPlaceSchema
+>;
+
+/** The outcome of an alert evaluation: ok, insufficient, no_data or pending */
+export type MonitorAlertStatus = zinfer<typeof monitorAlertStatusSchema>;
+
+/** One entry type's current alert result for a monitor */
+export type MonitorAlertCurrent = zinfer<typeof monitorAlertCurrentSchema>;
+
+/** Current alert results keyed by entry type id */
+export type MonitorAlertCurrentRecord = zinfer<
+  typeof monitorAlertCurrentRecordSchema
+>;

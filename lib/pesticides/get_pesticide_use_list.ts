@@ -76,13 +76,13 @@ export interface PesticideUseListFilters {
   /** Filter by the county's slug */
   county?: string;
 
-  /** Filter by the chemical's DPR chemical code */
+  /** Filter by the chemical's CDPR chem code (not its `id`; `getPesticidesForPlace` takes ids) */
   chemical?: number;
 
-  /** Filter by the commodity's DPR site code */
+  /** Filter by the commodity's CDPR site code (not its `id`; `getPesticidesForPlace` takes ids) */
   commodity?: string;
 
-  /** Filter by the product's DPR product number */
+  /** Filter by the product's CDPR product number (not its `id`; `getPesticidesForPlace` takes ids) */
   product?: number;
 
   /** Filter to records within the given region's boundary (county direct match, other types via MTRS spatial join) */

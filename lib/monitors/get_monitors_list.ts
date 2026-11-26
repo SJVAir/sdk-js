@@ -43,6 +43,10 @@
  * //     }
  * //     ... (more monitors)
  * //   ]
+ *
+ * // The monitors in one region, or in any of several (by region id):
+ * const inFresno = await getMonitorsList({ region: "r6phe" });
+ * const inEither = await getMonitorsList({ region: ["r6phe", "hu7vc"] });
  * ```
  *
  * @module
@@ -51,20 +55,39 @@ import { APIError, jsonCall, type RequestOptions } from "$http";
 import type { MonitorData } from "./types.ts";
 
 /**
- * Fetches all monitors.
+ * Fetches all monitors, the monitors of one dataset, or the monitors in some
+ * regions.
  *
- * @param options Optional per-request options: an AbortSignal and extra fetch init.
+ * @param options Optional per-request options: an AbortSignal and extra fetch
+ * init, plus:
+ * - `dataset`: with `"weather"` the list holds CIMIS weather stations;
+ *   `"air-quality"` is the default list. See `places_url` in the dataset
+ *   catalog. An unknown dataset rejects with a 400.
+ * - `region`: one region id, or several (the monitors in any of them). Empty
+ *   ids are dropped. An unknown id rejects with a 404. Combines with `dataset`.
  *
- * @returns An array containing all monitors.
+ * @returns An array of monitors. The default list rejects when empty; a list
+ * filtered by `dataset` or `region` may be empty.
  */
 export async function getMonitorsList(
-  options?: RequestOptions,
+  options?: RequestOptions & { dataset?: string; region?: string | string[] },
 ): Promise<Array<MonitorData>> {
+  const { dataset, region, ...requestOptions } = options ?? {};
+  const regions = [region ?? []].flat().filter((id) => id !== "");
+  const searchParams: Record<string, string | string[]> = {};
+  if (dataset) searchParams.dataset = dataset;
+  if (regions.length > 0) searchParams.region = regions;
+  const filtered = Object.keys(searchParams).length > 0;
   return await jsonCall<Array<MonitorData>>(
-    { url: "monitors", options },
+    {
+      url: "monitors",
+      searchParams: filtered ? searchParams : undefined,
+      options: requestOptions,
+    },
     (response) => {
       if (
-        !Array.isArray(response.body.data) || response.body.data.length <= 0
+        !Array.isArray(response.body.data) ||
+        (!filtered && response.body.data.length <= 0)
       ) {
         throw new APIError("Failed to fetch all monitors", response);
       }

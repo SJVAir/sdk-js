@@ -17,13 +17,25 @@
  * //      },
  * //      ... (other region types omitted for brevity)
  * //    },
+ * //    "location_groups": {
+ * //      "school": { "key": "school", "label": "Schools", "order": 0 },
+ * //      "child_care": { "key": "child_care", "label": "Child care", "order": 1 },
+ * //    },
  * //  }
  * ```
  *
  * @module
  */
 import { jsonCall, type RequestOptions } from "$http";
-import type { RegionsMetaData, RegionType, RegionTypeMeta } from "./types.ts";
+import type {
+  LocationGroup,
+  LocationType,
+  LocationTypeMeta,
+  RegionBuffer,
+  RegionsMetaData,
+  RegionType,
+  RegionTypeMeta,
+} from "./types.ts";
 
 export class RegionsMeta implements RegionsMetaData {
   /**
@@ -34,6 +46,16 @@ export class RegionsMeta implements RegionsMetaData {
      * An array of region type metadata.
      */
     types: Array<RegionTypeMeta>;
+
+    /**
+     * An array of location type metadata.
+     */
+    locationTypes: Array<LocationTypeMeta>;
+
+    /**
+     * An array of the location groups, sorted by `order`.
+     */
+    locationGroups: Array<LocationGroup>;
   };
 
   /**
@@ -42,6 +64,10 @@ export class RegionsMeta implements RegionsMetaData {
   constructor(private meta: RegionsMetaData) {
     this.asIter = {
       types: Object.values(this.meta.types),
+      locationTypes: Object.values(this.meta.location_types),
+      locationGroups: Object.values(this.meta.location_groups).sort((a, b) =>
+        a.order - b.order
+      ),
     };
   }
 
@@ -52,6 +78,35 @@ export class RegionsMeta implements RegionsMetaData {
    */
   get types(): Record<string, RegionTypeMeta> {
     return this.meta.types;
+  }
+
+  /**
+   * Returns a record of all location type metadata, keyed by type.
+   *
+   * @returns A record of all location type metadata.
+   */
+  get location_types(): Record<LocationType, LocationTypeMeta> {
+    return this.meta.location_types;
+  }
+
+  /**
+   * Returns a record of the groups location types are listed under, keyed
+   * by group. Sort them by `order` (or use `asIter.locationGroups`).
+   *
+   * @returns A record of all location groups.
+   */
+  get location_groups(): Record<string, LocationGroup> {
+    return this.meta.location_groups;
+  }
+
+  /**
+   * Returns the distances a region's boundary can be widened by (the
+   * `buffer` of `getRegionDetails`), with their labels.
+   *
+   * @returns The buffer choices, smallest first.
+   */
+  get buffers(): Array<RegionBuffer> {
+    return this.meta.buffers;
   }
 
   /**

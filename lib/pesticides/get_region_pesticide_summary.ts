@@ -48,10 +48,10 @@ export interface RegionPesticideSummaryFilters {
   /** Filter by application method, exact match */
   aerial_ground?: AerialGround;
 
-  /** Filter by the chemical's DPR chemical code */
+  /** Filter by the chemical's CDPR chem code (not its `id`; `getPesticidesForPlace` takes ids) */
   chemical?: number;
 
-  /** Filter by the commodity's DPR site code */
+  /** Filter by the commodity's CDPR site code (not its `id`; `getPesticidesForPlace` takes ids) */
   commodity?: string;
 
   /** Filter by hazard category */

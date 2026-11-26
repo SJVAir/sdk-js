@@ -98,6 +98,7 @@ async function parseBody<T>(response: Response): Promise<T> {
   if (!response.headers.has("Content-Type")) {
     throw new Error(
       "Unable to handle server response, no Content-Type header was found",
+      { cause: response },
     );
   }
 
@@ -117,6 +118,14 @@ async function parseBody<T>(response: Response): Promise<T> {
         );
     }
   } catch (error) {
+    // A failed response whose body can't be read (such as an empty JSON
+    // error body) still carries the response, so callers can see its status.
+    if (!response.ok && !(error instanceof Error && error.cause === response)) {
+      throw new Error(
+        `Unable to parse the "${contentType}" error response`,
+        { cause: response },
+      );
+    }
     throw error;
   }
 }
@@ -281,16 +290,26 @@ export function mergeBulkPages<
   return merged;
 }
 
+/** Whether a failed `httpRequest` was a 404. */
+function isNotFound(fault: unknown): boolean {
+  const cause = (fault as { cause?: { result?: { status?: number } } })?.cause;
+  return cause?.result?.status === 404;
+}
+
 /**
  * Fetches every page of a bulk summary endpoint, preserving the boundaries
  * between pages so they can be merged afterward.
  *
  * @param requestConfig The base request config (URL and search params) for the endpoint
+ * @param behavior Optional: `laterPageMissingIsEmpty` reads a 404 on a page
+ * after the first as an empty page, for endpoints whose page count can shrink
+ * between the first request and the rest
  *
  * @returns An ordered array of pages, each an array of items
  */
 export async function fetchAllBulkPages<T>(
   requestConfig: APIRequestConfig,
+  behavior?: { laterPageMissingIsEmpty?: boolean },
 ): Promise<Array<Array<T>>> {
   return await httpRequest<PaginatedResponse<T>>(
     requestConfig,
@@ -313,7 +332,15 @@ export async function fetchAllBulkPages<T>(
                   page: `${idx + 1 + page}`,
                 },
               }).then((response) => response.body.data)
-                .catch(errorHandlerFor(requestConfig)) as Promise<Array<T>>,
+                .catch((fault) => {
+                  if (
+                    behavior?.laterPageMissingIsEmpty &&
+                    isNotFound(fault)
+                  ) {
+                    return [];
+                  }
+                  return errorHandlerFor(requestConfig)(fault);
+                }) as Promise<Array<T>>,
           ),
         );
         allPages.push(...rest);

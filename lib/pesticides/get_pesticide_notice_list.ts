@@ -66,10 +66,10 @@ export interface PesticideNoticeListFilters {
   /** Filter by the county's slug */
   county?: string;
 
-  /** Filter by the chemical's DPR chemical code */
+  /** Filter by the chemical's CDPR chem code (not its `id`; `getPesticidesForPlace` takes ids) */
   chemical?: number;
 
-  /** Filter by the product's DPR product number */
+  /** Filter by the product's CDPR product number (not its `id`; `getPesticidesForPlace` takes ids) */
   product?: number;
 
   /** Filter to notices scheduled at or after now */

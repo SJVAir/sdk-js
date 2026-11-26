@@ -6,21 +6,49 @@ import type { infer as zinfer } from "zod";
 import type {
   boundaryListSchema,
   boundarySchema,
+  locationGroupKeySchema,
+  locationGroupSchema,
+  locationSchema,
+  locationSourceSchema,
+  locationTypeMetaSchema,
+  locationTypeSchema,
+  regionBufferSchema,
   regionCategorySchema,
+  regionFeatureCollectionSchema,
+  regionFeatureSchema,
   regionListItemSchema,
+  regionOverlapSchema,
+  regionPlaceMatchSchema,
+  regionRefSchema,
   regionSchema,
   regionsMetaSchema,
   regionSummarySchema,
   regionTypeMetaSchema,
   regionTypeSchema,
   regionWithSummariesSchema,
+  retiredLocationSchema,
+  retiredRegionSchema,
 } from "./schemas/mod.ts";
+
+/** How `within` matches: wholly inside (the default), or touching at all */
+export type RegionsWithinMode = "contained" | "overlaps";
 
 /** The type of geography a region represents */
 export type RegionType = zinfer<typeof regionTypeSchema>;
 
+/** The region types a location search can be narrowed to (others are a 400) */
+export type LocationSearchRegionType =
+  | "county"
+  | "city"
+  | "cdp"
+  | "zipcode"
+  | "school_district";
+
 /** The backend classification a region's type belongs to */
 export type RegionCategory = zinfer<typeof regionCategorySchema>;
+
+/** A short reference to a region: its id, type, code and name */
+export type RegionRef = zinfer<typeof regionRefSchema>;
 
 /** A region's current boundary */
 export type RegionBoundary = zinfer<typeof boundarySchema>;
@@ -37,12 +65,20 @@ export type RegionListBoundary = zinfer<typeof boundaryListSchema>;
  */
 export type RegionListItem = zinfer<typeof regionListItemSchema>;
 
+/**
+ * A region as `searchRegionPlaces` returns it: its boundary has a `bbox` but no
+ * `geometry`, and `county` names the county containing it (`null` on county
+ * rows and outside every county).
+ */
+export type RegionPlaceMatch = zinfer<typeof regionPlaceMatchSchema>;
+
 /** A single aggregated summary of a region's entries over a period of time */
 export type RegionSummary = zinfer<typeof regionSummarySchema>;
 
 /**
  * A Region object with its matching bulk summary rows attached. It has no
- * `boundary`; get that from the regions list or the region's details.
+ * `external_id`, `retired` or `boundary`; get those from the regions list or
+ * the region's details.
  */
 export type RegionWithSummaries = zinfer<typeof regionWithSummariesSchema>;
 
@@ -51,3 +87,53 @@ export type RegionTypeMeta = zinfer<typeof regionTypeMetaSchema>;
 
 /** The metadata returned from regions/meta */
 export type RegionsMetaData = zinfer<typeof regionsMetaSchema>;
+
+/** A distance a region's boundary can be widened by, with its label */
+export type RegionBuffer = zinfer<typeof regionBufferSchema>;
+
+/** The options for a region details request */
+export interface RegionDetailsQuery {
+  /**
+   * Widen the boundary by this many miles. The allowed values are in
+   * `getRegionsMeta()`'s `buffers`; any other is the server's 400.
+   */
+  buffer?: number;
+}
+
+/** The marker a retired region carries; its code still resolves */
+export type RegionRetired = zinfer<typeof retiredRegionSchema>;
+
+/** Where a location's code comes from */
+export type LocationSource = zinfer<typeof locationSourceSchema>;
+
+/** The kind of a location */
+export type LocationType = zinfer<typeof locationTypeSchema>;
+
+/** The metadata about a given location type */
+export type LocationTypeMeta = zinfer<typeof locationTypeMetaSchema>;
+
+/** The key of a group that location types are listed under */
+export type LocationGroupKey = zinfer<typeof locationGroupKeySchema>;
+
+/** A group that location types are listed under, such as "Schools" */
+export type LocationGroup = zinfer<typeof locationGroupSchema>;
+
+/** What `searchLocations` returns: the matches, and whether more were left out */
+export type LocationSearchResult = { results: Array<Location>; more: boolean };
+
+/** A school or child care location, looked up by its official code */
+export type Location = zinfer<typeof locationSchema>;
+
+/** The marker a retired location carries; its code still resolves */
+export type LocationRetired = zinfer<typeof retiredLocationSchema>;
+
+/** A region named by its code, as `also_in` lists the other regions it straddles */
+export type RegionOverlap = zinfer<typeof regionOverlapSchema>;
+
+/** One region as a GeoJSON feature */
+export type RegionFeature = zinfer<typeof regionFeatureSchema>;
+
+/** Regions as a GeoJSON feature collection */
+export type RegionFeatureCollection = zinfer<
+  typeof regionFeatureCollectionSchema
+>;

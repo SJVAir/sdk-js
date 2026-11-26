@@ -1,3 +1,17 @@
+/**
+ * Integration test for the account module, against a running sjvair.com.
+ *
+ * Skipped unless `TEST_ACCOUNTS=1`. It writes to that server: it registers a
+ * "TEST USER" with `TEST_PHONE`, which sends a real verification text to that
+ * number, edits the account, and deletes it. Its phone verification step asks
+ * for the texted code at a prompt.
+ *
+ * ```sh
+ * TEST_ACCOUNTS=1 deno test --allow-net --allow-env --env-file lib/account/mod_test.ts
+ * ```
+ *
+ * @module
+ */
 import { assertEquals } from "@std/assert";
 import { setOrigin } from "$http";
 import {
@@ -69,8 +83,11 @@ const getRandomPassword = () => {
   return TEST_USER_FORM.password;
 };
 
+const ENABLED = Deno.env.get("TEST_ACCOUNTS") === "1";
+
 Deno.test({
   name: "Module: Account Endpoints",
+  ignore: !ENABLED,
   permissions: { net: true },
   async fn(t) {
     const crudSuccess = await t.step(

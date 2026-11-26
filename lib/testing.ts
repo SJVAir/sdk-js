@@ -24,6 +24,19 @@ export function getSimpleValidationTest<T extends ZodType>(
   );
 }
 
+/**
+ * Whether an integration probe failed because the dev server lacks the
+ * endpoint (404) or can't be reached. Any other failure is a real one and
+ * should be rethrown.
+ */
+export function isUnavailable(error: unknown): boolean {
+  if (error instanceof TypeError) return true;
+  const cause =
+    (error as { cause?: { status?: number; result?: { status?: number } } })
+      ?.cause;
+  return cause?.status === 404 || cause?.result?.status === 404;
+}
+
 export const EXISTING_PHONE = assertTestVariable("PHONE");
 export const EXISTING_MONITOR_ID = assertTestVariable("MONITOR_ID");
 
