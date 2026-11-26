@@ -1,11 +1,13 @@
 # Changelog
 
-## 5.0.0 (unreleased; betas only)
+## 5.0.0 (2026-11-25)
 
-5.0.0 goes live together with the sjvair.com release it wraps (sjvair.com
-`develop`). It needs a server running that branch: the SDK keeps no fallbacks
-for older server responses. It was called 4.8.0 through 4.8.0-beta.6; the call
-changes below made it a major version.
+5.0.0 wraps the sjvair.com release on sjvair.com `develop`. It needs a server
+running that branch: the SDK keeps no fallbacks for older server responses. It
+is published before that branch reaches production, so until the sjvair.com
+deploy, 5.0.0 (JSR's `latest`) doesn't work against www.sjvair.com; use 4.7.0
+there until then. It was called 4.8.0 through 4.8.0-beta.6; the call changes
+below made it a major version.
 
 Betas: **5.0.0-beta.1** (2026-11-04): everything below except the documents
 removal and the entry-bounds change. **5.0.0-beta.2** (2026-11-04): adds the
