@@ -86,8 +86,9 @@ any time.
   already use), keeping live-server steps as an opt-in layer. Deferred because
   it touches every module's tests and isn't blocking the dashboard work.
 
-  **Revisit when** planning 5.0.0 final, or the next time a test hits a shared
-  stack by mistake or a change ships without a local run.
+  **Revisit when** the dashboard launch is out (after the sjvair.com production
+  deploy; retargeted from 5.0.0 final by the user, 2026-11-25), or the next time
+  a test hits a shared stack by mistake or a change ships without a local run.
 
 ## Dropped
 
